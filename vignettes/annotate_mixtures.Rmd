@@ -62,7 +62,7 @@ Once installed you can activate the packages in the usual way:
 ```{r, eval=TRUE, include=FALSE}
 suppressPackageStartupMessages({
     # load the packages
-    library(MetMasheR)
+    library(MetMashR)
     library(ggplot2)
     library(structToolbox)
     library(dplyr)
@@ -72,7 +72,7 @@ suppressPackageStartupMessages({
 
 ```{r, eval=FALSE, include=TRUE}
 # load the packages
-library(MetMasheR)
+library(MetMashR)
 library(ggplot2)
 library(dplyr)
 ```

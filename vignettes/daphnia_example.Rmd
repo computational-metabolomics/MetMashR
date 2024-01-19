@@ -40,7 +40,7 @@ Once installed you can activate the packages in the usual way:
 suppressWarnings({suppressPackageStartupMessages({
     # load the packages
     library(struct)
-    library(MetMasheR)
+    library(MetMashR)
     library(metabolomicsWorkbenchR)
     library(ggplot2)
     library(patchwork)
@@ -50,7 +50,7 @@ suppressWarnings({suppressPackageStartupMessages({
 ```{r, eval=FALSE, include=TRUE}
 # load the packages
 library(struct)
-library(MetMasheR)
+library(MetMashR)
 library(metabolomicsWorkbenchR)
 library(ggplot2)
 library(patchwork)
