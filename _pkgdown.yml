@@ -1,4 +1,4 @@
-url: https://computational-metabolomics.github.io/MetMasheR/
+url: https://computational-metabolomics.github.io/MetMashR/
 template:
   bootstrap: 5
   bootswatch: flatly
@@ -21,7 +21,7 @@ navbar:
         href: articles/daphnia_example.html
   right:
     - icon: fa-github
-      href: https://github.com/computational-metabolomics/MetMasheR
+      href: https://github.com/computational-metabolomics/MetMashR
       aria-label: 'GitHub'
     - icon: fa-flask
       href: https://www.birmingham.ac.uk/research/activity/phenome-centre/index.aspx
