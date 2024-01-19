@@ -1,0 +1,72 @@
+{
+    "smiles": "O",
+    "inchikey": "InChIKey=XLYOFNOQVPJJNP-UHFFFAOYSA-N",
+    "kingdom": {
+        "name": "Inorganic compounds",
+        "description": "Compounds that do not contain a C atom. Exceptions are made for isocyanide/cyanide and their non-hydrocarbyl derivatives, thiophosgene, carbon diselenide, carbon monosulfide, carbon disulfide, carbon subsulfide, carbon monoxide, carbon trioxide, carbon suboxide, and dicarbon monoxide.",
+        "chemont_id": "CHEMONTID:0000001",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000001"
+    },
+    "superclass": {
+        "name": "Homogeneous non-metal compounds",
+        "description": "Inorganic compounds that contain only metal elements.",
+        "chemont_id": "CHEMONTID:0000423",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000423"
+    },
+    "class": {
+        "name": "Homogeneous other non-metal compounds",
+        "description": "Inorganic non-metallic compounds in which the largest atom belongs to the class of 'other nonmetals'.",
+        "chemont_id": "CHEMONTID:0000434",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000434"
+    },
+    "subclass": null,
+    "intermediate_nodes": [
+
+    ],
+    "direct_parent": {
+        "name": "Homogeneous other non-metal compounds",
+        "description": "Inorganic non-metallic compounds in which the largest atom belongs to the class of 'other nonmetals'.",
+        "chemont_id": "CHEMONTID:0000434",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000434"
+    },
+    "alternative_parents": [
+
+    ],
+    "molecular_framework": null,
+    "substituents": [
+        "Homogeneous other non metal"
+    ],
+    "description": "This compound belongs to the class of inorganic compounds known as homogeneous other non-metal compounds. These are inorganic non-metallic compounds in which the largest atom belongs to the class of 'other non-metals'.",
+    "external_descriptors": [
+        {
+            "source": "CHEBI",
+            "source_id": "CHEBI:15377",
+            "annotations": [
+                "oxygen hydride",
+                "mononuclear parent hydride",
+                "inorganic hydroxy compound"
+            ]
+        },
+        {
+            "source": "META CYC",
+            "source_id": "WATER",
+            "annotations": [
+                "a small molecule"
+            ]
+        }
+    ],
+    "ancestors": [
+        "Chemical entities",
+        "Homogeneous non-metal compounds",
+        "Homogeneous other non-metal compounds",
+        "Inorganic compounds"
+    ],
+    "predicted_chebi_terms": [
+        "inorganic molecular entity (CHEBI:24835)",
+        "chemical entity (CHEBI:24431)"
+    ],
+    "predicted_lipidmaps_terms": [
+
+    ],
+    "classification_version": "2.1"
+}

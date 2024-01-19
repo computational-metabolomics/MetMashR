@@ -1,0 +1,371 @@
+{
+    "smiles": "CC(C)[C@H](N)C(=O)NC(C(O)C[C@H]1CN2[C@H](CC2=O)O1)C(O)=O",
+    "inchikey": "InChIKey=YCGXMNQNHBKSKZ-YNWZBRBLSA-N",
+    "kingdom": {
+        "name": "Organic compounds",
+        "description": "Compounds that contain at least one carbon atom, excluding isocyanide/cyanide and their non-hydrocarbyl derivatives, thiophosgene, carbon diselenide, carbon monosulfide, carbon disulfide, carbon subsulfide, carbon monoxide, carbon dioxide, Carbon suboxide, and dicarbon monoxide.",
+        "chemont_id": "CHEMONTID:0000000",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000000"
+    },
+    "superclass": {
+        "name": "Organic acids and derivatives",
+        "description": "Compounds an organic acid or a derivative thereof.",
+        "chemont_id": "CHEMONTID:0000264",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000264"
+    },
+    "class": {
+        "name": "Carboxylic acids and derivatives",
+        "description": "Compounds containing a carboxylic acid group with the formula -C(=O)OH or a derivative thereof.",
+        "chemont_id": "CHEMONTID:0000265",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000265"
+    },
+    "subclass": {
+        "name": "Amino acids, peptides, and analogues",
+        "description": "Organic compounds containing an amino acid or a peptide backbone, or derivatives thereof.",
+        "chemont_id": "CHEMONTID:0000013",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000013"
+    },
+    "intermediate_nodes": [
+        {
+            "name": "Peptides",
+            "description": "Compounds containing an amide derived from two or more amino carboxylic acid molecules (the same or different) by formation of a covalent bond from the carbonyl carbon of one to the nitrogen atom of another.",
+            "chemont_id": "CHEMONTID:0000348",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000348"
+        }
+    ],
+    "direct_parent": {
+        "name": "Dipeptides",
+        "description": "Organic compounds containing a sequence of exactly two alpha-amino acids joined by a peptide bond.",
+        "chemont_id": "CHEMONTID:0004830",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0004830"
+    },
+    "alternative_parents": [
+        {
+            "name": "Valine and derivatives",
+            "description": "Compounds containing valine or a derivative thereof resulting from reaction of valine at the amino group or the carboxy group, or from the replacement of any hydrogen of glycine by a heteroatom.",
+            "chemont_id": "CHEMONTID:0004310",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004310"
+        },
+        {
+            "name": "N-acyl-alpha amino acids",
+            "description": "Compounds containing an alpha amino acid which bears an acyl group at its terminal nitrogen atom.",
+            "chemont_id": "CHEMONTID:0002402",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0002402"
+        },
+        {
+            "name": "Alpha amino acid amides",
+            "description": "Amide derivatives of alpha amino acids.",
+            "chemont_id": "CHEMONTID:0002309",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0002309"
+        },
+        {
+            "name": "Clavams",
+            "description": "Organic compounds containing a 4-oxa-1-azabicyclo[3.2.0]heptan-7-one moiety. Clavams are similar to penams, but with an oxygen substituted for the sulfur in the penam skeleton.",
+            "chemont_id": "CHEMONTID:0000169",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000169"
+        },
+        {
+            "name": "Short-chain hydroxy acids and derivatives",
+            "description": "Hydroxy acids with an alkyl chain the contains less than 6 carbon atoms.",
+            "chemont_id": "CHEMONTID:0000266",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000266"
+        },
+        {
+            "name": "Heterocyclic fatty acids",
+            "description": "Fatty acids containing a heterocyclic attached to the acyl chain.",
+            "chemont_id": "CHEMONTID:0001989",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001989"
+        },
+        {
+            "name": "1,4-oxazepines",
+            "description": "Organic compounds containing an aromatic seven-membered wring containing a nitrogen and an oxygen atom, a positions 1 and 4, respectively.",
+            "chemont_id": "CHEMONTID:0001339",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001339"
+        },
+        {
+            "name": "Branched fatty acids",
+            "description": "Fatty acids containing a branched chain.",
+            "chemont_id": "CHEMONTID:0000338",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000338"
+        },
+        {
+            "name": "Hydroxy fatty acids",
+            "description": "Fatty acids in which the chain bears a hydroxyl group.",
+            "chemont_id": "CHEMONTID:0000341",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000341"
+        },
+        {
+            "name": "Beta hydroxy acids and derivatives",
+            "description": "Compounds containing a carboxylic acid substituted with a hydroxyl group on the C3 carbon atom.",
+            "chemont_id": "CHEMONTID:0001713",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001713"
+        },
+        {
+            "name": "N-acyl amines",
+            "description": "Compounds containing a fatty acid moiety linked to an amine group through an ester linkage.",
+            "chemont_id": "CHEMONTID:0001096",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001096"
+        },
+        {
+            "name": "Tertiary carboxylic acid amides",
+            "description": "Compounds containing an amide derivative of carboxylic acid, with the general structure RN(R1)C(R2)=O (R1-R2 any atom but H).",
+            "chemont_id": "CHEMONTID:0001664",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001664"
+        },
+        {
+            "name": "Oxazolidines",
+            "description": "Compounds containing an oxazolidine moiety, which consists of a saturated aliphatic five-member ring with one oxygen atom, one nitrogen, three carbon atoms, and two double bonds.",
+            "chemont_id": "CHEMONTID:0000108",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000108"
+        },
+        {
+            "name": "Azetidines",
+            "description": "Organic compounds containing a saturated four-member heterocycle where one nitrogen atom replaces a carbon atom.",
+            "chemont_id": "CHEMONTID:0000102",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000102"
+        },
+        {
+            "name": "Amino acids",
+            "description": "Organic compounds that contain at least one carboxyl group and one amino group.",
+            "chemont_id": "CHEMONTID:0004176",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004176"
+        },
+        {
+            "name": "Secondary alcohols",
+            "description": "Compounds containing a secondary alcohol functional group, with the general structure HOC(R)(R') (R,R'=alkyl, aryl).",
+            "chemont_id": "CHEMONTID:0001661",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001661"
+        },
+        {
+            "name": "Secondary carboxylic acid amides",
+            "description": "Compounds containing a secondary carboxylic acid amide functional group, with the general structure RC(=O)N(R')H (R,R'=alkyl, aryl).",
+            "chemont_id": "CHEMONTID:0001663",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001663"
+        },
+        {
+            "name": "Oxacyclic compounds",
+            "description": "Organic compounds containing an heterocycle with at least one oxygen atom linked to a ring carbon.",
+            "chemont_id": "CHEMONTID:0004140",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004140"
+        },
+        {
+            "name": "Azacyclic compounds",
+            "description": "Organic compounds containing an heterocycle with at least one nitrogen atom and one carbon atom linked to each other.",
+            "chemont_id": "CHEMONTID:0004139",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004139"
+        },
+        {
+            "name": "Monocarboxylic acids and derivatives",
+            "description": "Carboxylic acids containing exactly one carboxyl groups.",
+            "chemont_id": "CHEMONTID:0001137",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001137"
+        },
+        {
+            "name": "Carboxylic acids",
+            "description": "Compounds containing a carboxylic acid group with the formula -C(=O)OH.",
+            "chemont_id": "CHEMONTID:0001205",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001205"
+        },
+        {
+            "name": "Organic oxides",
+            "description": "Organic compounds containing an oxide group.",
+            "chemont_id": "CHEMONTID:0003940",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0003940"
+        },
+        {
+            "name": "Monoalkylamines",
+            "description": "Organic compounds containing an primary aliphatic amine group.",
+            "chemont_id": "CHEMONTID:0000469",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000469"
+        },
+        {
+            "name": "Hydrocarbon derivatives",
+            "description": "Derivatives of hydrocarbons obtained by substituting one or more carbon atoms by an heteroatom. They contain at least one carbon atom and heteroatom.",
+            "chemont_id": "CHEMONTID:0004150",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004150"
+        },
+        {
+            "name": "Carbonyl compounds",
+            "description": "Organic compounds containing a carbonyl group, with the general structure RC(=O)R', where R=organyl, R'=H, N, O, organyl group or halide group.",
+            "chemont_id": "CHEMONTID:0001831",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001831"
+        },
+        {
+            "name": "Organopnictogen compounds",
+            "description": "Compounds containing a bond between carbon a pnictogen atom. Pnictogens are p-block element atoms that are in the group 15 of the periodic table.",
+            "chemont_id": "CHEMONTID:0004557",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004557"
+        }
+    ],
+    "molecular_framework": "Aliphatic heteropolycyclic compounds",
+    "substituents": [
+        "Alpha-dipeptide",
+        "Valine or derivatives",
+        "N-acyl-alpha-amino acid",
+        "N-acyl-alpha amino acid or derivatives",
+        "Alpha-amino acid amide",
+        "Alpha-amino acid or derivatives",
+        "Clavam",
+        "Para-oxazepine",
+        "Beta-hydroxy acid",
+        "Branched fatty acid",
+        "Heterocyclic fatty acid",
+        "Hydroxy fatty acid",
+        "Short-chain hydroxy acid",
+        "Fatty amide",
+        "Hydroxy acid",
+        "N-acyl-amine",
+        "Fatty acyl",
+        "Fatty acid",
+        "Oxazolidine",
+        "Tertiary carboxylic acid amide",
+        "Beta-lactam",
+        "Secondary carboxylic acid amide",
+        "Secondary alcohol",
+        "Amino acid or derivatives",
+        "Azetidine",
+        "Amino acid",
+        "Lactam",
+        "Carboxamide group",
+        "Organoheterocyclic compound",
+        "Monocarboxylic acid or derivatives",
+        "Azacycle",
+        "Carboxylic acid",
+        "Oxacycle",
+        "Organonitrogen compound",
+        "Carbonyl group",
+        "Primary aliphatic amine",
+        "Organooxygen compound",
+        "Organic oxide",
+        "Organic oxygen compound",
+        "Amine",
+        "Organopnictogen compound",
+        "Hydrocarbon derivative",
+        "Organic nitrogen compound",
+        "Primary amine",
+        "Alcohol",
+        "Aliphatic heteropolycyclic compound"
+    ],
+    "description": "This compound belongs to the class of organic compounds known as dipeptides. These are organic compounds containing a sequence of exactly two alpha-amino acids joined by a peptide bond.",
+    "external_descriptors": [
+        {
+            "source": "CHEBI",
+            "source_id": "CHEBI:9920",
+            "annotations": [
+                "peptide"
+            ]
+        }
+    ],
+    "ancestors": [
+        "1,4-oxazepines",
+        "Alcohols and polyols",
+        "Alpha amino acid amides",
+        "Alpha amino acids and derivatives",
+        "Amines",
+        "Amino acids",
+        "Amino acids and derivatives",
+        "Amino acids, peptides, and analogues",
+        "Azacyclic compounds",
+        "Azetidines",
+        "Azolidines",
+        "Beta hydroxy acids and derivatives",
+        "Beta lactams",
+        "Branched fatty acids",
+        "Carbonyl compounds",
+        "Carboxylic acid amides",
+        "Carboxylic acid derivatives",
+        "Carboxylic acids",
+        "Carboxylic acids and derivatives",
+        "Chemical entities",
+        "Clavams",
+        "Dipeptides",
+        "Fatty Acyls",
+        "Fatty acids and conjugates",
+        "Fatty amides",
+        "Heterocyclic fatty acids",
+        "Hydrocarbon derivatives",
+        "Hydroxy acids and derivatives",
+        "Hydroxy fatty acids",
+        "Lactams",
+        "Lipids and lipid-like molecules",
+        "Monoalkylamines",
+        "Monocarboxylic acids and derivatives",
+        "N-acyl amines",
+        "N-acyl-alpha amino acids",
+        "N-acyl-alpha amino acids and derivatives",
+        "Organic acids and derivatives",
+        "Organic compounds",
+        "Organic nitrogen compounds",
+        "Organic oxides",
+        "Organic oxygen compounds",
+        "Organoheterocyclic compounds",
+        "Organonitrogen compounds",
+        "Organooxygen compounds",
+        "Organopnictogen compounds",
+        "Oxacyclic compounds",
+        "Oxazepines",
+        "Oxazolidines",
+        "Peptides",
+        "Primary amines",
+        "Secondary alcohols",
+        "Secondary carboxylic acid amides",
+        "Short-chain hydroxy acids and derivatives",
+        "Tertiary carboxylic acid amides",
+        "Valine and derivatives"
+    ],
+    "predicted_chebi_terms": [
+        "valine derivative (CHEBI:27267)",
+        "N-acyl-amino acid (CHEBI:51569)",
+        "amino acid amide (CHEBI:22475)",
+        "penams (CHEBI:35992)",
+        "hydroxy carboxylic acid (CHEBI:24669)",
+        "heterocyclic fatty acid (CHEBI:48847)",
+        "oxacycle (CHEBI:38104)",
+        "organonitrogen heterocyclic compound (CHEBI:38101)",
+        "branched-chain fatty acid (CHEBI:35819)",
+        "hydroxy fatty acid (CHEBI:24654)",
+        "3-hydroxy carboxylic acid (CHEBI:61355)",
+        "fatty amide (CHEBI:29348)",
+        "carboxamide (CHEBI:37622)",
+        "oxazolidines (CHEBI:38329)",
+        "azetidines (CHEBI:38777)",
+        "amino acid (CHEBI:33709)",
+        "secondary alcohol (CHEBI:35681)",
+        "carbonyl compound (CHEBI:36586)",
+        "carboxylic acid (CHEBI:33575)",
+        "carboxylic acid anion (CHEBI:29067)",
+        "organic oxide (CHEBI:25701)",
+        "alkylamine (CHEBI:13759)",
+        "organic molecule (CHEBI:72695)",
+        "pnictogen molecular entity (CHEBI:33302)",
+        "organic molecular entity (CHEBI:50860)",
+        "dipeptide (CHEBI:46761)",
+        "chemical entity (CHEBI:24431)",
+        "organooxygen compound (CHEBI:36963)",
+        "peptide (CHEBI:16670)",
+        "organonitrogen compound (CHEBI:35352)",
+        "organic heterocyclic compound (CHEBI:24532)",
+        "lactam (CHEBI:24995)",
+        "beta-lactam (CHEBI:35627)",
+        "lipid (CHEBI:18059)",
+        "monocarboxylic acid (CHEBI:25384)",
+        "amide (CHEBI:32988)",
+        "oxygen molecular entity (CHEBI:25806)",
+        "polyol (CHEBI:26191)",
+        "organic hydroxy compound (CHEBI:33822)",
+        "alcohol (CHEBI:30879)",
+        "nitrogen molecular entity (CHEBI:51143)",
+        "amine (CHEBI:32952)",
+        "primary amine (CHEBI:32877)"
+    ],
+    "predicted_lipidmaps_terms": [
+        "Heterocyclic fatty acids (FA0115)",
+        "Branched fatty acids (FA0102)",
+        "Hydroxy fatty acids (FA0105)",
+        "N-acyl amines (FA0802)",
+        "Fatty Acyls (FA)",
+        "Fatty Acids and Conjugates (FA01)",
+        "Fatty amides (FA08)"
+    ],
+    "classification_version": "2.1"
+}

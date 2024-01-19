@@ -1,0 +1,388 @@
+---
+title: "Exploring the MTox700+ library"
+author: "Gavin Rhys Lloyd"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2  
+    number_sections: true  
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Exploring the MTox700+ library}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    message = FALSE,
+    warning = FALSE,
+    fig.align="center"
+)
+
+.DT = function(x){
+    dt_options=list(
+        scrollX=TRUE,
+        pageLength=6,
+        dom='t',
+        initComplete = DT::JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'font-size':'10pt'});",
+            "}")
+    )
+    
+    x %>%
+        DT::datatable(options=dt_options,rownames=FALSE) %>%
+        DT::formatStyle(columns = colnames(x),
+                        fontSize = '10pt')
+}
+
+
+```
+
+<br>
+
+# Getting Started
+The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible 
+with your 
+current R version can be installed using BiocManager.
+
+```{r,eval = FALSE, include = TRUE}
+# install BiocManager if not present
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+# install MetMashR and dependencies
+BiocManager::install("MetMashR")
+```
+
+Once installed you can activate the packages in the usual way:
+
+```{r, eval=TRUE, include=FALSE}
+suppressWarnings(suppressPackageStartupMessages({
+    # load the packages
+    library(MetMasheR)
+    library(ggplot2)
+    library(structToolbox)
+    library(dplyr)
+    library(DT)
+}))
+```
+
+```{r, eval=FALSE, include=TRUE}
+# load the packages
+library(MetMasheR)
+library(ggplot2)
+library(structToolbox)
+library(dplyr)
+library(DT)
+```
+
+<br>
+
+# Introduction
+
+> MTox700+ is a list of toxicologically relevant metabolites derived from 
+publications, public databases and relevant toxicological assays.
+
+In this vignette we import the MTox700+ database and combine.merge and "mash" it
+with other databases to explore its contents and it's coverage of chemical, 
+biological and toxicological space.
+
+<br>
+
+# Importing the MTox700+ database
+The MTox700+ database can be imported using the `MTox700plus_database` object.
+It can be imported to a data.frame using the `read_database` method.
+
+```{r}
+# prep object
+MT = MTox700plus_database(
+    version = 'latest',
+    tag = 'MTox700+'
+)
+
+# import
+df = read_database(MT)
+
+# show contents
+.DT(df)
+```
+
+```{r}
+# prepare workflow that uses MTox700+ as a source
+M = import_source()
+    trim_whitespace(
+        column_name = '.all',
+        which = 'both',
+        whitespace = '[\\h\\v]'
+    )
+
+# apply
+M = model_apply(M,MT)
+```
+
+
+<br>
+
+# Exploring the chemical space
+
+The chemical (or "metabolite") space covered by the 
+MTox700+ database can be explored in several ways using the data included in 
+the database.
+
+For example, we can generate images of the molecules using the SMILES included in 
+the database. Here we generate images of the first 6 metabolites in the database.
+
+```{r}
+# prepare chart
+C = openbabel_structure(
+    smiles_column = 'smiles',
+    row_index = 1,
+    scale_to_fit = FALSE,
+    image_size = 300,
+    title_column = 'metabolite_name',
+    view_port = 400
+)
+
+# first six
+G = list()
+for (k in 1:6) {
+    # set row idx
+    C$row_index=k
+    # plot
+    G[[k]] = chart_plot(C,predicted(M)) 
+}
+
+# layout
+cowplot::plot_grid(plotlist = G,nrow=2)
+```
+
+The MTox700+ database also contains information about the structural 
+classification of the metabolites based on ChemOnt (a chemical taxonomy) and
+ClassyFire (software to compute the taxonomy of a structure) 
+[10.1186/s13321-016-0174-y].
+
+In this plot we show the number of metabolites in the MTox700+ database that 
+are assigned to a "superclass" of molecules.
+
+```{r,fig.height=7.5,fig.width=7.5}
+# initialise chart object
+C = annotation_bar_chart(
+    factor_name = 'superclass',
+    label_rotation = TRUE,
+    label_location = 'outside',
+    label_type = 'percent',
+    legend = TRUE
+)
+
+# plot
+g = chart_plot(C,predicted(M)) + ylim(c(0,600)) +
+    guides(fill=guide_legend(nrow=6,title = element_blank())) + 
+    theme(legend.position = 'bottom',legend.margin=margin())
+
+# layout
+leg = cowplot::get_legend(g)
+cowplot::plot_grid(g+theme(legend.position = 'none'),leg,nrow=2,rel_heights = c(75,25))
+```
+
+<br>
+
+# Exploring the biological space
+
+To explore the biological space covered by the metabolites in MTox700+ we need 
+mash the database with additional information about the biological pathways that
+the metabolites are part of.
+
+We use the [PathBank](https://pathbank.org/) for this purpose. A `struct_database`
+object for PathBank is already included in `MetMashR`.
+
+<br>
+
+## Importing PathBank
+
+`MetMashR` provides the `PathBank_metabolite_databse` object to import the
+PathBank database. You can choose to import:
+
+- The "primary" database. This is a smaller version of the database restricted 
+to primary pathways.
+- The "complete" database, which includes all pathways in the database.
+
+The "complete" database is a >50mb download, and unzipped is >1Gb. Unzipping
+and caching of the database is handled by [BiocFileCache].
+
+For the vignette we restrict to the "primary" PathBank database to keep file 
+sizes and downloads to a minimum.
+
+We can use the database in two ways:
+
+1. convert it to a source and "mash" it with other sources
+2. use it as a lookup table to add information to an existing source. 
+
+To explore the biological space covered by MetMashR we will do both.
+
+<br>
+
+## Comparing PathBank and MTox700+
+
+It is useful to visualise the overlap between PathBank and MTox700+. MTox700+
+is a much smaller database due to it being a curated list of metabolites with
+toxicologial relevance, and PathBank is more general.
+
+In th example below we import PathBank as a source, and use a venn diagram to 
+compare the overlap between inchikey identifiers in PathBank and MTox700+.
+
+```{r,fig.width=4}
+# object M already contains the MTox700+ database as a source
+
+# prepare PathBank as a source
+P = PathBank_metabolite_database(
+        version = 'primary',
+        tag = 'PathBank'
+)
+
+# import
+P = read_source(P)
+
+# prepare chart
+C = annotation_venn_chart(
+    factor_name = c('inchikey','InChI.Key'),legend = FALSE,
+    fill_colour = '.group',
+    line_colour = 'white'
+)
+
+# plot
+chart_plot(C,predicted(M),P)
+
+```
+
+The diagram shows that less than half of the metabolites in MTox700+ are also present 
+in the PathBank database for primary pathways.
+
+<br>
+
+## Combining MTox700+ with PathBank
+
+To combine the pathway information in PathBank with the MTox700+ database we 
+can use PathBank as a lookup table based on inchikeys. To do this we use the 
+`database_lookup` object.
+
+Note that PathBank is not downloaded a second time; it is automatically 
+retrieved from the cache.
+
+We request a number of columns from PathBank, including pathway information and
+additional identifiers such as HMBD ID and KEGG ID.
+
+```{r}
+# prepare object
+X = database_lookup(
+    query_column = 'inchikey',
+    database = P$data,
+        database_column = 'InChI.Key',
+        include = c(
+            "PathBank.ID","Pathway.Name","Pathway.Subject","Species",
+            "HMDB.ID","KEGG.ID","ChEBI.ID","DrugBank.ID","SMILES"),
+        suffix = ''
+)
+
+# apply
+X = model_apply(X,predicted(M))
+```
+
+We can now visualise e.g. the subject of the pathways captured by the MTox700+ 
+database.
+
+```{r}
+C = annotation_bar_chart(
+    factor_name = 'Pathway.Subject',
+    label_rotation = TRUE,
+    label_location = 'outside',
+    label_type = 'percent',
+    legend = TRUE
+)
+
+chart_plot(C,predicted(X))+ylim(c(0,17500))
+```
+
+We can see that MTox700+ largely focuses on metabolites related to Disease 
+metabolism and general metabolism, which is concomitant with the database
+being curated to contain metabolites relevant to toxicology in humans.
+
+<br>
+
+## Combining records
+Metabolites can appear in multiple pathways. The PathBank database therefore 
+contains multiple records for the same metabolite, and the relationship 
+between MTox700+ and PathBank is one-to-many.
+
+After obtaining pathway information from PathBank the new table has many more
+rows than the original MTox700+ database, as each MTox700+ record has been 
+replicated for each match in the PathBank database.
+
+e.g. after importing MTox700+ the number of records was:
+```{r}
+# Number in MTox700+
+nrow(predicted(M)$data)
+```
+
+After combing with PathBank the number of records is:
+```{r}
+# Number after PathBank lookup
+nrow(predicted(X)$data)
+```
+
+Sometimes it is useful to collapse this information into a single record per 
+metabolite. We can use the `combine_records` object and its helper functions to
+do this in a `MetMashR` workflow.
+
+```{r}
+# prepare object
+X = database_lookup(
+    query_column = 'inchikey',
+    database = P$data,
+        database_column = 'InChI.Key',
+        include = c(
+            "PathBank.ID","Pathway.Name","Pathway.Subject","Species",
+            "HMDB.ID","KEGG.ID","ChEBI.ID","DrugBank.ID","SMILES"),
+        suffix = '') + 
+    combine_records(
+        group_by = 'inchikey',
+        default_fcn = .unique(' || ')
+    )
+
+# apply
+X = model_apply(X,predicted(M))
+
+```
+
+We have used the `.unique` helper function so that records for each inchikey are
+combined into a single record by only retaining unique values in each field 
+(column). If there are multiple unique values for a field then they are 
+combined into a single string using the " || " separator.
+
+We can now extract the pathways associated with a particular metabolite. For 
+example Glycolic acid:
+
+```{r}
+# get index of metabolite
+w = which(predicted(X)$data$metabolite_name=='Glycolic acid')
+```
+
+The pathways associated with Glycolic acid are:
+```{r}
+# print list of pathways
+predicted(X)$data$Pathway.Name[w]
+```
+
+<br>
+
+# Session Info
+```{r}
+sessionInfo()
+```
+
+
+

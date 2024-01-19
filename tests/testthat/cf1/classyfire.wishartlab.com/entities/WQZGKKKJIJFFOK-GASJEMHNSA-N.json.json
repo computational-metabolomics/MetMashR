@@ -1,0 +1,161 @@
+{
+    "smiles": "[H]C1(O)O[C@]([H])(CO)[C@@]([H])(O)[C@]([H])(O)[C@@]1([H])O",
+    "inchikey": "InChIKey=WQZGKKKJIJFFOK-GASJEMHNSA-N",
+    "kingdom": {
+        "name": "Organic compounds",
+        "description": "Compounds that contain at least one carbon atom, excluding isocyanide/cyanide and their non-hydrocarbyl derivatives, thiophosgene, carbon diselenide, carbon monosulfide, carbon disulfide, carbon subsulfide, carbon monoxide, carbon dioxide, Carbon suboxide, and dicarbon monoxide.",
+        "chemont_id": "CHEMONTID:0000000",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000000"
+    },
+    "superclass": {
+        "name": "Organic oxygen compounds",
+        "description": "Organic compounds that contain one or more oxygen atoms.",
+        "chemont_id": "CHEMONTID:0004603",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0004603"
+    },
+    "class": {
+        "name": "Organooxygen compounds",
+        "description": "Organic compounds containing a bond between a carbon atom and an oxygen atom.",
+        "chemont_id": "CHEMONTID:0000323",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000323"
+    },
+    "subclass": {
+        "name": "Carbohydrates and carbohydrate conjugates",
+        "description": "Monosaccharides, disaccharides, oligosaccharides, polysaccharides, and their derivatives.",
+        "chemont_id": "CHEMONTID:0000011",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000011"
+    },
+    "intermediate_nodes": [
+        {
+            "name": "Monosaccharides",
+            "description": "Compounds containing one carbohydrate unit not glycosidically linked to another such unit, and no set of two or more glycosidically linked carbohydrate units. Monosaccharides have the general formula CnH2nOn.",
+            "chemont_id": "CHEMONTID:0001540",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001540"
+        }
+    ],
+    "direct_parent": {
+        "name": "Hexoses",
+        "description": "Monosaccharides in which the sugar unit is a is a six-carbon containing moeity.",
+        "chemont_id": "CHEMONTID:0001498",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0001498"
+    },
+    "alternative_parents": [
+        {
+            "name": "Oxanes",
+            "description": "Compounds containing an oxane (tetrahydropyran) ring, which is a six-member saturated aliphatic heterocycle with one oxygen atom and five carbon atoms.",
+            "chemont_id": "CHEMONTID:0002012",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0002012"
+        },
+        {
+            "name": "Secondary alcohols",
+            "description": "Compounds containing a secondary alcohol functional group, with the general structure HOC(R)(R') (R,R'=alkyl, aryl).",
+            "chemont_id": "CHEMONTID:0001661",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001661"
+        },
+        {
+            "name": "Hemiacetals",
+            "description": "Compounds comprising the hemiacetal functional group, with the general formula R2C(OH)OR' ( R' not Hydrogen ).",
+            "chemont_id": "CHEMONTID:0001092",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001092"
+        },
+        {
+            "name": "Polyols",
+            "description": "Organic compounds containing more than one hydroxyl groups.",
+            "chemont_id": "CHEMONTID:0002286",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0002286"
+        },
+        {
+            "name": "Oxacyclic compounds",
+            "description": "Organic compounds containing an heterocycle with at least one oxygen atom linked to a ring carbon.",
+            "chemont_id": "CHEMONTID:0004140",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004140"
+        },
+        {
+            "name": "Primary alcohols",
+            "description": "Compounds comprising the primary alcohol functional group, with the general structure RCOH (R=alkyl, aryl).",
+            "chemont_id": "CHEMONTID:0000286",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000286"
+        },
+        {
+            "name": "Hydrocarbon derivatives",
+            "description": "Derivatives of hydrocarbons obtained by substituting one or more carbon atoms by an heteroatom. They contain at least one carbon atom and heteroatom.",
+            "chemont_id": "CHEMONTID:0004150",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004150"
+        }
+    ],
+    "molecular_framework": "Aliphatic heteromonocyclic compounds",
+    "substituents": [
+        "Hexose monosaccharide",
+        "Oxane",
+        "Secondary alcohol",
+        "Hemiacetal",
+        "Oxacycle",
+        "Organoheterocyclic compound",
+        "Polyol",
+        "Hydrocarbon derivative",
+        "Primary alcohol",
+        "Alcohol",
+        "Aliphatic heteromonocyclic compound"
+    ],
+    "description": "This compound belongs to the class of organic compounds known as hexoses. These are monosaccharides in which the sugar unit is a is a six-carbon containing moeity.",
+    "external_descriptors": [
+        {
+            "source": "CHEBI",
+            "source_id": "CHEBI:4167",
+            "annotations": [
+                "glucopyranose",
+                "D-glucose"
+            ]
+        },
+        {
+            "source": "KEGG",
+            "source_id": "C00031",
+            "annotations": [
+                "Aldoses"
+            ]
+        }
+    ],
+    "ancestors": [
+        "Alcohols and polyols",
+        "Carbohydrates and carbohydrate conjugates",
+        "Chemical entities",
+        "Ethers",
+        "Hemiacetals",
+        "Hexoses",
+        "Hydrocarbon derivatives",
+        "Monosaccharides",
+        "Organic compounds",
+        "Organic oxygen compounds",
+        "Organoheterocyclic compounds",
+        "Organooxygen compounds",
+        "Oxacyclic compounds",
+        "Oxanes",
+        "Polyols",
+        "Primary alcohols",
+        "Secondary alcohols"
+    ],
+    "predicted_chebi_terms": [
+        "oxanes (CHEBI:46942)",
+        "secondary alcohol (CHEBI:35681)",
+        "hemiacetal (CHEBI:5653)",
+        "polyol (CHEBI:26191)",
+        "oxacycle (CHEBI:38104)",
+        "primary alcohol (CHEBI:15734)",
+        "organic molecule (CHEBI:72695)",
+        "hexose (CHEBI:18133)",
+        "chemical entity (CHEBI:24431)",
+        "organic heterocyclic compound (CHEBI:24532)",
+        "oxygen molecular entity (CHEBI:25806)",
+        "organic molecular entity (CHEBI:50860)",
+        "organooxygen compound (CHEBI:36963)",
+        "organic hydroxy compound (CHEBI:33822)",
+        "alcohol (CHEBI:30879)",
+        "ether (CHEBI:25698)",
+        "carbohydrates and carbohydrate derivatives (CHEBI:78616)",
+        "monosaccharide (CHEBI:35381)"
+    ],
+    "predicted_lipidmaps_terms": [
+
+    ],
+    "classification_version": "2.1"
+}

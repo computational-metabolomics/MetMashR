@@ -1,0 +1,131 @@
+Package: MetMashR
+Type: Package
+Title: Metabolite Mashing with R
+Version: 0.1.0
+Authors@R: c(
+    person(
+        c("Gavin","Rhys"),
+          "Lloyd",
+           role=c("aut","cre"),
+           email="g.r.lloyd@bham.ac.uk",
+		   comment = c(ORCID = "0000-0001-7989-6695")
+		),
+    person(
+        c("Ralf","Johannes", "Maria"),
+          "Weber",
+           role=c("aut"),
+           email="r.j.weber@bham.ac.uk")
+        )
+Description: A package to merge, filter sort, organise and otherwise mash 
+    together metabolite annotations. Metabolite annotations can be imported from
+    multiple sources (software) and combined using workflow steps based on S4
+    class templates derived from the `struct` package.
+License: GPL-3
+Encoding: UTF-8
+LazyData: false
+RoxygenNote: 7.2.3
+Depends: 
+    R (>= 2.10),
+    struct
+Imports: 
+    dplyr,
+    methods,
+    jsonlite,
+    openxlsx,
+    httr,
+    scales,
+    ggthemes,
+    cowplot,
+    ggplot2,
+    utils
+Collate: 
+    'BiocFileCache_database_helpers.R'
+    'generics.R'
+    'zzz.R'
+    'annotation_source_class.R'
+    'annotation_database_class.R'
+    'BiocFileCache_database_class.R'
+    'CompoundDb_source_class.R'
+    'MTox700plus_database_class.R'
+    'annotation_table_class.R'
+    'MetFrag_source_class.R'
+    'MetMasheR.R'
+    'PathBank_metabolite_database_class.R'
+    'add_columns_class.R'
+    'add_labels_class.R'
+    'annotation_bar_chart.R'
+    'annotation_histogram_class.R'
+    'annotation_histogram2d_class.R'
+    'annotation_pie_chart.R'
+    'annotation_venn_chart.R'
+    'calc_ppm_diff_class.R'
+    'calc_rt_diff_class.R'
+    'cd_source_class.R'
+    'rest_api_parsers.R'
+    'rest_api_class.R'
+    'classyfire_lookup_class.R'
+    'combine_columns_class.R'
+    'combine_records_class.R'
+    'combine_sources.R'
+    'concatenate_strings_class.R'
+    'database_lookup_class.R'
+    'dictionaries.R'
+    'filter_labels_class.R'
+    'filter_na_class.R'
+    'filter_range_class.R'
+    'filter_venn_class.R'
+    'hmdb_lookup_class.R'
+    'id_count_class.R'
+    'import_source_class.R'
+    'kegg_lookup_class.R'
+    'lipidmaps_lookup_class.R'
+    'ls_source_class.R'
+    'mspurity_source_class.R'
+    'mwb_compound_lookup_class.R'
+    'mwb_refmet_database_class.R'
+    'mwb_structure_chart_class.R'
+    'mz_match_class.R'
+    'mzrt_match_class.R'
+    'normalise_lipids_class.R'
+    'normalise_strings_class.R'
+    'openbabel_structure_chart.R'
+    'opsin_lookup_class.R'
+    'pubchem_compound_lookup_class.R'
+    'pubchem_property_lookup_class.R'
+    'pubchem_structure_chart_class.R'
+    'pubchem_structure_lookup_class.R'
+    'pubchem_widget.R'
+    'rds_database_class.R'
+    'rt_match_class.R'
+    'sqlite_database_class.R'
+    'trim_whitespace_class.R'
+Suggests: 
+    covr,
+    httptest,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    rgoslin,
+    DT,
+    RSQLite,
+    CompoundDb,
+    BiocStyle,
+    BiocFileCache,
+    msPurity,
+    ChemmineOB,
+    rsvg,
+    metabolomicsWorkbenchR,
+    KEGGREST,
+    plyr,
+    magick,
+    structToolbox,
+    sf,
+    RVenn,
+    ggVennDiagram,
+    patchwork
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+URL: https://computational-metabolomics.github.io/MetMashR/
+Roxygen: list(markdown = TRUE)
+biocViews: WorkflowStep, Metabolomics
+BugReports: https://github.com/computational-metabolomics/MetMashR/issues

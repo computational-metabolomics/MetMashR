@@ -1,0 +1,607 @@
+---
+title: "Processing Annotations for LCMS of Daphnia samples"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2  
+    number_sections: true  
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Processing Annotations for LCMS of Daphnia samples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    fig.align = 'center'
+)
+```
+
+# Getting Started
+The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible 
+with your 
+current R version can be installed using BiocManager.
+
+```{r,eval = FALSE, include = TRUE}
+# install BiocManager if not present
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+# install MetMashR and dependencies
+BiocManager::install("MetMashR")
+```
+
+Once installed you can activate the packages in the usual way:
+
+```{r, eval=TRUE, include=FALSE}
+suppressWarnings({suppressPackageStartupMessages({
+    # load the packages
+    library(struct)
+    library(MetMasheR)
+    library(metabolomicsWorkbenchR)
+    library(ggplot2)
+    library(patchwork)
+})})
+```
+
+```{r, eval=FALSE, include=TRUE}
+# load the packages
+library(struct)
+library(MetMasheR)
+library(metabolomicsWorkbenchR)
+library(ggplot2)
+library(patchwork)
+```
+
+<br>
+
+# Import Daphina data
+TODO
+
+```{r}
+# import HILIC_POS
+HP = openxlsx::read.xlsx(
+        system.file("extdata/daphnia/daphnia_example.xlsx",
+                package = 'MetMasheR'),
+        sheet='HILIC_POS',
+        rowNames=FALSE,
+        colNames=TRUE)
+# rename columns
+colnames(HP)[1] = 'id'
+# append assay to feature id
+HP$id = paste0('HILIC_POS_',HP$id)
+# convert some columns to numeric
+HP$rsd_qc=as.numeric(HP$rsd_qc)
+HP$rsd_sample=as.numeric(HP$rsd_sample)
+
+# import LIPIDS_POS
+LP = openxlsx::read.xlsx(
+        system.file("extdata/daphnia/daphnia_example.xlsx",
+                package = 'MetMasheR'),
+        sheet='LIPIDS_POS',
+        rowNames=FALSE,
+        colNames=TRUE)
+# rename columns
+colnames(LP)[1] = 'id'
+# append assay to feature id
+LP$id = paste0('LIPIDS_POS_',LP$id)
+# convert some columns to numeric
+LP$rsd_qc=as.numeric(LP$rsd_qc)
+LP$rsd_sample=as.numeric(LP$rsd_sample)
+
+```
+
+<br>
+
+# Import and clean Compound Discoverer annotations
+Here we implement a workflow to process the Compound Discoverer outputs for 
+each assay. Labels are added to aid with filtering in later steps. For duplicate 
+annotations we select the annotation with the highest mzCloud match score. We 
+retain annotations with a Full Match and disregard the rest. Finally we match the
+MS2 peaks to the MS1 peaks.
+
+```{r}
+cd_workflow = 
+    # import source
+    import_source() +
+    
+    # add useful labels
+    add_labels(
+        labels = list(
+            source_name = 'CD',
+            assay = 'placeholder')) + # placeholder replaced later
+    
+    # filter low quality
+    filter_labels(
+        column_name = 'compound_match',
+        labels = 'Full match',
+        mode = 'include') +
+    
+    # resolve duplicates
+    combine_records(
+        group_by = c('compound','ion'),
+        default_fcn = .select_max(
+            max_col = 'mzcloud_score',
+            keep_NA = FALSE,
+            use_abs = TRUE
+        )) +
+
+    # match MS1 to MS2
+    mzrt_match(
+        variable_meta = HP,
+        mz_column = 'mz',
+        rt_column = 'rt',
+        ppm_window = 5,
+        rt_window = 20,
+        id_column = 'id'
+    ) +
+    
+    # ppm difference MS1 vs library
+    calc_ppm_diff(
+        obs_mz_column = 'mz_match',
+        ref_mz_column = 'theoretical_mz',
+        out_column = 'ms1_lib_ppm_diff'
+    ) 
+```
+
+We need to apply this workflow to each assay. For convenience we store the sources
+for each assay in a list.
+
+```{r}
+# prepare sources
+cd_sources = list(
+    HILIC_POS = cd_source(
+        source = c(
+            system.file(
+                'extdata/daphnia/HILIC_POS_EL_CD.xlsx',
+                package = 'MetMasheR'),
+            system.file(
+            'extdata/daphnia/HILIC_POS_EL_CD_comp.xlsx',
+            package = 'MetMasheR')),
+        sheets = c('Compounds','Compounds')
+    ),
+    LIPIDS_POS = cd_source(
+        source = c(
+            system.file(
+                'extdata/daphnia/LIPIDS_POS_EL_CD.xlsx',
+                package = 'MetMasheR'),
+            system.file(
+            'extdata/daphnia/LIPIDS_POS_EL_CD_comp.xlsx',
+            package = 'MetMasheR')),
+        sheets = c('Compounds','Compounds')
+    )
+)
+```
+
+Now we are ready to apply the workflow to the sources. Note that because the 
+labels we are adding are specific to the assay we need to update this input
+parameter of the workflow before apply it to the source. Again we store the 
+applied workflow in a list for convenience.
+
+```{r}
+# place to store results
+CD = list()
+
+# set labels
+cd_workflow[2]$labels$assay='HILIC_POS' 
+# apply workflow
+CD$HILIC_POS = model_apply(cd_workflow,cd_sources$HILIC_POS)
+
+# set labels
+cd_workflow[2]$labels$assay='LIPIDS_POS' 
+# apply workflow
+CD$LIPIDS_POS = model_apply(cd_workflow,cd_sources$LIPIDS_POS)
+```
+
+<br>
+
+### CD Quality Assurance
+In the CD workflow we computed ppm and retention time differences
+between the 
+mzCloud library used by Compound Discoverer and the MS2 experimental data.
+
+If the peak of the distribution is off centre this can be indicative of e.g. retention 
+time or m/z drift.
+
+If there are a lot of annotations with a large difference vs the library then 
+these can be excluded by adding e.g. a `filter_range` workflow step.
+
+```{r}
+# MS2 vs library
+C = annotation_histogram(
+    factor_name = 'library_ppm_diff',
+    vline = c(-5,5)
+)
+g1 = chart_plot(C,predicted(CD$HILIC_POS)) + ggtitle('MS2 vs library')
+
+# MS1 vs library
+C = annotation_histogram(
+    factor_name = 'ms1_lib_ppm_diff',
+    vline = c(-5,5)
+)
+g2 = chart_plot(C,predicted(CD$HILIC_POS)) + ggtitle('MS1 vs library')
+
+# layout
+cowplot::plot_grid(g1,g2,nrow=1)
+```
+
+The ppm and retention time differences between the MS1 and MS2 features (peaks)
+can also be indicative of analytical problems.
+
+```{r,fig.width=6,fig.height=5.5}
+# prepare chart
+C = annotation_histogram2d(
+    factor_name = c('ppm_match_diff_an','rt_match_diff'),
+    bins = 30
+)
+chart_plot(C,predicted(CD$HILIC_POS))
+
+```
+
+The LIPID_POS assay (not shown) only has 2 matches, so the chart is not informative for 
+that assay.
+
+<br>
+
+## Import and clean LipidSearch annotations
+Similarly to the CD sources, here we implement a workflow to process the 
+LipidSearch outputs for 
+each assay. Labels are added to aid with filtering in later steps. For duplicate 
+annotations we select the annotation with the lowest ppm difference vs the library. We 
+retain only LS annotations with Grades A and B.
+
+```{r}
+
+# prepare workflow
+ls_workflow = 
+
+    # import raw file
+    import_source() +   
+    
+    # add labels
+    add_labels(
+        labels = c(
+            assay = 'placeholder', # will be replaced later
+            source_name = 'LS'
+        ))+
+
+    # filter by grade
+    filter_labels(
+        column_name = 'Grade',
+        labels = c('A','B'),
+        mode = 'include') +
+    
+    # resolve duplicates
+    combine_records(
+        group_by = c('LipidIon'),
+        default_fcn = .select_min(
+            min_col = 'library_ppm_diff',
+            keep_NA = FALSE,
+            use_abs = TRUE
+        ) 
+    ) +
+    
+    # match MS1 to MS2
+    mzrt_match(
+        variable_meta = HP,
+        mz_column = 'mz',
+        rt_column = 'rt',
+        ppm_window = 5,
+        rt_window = 20,
+        id_column = 'id'
+    ) +
+    
+    # ppm difference MS1 vs library
+    calc_ppm_diff(
+        obs_mz_column = 'mz_match',
+        ref_mz_column = 'theor_mass',
+        out_column = 'ms1_lib_ppm_diff'
+    ) 
+```
+
+Next we prepare the LipidSearch source objects:
+
+```{r}
+# prepare sources
+ls_sources = list(
+    HILIC_POS = ls_source(
+        source = 
+            system.file(
+                'extdata/daphnia/HILIC_POS_EL_LS.txt',
+                package = 'MetMasheR')
+    ),
+    LIPIDS_POS = ls_source(
+        source = 
+            system.file(
+                'extdata/daphnia/LIPIDS_POS_EL_LS.txt',
+                package = 'MetMasheR')
+    )
+)
+```
+
+Now we can apply the LipidSearch workflow to the LipidSearch sources:
+
+```{r}
+# place to store results
+LS = list()
+
+# set labels
+ls_workflow[2]$labels$assay='HILIC_POS' 
+# apply workflow
+LS$HILIC_POS = model_apply(ls_workflow,ls_sources$HILIC_POS)
+
+# set labels
+ls_workflow[2]$labels$assay='LIPIDS_POS' 
+# apply workflow
+LS$LIPIDS_POS = model_apply(ls_workflow,ls_sources$LIPIDS_POS)
+```
+
+<br>
+
+### LS Quality Assurance
+We can assess drift in m/z and/or retention time using histograms of ppm and 
+differences vs the library like we did 
+before.
+
+```{r}
+# MS2 vs library
+C = annotation_histogram(
+    factor_name = 'library_ppm_diff',
+    vline = c(-5,5)
+)
+g1 = chart_plot(C,predicted(LS$HILIC_POS)) + ggtitle('MS2 vs library')
+
+# MS1 vs library
+C = annotation_histogram(
+    factor_name = 'ms1_lib_ppm_diff',
+    vline = c(-5,5)
+)
+g2 = chart_plot(C,predicted(LS$HILIC_POS)) + ggtitle('MS1 vs library')
+
+# layout
+cowplot::plot_grid(g1,g2,nrow=1)
+```
+
+We can also check for analytical issue by comparing the MS1 and MS2 ppm and 
+retention time differences.
+
+```{r,fig.width=6,fig.height=5.5}
+# prepare chart
+C = annotation_histogram2d(
+    factor_name = c('ppm_match_diff_an','rt_match_diff'),
+    bins = 30
+)
+chart_plot(C,predicted(LS$HILIC_POS))
+
+```
+
+<br>
+
+# Mashing all sources / assays
+
+Now that we have imported and cleaned the individual sources we can combine 
+them into a single annotation_table. This table can the be further cleaned and
+augmented with additional information as required.
+
+Here, we use the `normalise_strings` object to clean and tidy metabolite names to
+improve matches when searching for inchikey's using PubChem and LipidMaps APIs.
+
+We then use the inchikey's to obtain pathway information from the PathBank metabolite database.
+
+Imported statistics for the MS1 peaks are joined with the annotation table and used to quality filter the MS1 peaks based on an assessment of quality (RSD of the QC samples < 30).
+
+Finally, we collapse the table such that each MS1 peak has a list of
+possible annotations.
+
+For the vignette we used cached results, which we prepare now.
+
+```{r}
+cache1=rds_database(
+    source=file.path(
+        system.file('cached',package='MetMasheR'),'cache1.rds'))
+cache2=rds_database(    
+ source=file.path(
+        system.file('cached',package='MetMasheR'),'cache2.rds'))
+cache3=rds_database(
+ source=file.path(
+        system.file('cached',package='MetMasheR'),'cache3.rds'))
+cache4=rds_database(
+ source=file.path(
+        system.file('cached',package='MetMasheR'),'cache4.rds'))
+```
+
+Next we prepare the workflow and then apply it.
+
+```{r}
+WF = 
+    combine_sources(
+        list(
+             predicted(CD$LIPIDS_POS),
+             predicted(LS$HILIC_POS),
+             predicted(LS$LIPIDS_POS)),
+        source_col = 'annotation_source',
+        keep_cols = '.all',
+        matching_columns = c(
+            Compound = 'compound', 
+            Compound = 'LipidName',
+            Ion = 'ion',
+            Ion = 'LipidIon',
+            theoretical_mz = 'theor_mass',
+            LipidClass = 'Class')
+    ) +
+    normalise_strings(
+        search_column = 'Compound',
+        output_column = 'normalised_compound',
+        dictionary = c(
+            # custom dictionary
+            list(
+                # replace "NP" with "Compound NP"
+                list(
+                    pattern = '^NP-',
+                    replace = 'Compound NP-'),
+                # remove terms in trailing brackets e.g." (ATP)" 
+                list(
+                    pattern = '\\ \\([^\\)]*\\)$',
+                    replace = ''),
+                # replace known abbreviations
+                list(
+                    pattern = '3-Fluoro NNEI',
+                    replace = '3-Fluoro-nnei',
+                    fixed = TRUE),
+                list(
+                    pattern = 'Υ-L-Glutamyl-L-glutamic acid',
+                    replace = 'Tyr-Glu-Glu'
+                ),
+                list(
+                    pattern = 'AcCa',
+                    replace = 'CAR'
+                )
+            ),
+            # update tripeptides
+            .tripeptide_dictionary,
+            # remove racemic information
+            .racemic_dictionary,
+            # replace greek characters
+            .greek_dictionary
+        )
+    ) +
+    pubchem_property_lookup(
+        query_column = 'normalised_compound',
+        search_by = 'name',
+        property = 'InChIKey',
+        suffix = '_pubchem',
+        cache = cache1
+    ) +
+    lipidmaps_lookup(
+        query_column = 'normalised_compound',
+        context = 'compound',
+        context_item = 'abbrev',
+        output_item = 'inchi_key',
+        suffix = '_abbrev',
+        cache = cache2
+    )+
+    lipidmaps_lookup(
+        query_column = 'normalised_compound',
+        context = 'compound',
+        context_item = 'abbrev_chains',
+        output_item = 'inchi_key',
+        suffix = '_abbrevchains',
+        cache = cache3
+    ) +
+    combine_columns(
+        c('InChIKey_pubchem','inchi_key_abbrev','inchi_key_abbrevchains'),
+        output_name = 'inchikey',
+        source_name = 'inchikey_src',
+        source_tags = c('pubchem','lm_abbrev','lm_chains'),
+        clean = TRUE
+    ) +
+    classyfire_lookup(
+        query_column = 'inchikey',
+        output_items = '.all',
+        output_fields = '.all',suffix = '_cf',
+        cache = cache4,
+        delay = 5
+    ) +
+    database_lookup(
+        query_column = 'inchikey',
+        database_column = 'InChI.Key',
+        database = PathBank_metabolite_database(),
+        include = c('Pathway.Name','Pathway.Subject','Species'),
+        suffix = '',
+        not_found = NA
+    ) +
+    add_columns(
+        new_columns = rbind(HP,LP),
+        by = c('mzrt_match_id'='id')
+    ) +
+    filter_na(
+        column_name = 'inchikey'
+    ) +
+    combine_records(
+        group_by = 'mzrt_match_id',
+        default_fcn = .unique(
+            separator = ' || ')
+    ) +
+    filter_labels(
+        column_name = 'rsd_qc',
+        labels = 'NA',
+        mode = 'exclude'
+    ) +
+    filter_range(
+        column_name = 'rsd_qc',
+        upper_limit = 20,
+        lower_limit=-Inf,
+        equal_to=FALSE
+    )
+WF = model_apply(WF,predicted(CD$HILIC_POS))
+```
+  
+We can explore the contents of the table. Here we generate plots to visualise 
+the number of annotations from each source.
+  
+```{r,warning=FALSE,message=FALSE,fig.width=4}
+# pie chart of the sources of annotations
+C = annotation_pie_chart(
+    factor_name = 'source_name',
+    label_location = 'outside'
+)
+chart_plot(C,predicted(WF)) + ggtitle('Annotations per source')
+```
+
+Next we plot a histogram of the QC-RSD values before filtering, 
+by indexing the relevant step of the workflow.
+
+```{r}
+# histogram of the rsd-qc for annotated features (before filtering)
+C = annotation_histogram(
+    factor_name = 'rsd_qc',
+    bins = 30,
+    vline = 20
+)
+chart_plot(C,predicted(WF[12])) + 
+    ggtitle('MS1 peak QC-RSD',"Features with QC-RSD<20 were removed by the workflow.")
+```
+
+In this plot we present a bar chart of the different molecular classes present in
+the final table.
+
+```{r}
+# bar chart of the superclasses
+C = annotation_bar_chart(
+    factor_name = 'superclass.name_cf',
+    legend = TRUE,label_type = 'none'
+)
+chart_plot(C,predicted(WF[10])) + ggtitle('Superclasses')
+```
+
+Finally we use the PubChem API to generate an image of the molecular structure
+for one of the metabolites.
+
+```{r}
+# display one of the metabolite structures
+C = pubchem_widget(
+        query_column = 'normalised_compound',
+        row_index=1,
+        record_type = '3D-Conformer',
+        display = FALSE,
+        hide_title = FALSE,
+        height = '820px')
+
+chart_plot(C,predicted(WF))
+```
+
+
+
+<br>
+
+# Session Info
+```{r}
+sessionInfo()
+```
+
+
+
+

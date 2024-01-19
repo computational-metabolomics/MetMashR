@@ -1,0 +1,923 @@
+---
+title: "Annotation of mixtures of standards"
+author: "Gavin Rhys Lloyd"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2  
+    number_sections: true  
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Annotation of mixtures of standards}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    fig.align='center'
+)
+
+.DT = function(x){
+    dt_options=list(
+        scrollX=TRUE,
+        pageLength=6,
+        dom='t',
+        initComplete = DT::JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'font-size':'10pt'});",
+            "}")
+    )
+    
+    x %>%
+        DT::datatable(options=dt_options,rownames=FALSE) %>%
+        DT::formatStyle(columns = colnames(x),
+                        fontSize = '10pt')
+}
+
+
+```
+
+<br>
+
+# Getting Started
+The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible 
+with your 
+current R version can be installed using BiocManager.
+
+```{r,eval = FALSE, include = TRUE}
+# install BiocManager if not present
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+# install MetMashR and dependencies
+BiocManager::install("MetMashR")
+```
+
+Once installed you can activate the packages in the usual way:
+
+```{r, eval=TRUE, include=FALSE}
+suppressPackageStartupMessages({
+    # load the packages
+    library(MetMasheR)
+    library(ggplot2)
+    library(structToolbox)
+    library(dplyr)
+    library(DT)
+})
+```
+
+```{r, eval=FALSE, include=TRUE}
+# load the packages
+library(MetMasheR)
+library(ggplot2)
+library(dplyr)
+```
+
+<br>
+
+# Introduction
+
+Mixtures of standards can be used to build annotation libraries. In LCMS these 
+libraries can be collected using the same chromatography and instrument as the 
+samples. Such a library
+allows high-confidence (MSI level 1) detection/annotation of MTox metabolites,
+in comparison to external databases/sources that rely on m/z only or in-silico
+predictions.
+
+In this vignette we will explore the annotations generated using Compound
+Discoverer (CD) and LipidSearch (LS) for several mixtures of standards.
+
+As the content of the standard mixtures is known, we can assess the ability
+of CD and LS to annotate these metabolites.
+
+<br>
+
+# Input data
+The data collected corresponds to mixtures of 
+high-purity standards measured using LCMS, with the intention of building an
+internally measured library including m/z and retention times for each 
+standard. 
+
+Analysis of the standard mixtures resulted in four data tables: HILIC_NEG, 
+HILIC_POS, LIPIDS_POS and LIPIDS_NEG. We will loosely refer to these as 
+"assays".
+
+All four assays were used as input to both Compound Discoverer (CD) and 
+LipidSearch (LS) software, which are software tools commonly used to annotation 
+LCMS datasets.
+
+
+<br>
+
+# Importing the annotations
+`MetMashR` includes `cd_source` and `ls_source` objects. These objects read the 
+output files from CD and LS and parse them into an `annotation_table` object. 
+
+Importing the annotation tables isn't always enough; sometimes they need to be
+cleaned or processed further. We therefore define two `MetMashR` workflows, 
+one for CD and one for LS, in which we import the tables and then apply 
+source-specific cleaning.
+
+<br>
+
+## Importing Compound Discoverer annotations
+The CD file format expected by `cd_source` is Excel format; see [TODO] for 
+details on how to generate this format from CD.
+
+For the CD `MetMashR` workflow we would like to:
+
+1. Import CD annotations and convert to `annotation_table` format
+2. Filter to only include "Full match" annotations
+3. Resolve duplicates
+
+When we import the annotations, we add a column indicating which assay the
+annotations are associated with, include a `tag` for each row indicating
+both the source and the assay. This will be useful later when processing the
+combined tables.
+
+The resolution of duplicates is needed because CD might assign the same
+metabolite + adduct to multiple peaks. Here we choose the match with highest
+mzcloud score using the `.select_max` helper function with the combine_records` 
+object. This object is a wrapper for [dplyr::reframe()].
+
+```{r}
+# prepare workflow
+M = import_source() +
+    add_labels(
+        labels = c(
+            assay = 'placeholder', # will be replaced later
+            source_name = 'CD'
+        ))+
+    filter_labels(
+        column_name = 'compound_match',
+        labels = 'Full match',
+        mode = 'include')+
+    filter_labels(
+        column_name = 'compound_match',
+        labels = 'Full match',
+        mode = 'include') +
+    filter_range(
+        column_name = 'library_ppm_diff',
+        upper_limit = 2,
+        lower_limit = -2,
+        equal_to = FALSE) +
+    combine_records(
+        group_by = c('compound','ion'),
+        default_fcn = .select_max(
+            max_col = 'mzcloud_score',
+            keep_NA = FALSE,
+            use_abs = TRUE
+        ) 
+    )
+
+# place to store results
+CD = list()
+for (assay in c('HILIC_NEG','HILIC_POS','LIPIDS_NEG','LIPIDS_POS')) {
+    # prepare source
+    AT = cd_source(
+        source = c(
+            system.file(
+                paste0('extdata/MTox/CD/',assay,'.xlsx'),
+                package = 'MetMasheR'),
+            system.file(
+                paste0('extdata/MTox/CD/',assay,'_comp.xlsx'),
+                package = 'MetMasheR')),
+        tag = paste0('CD_',assay))
+    
+    # update labels in workflow
+    M[2]$labels$assay = assay
+    
+    # apply workflow to source
+    CD[[assay]] = model_apply(M,AT)
+}
+```
+
+The `CD` variable is now a list containing the workflow for each assay. 
+
+The default output of each workflow is a processed `lcms_table`, which is an
+extension of `annotation_table` that requires both an m/z and a retention time 
+column to be defined.
+
+A summary of the table for e.g. the HILIC_NEG assay can be displayed on the 
+console:
+
+```{r}
+predicted(CD$HILIC_NEG)
+```
+The HILIC_NEG table is shown below.
+
+```{r,echo=FALSE}
+.DT(predicted(CD$HILIC_NEG)$data)
+```
+
+`MetMashR` workflows store the output after each step. We can use this to 
+explore the impact of different workflow steps. For example, we can display
+the different compound matched present before and after filtering as pie charts.
+
+First, we create the pie chart object and specify some parameters.
+```{r}
+C = annotation_pie_chart(
+    factor_name = 'compound_match',
+    label_rotation = FALSE,
+    label_location = 'outside',
+    legend = TRUE,
+    label_type = 'percent',
+    centre_radius = 0.5,
+    centre_label = '.total'
+)
+```
+
+Now we create the plots using `chart_plot` and add some additional settings
+using `ggplot2`, and arrange the plots using `cowplot`.
+
+Note that we use square brackets to index the step of the workflow we want to
+access e.g. `HILIC_NEG[3]`.
+
+```{r}
+# plot individual charts
+g1 = chart_plot(C,predicted(CD$HILIC_NEG[3])) + 
+    ggtitle('Compound matches\nafter filtering') + 
+    theme(plot.title = element_text(hjust = 0.5)) 
+
+
+g2 = chart_plot(C,predicted(CD$HILIC_NEG[2])) + 
+    ggtitle('Compound matches\nbefore filtering') + 
+    theme(plot.title = element_text(hjust = 0.5)) 
+
+
+# get legend
+leg  = cowplot::get_legend(g2)
+
+# layout
+cowplot::plot_grid(
+    g2+theme(legend.position = 'none'),
+    g1+theme(legend.position = 'none'),
+    leg,
+    nrow=1,
+    rel_widths = c(1,1,0.5))
+```
+
+It is clear from these plots that the filter has removed all annotations 
+without a "full match".
+
+<br>
+
+We can assess the quality of the annotations be examining the histogram of
+ppm errors between the MS2 peaks and the library.
+
+If there is a wide distribution then this may indicate false
+positives. If the distribution is offset from zero then this indicates some 
+m/z drift is present. 
+
+```{r}
+C = annotation_histogram(
+    factor_name = 'library_ppm_diff',vline = c(-2,2)
+)
+G=list()
+G$HILIC_NEG = chart_plot(C,predicted(CD$HILIC_NEG[2])) 
+G$HILIC_POS = chart_plot(C,predicted(CD$HILIC_POS[3])) 
+
+cowplot::plot_grid(plotlist=G,labels=c('HILIC_NEG','HILIC_POS'))
+```
+
+Note that we plotted the distribution based on the step before filtering by 
+range, and set the vertical red lines equal to the range filter so that we can
+see which parts of the histogram are affected by the range filter.
+
+## Importing LipidSearch annotations
+The file format expected by `ls_source` is a `.csv` file. See [TODO] for 
+details on how to generate this format from LS.
+
+For the `MetMashR` workflow we would like to:
+
+1. Import the LS annotations and convert to `annotation_table` format
+2. Filter the annotations to only include grades A and B
+3. Resolve duplicates
+
+When we import the annotations, we add a column indicating which assay and source 
+the annotations are associated with. We also include a `tag` for the table. 
+This will be useful later when processing the combined tables.
+
+For LS we resolve duplicates by selecting the annotation with the smallest 
+ppm error. We use the `combine_records` object with the `.select_min` helper
+function to do this.
+
+```{r}
+# prepare workflow
+M = import_source() +   
+    add_labels(
+        labels = c(
+            assay = 'placeholder', # will be replaced later
+            source_name = 'LS'
+        ))+
+    filter_labels(
+        column_name = 'Grade',
+        labels = c('A','B'),
+        mode = 'include') +
+    filter_labels(
+        column_name = 'Grade',
+        labels = c('A','B'),
+        mode = 'include') +
+    combine_records(
+        group_by = c('LipidIon'),
+        default_fcn = .select_min(
+            min_col = 'library_ppm_diff',
+            keep_NA = FALSE,
+            use_abs = TRUE
+        ) 
+    )
+
+# place to store results
+LS = list()
+for (assay in c('HILIC_NEG','HILIC_POS','LIPIDS_NEG','LIPIDS_POS')) {
+    # prepare source
+    AT = ls_source(
+        source = system.file(
+            paste0('extdata/MTox/LS/MTox_2023_',assay,'.txt'),
+            package = 'MetMasheR'),
+        tag = paste0('LS_',assay)) 
+    
+    # update labels in workflow
+    M[2]$labels$assay = assay
+    
+    # apply workflow to source
+    LS[[assay]] = model_apply(M,AT)
+}
+```
+
+The `LS` variable is now a list containing the workflow for each assay. 
+
+A summary of the table for e.g. the LIPIDS_NEG assay can be displayed on the 
+console:
+
+```{r}
+predicted(LS$LIPIDS_NEG)
+```
+
+The LIPIDS_NEG table is shown below.
+
+```{r, echo=FALSE}
+.DT(predicted(LS$LIPIDS_NEG)$data)
+```
+
+`MetMashR` workflows store the output after each step. We can use this to 
+explore the impact of different workflow steps. For example, we can display
+the different Grades present before and after filtering as pie charts.
+
+```{r}
+C = annotation_pie_chart(
+    factor_name = 'Grade',
+    label_rotation = FALSE,
+    label_location = 'outside',
+    label_type = 'percent',
+    legend = FALSE,
+    centre_radius = 0.5,
+    centre_label = '.total'
+)
+g1 = chart_plot(C,predicted(LS$LIPIDS_NEG)) + 
+    ggtitle('Grades after filtering') + 
+    theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm"))
+
+g2 = chart_plot(C,predicted(LS$LIPIDS_NEG[1])) + 
+    ggtitle('Grades before filtering') + 
+    theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm"))
+
+
+cowplot::plot_grid(g2,g1,nrow=1,align='v')
+```
+<br>
+
+# Exploratory analysis of annotation sources
+
+The annotations imported from each source are interesting to explore graphically
+"within source". We will draw a comparison "between sources" later.
+
+In this example we generate Venn diagrams by providing several 
+`annotation_table` inputs to the `chart_plot` function for an 
+`annotation_venn_chart`. This allows us to compare columns of e.g. compound 
+names present in each table.
+
+Here, we compare the compound names for each assay within each source, to see 
+if there is any overlap i.e. the same metabolite detecting in several assays.
+
+```{r}
+# prepare chart object
+C = annotation_venn_chart(
+    factor_name = 'compound',
+    line_colour = 'white',
+    fill_colour = '.group',
+    legend = TRUE,
+    labels = FALSE
+)
+
+## plot
+# get all CD tables
+cd = lapply(CD,predicted) 
+g1 = chart_plot(C,cd) + ggtitle('Compounds in CD per assay')
+
+# get all LS tables
+C$factor_name = 'LipidName'
+ls = lapply(LS,predicted)
+g2 = chart_plot(C,ls) + ggtitle('Compounds in LS per assay')
+
+# layout
+cowplot::plot_grid(g1,g2,nrow=2)
+```
+
+
+The diagram for CD shows the largest amount of overlap is between assays with
+the same ion mode.
+
+For LS the number of annotations is quite small, so the diagram is less 
+informative. However, we are clearly detecting a larger number of annotations in
+the LIPIDS assays, which is to be expected as the LS 
+software is designed to annotate lipids molecules.
+
+Here the `annotation_venn_chart` object was used to compare the same column 
+across several `annotation_tables`. The same object can also compare groups
+from within the same table, which we will explore later. 
+First, we need to combine the CD and LS tables.
+
+# Combining Annotation Sources
+In this workflow step we combine the imported assay tables from each assay and 
+annotation source vertically into a single annotation table.
+
+The `combine_tables` object can be used for this step. Combining tables from 
+the same source (e.g. the CD table for each assay) is straight forward as all 
+tables have the same columns.
+
+When combining different sources the `combine_tables` object provides input
+parameters that allow you to combine and select columns from different sources
+into new columns with the same information. For example the `adduct` column in CD
+is called "Ion" and in LS it is called "LipidIon"; we can combine these columns
+into a new column called "adduct".
+
+Here we specify that all columns should be retained from both tables, padding 
+with NA if not present; columns with the same name are automatically merged.
+
+```{r}
+# get all the cleaned annotation tables in one list
+all_source_tables = lapply(c(CD,LS),predicted)
+
+# prepare to merge
+combine_workflow = 
+    combine_sources(
+        source_list = all_source_tables,
+        tag_ids = TRUE,
+        matching_columns = c(
+            name = 'LipidName',
+            name = 'compound',
+            adduct= 'ion',
+            adduct = 'LipidIon'),
+        keep_cols = '.all',
+        source_col = 'annotation_table',
+        exclude_cols = NULL,
+        tag = 'combined'
+    ) 
+
+# merge
+combine_workflow = model_apply(combine_workflow,lcms_table())
+
+# show
+predicted(combine_workflow)
+```
+Now that the tables have been combined we can explore the table using charts.
+For example, we visualise the number of annotations for each assay from both 
+sources.
+
+```{r}
+C = annotation_pie_chart(
+    factor_name = 'assay',
+    label_rotation = FALSE,
+    label_location = 'outside',
+    label_type = 'percent',
+    legend = TRUE ,
+    centre_radius = 0.5,
+    centre_label = '.total'
+)
+
+chart_plot(C,predicted(combine_workflow)) +
+    ggtitle('Annotations per assay') + 
+    theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm")) +
+    guides(fill=guide_legend(title="Assay"))
+
+```
+
+In this next example we compare the number of annotations from each source.
+
+```{r}
+# change to plot source_name column
+C$factor_name = 'source_name'
+chart_plot(C,predicted(combine_workflow)) +
+    ggtitle('Annotations per source') + 
+    theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm")) +
+    guides(fill=guide_legend(title="Source"))
+```
+
+# Adding identifiers
+Ultimately we would like to compare the annotations detected using our software
+sources to the list of standard we included in the samples. Comparing the two
+tables using metabolite names is less than ideal, because different sources
+might use different synonyms for the same molecular structure. 
+
+To overcome this it is much better to compare the tables using molecular 
+identifiers such as InChIKey, which are unique to the molecule. `MetMashR`
+includes a number of workflow steps that allow us to look up identifiers from
+various databases, either stored locally, or in online databases such as 
+PubChem by using their REST API.
+
+For this vignette we use cached results so that we don't overburden the api; 
+in practice you would create your own (see [TODO]).
+
+```{r}
+# import cached results
+inchikey_cache = rds_database(
+    source = file.path(
+        system.file('cached',package='MetMasheR'),
+        'pubchem_inchikey_mtox_cache.rds'),
+    .writable = FALSE
+)
+
+id_workflow = 
+    pubchem_property_lookup(
+        query_column = 'name',
+        search_by = 'name',
+        suffix = '',
+        property = 'InChIKey',
+        records = 'best',
+        cache = inchikey_cache
+    )
+
+id_workflow = model_apply(id_workflow,predicted(combine_workflow))
+```
+
+<br>
+
+# Improving ID coverage
+The ID's obtained in the previous section were obtained by queries based on
+the molecule name. 
+
+Molecule names can contain a number of special characters, and follow different 
+nomenclatures when constructing the name, as well as abbreviations and naming 
+conventions. 
+
+It useful therefore to apply some kind of
+"molecule name normalisation" to account for these properties of molecule names.
+
+We can use the `normalise_strings` MetMashR object to do this. This object has
+a `dictionary` parameter that takes the form of a list of lists. 
+
+Each sub-list
+contains a pattern to be matched and a replacement. In the example workflow 
+below we include a number of definitions in our dictionary:
+
+- Update compounds starting with "NP" to start "Compound NP" as this is how they
+are recorded in PubChem.
+- Replace any molecule name containing a ? with NA, as this indicates ambiguity
+in the annotation.
+- Remove abbreviations from molecule names e.g. "adenosine triphosphate (ATP)"
+should have the "(ATP)" part removed.
+- Replace some shorthand names with more formal names that are more likely to 
+result in a match to a PubChem compound.
+- Remove optical properties from racemic compounds e.g. D-(+)-Glucose becomes
+D-Glucose.
+- Replace Greek characters with their Romanised names.
+
+Both the Greek and racemic dictionaries are provided by MetMashR for
+convenience.
+
+In steps 2 and 3 of the workflow we submit these normalised names to the PubChem
+API and to OPSIN. By utlilising serveral API's we can maximise the number of 
+molecules we obtain an InChIKey for. 
+
+In the final step we merge the three columns of identifiers, giving priority to
+OPSIN, which is based on deconstructing the molecule name into its component 
+parts. If there is no result from OPSIN then a PubChem search 
+based on the normalised names is prioritised over a PubChem search using the
+non-normalised names.
+
+```{r}
+# prepare cached results for vignette
+inchikey_cache2 = rds_database(
+    source = file.path(
+        system.file('cached',package='MetMasheR'),
+        'pubchem_inchikey_mtox_cache2.rds'),
+    .writable = FALSE
+)
+inchikey_cache3 = rds_database(
+    source = file.path(
+        system.file('cached',package='MetMasheR'),
+        'pubchem_inchikey_mtox_cache3.rds'),
+    .writable=FALSE
+)
+
+N = normalise_strings(
+    search_column = 'name',
+    output_column = 'normalised_name',
+    dictionary = c(
+        # custom dictionary
+        list(
+            # replace "NP" with "Compound NP"
+            list(pattern = '^NP-',replace = 'Compound NP-'),
+            # replace ? with NA, since this is ambiguous
+            list(pattern = '?',replace = NA,fixed=TRUE),
+            # remove terms in trailing brackets e.g." (ATP)" 
+            list(pattern = '\\ \\([^\\)]*\\)$',replace = ''),
+            # replace known abbreviations
+            list(pattern = '(+/-)9-HpODE',
+                 replace = '9-hydroperoxy-10E,12Z-octadecadienoic acid',
+                 fixed = TRUE),
+            list(pattern = '(+/-)19(20)-DiHDPA',
+                 replace = '19,20-dihydroxy-4Z,7Z,10Z,13Z,16Z-docosapentaenoic acid',
+                 fixed = TRUE)
+        ),
+        # replace greek characters
+        .greek_dictionary,
+        # remove racemic properties
+        .racemic_dictionary
+    )) +
+    pubchem_property_lookup(
+        query_column = 'normalised_name',
+        search_by = 'name',
+        suffix = '_norm',
+        property = 'InChIKey',
+        records = 'best',
+        cache = inchikey_cache2) +
+    opsin_lookup(
+        query_column = 'normalised_name',
+        suffix = '_opsin',
+        output = 'stdinchikey',
+        cache = inchikey_cache3
+    ) +
+    combine_columns(
+        column_names = c('stdinchikey_opsin','InChIKey_norm','InChIKey'),
+        output_name =  'inchikey',
+        source_name = 'inchikey_source',
+        clean = TRUE
+    )
+
+N = model_apply(N,predicted(id_workflow))
+
+```
+
+We can explore the impact of these workflow steps using Venn and Pie charts to 
+compare the results before/after the workflow.
+
+In this Venn diagram we show the overlap between the InChIKey identifiers obtained from 
+the three queries. It can be seen that normalising the names resulted in 37
+identifiers that we were unable to obtain without normalisation.
+
+The use of OPSIN then added a further 31 identifiers. The column of combined
+identifers therefore contains 
+
+```{r}
+# venn inchikey columns
+C = annotation_venn_chart(
+    factor_name = c('InChIKey','InChIKey_norm','stdinchikey_opsin'),
+    line_colour = 'white',
+    fill_colour = '.group',
+    legend = TRUE,
+    labels = FALSE
+)
+chart_plot(C,predicted(N[3]))+ 
+    guides(fill = guide_legend(title='Source'),
+           colour = guide_legend(title = 'Source')) +
+    theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm")) 
+
+
+```
+
+In the next chart we visualise the proportion of annotations from each query,
+after prioritisation and merging has taken place. 
+
+Note that in this case some of
+the identifiers might be the same if e.g. the same molecule is present in 
+multiple rows. You can see that in the end only a small proportion (12.1%) of the 
+identifiers are from the least reliable query based on the non-normalised name.
+
+```{r}
+# pie source of inchikey
+C = annotation_pie_chart(
+    factor_name = 'inchikey_source',
+    label_rotation = FALSE,
+    label_location = 'outside',
+    label_type = 'percent',
+    legend = TRUE,
+    centre_radius = 0.5,
+    centre_label = '.total',
+    count_na = TRUE
+)
+chart_plot(C,predicted(N)) +  
+    guides(fill = guide_legend(title='Source'),
+           colour = guide_legend(title = 'Source'))+
+    theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm")) 
+```
+
+To keep the records with the highest confidence identifiers We can remove the 
+annotations based on the `name` query using the `filter_labels` object.
+
+```{r}
+# prepare workflow
+FL = filter_labels(
+    column_name = 'inchikey_source',
+    labels='InChIKey',
+    mode='exclude')
+# apply
+FF = model_apply(FL,predicted(N))
+
+# print summary
+predicted(FF)
+```
+
+<br>
+
+# Comparison with the true mixtures
+
+In this section we compare the annotated features with the table of standards 
+known to be included in each of the mixtures.
+
+<br>
+
+## Importing the standard mixture tables
+
+The first step is to import the tables of standards for each mixture. The data 
+has ready been saved as an RDS file so we can use `rds_database` to import it.
+
+```{r}
+# prepare object
+R = rds_database(
+    source = file.path(
+        system.file('extdata',package='MetMasheR'),
+        'standard_mixtures.rds'
+    ),
+    .writable = FALSE
+)
+
+# read
+R = read_source(R)
+```
+
+```{r, echo=FALSE}
+.DT(R$data)
+```
+The standards table contains a list of metabolites and the the mixture they were 
+included in. It also contains some manually curated data providing m/z and 
+retention time of the metabolite, which assay it was observed in and the adduct.
+
+<br>
+
+## Identifiers for the standards
+The standards table provides HMDB identifiers for each metabolite, but our 
+preference is to work with InChIkey. So our first task is to obtain InChiKey for
+the standards.
+
+The standards are based on the MTox700+ database (see [TODO]), so we can import 
+MTox700+ and use it to obtain InChIKey identifiers by matching the the HMBD 
+identifiers. An alternative might be to use `hmdb_lookup` and/or 
+`pubchem_property_lookup`.
+
+```{r}
+# convert standard mixtures to source, then get inchikey from MTox700+
+SM = import_source() +
+    filter_na(
+        column_name = 'rt') +
+    filter_na(
+        column_name = 'median_ms2_scans') +
+    filter_na(
+        column_name = 'mzcloud_id') +
+    filter_range(
+        column_name = 'median_ms2_scans',
+        upper_limit = Inf,
+        lower_limit = 0,
+        equal_to = TRUE) +
+    database_lookup(
+        query_column = 'hmdb_id',
+        database_column = 'hmdb_id',
+        database = MTox700plus_database(),
+        include = 'inchikey',
+        suffix = '',
+        not_found = NA) +
+    id_counts(
+        id_column = 'inchikey',
+        count_column = 'inchikey_count',
+        count_na = FALSE
+    )
+# apply
+SM = model_apply(SM,R)
+```
+
+In this next plot we show the overlap in standards for each assay detected by
+manual observation.
+
+
+```{r}
+C = annotation_venn_chart(
+    factor_name = 'inchikey',
+    group_column = 'ion_mode',
+    line_colour = 'white',
+    fill_colour = '.group',
+    legend = TRUE,
+    labels = FALSE
+)
+
+## plot
+chart_plot(C,predicted(SM))
+```
+
+<br>
+
+# Comparison of standards and annotations
+Now that we have both the annotations and the standards we can look at overlap
+between the identifiers in both sources, and begin to assess the ability of the
+annotation software annotate the standards.
+
+Here we plot a venn diagram showing the overlap in identifiers.
+
+```{r,fig.width=4}
+# get processed data
+AN = predicted(FF)
+AN$tag = 'Annotations'
+sM = predicted(SM)
+sM$tag = 'Standards'
+
+# prepare chart
+C = annotation_venn_chart(
+    factor_name = 'inchikey',
+    line_colour = 'white',
+    fill_colour = '.group'
+)
+
+# plot
+chart_plot(C,sM,AN)+ggtitle('All assays, all sources')
+
+```
+
+It can been seen that there is a large number of annotations not present in the 
+standard. These are false positives.
+
+In the next plot we show similar Venn diagrams but for each assay individually.
+These are followed by a 4-set Venn diagram that
+shows the overlap between annotations from each assay that matched to a 
+standard.
+
+```{r,fig.height  = 10, fig.width = 8}
+G =list()
+VV = list()
+for (k in c('HILIC_NEG','HILIC_POS','LIPIDS_NEG','LIPIDS_POS')) {
+    wf = filter_labels(
+        column_name = 'assay',
+        labels = k,
+        mode = 'include') 
+    wf1 = model_apply(wf,AN)
+    wf$column_name = 'ion_mode'
+    wf2 = model_apply(wf,sM)
+    G[[k]]=chart_plot(C,predicted(wf2),predicted(wf1))
+    
+    V = filter_venn(
+        factor_name = 'inchikey',
+        tables = list(predicted(wf1)),
+        levels = 'Standards/Annotations', 
+        mode = 'include'
+    )
+    V = model_apply(V,predicted(wf2))
+    VV[[k]] = predicted(V)
+    VV[[k]]$tag = k
+}
+r1=cowplot::plot_grid(
+    plotlist = G,nrow = 2 , 
+    labels = c('HILIC_NEG','HILIC_POS','LIPIDS_NEG','LIPIDS_POS'))
+
+cowplot::plot_grid(r1,chart_plot(C,VV),nrow=2,rel_heights = c(1,0.5))
+```
+
+The majority of the standards were correctly annotated in the HILIC_NEG assay.
+
+In the next plot we compare the overlap in InChIKey for each source.
+
+```{r,fig.height  = 3, fig.width = 8}
+G=list()
+for (k in c('CD','LS')) {
+    wf = filter_labels(
+        column_name = 'source_name',
+        labels = k,
+        mode = 'include')
+    wf1 = model_apply(wf,AN)
+    
+    G[[k]]=chart_plot(C,sM,predicted(wf1))
+}
+cowplot::plot_grid(plotlist = G,nrow = 1,labels = c('CD','LS'))
+```
+
+<br>
+
+# Session Info
+```{r}
+sessionInfo()
+```
+
+
+

@@ -1,0 +1,21 @@
+{
+    "Row1": {
+        "input": "PE(16:0_18:1)",
+        "inchi_key": "FHQVHHIBKUMWTI-OTMQOFQLSA-N",
+        "hmdb_id": "HMDB0008927"
+    },
+    "Row2": {
+        "input": "PE(16:0_18:1)",
+        "inchi_key": "DVXMEPWDARXHCX-OTMQOFQLSA-N",
+        "hmdb_id": "HMDB0009055"
+    },
+    "Row3": {
+        "input": "PE(16:0_18:1)",
+        "inchi_key": "DJFPPOZEZQGHHJ-QGBSNROPSA-N"
+    },
+    "Row4": {
+        "input": "PE(16:0_18:1)",
+        "inchi_key": "LYJWNHGFGVVCAO-IEHWZJNJSA-N",
+        "hmdb_id": "HMDB0008926"
+    }
+}

@@ -1,0 +1,154 @@
+{
+    "smiles": "CCCCCCCCCCCCCCCC(O)=O",
+    "inchikey": "InChIKey=IPCSVZSSVZVIGE-UHFFFAOYSA-N",
+    "kingdom": {
+        "name": "Organic compounds",
+        "description": "Compounds that contain at least one carbon atom, excluding isocyanide/cyanide and their non-hydrocarbyl derivatives, thiophosgene, carbon diselenide, carbon monosulfide, carbon disulfide, carbon subsulfide, carbon monoxide, carbon dioxide, Carbon suboxide, and dicarbon monoxide.",
+        "chemont_id": "CHEMONTID:0000000",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000000"
+    },
+    "superclass": {
+        "name": "Lipids and lipid-like molecules",
+        "description": "Fatty acids and their derivatives, and substances related biosynthetically or functionally to these compounds.",
+        "chemont_id": "CHEMONTID:0000012",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000012"
+    },
+    "class": {
+        "name": "Fatty Acyls",
+        "description": "Organic molecules synthesized by chain elongation of an acetyl-CoA primer with malonyl-CoA (or methylmalonyl-CoA) groups that might contain a cyclic functionality and/or are substituted with heteroatoms.",
+        "chemont_id": "CHEMONTID:0003909",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0003909"
+    },
+    "subclass": {
+        "name": "Fatty acids and conjugates",
+        "description": "Aliphatic monocarboxylic acids with a saturated or unsaturated aliphatic tail (with at least 4 Carbon atoms).",
+        "chemont_id": "CHEMONTID:0000262",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0000262"
+    },
+    "intermediate_nodes": [
+
+    ],
+    "direct_parent": {
+        "name": "Long-chain fatty acids",
+        "description": "Fatty acids with an aliphatic tail that contains between 13 and 21 carbon atoms.",
+        "chemont_id": "CHEMONTID:0002949",
+        "url": "http://classyfire.wishartlab.com/tax_nodes/C0002949"
+    },
+    "alternative_parents": [
+        {
+            "name": "Straight chain fatty acids",
+            "description": "Fatty acids with a straight aliphatic chain.",
+            "chemont_id": "CHEMONTID:0000333",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0000333"
+        },
+        {
+            "name": "Monocarboxylic acids and derivatives",
+            "description": "Carboxylic acids containing exactly one carboxyl groups.",
+            "chemont_id": "CHEMONTID:0001137",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001137"
+        },
+        {
+            "name": "Carboxylic acids",
+            "description": "Compounds containing a carboxylic acid group with the formula -C(=O)OH.",
+            "chemont_id": "CHEMONTID:0001205",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001205"
+        },
+        {
+            "name": "Organic oxides",
+            "description": "Organic compounds containing an oxide group.",
+            "chemont_id": "CHEMONTID:0003940",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0003940"
+        },
+        {
+            "name": "Hydrocarbon derivatives",
+            "description": "Derivatives of hydrocarbons obtained by substituting one or more carbon atoms by an heteroatom. They contain at least one carbon atom and heteroatom.",
+            "chemont_id": "CHEMONTID:0004150",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0004150"
+        },
+        {
+            "name": "Carbonyl compounds",
+            "description": "Organic compounds containing a carbonyl group, with the general structure RC(=O)R', where R=organyl, R'=H, N, O, organyl group or halide group.",
+            "chemont_id": "CHEMONTID:0001831",
+            "url": "http://classyfire.wishartlab.com/tax_nodes/C0001831"
+        }
+    ],
+    "molecular_framework": "Aliphatic acyclic compounds",
+    "substituents": [
+        "Long-chain fatty acid",
+        "Straight chain fatty acid",
+        "Monocarboxylic acid or derivatives",
+        "Carboxylic acid",
+        "Carboxylic acid derivative",
+        "Organic oxygen compound",
+        "Organic oxide",
+        "Hydrocarbon derivative",
+        "Organooxygen compound",
+        "Carbonyl group",
+        "Aliphatic acyclic compound"
+    ],
+    "description": "This compound belongs to the class of organic compounds known as long-chain fatty acids. These are fatty acids with an aliphatic tail that contains between 13 and 21 carbon atoms.",
+    "external_descriptors": [
+        {
+            "source": "CHEBI",
+            "source_id": "CHEBI:15756",
+            "annotations": [
+                "long-chain fatty acid",
+                "straight-chain saturated fatty acid"
+            ]
+        },
+        {
+            "source": "KEGG",
+            "source_id": "C00249",
+            "annotations": [
+                "Straight chain fatty acids",
+                "Saturated fatty acids"
+            ]
+        },
+        {
+            "source": "LIPID MAPS",
+            "source_id": "LMFA01010001",
+            "annotations": [
+                "Straight chain fatty acids"
+            ]
+        }
+    ],
+    "ancestors": [
+        "Carbonyl compounds",
+        "Carboxylic acids",
+        "Carboxylic acids and derivatives",
+        "Chemical entities",
+        "Fatty Acyls",
+        "Fatty acids and conjugates",
+        "Hydrocarbon derivatives",
+        "Lipids and lipid-like molecules",
+        "Long-chain fatty acids",
+        "Monocarboxylic acids and derivatives",
+        "Organic acids and derivatives",
+        "Organic compounds",
+        "Organic oxides",
+        "Organic oxygen compounds",
+        "Organooxygen compounds",
+        "Straight chain fatty acids"
+    ],
+    "predicted_chebi_terms": [
+        "straight-chain fatty acid (CHEBI:59202)",
+        "carbonyl compound (CHEBI:36586)",
+        "carboxylic acid (CHEBI:33575)",
+        "carboxylic acid anion (CHEBI:29067)",
+        "organic oxide (CHEBI:25701)",
+        "organic molecule (CHEBI:72695)",
+        "long-chain fatty acid (CHEBI:15904)",
+        "chemical entity (CHEBI:24431)",
+        "lipid (CHEBI:18059)",
+        "organooxygen compound (CHEBI:36963)",
+        "monocarboxylic acid (CHEBI:25384)",
+        "oxygen molecular entity (CHEBI:25806)",
+        "organic molecular entity (CHEBI:50860)"
+    ],
+    "predicted_lipidmaps_terms": [
+        "Straight chain fatty acids (FA0101)",
+        "Fatty Acids and Conjugates (FA01)",
+        "Fatty Acyls (FA)"
+    ],
+    "classification_version": "2.1"
+}

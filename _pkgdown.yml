@@ -1,0 +1,150 @@
+url: https://computational-metabolomics.github.io/MetMasheR/
+template:
+  bootstrap: 5
+  bootswatch: flatly
+navbar: 
+  type: standard
+  left:
+    - text: "Reference"
+      href: reference/index.html
+    - text: Articles
+      menu:
+      - text: Using MetMashR
+        href: articles/using_MetMashR.html
+      - text: Extending MetMashR
+        href: articles/Extending_MetMashR.html
+      - text: Annotating mixtures of standards
+        href: articles/annotate_mixtures.html
+      - text: Exploring the MTox700+ database
+        href: articles/exploring_mtox.html
+      - text: Processing Annotations for LCMS of Daphnia samples
+        href: articles/daphnia_example.html
+  right:
+    - icon: fa-github
+      href: https://github.com/computational-metabolomics/MetMasheR
+      aria-label: 'GitHub'
+    - icon: fa-flask
+      href: https://www.birmingham.ac.uk/research/activity/phenome-centre/index.aspx
+      aria-label: 'Phenome Centre Birmingham'
+    - icon: fa-music
+      menu: 
+      - text: MetMashR
+        href: https://www.bioconductor.org/packages/release/bioc/html/MetMashR.html
+      - text: struct
+        href: https://www.bioconductor.org/packages/release/bioc/html/struct.html
+      - text: structToolbox
+        href: https://www.bioconductor.org/packages/release/bioc/html/structToolbox.html
+      - text: metabolmicsWorkbenchR
+        href: https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html
+      - text: pmp
+        href: https://www.bioconductor.org/packages/release/bioc/html/pmp.html
+reference:
+- title: "Annotation sources"
+  desc: >
+    An `annotation source` is the dataset object used by all MetMashR objects.
+    Different types of source have been defined, depending on the intended use
+    of the data.
+  contents:
+  - ends_with('_source')
+- title: "Annotation tables"
+  desc: >
+    Annotation tables represent the data imported from a source that includes
+    experimentally measured data. Annotation tables are extended to support the
+    specifics of an analytical platform used to collect the data.
+  contents:
+  - ends_with("_table")
+- title: "Annotation databases"
+  desc: >
+    Annotation databases are (often remote) sources of annotation related 
+    meta data, such as molecular identifiers, pathways etc.
+  contents:
+  - ends_with('_database')
+  - is_writable
+  - read_database
+  - write_database
+- title: "REST API interfaces"
+  desc: >
+    MetMashR includes a REST API object that has been extended to accomodate
+    various services.
+  contents:
+  - rest_api
+  - ends_with('_lookup')
+- title: "Annotation table mashing"
+  desc: >
+    These models provide steps for cleaning, filtering, prioritising and 
+    combining annotation tables from different sources.
+  contents:
+  - add_columns
+  - add_labels
+  - calc_ppm_diff
+  - calc_rt_diff
+  - combine_columns
+  - combine_sources
+  - vertical_join
+  - combine_records
+  - filter_labels
+  - filter_range
+  - filter_na
+  - filter_venn
+  - id_counts
+  - mz_match
+  - rt_match
+  - mzrt_match
+  - normalise_lipids
+  - normalise_strings
+  - trim_whitespace
+  - concatenate_columns
+- title: "Combining records"
+  desc: >
+    Combining records is an important step in the annotation mashing workflow.
+    These functions can be used with the combine_records function to merge
+    the information for multiple records in different ways.
+  contents:
+  - .collapse
+  - .count
+  - .mean
+  - .median
+  - .mode
+  - .nothing
+  - .prioritise
+  - .select_exact
+  - .select_grade
+  - .select_match
+  - .select_max
+  - .select_min
+  - .unique
+- title: "Charts"
+  desc: >
+    Chart objects are wrappers around ggplot objects plots useful for exploring
+    and visualising the information present in a table of annotations.
+  contents:
+    - ends_with('_structure')
+    - ends_with('_chart')
+    - annotation_histogram
+    - annotation_histogram2d
+    - pubchem_widget
+- title: "BiocFileCache_database helper functions"
+  desc: >
+    These functions can be used with BiocFileCache_database objects to modify
+    a dowloaded resource before caching, or to parse the downloaded resource
+    when retrieved from the cache.
+  contents:
+  - .cache_as_is
+  - .unzip
+- title: "Dictionaries for normalising strings"
+  desc: >
+    These lists define patterns and replacements to match when using the 
+    normalise_strings object.
+  contents:
+  - ends_with('_dictionary')
+- title: "Additional functions"
+  desc: >
+    Various supporting functions are used by MetMashR
+  contents:
+  - struct_venn_set
+  - check_for_columns
+home:
+  links:
+  - text: View on Bioconductor
+    href: https://bioconductor.org/packages/release/bioc/html/MetMashR.html
+

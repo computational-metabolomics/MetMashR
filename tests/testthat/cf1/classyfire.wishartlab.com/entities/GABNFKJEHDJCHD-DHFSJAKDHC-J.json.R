@@ -1,0 +1,20 @@
+structure(list(url = "http://classyfire.wishartlab.com/entities/GABNFKJEHDJCHD-DHFSJAKDHC-J.json", 
+    status_code = 404L, headers = structure(list(server = "nginx", 
+        date = "Mon, 05 Jun 2023 15:20:02 GMT", `content-type` = "application/json; charset=UTF-8", 
+        `content-length` = "34", connection = "keep-alive", `x-request-id` = "9e3b0b07-e75a-462d-b46f-62a465b2ce31", 
+        `x-runtime` = "0.023862"), class = c("insensitive", "list"
+    )), all_headers = list(list(status = 404L, version = "HTTP/1.1", 
+        headers = structure(list(server = "nginx", date = "Mon, 05 Jun 2023 15:20:02 GMT", 
+            `content-type` = "application/json; charset=UTF-8", 
+            `content-length` = "34", connection = "keep-alive", 
+            `x-request-id` = "9e3b0b07-e75a-462d-b46f-62a465b2ce31", 
+            `x-runtime` = "0.023862"), class = c("insensitive", 
+        "list")))), cookies = structure(list(domain = logical(0), 
+        flag = logical(0), path = logical(0), secure = logical(0), 
+        expiration = structure(numeric(0), class = c("POSIXct", 
+        "POSIXt")), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("{\"status\":404,\"error\":\"Not Found\"}"), 
+    date = structure(1685978402, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 8.4e-05, 
+    connect = 8.4e-05, pretransfer = 0.000138, starttransfer = 0.125048, 
+    total = 0.125161)), class = "response")
