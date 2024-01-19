@@ -65,7 +65,7 @@ TODO
 # import HILIC_POS
 HP = openxlsx::read.xlsx(
         system.file("extdata/daphnia/daphnia_example.xlsx",
-                package = 'MetMasheR'),
+                package = 'MetMashR'),
         sheet='HILIC_POS',
         rowNames=FALSE,
         colNames=TRUE)
@@ -80,7 +80,7 @@ HP$rsd_sample=as.numeric(HP$rsd_sample)
 # import LIPIDS_POS
 LP = openxlsx::read.xlsx(
         system.file("extdata/daphnia/daphnia_example.xlsx",
-                package = 'MetMasheR'),
+                package = 'MetMashR'),
         sheet='LIPIDS_POS',
         rowNames=FALSE,
         colNames=TRUE)
@@ -157,20 +157,20 @@ cd_sources = list(
         source = c(
             system.file(
                 'extdata/daphnia/HILIC_POS_EL_CD.xlsx',
-                package = 'MetMasheR'),
+                package = 'MetMashR'),
             system.file(
             'extdata/daphnia/HILIC_POS_EL_CD_comp.xlsx',
-            package = 'MetMasheR')),
+            package = 'MetMashR')),
         sheets = c('Compounds','Compounds')
     ),
     LIPIDS_POS = cd_source(
         source = c(
             system.file(
                 'extdata/daphnia/LIPIDS_POS_EL_CD.xlsx',
-                package = 'MetMasheR'),
+                package = 'MetMashR'),
             system.file(
             'extdata/daphnia/LIPIDS_POS_EL_CD_comp.xlsx',
-            package = 'MetMasheR')),
+            package = 'MetMashR')),
         sheets = c('Compounds','Compounds')
     )
 )
@@ -311,13 +311,13 @@ ls_sources = list(
         source = 
             system.file(
                 'extdata/daphnia/HILIC_POS_EL_LS.txt',
-                package = 'MetMasheR')
+                package = 'MetMashR')
     ),
     LIPIDS_POS = ls_source(
         source = 
             system.file(
                 'extdata/daphnia/LIPIDS_POS_EL_LS.txt',
-                package = 'MetMasheR')
+                package = 'MetMashR')
     )
 )
 ```
@@ -401,16 +401,16 @@ For the vignette we used cached results, which we prepare now.
 ```{r}
 cache1=rds_database(
     source=file.path(
-        system.file('cached',package='MetMasheR'),'cache1.rds'))
+        system.file('cached',package='MetMashR'),'cache1.rds'))
 cache2=rds_database(    
  source=file.path(
-        system.file('cached',package='MetMasheR'),'cache2.rds'))
+        system.file('cached',package='MetMashR'),'cache2.rds'))
 cache3=rds_database(
  source=file.path(
-        system.file('cached',package='MetMasheR'),'cache3.rds'))
+        system.file('cached',package='MetMashR'),'cache3.rds'))
 cache4=rds_database(
  source=file.path(
-        system.file('cached',package='MetMasheR'),'cache4.rds'))
+        system.file('cached',package='MetMashR'),'cache4.rds'))
 ```
 
 Next we prepare the workflow and then apply it.

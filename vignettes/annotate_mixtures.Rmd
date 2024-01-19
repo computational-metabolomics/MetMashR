@@ -182,10 +182,10 @@ for (assay in c('HILIC_NEG','HILIC_POS','LIPIDS_NEG','LIPIDS_POS')) {
         source = c(
             system.file(
                 paste0('extdata/MTox/CD/',assay,'.xlsx'),
-                package = 'MetMasheR'),
+                package = 'MetMashR'),
             system.file(
                 paste0('extdata/MTox/CD/',assay,'_comp.xlsx'),
-                package = 'MetMasheR')),
+                package = 'MetMashR')),
         tag = paste0('CD_',assay))
     
     # update labels in workflow
@@ -338,7 +338,7 @@ for (assay in c('HILIC_NEG','HILIC_POS','LIPIDS_NEG','LIPIDS_POS')) {
     AT = ls_source(
         source = system.file(
             paste0('extdata/MTox/LS/MTox_2023_',assay,'.txt'),
-            package = 'MetMasheR'),
+            package = 'MetMashR'),
         tag = paste0('LS_',assay)) 
     
     # update labels in workflow
@@ -537,7 +537,7 @@ in practice you would create your own (see [TODO]).
 # import cached results
 inchikey_cache = rds_database(
     source = file.path(
-        system.file('cached',package='MetMasheR'),
+        system.file('cached',package='MetMashR'),
         'pubchem_inchikey_mtox_cache.rds'),
     .writable = FALSE
 )
@@ -604,13 +604,13 @@ non-normalised names.
 # prepare cached results for vignette
 inchikey_cache2 = rds_database(
     source = file.path(
-        system.file('cached',package='MetMasheR'),
+        system.file('cached',package='MetMashR'),
         'pubchem_inchikey_mtox_cache2.rds'),
     .writable = FALSE
 )
 inchikey_cache3 = rds_database(
     source = file.path(
-        system.file('cached',package='MetMasheR'),
+        system.file('cached',package='MetMashR'),
         'pubchem_inchikey_mtox_cache3.rds'),
     .writable=FALSE
 )
@@ -751,7 +751,7 @@ has ready been saved as an RDS file so we can use `rds_database` to import it.
 # prepare object
 R = rds_database(
     source = file.path(
-        system.file('extdata',package='MetMasheR'),
+        system.file('extdata',package='MetMashR'),
         'standard_mixtures.rds'
     ),
     .writable = FALSE

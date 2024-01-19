@@ -158,7 +158,7 @@ rest of the file into a table.
 AT = ls_source(
     source = system.file(
         paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMasheR')
+        package = 'MetMashR')
 )
 
 # read source
@@ -243,7 +243,7 @@ to be used as the first step in a workflow.
 AT = ls_source(
     source = system.file(
         paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMasheR')
+        package = 'MetMashR')
 )
 
 # prepare workflow
@@ -280,7 +280,7 @@ apply a filtering step to remove records with a lower Grading.
 AT = ls_source(
     source = system.file(
         paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMasheR')
+        package = 'MetMashR')
 )
 
 # prepare workflow
@@ -378,7 +378,7 @@ be included in a workflow and updated as more results are collected over time.
 AT = ls_source(
     source = system.file(
         paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMasheR')
+        package = 'MetMashR')
 )
 
 # prepare cache
