@@ -5,10 +5,13 @@ combine_sources = function(
         source_list,
         matching_columns=NULL,
         keep_cols=NULL,
-        tag_ids=FALSE,
         source_col='annotation_source',
         exclude_cols=NULL,
         tag='combined',
+        as = annotation_source(
+                name = 'combined',
+                description = paste0(
+                    'A source created by combining two or more sources')),
         ...) {
     
     # if source list is an annotation_source, make it a list
@@ -31,10 +34,10 @@ combine_sources = function(
         source_list=source_list,
         matching_columns = matching_columns,
         keep_cols = keep_cols,
-        tag_ids = tag_ids,
         source_col = source_col,
         exclude_cols=exclude_cols,
         tag=tag,
+        as = as,
         ...)
     return(out)
 }
@@ -48,11 +51,11 @@ combine_sources = function(
         source_list='entity',
         matching_columns = 'entity',
         keep_cols = 'entity',
-        tag_ids = 'entity',
         source_col = 'entity',
         combined_table='entity',
         exclude_cols = 'entity',
-        tag='entity'
+        tag='entity',
+        as = 'entity'
     ),
     
     prototype=list(
@@ -61,8 +64,8 @@ combine_sources = function(
             'Annotation tables are joined and matching columns merged.'),
         type = 'univariate',
         predicted = 'combined_table',
-        .params=c('source_list','matching_columns','keep_cols','tag_ids',
-                  'source_col','exclude_cols','tag'),
+        .params=c('source_list','matching_columns','keep_cols',
+                  'source_col','exclude_cols','tag','as'),
         .outputs=c('combined_table'),
         combined_table=entity(
             name='Combined annotation tables',
@@ -94,16 +97,6 @@ combine_sources = function(
             type=c('character','NULL'),
             value=NULL
         ),
-        tag_ids = entity(
-            name = 'Tag ids',
-            description = paste0(
-                'Create a column of new identifiers for each annotation ',
-                'by merging the id from each source with the annotation tag. e.g.', 
-                'an annotation with id = "A1" for source tagged "XY" is given a new ', 
-                'id "A1_XY" to prevent duplicate IDs from multiple sources.'),
-            type='logical',
-            value = TRUE
-        ),
         source_col = entity(
             name = 'Source column',
             description = paste0(
@@ -126,6 +119,14 @@ combine_sources = function(
             description = paste0('The tag given to the newly combined table.'), 
             type=c('character'),
             value = 'combined'
+        ),
+        as = entity(
+            name = 'Output object',
+            description = paste0(
+                'An annotation_source object to use as the base class for the ',
+                'combined sources.'),
+            value = annotation_source(),
+            type = 'annotation_source'
         )
     )
 )
@@ -141,9 +142,9 @@ setMethod(f="model_apply",
                   x = A,
                   matching_columns=M$matching_columns,
                   keep_cols=M$keep_cols,
-                  tag_ids=M$tag_ids,
                   source_col=M$source_col,
-                  exclude_cols=M$exclude_cols)
+                  exclude_cols=M$exclude_cols,
+                  as = M$as)
               M$combined_table$tag=M$tag
               
               return(M)
@@ -155,15 +156,20 @@ setMethod(f="model_apply",
 setMethod(f="model_apply",
           signature=c("combine_sources",'list'),
           definition=function(M,D) {
+              # make a list
               A = c(M$source_list,D)
+              
+              # join
               M$combined_table = vertical_join(
                   x = A,
                   matching_columns=M$matching_columns,
                   keep_cols=M$keep_cols,
-                  tag_ids=M$tag_ids,
                   source_col=M$source_col,
-                  exclude_cols=M$exclude_cols)
+                  exclude_cols=M$exclude_cols,as=M$as)
+              
+              # update tag
               M$combined_table$tag=M$tag
+              
               return(M)
           }
 )
