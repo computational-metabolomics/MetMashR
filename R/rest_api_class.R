@@ -178,7 +178,7 @@ setMethod(f="model_apply",
                   }
                   
                   # build url
-                  u = .build_api_url(M,query_column = k)
+                  u = .build_api_url(M,query_column = as.character(k))
                   
                   # check cache if used
                   parsed = NULL
