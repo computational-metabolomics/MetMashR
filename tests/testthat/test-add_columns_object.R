@@ -31,7 +31,8 @@ test_that("add-columnns object includes the requested columns", {
     an = data.frame(a=c(seq(from=11,to=20,by=2)),id=1:5)
     
     # annotation table
-    AN = annotation_table(annotations=an,
+    AN = annotation_table(
+            data = an,
             id_column = 'id')
     
     # model
@@ -41,7 +42,7 @@ test_that("add-columnns object includes the requested columns", {
     M = model_apply(M,AN)
     
     # tests
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_true('b' %in% colnames(out))
     expect_true(all(out$b==c(1,3,5,7,9)))

@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(MetMasheR)
+library(MetMashR)
 
-test_check("MetMasheR")
+test_check("MetMashR")

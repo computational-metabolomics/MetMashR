@@ -6,7 +6,7 @@ test_that("combine_columns works", {
             id=1:10
         )
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
     
     # priority is column  a
     M = combine_columns(
@@ -17,7 +17,7 @@ test_that("combine_columns works", {
         )
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_true('combined' %in% colnames(out))
     expect_true('df' %in% colnames(out))
@@ -33,7 +33,7 @@ test_that("combine_columns works", {
     )
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_true('combined' %in% colnames(out))
     expect_true('df' %in% colnames(out))

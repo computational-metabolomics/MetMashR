@@ -15,12 +15,12 @@ db =data.frame(
 test_that("rds cache reads/writes", {
     
     # prep cache object
-    C = rds_database(path=tempfile(fileext = 'rds'))
+    C = rds_database(source=tempfile(fileext = 'rds'))
     
     # write to cache
     write_database(C,db)
     
-    # read cahce
+    # read cache
     check=read_database(C)
     
     # compare
@@ -29,7 +29,7 @@ test_that("rds cache reads/writes", {
 
 test_that("sqlite cache reads/writes", {
     # prep cache object
-    C = sqlite_database(path=tempfile(fileext = 'db'),table = 'test')
+    C = sqlite_database(source=tempfile(fileext = 'db'),table = 'test')
     
     # write to cache
     write_database(C,db)

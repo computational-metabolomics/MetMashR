@@ -1,2 +1,0 @@
-pubchem:3937	cpd:C00668
-pubchem:3938	cpd:C00669

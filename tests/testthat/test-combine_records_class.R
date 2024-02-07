@@ -7,7 +7,7 @@ test_that("combine records collapses ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -20,7 +20,7 @@ test_that("combine records collapses ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'A || B || C')
@@ -36,7 +36,7 @@ test_that("combine records does nothings ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -49,7 +49,7 @@ test_that("combine records does nothings ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),3) # all combined into 1 row
     expect_equal(out$combine_by,db$combine_by) # all combined into 1 row
@@ -65,7 +65,7 @@ test_that("combine unique ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -79,7 +79,7 @@ test_that("combine unique ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'A || B || C')
@@ -93,7 +93,7 @@ test_that("combine unique ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'A || B || C')
@@ -111,7 +111,7 @@ test_that("combine select_exact ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -127,7 +127,7 @@ test_that("combine select_exact ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'A || B') # only A and B have leve = 1
@@ -144,7 +144,7 @@ test_that("combine select_exact ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),2) # all A and B not collapsed because sep=NULL
     expect_equal(out$dbid[1],'A') # only A
@@ -163,7 +163,7 @@ test_that("combine select_match ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -177,7 +177,7 @@ test_that("combine select_match ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'A || B') # only A and B have level and level2 equal 1
@@ -192,7 +192,7 @@ test_that("combine select_match ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),2) # 2 rows, not combined
     expect_equal(out$dbid[1],'A') # A has level and level2 equal 1
@@ -216,7 +216,7 @@ test_that("combine select_min ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -230,7 +230,7 @@ test_that("combine select_min ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'A') # A has min rt
@@ -243,7 +243,7 @@ test_that("combine select_min ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'A') # A has min rt
@@ -256,7 +256,7 @@ test_that("combine select_min ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),3) # all NA so original table returned
     expect_equal(out$dbid,db$dbid) # all NA so original table returned
@@ -269,7 +269,7 @@ test_that("combine select_min ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # only one value is NA
     expect_equal(out$dbid[1],'B') # B has min rt
@@ -289,7 +289,7 @@ test_that("combine select_max ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -303,7 +303,7 @@ test_that("combine select_max ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'C') # C has max rt
@@ -316,7 +316,7 @@ test_that("combine select_max ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # all combined into 1 row
     expect_equal(out$dbid[1],'C') # C has max rt
@@ -329,7 +329,7 @@ test_that("combine select_max ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),3) # all NA so original table returned
     expect_equal(out$dbid,db$dbid) # all NA so original table returned
@@ -342,7 +342,7 @@ test_that("combine select_max ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # only one value is NA
     expect_equal(out$dbid[1],'B') # B has min rt
@@ -359,7 +359,7 @@ test_that("combine mean median mode ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -376,7 +376,7 @@ test_that("combine mean median mode ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(out$dbid[1],'A || B || C')
     expect_equal(out$rt,median(out$rt))
@@ -395,7 +395,7 @@ test_that("combine records prioritise ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -413,7 +413,7 @@ test_that("combine records prioritise ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     # level 2 prioritised over 1 for combine_by == 1
     expect_equal(out$dbid[1],'B')
@@ -433,7 +433,7 @@ test_that("combine records prioritise ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     # level 2 prioritised over 1 for combine_by == 1
     expect_equal(out$dbid[1],'B')
@@ -455,7 +455,7 @@ test_that("combine prioritise collapse ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -473,7 +473,7 @@ test_that("combine prioritise collapse ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(out$dbid[1],'A || B') # check collapsed expected rows
     expect_equal(out$levels,"1") # check priority 1
@@ -504,7 +504,7 @@ test_that("combine records with two groups ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -517,7 +517,7 @@ test_that("combine records with two groups ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),2) # all combined into 2 rows
     expect_equal(out$dbid[1],'A || B')
@@ -536,7 +536,7 @@ test_that("combine records creates artificial groups for NA ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -549,7 +549,7 @@ test_that("combine records creates artificial groups for NA ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),2) # all combined into 2 rows
     expect_equal(out$dbid[1],'C')
@@ -568,7 +568,7 @@ test_that("combine records works for count ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -581,7 +581,7 @@ test_that("combine records works for count ok", {
     
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),2) # all combined into 2 rows
     expect_equal(out$dbid[1],'C')

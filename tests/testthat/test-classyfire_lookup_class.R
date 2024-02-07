@@ -11,7 +11,7 @@ test_that("classyfire_lookup queries ok", {
         )
     )
     
-    D = annotation_table(annotations = db,id_column='id')
+    D = annotation_table(data = db,id_column='id')
     
     
     M = classyfire_lookup(
@@ -25,7 +25,7 @@ test_that("classyfire_lookup queries ok", {
         M = model_apply(M,D)
     })
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_equal(colnames(out)[3],'kingdom.name')
     expect_equal(out$inchikey[1],'WQZGKKKJIJFFOK-GASJEMHNSA-N')
