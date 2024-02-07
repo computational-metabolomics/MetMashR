@@ -45,7 +45,7 @@ A  \code{rest_api} object with the following \code{output} slots:
 \section{Inheritance}{
 
 A \code{rest_api} object inherits the following \code{struct} classes: \cr\cr
-\code{rest_api()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

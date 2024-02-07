@@ -36,7 +36,7 @@ Removes annotations where the names column is  greater than an upper limit or le
 \section{Inheritance}{
 
 A \code{filter_range} object inherits the following \code{struct} classes: \cr\cr
-\code{filter_range()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[filter_range]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

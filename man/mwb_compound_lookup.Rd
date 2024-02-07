@@ -38,7 +38,7 @@ This object makes use of functionality from the following packages:\itemize{  \i
 \section{Inheritance}{
 
 A \code{mwb_compound_lookup} object inherits the following \code{struct} classes: \cr\cr
-\code{mwb_compound_lookup()} ⭢ \code{rest_api()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[mwb_compound_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

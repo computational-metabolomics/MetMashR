@@ -33,7 +33,7 @@ an alternative solution.
 \section{Inheritance}{
 
 A \code{mwb_structure} object inherits the following \code{struct} classes: \cr\cr
-\code{mwb_structure()} ⭢ \code{chart()} ⭢ \code{struct_class()}
+\verb{[mwb_structure]} >> \verb{[chart]} >> \verb{[struct_class]}
 }
 
 \examples{

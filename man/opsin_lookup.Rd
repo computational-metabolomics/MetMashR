@@ -27,7 +27,7 @@ Uses the OPSIN API \link{https://opsin.ch.cam.ac.uk/} to search for identifers b
 \section{Inheritance}{
 
 A \code{opsin_lookup} object inherits the following \code{struct} classes: \cr\cr
-\code{opsin_lookup()} ⭢ \code{rest_api()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[opsin_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

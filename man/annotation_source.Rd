@@ -24,7 +24,7 @@ An \code{annotation_database} is an \code{\link[=annotation_source]{annotation_s
 \section{Inheritance}{
 
 A \code{annotation_database} object inherits the following \code{struct} classes: \cr\cr
-\code{annotation_database()} ⭢ \code{annotation_source()} ⭢ \code{struct_class()}
+\verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
 }
 
 \examples{

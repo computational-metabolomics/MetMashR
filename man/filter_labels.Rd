@@ -10,6 +10,7 @@ filter_labels(
   mode = "exclude",
   perl = FALSE,
   fixed = FALSE,
+  match_na = FALSE,
   ...
 )
 }
@@ -23,6 +24,8 @@ filter_labels(
 \item{perl}{(logical) Use a Perl-compatible regex. The default is \code{FALSE}.\cr}
 
 \item{fixed}{(logical) Use exact matching. The default is \code{FALSE}.\cr}
+
+\item{match_na}{(logical) Match NA. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: NA values will be treated as if they matched to one of the labels.}\item{\code{"FALSE"}: NA values will be treated as though they did not match to any of the labels.}} The default is \code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -40,7 +43,7 @@ excludes (or includes) the specified labels.
 \section{Inheritance}{
 
 A \code{filter_labels} object inherits the following \code{struct} classes: \cr\cr
-\code{filter_labels()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[filter_labels]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{
@@ -49,6 +52,7 @@ M = filter_labels(
       labels = "",
       mode = "exclude",
       perl = FALSE,
-      fixed = FALSE)
+      fixed = FALSE,
+      match_na = FALSE)
 
 }

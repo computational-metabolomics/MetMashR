@@ -46,7 +46,7 @@ an alternative solution.
 \section{Inheritance}{
 
 A \code{pubchem_structure} object inherits the following \code{struct} classes: \cr\cr
-\code{pubchem_structure()} ⭢ \code{chart()} ⭢ \code{struct_class()}
+\verb{[pubchem_structure]} >> \verb{[chart]} >> \verb{[struct_class]}
 }
 
 \examples{

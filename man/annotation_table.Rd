@@ -32,7 +32,7 @@ An \code{annotation_table} is an \code{\link[=annotation_source]{annotation_sour
 \section{Inheritance}{
 
 A \code{annotation_table} object inherits the following \code{struct} classes: \cr\cr
-\code{annotation_table()} ⭢ \code{annotation_source()} ⭢ \code{struct_class()}
+\verb{[annotation_table]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
 }
 
 \examples{

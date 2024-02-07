@@ -35,7 +35,7 @@ Calculate ppm difference between two columns in an \code{\link{annotation_table}
 \section{Inheritance}{
 
 A \code{calc_ppm_diff} object inherits the following \code{struct} classes: \cr\cr
-\code{calc_ppm_diff()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[calc_ppm_diff]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

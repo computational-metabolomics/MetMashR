@@ -40,7 +40,7 @@ This object makes use of functionality from the following packages:\itemize{  \i
 \section{Inheritance}{
 
 A \code{BiocFileCache_database} object inherits the following \code{struct} classes: \cr\cr
-\code{BiocFileCache_database()} ⭢ \code{annotation_database()} ⭢ \code{annotation_source()} ⭢ \code{struct_class()}
+\verb{[BiocFileCache_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
 }
 
 \examples{

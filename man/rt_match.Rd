@@ -29,7 +29,7 @@ Annotations will be matched to the measured variable meta data.frame by determin
 \section{Inheritance}{
 
 A \code{rt_match} object inherits the following \code{struct} classes: \cr\cr
-\code{rt_match()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[rt_match]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

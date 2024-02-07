@@ -27,7 +27,7 @@ Adds the number of times an identical identifier is present to each record.
 \section{Inheritance}{
 
 A \code{id_counts} object inherits the following \code{struct} classes: \cr\cr
-\code{id_counts()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[id_counts]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

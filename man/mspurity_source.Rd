@@ -28,7 +28,7 @@ This object makes use of functionality from the following packages:\itemize{  \i
 \section{Inheritance}{
 
 A \code{mspurity_source} object inherits the following \code{struct} classes: \cr\cr
-\code{mspurity_source()} ⭢ \code{annotation_source()} ⭢ \code{struct_class()}
+\verb{[mspurity_source]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
 }
 
 \examples{

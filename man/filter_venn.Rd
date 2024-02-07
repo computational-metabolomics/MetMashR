@@ -45,7 +45,7 @@ Removes (or includes) annotations such that the named column excludes (or includ
 \section{Inheritance}{
 
 A \code{filter_venn} object inherits the following \code{struct} classes: \cr\cr
-\code{filter_venn()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[filter_venn]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

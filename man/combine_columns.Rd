@@ -38,7 +38,7 @@ Several columns are merged into a single column. If multiple columns contain ove
 \section{Inheritance}{
 
 A \code{combine_columns} object inherits the following \code{struct} classes: \cr\cr
-\code{combine_columns()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[combine_columns]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

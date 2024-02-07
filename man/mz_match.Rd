@@ -29,7 +29,7 @@ Annotations will be matched to the measured data variable meta data.frame by det
 \section{Inheritance}{
 
 A \code{mz_match} object inherits the following \code{struct} classes: \cr\cr
-\code{mz_match()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[mz_match]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

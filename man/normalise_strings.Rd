@@ -45,7 +45,7 @@ If a character string is provided then \verb{[gsub()]} will be used by default.
 \section{Inheritance}{
 
 A \code{normalise_strings} object inherits the following \code{struct} classes: \cr\cr
-\code{normalise_strings()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[normalise_strings]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

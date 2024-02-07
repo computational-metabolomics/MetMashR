@@ -35,7 +35,7 @@ Calculate RT difference between two RT values
 \section{Inheritance}{
 
 A \code{calc_rt_diff} object inherits the following \code{struct} classes: \cr\cr
-\code{calc_rt_diff()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[calc_rt_diff]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

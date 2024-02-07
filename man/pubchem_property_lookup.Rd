@@ -36,7 +36,7 @@ the input annotation column and returns property information.
 \section{Inheritance}{
 
 A \code{pubchem_property_lookup} object inherits the following \code{struct} classes: \cr\cr
-\code{pubchem_property_lookup()} ⭢ \code{pubchem_compound_lookup()} ⭢ \code{rest_api()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[pubchem_property_lookup]} >> \verb{[pubchem_compound_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

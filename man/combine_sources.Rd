@@ -8,10 +8,11 @@ combine_sources(
   source_list,
   matching_columns = NULL,
   keep_cols = NULL,
-  tag_ids = FALSE,
   source_col = "annotation_source",
   exclude_cols = NULL,
   tag = "combined",
+  as = annotation_source(name = "combined", description =
+    paste0("A source created by combining two or more sources")),
   ...
 )
 }
@@ -22,13 +23,13 @@ combine_sources(
 
 \item{keep_cols}{(character, NULL) A list of column names to keep in the combined table (padded with NA) if detected in one of the input tables. Special case ".all" will keep all columns from all tables. The default is \code{NULL}.}
 
-\item{tag_ids}{(logical) Create a column of new identifiers for each annotation by merging the id from each source with the annotation tag. e.g.an annotation with id = "A1" for source tagged "XY" is given a new id "A1_XY" to prevent duplicate IDs from multiple sources. The default is \code{FALSE}.\cr}
-
 \item{source_col}{(character) The column name that will be created to contain a tag to indicate which source the annotation originated from. The default is \code{"annotation_source"}.}
 
 \item{exclude_cols}{(NULL, character) Column names to be excluded from the merged annotation table. Note this is applied after \code{keep_cols}. The default is \code{NULL}.}
 
 \item{tag}{(character) The tag given to the newly combined table. The default is \code{"combined"}.}
+
+\item{as}{(annotation_source) An annotation_source object to use as the base class for the combined sources. The default is \code{annotation_source(name = "combined", description = paste0("A source created by combining two or more sources"))}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -44,7 +45,7 @@ Annotation tables are joined and matching columns merged.
 \section{Inheritance}{
 
 A \code{combine_sources} object inherits the following \code{struct} classes: \cr\cr
-\code{combine_sources()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[combine_sources]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{
@@ -52,9 +53,9 @@ M = combine_sources(
       source_list = list(),
       matching_columns = NULL,
       keep_cols = NULL,
-      tag_ids = FALSE,
       source_col = "annotation_source",
       exclude_cols = NULL,
-      tag = "combined")
+      tag = "combined",
+      as = [a annotation_source])
 
 }

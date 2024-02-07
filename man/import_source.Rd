@@ -21,11 +21,10 @@ A wrapper for \code{\link[=read_source]{read_source()}} that can be used in an a
 \section{Inheritance}{
 
 A \code{import_source} object inherits the following \code{struct} classes: \cr\cr
-\code{import_source()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[import_source]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{
-M = import_source(
-
+M = import_source()
 
 }

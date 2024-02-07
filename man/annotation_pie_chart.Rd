@@ -53,7 +53,7 @@ This object makes use of functionality from the following packages:\itemize{  \i
 \section{Inheritance}{
 
 A \code{annotation_pie_chart} object inherits the following \code{struct} classes: \cr\cr
-\code{annotation_pie_chart()} ⭢ \code{chart()} ⭢ \code{struct_class()}
+\verb{[annotation_pie_chart]} >> \verb{[chart]} >> \verb{[struct_class]}
 }
 
 \examples{

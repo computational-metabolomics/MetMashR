@@ -29,7 +29,7 @@ A wrapper for \code{\link[=trimws]{trimws()}}. Removes leading and/or trailing w
 \section{Inheritance}{
 
 A \code{trim_whitespace} object inherits the following \code{struct} classes: \cr\cr
-\code{trim_whitespace()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[trim_whitespace]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

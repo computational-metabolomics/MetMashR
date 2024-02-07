@@ -38,7 +38,7 @@ This object makes use of functionality from the following packages:\itemize{  \i
 \section{Inheritance}{
 
 A \code{kegg_lookup} object inherits the following \code{struct} classes: \cr\cr
-\code{kegg_lookup()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[kegg_lookup]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

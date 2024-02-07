@@ -38,7 +38,7 @@ Search the LipidMaps database using the API
 \section{Inheritance}{
 
 A \code{lipidmaps_lookup} object inherits the following \code{struct} classes: \cr\cr
-\code{lipidmaps_lookup()} ⭢ \code{rest_api()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[lipidmaps_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

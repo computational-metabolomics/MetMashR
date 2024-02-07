@@ -24,7 +24,7 @@ Removes annotations where the names column is  greater than an upper limit or le
 \section{Inheritance}{
 
 A \code{filter_na} object inherits the following \code{struct} classes: \cr\cr
-\code{filter_na()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[filter_na]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

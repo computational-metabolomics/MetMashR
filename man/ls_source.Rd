@@ -24,7 +24,7 @@ An LCMS table extends \code{\link[=annotation_table]{annotation_table()}} to rep
 \section{Inheritance}{
 
 A \code{ls_source} object inherits the following \code{struct} classes: \cr\cr
-\code{ls_source()} ⭢ \code{lcms_table()} ⭢ \code{annotation_table()} ⭢ \code{annotation_source()} ⭢ \code{struct_class()}
+\verb{[ls_source]} >> \verb{[lcms_table]} >> \verb{[annotation_table]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
 }
 
 \examples{

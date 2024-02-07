@@ -22,7 +22,7 @@ A data.frame stored as an RDS file.
 \section{Inheritance}{
 
 A \code{rds_database} object inherits the following \code{struct} classes: \cr\cr
-\code{rds_database()} ⭢ \code{annotation_database()} ⭢ \code{annotation_source()} ⭢ \code{struct_class()}
+\verb{[rds_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
 }
 
 \examples{

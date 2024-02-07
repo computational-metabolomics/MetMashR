@@ -28,7 +28,7 @@ This object makes use of functionality from the following packages:\itemize{  \i
 \section{Inheritance}{
 
 A \code{normalise_lipids} object inherits the following \code{struct} classes: \cr\cr
-\code{normalise_lipids()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[normalise_lipids]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

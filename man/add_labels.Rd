@@ -28,7 +28,7 @@ This object makes use of functionality from the following packages:\itemize{  \i
 \section{Inheritance}{
 
 A \code{add_labels} object inherits the following \code{struct} classes: \cr\cr
-\code{add_labels()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[add_labels]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{

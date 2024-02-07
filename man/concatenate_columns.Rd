@@ -41,7 +41,7 @@ A wrapper for \code{\link[=paste]{paste()}} and \code{\link[=interaction]{intera
 \section{Inheritance}{
 
 A \code{concatenate_columns} object inherits the following \code{struct} classes: \cr\cr
-\code{concatenate_columns()} ⭢ \code{model()} ⭢ \code{struct_class()}
+\verb{[concatenate_columns]} >> \verb{[model]} >> \verb{[struct_class]}
 }
 
 \examples{
