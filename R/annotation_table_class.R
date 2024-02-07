@@ -49,7 +49,8 @@ annotation_table = function(
             max_length=1,
             value = 'id'
         ),
-        .params=c('id_column')
+        .params=c('id_column'),
+        .required='id_column'
     )
 )
 
@@ -120,7 +121,8 @@ lcms_table = function(
             max_length = 1,
             value = 'rt'
         ),
-        .params = c('mz_column','rt_column')
+        .params = c('mz_column','rt_column'),
+        .required = c('mz_column','rt_column')
     )
 )
 

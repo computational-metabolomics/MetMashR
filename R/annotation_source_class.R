@@ -25,7 +25,8 @@ annotation_source = function(
     slots = c(
         source = 'entity',
         data = 'entity',
-        tag = 'entity'),
+        tag = 'entity',
+        .required = 'character'),
     prototype = list(
         name = 'An annotation source',
         description = paste0(
@@ -195,8 +196,8 @@ setMethod(f = 'check_for_columns',
 setMethod(f = "vertical_join",
           signature = c("annotation_source","annotation_source"),
           definition = function(x,y,matching_columns=NULL,keep_cols=NULL,
-                                tag_ids=FALSE,source_col='annotation_source',
-                                exclude_cols=NULL) {
+                                source_col='annotation_source',
+                                exclude_cols=NULL,as = annotation_source()) {
               
               xd = x$data
               yd = y$data
@@ -215,16 +216,6 @@ setMethod(f = "vertical_join",
                   yd[[source_col]] = y$tag  
               }
               
-              # tag ids if requested
-              if (tag_ids) {
-                  if (nrow(xd)>0) {
-                      xd[[x$id_column]] = paste0(x$tag,'_',xd[[x$id_column]])
-                  }
-                  if (nrow(yd)>0){
-                      yd[[x$id_column]] = paste0(y$tag,'_',xd[[y$id_column]])
-                  }
-              }
-              
               # bind
               zd = plyr::rbind.fill(xd,yd)
               
@@ -240,19 +231,21 @@ setMethod(f = "vertical_join",
                       keep_cols = keep_cols[-w]
                   }
               }
-              zd = zd %>% select(any_of(keep_cols))
-              
-              
-              OUT = struct::new_struct(
-                  class = class(x),
-                  data = zd,
-                  tag = 'combined',
-                  name = 'Combined annotation source',
-                  description = paste0(
-                      'This annotation_source object was generated ',
-                      'by combining two other sources.')
+              # ensure required columns are retained
+              keep_cols=unique(
+                  c(names(matching_columns),
+                    keep_cols,
+                    required_cols(x),
+                    required_cols(y),
+                    source_col
+                  )
               )
               
+              zd = zd %>% select(any_of(keep_cols))
+              
+              # update provided object
+              OUT = as
+              OUT$data = zd
               return(OUT)
           }
 )
@@ -261,24 +254,9 @@ setMethod(f = "vertical_join",
 setMethod(f = "vertical_join",
           signature = c("list","missing"),
           definition = function(x,y,matching_columns=NULL,keep_cols=NULL,
-                                tag_ids=FALSE,source_col='annotation_source',
-                                exclude_cols=NULL) {
+                                source_col='annotation_source',
+                                exclude_cols=NULL,as=annotation_source()) {
               A=x
-              # tag ids if requested
-              if (tag_ids) {
-                  A = lapply(x,function(z){
-                      
-                      # if no rows, return
-                      if (nrow(z$data) == 0) {
-                          return(z)
-                      }
-                      
-                      # append tag to id
-                      z$data[[z$id_column]]=paste(
-                          z$tag,z$data[[z$id_column]],sep='_')
-                      return(z)
-                  })
-              }
               
               J = A[[1]]
               AT = rep(J$tag,nrow(J$data))
@@ -289,9 +267,9 @@ setMethod(f = "vertical_join",
                       y = B,
                       matching_columns = matching_columns,
                       keep_cols = keep_cols,
-                      tag_ids = FALSE, # already tagged
                       source_col = source_col,
-                      exclude_cols = exclude_cols)
+                      exclude_cols = exclude_cols,
+                      as = as)
                   
                   AT_new = C$data[[source_col]]
                   AT_new[1:length(AT)] = AT
@@ -303,3 +281,26 @@ setMethod(f = "vertical_join",
               return(J)
           })
 
+#' @export
+setMethod(f = 'required_cols',
+          signature = c('annotation_source'),
+          definition = function(obj) {
+              
+              # collect all inherited req
+              parents = is(obj)
+              w = which(parents=='annotation_source')
+              req = NULL
+              for (k in 1:w) {
+                  
+                  req = c(req,new_struct(parents[k])@.required)
+              }
+              req = unique(req)
+              
+              # slots and values
+              L = param_list(obj)
+              L = L[req]
+              L = unlist(L)
+              
+              return(L)
+          }
+)
