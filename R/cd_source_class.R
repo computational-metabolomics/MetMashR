@@ -2,7 +2,7 @@
 #' @include annotation_source_class.R
 #' @family {annotation sources}
 #' @family {annotation tables}
-#' @import dplyr
+#' @rawNamespace import(dplyr, except = as_data_frame)
 #' @export
 cd_source = function(
         source,

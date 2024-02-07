@@ -1,6 +1,6 @@
 #' @eval get_description('openbabel_structure')
 #' @import ggplot2
-#' @import cowplot
+#' @rawNamespace import(cowplot, except = theme_map)
 #' @export 
 openbabel_structure = function(
         smiles_column = 'smiles',
