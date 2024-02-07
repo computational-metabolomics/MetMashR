@@ -1,4 +1,4 @@
-#' @eval MetMasheR:::get_description('combine_records')
+#' @eval get_description('combine_records')
 #' @export
 #' @include annotation_source_class.R
 combine_records = function(
