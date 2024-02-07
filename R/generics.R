@@ -98,4 +98,28 @@ setGeneric("is_writable",function(obj,...)standardGeneric("is_writable"))
 #' 
 setGeneric("vertical_join",function(x,y,...)standardGeneric("vertical_join"))
 
+#' Required columns in an annotation source
+#' 
+#' Some `annotation_sources`, such as LCMS tables (`lcms_table`), require that 
+#' certain columns are present in the data.frame. These are defined by slots in
+#' the source definition. The name of slots containing the required column names
+#' for a source can be retrieved using the `required_cols` function, which will 
+#' collect and return the names of slots containing required column names for
+#' the object and all of its parent objects.
+#' 
+#' @param x an `annotation_source` object
+#' @return a character vector of slot names
+#' 
+#' @examples
+#' # prepare object
+#' M = lcms_table(id_column='id',mz_column='mz',rt_column='rt')
+#' 
+#' #' # get values for required slots
+#' r = required(M)
+#' 
+#' # get slot names for required columns
+#' names(r)
+
+setGeneric("required_cols",function(obj,...)standardGeneric("required_cols"))
+
 #####
