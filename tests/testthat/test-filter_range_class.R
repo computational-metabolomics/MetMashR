@@ -2,7 +2,7 @@ test_that("filter_range works with limits and equal to", {
   
     df=data.frame(a=1:10,b=11:20,id=1:10)
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
     
     M = filter_range(
         column_name = 'a',
@@ -11,7 +11,7 @@ test_that("filter_range works with limits and equal to", {
         equal_to=TRUE
     )
     M=model_apply(M,AN)
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_setequal(out$a,c(3,4))
     
@@ -21,7 +21,7 @@ test_that("filter_range works with limits and not equal to", {
     
     df=data.frame(a=1:10,b=11:20,id=1:10)
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
     
     M = filter_range(
         column_name = 'a',
@@ -30,7 +30,7 @@ test_that("filter_range works with limits and not equal to", {
         equal_to=FALSE
     )
     M=model_apply(M,AN)
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_setequal(out$a,c(2,3,4,5))
     
@@ -41,7 +41,7 @@ test_that("filter_range works with Inf", {
     
     df=data.frame(a=1:10,b=11:20,id=1:10)
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
     
     M = filter_range(
         column_name = 'a',
@@ -50,7 +50,7 @@ test_that("filter_range works with Inf", {
         equal_to=FALSE
     )
     M=model_apply(M,AN)
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_setequal(out$a,2:10)
     
@@ -61,7 +61,7 @@ test_that("filter_range works with Inf", {
         equal_to=FALSE
     )
     M=model_apply(M,AN)
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_setequal(out$a,1:5)
     
@@ -71,7 +71,7 @@ test_that("filter_range works returns error if limits incorrect", {
     
     df=data.frame(a=1:10,b=11:20,id=1:10)
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
 
     expect_error({
         M = filter_range(
@@ -106,7 +106,7 @@ test_that("filter_range works if zero rows", {
     
     df=data.frame(a=numeric(0),b=numeric(0),id=numeric(0))
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
     
         M = filter_range(
             column_name = 'a',
@@ -116,7 +116,7 @@ test_that("filter_range works if zero rows", {
     )
     
     M=model_apply(M,AN)
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_equal(nrow(out),0)
     
@@ -126,7 +126,7 @@ test_that("filter_range works using functions as limits", {
     
     df=data.frame(a=1:10,b=1:10,id=1:10)
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
     
     M = filter_range(
         column_name = 'a',
@@ -136,7 +136,7 @@ test_that("filter_range works using functions as limits", {
     )
     
     M=model_apply(M,AN)
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_true(all(out$a<mean(df$a)))
     
@@ -148,7 +148,7 @@ test_that("filter_range works using functions as limits", {
     )
     
     M=model_apply(M,AN)
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_true(all(out$a>median(df$a)))
 

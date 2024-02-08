@@ -6,7 +6,7 @@ test_that("id_lookup works", {
             id=1:10
     )
     
-    AN = annotation_table(annotations=df,id_column='id')
+    AN = annotation_table(data=df,id_column='id')
     
     db = data.frame(
             id=c(1,3,5),
@@ -25,7 +25,7 @@ test_that("id_lookup works", {
     
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_true(all(c('c','in_db') %in% colnames(out)))
     expect_true(out[1,'c']=='cake')
@@ -50,7 +50,7 @@ test_that("id_lookup works", {
     
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     expect_true('c' %in% colnames(out))
     expect_false('in_db' %in% colnames(out))
     
@@ -66,7 +66,7 @@ test_that("id_lookup works", {
     
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_false('c' %in% colnames(out))
     expect_false('in_db' %in% colnames(out))
@@ -85,7 +85,7 @@ test_that("id_lookup works", {
     
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
 
     
 })

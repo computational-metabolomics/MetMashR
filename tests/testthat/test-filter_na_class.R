@@ -11,14 +11,14 @@ test_that("filter_na removes na rows", {
     df[4,'b']=NA
     
     AN = annotation_table(
-            annotations = df,
+            data = df,
             tag='test',
             id_column = 'id')
     
     M = filter_na(column_name = 'a')
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     # check a row was removed
     expect_true(nrow(out)==9)
@@ -37,14 +37,14 @@ test_that("filter_na works when nothing present in table", {
     
     
     AN = annotation_table(
-        annotations = df,
+        data = df,
         tag='test',
         id_column = 'id')
     
     M = filter_na(column_name = 'a')
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     # check nothing happened
     expect_true(nrow(out)==0)

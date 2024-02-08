@@ -3,14 +3,14 @@ test_that('id count works', {
     
     
     AN = annotation_table(
-        annotations = df,
+        data = df,
         tag='test',
         id_column = 'id')
     
     M = id_counts(id_column='id',count_column='id_counts')
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     # check new column
     expect_true("id_counts" %in% colnames(out))
@@ -25,14 +25,14 @@ test_that('id count works with empty table', {
     
     
     AN = annotation_table(
-        annotations = df,
+        data = df,
         tag='test',
         id_column = 'id')
     
     M = id_counts(id_column='id',count_column='id_counts')
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     # check new column
     expect_true("id_counts" %in% colnames(out))
@@ -45,7 +45,7 @@ test_that('id count works with NA', {
     
     
     AN = annotation_table(
-        annotations = df,
+        data = df,
         tag='test',
         id_column = 'id')
     
@@ -53,7 +53,7 @@ test_that('id count works with NA', {
     M = id_counts(id_column='id',count_column='id_counts',count_na=TRUE)
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     # check new column
     expect_true("id_counts" %in% colnames(out))
@@ -67,7 +67,7 @@ test_that('id count works with NA', {
     M = id_counts(id_column='id',count_column='id_counts',count_na=FALSE)
     M = model_apply(M,AN)
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     # check new column
     expect_true("id_counts" %in% colnames(out))
     # check counts for each id

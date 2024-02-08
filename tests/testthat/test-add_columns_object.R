@@ -27,7 +27,7 @@ test_that("add-columnns object includes the requested columns", {
     # some data.frames
     df = data.frame(a=11:20,b=1:10)
     
-    # annotations only match the by column in some places
+    # data only match the by column in some places
     an = data.frame(a=c(seq(from=11,to=20,by=2)),id=1:5)
     
     # annotation table

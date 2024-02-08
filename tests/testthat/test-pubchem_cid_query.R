@@ -8,7 +8,7 @@ with_mock_dir('pc1', {
         )
         
         AN = lcms_table(
-            annotations = db,
+            data = db,
             id_column='dbid',
             rt_column='rt',
             mz_column='mz'
@@ -22,7 +22,7 @@ with_mock_dir('pc1', {
         
         M = model_apply(M,AN)
         
-        out=predicted(M)$annotations
+        out=predicted(M)$data
         expect_setequal(out$CID,c(NA,79025,NA)) 
     })
 })
@@ -37,7 +37,7 @@ with_mock_dir('pc2', {
         )
         
         AN = lcms_table(
-            annotations = db,
+            data = db,
             id_column='dbid',
             rt_column='rt',
             mz_column='mz'
@@ -51,7 +51,7 @@ with_mock_dir('pc2', {
         
         M = model_apply(M,AN)
         
-        out=predicted(M)$annotations
+        out=predicted(M)$data
         expect_setequal(out$CID,c(NA,79025,NA)) 
         expect_setequal(out$InChIKey,c(NA,'WQZGKKKJIJFFOK-DVKNGEFBSA-N',NA))
     })

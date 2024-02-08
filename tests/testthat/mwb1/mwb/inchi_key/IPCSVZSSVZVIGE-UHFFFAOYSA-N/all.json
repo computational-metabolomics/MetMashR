@@ -1,0 +1,15 @@
+{
+    "inchi_key": "IPCSVZSSVZVIGE-UHFFFAOYSA-N",
+    "regno": "23",
+    "formula": "C16H32O2",
+    "exactmass": "256.240231",
+    "name": "Palmitic acid",
+    "sys_name": "hexadecanoic acid",
+    "lm_id": "LMFA01010001",
+    "pubchem_cid": "985",
+    "hmdb_id": "HMDB0000220",
+    "kegg_id": "C00249",
+    "chebi_id": "15756",
+    "metacyc_id": "PALMITATE",
+    "smiles": "CCCCCCCCCCCCCCCC(=O)O"
+}

@@ -15,7 +15,7 @@ test_that("mz_match works", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -29,7 +29,7 @@ test_that("mz_match works", {
     )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_true(all(abs(out$ppm_match_diff_an)<=5,na.rm=TRUE))
     expect_setequal(out$dbid,c('A',rep('B',8),'C'))
@@ -78,7 +78,7 @@ test_that("mz_match rownames", {
     
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -92,7 +92,7 @@ test_that("mz_match rownames", {
     )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_true(all(abs(out$ppm_match_diff_an)<=5,na.rm=TRUE))
     expect_setequal(out$dbid,c('A',rep('B',8),'C'))

@@ -14,7 +14,7 @@ test_that("mzrt_match works", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -30,7 +30,7 @@ test_that("mzrt_match works", {
     )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),1) # expect one result on both RT and MZ
     expect_equal(out$dbid[1],'B') # should be annotation B
@@ -89,7 +89,7 @@ test_that("mzrt_match works with no rows", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -105,7 +105,7 @@ test_that("mzrt_match works with no rows", {
     )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_equal(nrow(out),0) # expect zero results on both RT and MZ
     expect_setequal(colnames(out),c("dbid","rt","mz","mz_match_diff","ppm_match_diff_an","ppm_match_diff_vm",

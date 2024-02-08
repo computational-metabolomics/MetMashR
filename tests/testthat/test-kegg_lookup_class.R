@@ -5,7 +5,7 @@ test_that("kegg_lookup queries ok", {
         'pubchem_sid' = c(3937,3938,1)
     )
     
-    D = annotation_table(annotations = db,id_column='id')
+    D = annotation_table(data = db,id_column='id')
     
     
     M = kegg_lookup(
@@ -19,7 +19,7 @@ test_that("kegg_lookup queries ok", {
         M = model_apply(M,D)
     })
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_equal(colnames(out)[3],'compound')
     expect_equal(out$compound[1],'C00668')
@@ -52,7 +52,7 @@ test_that("kegg_lookup works correctly when there are no hits",{
         'pubchem_sid' = c(1,1,1)
     )
     
-    D = annotation_table(annotations = db,id_column='id')
+    D = annotation_table(data = db,id_column='id')
     
     M = kegg_lookup(
         get='compound',
@@ -66,18 +66,18 @@ test_that("kegg_lookup works correctly when there are no hits",{
     })
     
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_true(all(is.na(out$compound)))
 })
 
-test_that("kegg_lookup works correctly when there are no annotations",{
+test_that("kegg_lookup works correctly when there are no data",{
     db=data.frame(
         'id'=character(0),
         'pubchem_sid' = character(0)
     )
     
-    D = annotation_table(annotations = db,id_column='id')
+    D = annotation_table(data = db,id_column='id')
     
     M = kegg_lookup(
         get='compound',
@@ -91,7 +91,7 @@ test_that("kegg_lookup works correctly when there are no annotations",{
     })
     
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_equal(nrow(out),0)
     expect_equal(ncol(out),3)

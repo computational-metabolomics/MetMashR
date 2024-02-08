@@ -7,7 +7,7 @@ test_that('lipidmaps_api search works', {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -25,7 +25,7 @@ test_that('lipidmaps_api search works', {
         M = model_apply(M,AN)
     })
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_true(out$inchi_key[2]=='HDFLQJUGWGNORO-BJPYDGQASA-N')
     expect_true(out$hmdb_id[2]=='HMDB05379')

@@ -14,7 +14,7 @@ test_that("mwb_lookup queries ok", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -32,7 +32,7 @@ test_that("mwb_lookup queries ok", {
         M = model_apply(M,AN)
     })
     
-    out = predicted(M)$annotations
+    out = predicted(M)$data
     
     expect_equal(colnames(out)[5],'regno')
     expect_equal(out$search[1],'WQZGKKKJIJFFOK-GASJEMHNSA-N')

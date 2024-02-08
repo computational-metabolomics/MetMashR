@@ -15,7 +15,7 @@ test_that("rt_match works", {
     )
     
     AN = lcms_table(
-            annotations = db,
+            data = db,
             id_column='dbid',
             rt_column='rt',
             mz_column='mz'
@@ -29,7 +29,7 @@ test_that("rt_match works", {
       )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_true(all(abs(out$rt_match_diff)<=5,na.rm=TRUE))
     expect_setequal(out$dbid,c('A',rep('B',8),'C'))
@@ -76,7 +76,7 @@ test_that("rt_match rownames", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -90,7 +90,7 @@ test_that("rt_match rownames", {
     )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_true(all(abs(out$rt_match_diff)<=5,na.rm=TRUE))
     expect_setequal(out$dbid,c('A',rep('B',8),'C'))
@@ -115,7 +115,7 @@ test_that("rt_match overlap vmeta", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -129,14 +129,14 @@ test_that("rt_match overlap vmeta", {
     )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_true(all(abs(out$rt_match_diff)<=5,na.rm=TRUE))
     expect_setequal(out$dbid,c('A',rep('B',8),'C'))
     expect_setequal(out$rt_match_id,c(NA,letters[4:10],NA))
 })
 
-test_that("rt_match overlap annotations", {
+test_that("rt_match overlap data", {
     
     
     obs=data.frame(
@@ -153,7 +153,7 @@ test_that("rt_match overlap annotations", {
     )
     
     AN = lcms_table(
-        annotations = db,
+        data = db,
         id_column='dbid',
         rt_column='rt',
         mz_column='mz'
@@ -167,7 +167,7 @@ test_that("rt_match overlap annotations", {
     )
     M = model_apply(M,AN)
     
-    out=predicted(M)$annotations
+    out=predicted(M)$data
     
     expect_true(all(abs(out$rt_match_diff)<=5,na.rm=TRUE))
     expect_setequal(out$dbid,c('A',rep('B',8),'C'))
