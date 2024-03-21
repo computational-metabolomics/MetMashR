@@ -24,7 +24,7 @@ object.
 CD = cd_source(
         source = system.file(
             paste0('extdata/MTox/CD/HILIC_POS.xlsx'),
-            package = 'MetMasheR')
+            package = 'MetMashR')
          )
 
 }

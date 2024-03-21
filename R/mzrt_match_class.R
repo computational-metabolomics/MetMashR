@@ -116,7 +116,7 @@ mzrt_match = function(
 
 #' @export
 setMethod(f="model_apply",
-    signature=c("mzrt_match","annotation_source"),
+    signature=c("mzrt_match","lcms_table"),
     definition=function(M,D) {
         
         # if nothing in table, then return

@@ -45,7 +45,8 @@ rest_api = function(
         parse_response = 'entity',
         updated = 'entity',
         delay='entity',
-        suffix = 'entity'
+        suffix = 'entity',
+        .encode_reserved = 'logical'
     ),
     
     prototype=list(
@@ -135,7 +136,8 @@ rest_api = function(
             type=c('numeric','integer'),
             value=0.5,
             max_length = 1
-        )
+        ),
+        .encode_reserved = TRUE
     )
 )
 
@@ -162,11 +164,24 @@ setMethod(f="model_apply",
               # import cache
               cached=NULL
               if (!is.null(M$cache)){
-                  if (file.exists(M$cache$source)) {
-                      cached = read_source(M$cache)
-                      cached = cached$data
+                  # read source
+                  cached = read_source(M$cache)
+                  # if empty, create a compatible one, otherwise use loaded
+                  if (ncol(cached$data)==0){ # probably new source
+                      cached=data.frame(.search=character(0))
+                  } else {
+                    cached = cached$data
                   }
+                  
+                  # must have a search column
+                  if (!('.search' %in% colnames(cached))) {
+                      stop('Cache does not contain a ".search" column')
+                  }
+                  
               }
+              
+              
+              
               
               collected=list()
               # for each query term
@@ -186,14 +201,14 @@ setMethod(f="model_apply",
                       # filter on query column
                       parsed = 
                           cached %>% 
-                          filter(.data[['search']] == k)
+                          filter(.data[['.search']] == k)
                       
                       # if no hits, reset to null
                       if (nrow(parsed)==0) {
                           parsed=NULL
                       } else {
                           # rename search column
-                          colnames(parsed)[colnames(parsed)=='search'] = 
+                          colnames(parsed)[colnames(parsed)=='.search'] = 
                               M$query_column
                       }
                   }
@@ -228,7 +243,7 @@ setMethod(f="model_apply",
                       # update cached (even if not saving cache, 
                       # to avoid same query multiple times)
                       forcache = parsed
-                      colnames(forcache)[colnames(parsed)==M$query_column] = 'search'
+                      colnames(forcache)[colnames(parsed)==M$query_column] = '.search'
                       cached = plyr::rbind.fill(cached,forcache)
                   }
                   
@@ -245,6 +260,8 @@ setMethod(f="model_apply",
                   # write to cache
                   if (is_writable(M$cache)) {
                     write_database(M$cache,cached)
+                  } else {
+                      warning('Cache is not writable and could not be updated.')
                   }
               }
               
@@ -293,7 +310,7 @@ setMethod(f="model_apply",
         if (k == 'base_url'){
             r = L[[k]]
         } else {
-            r = URLencode(L[[k]],reserved = TRUE)
+            r = URLencode(L[[k]],reserved = M@.encode_reserved)
         }
         template = sub(
             pattern = paste0('<',k,'>'),

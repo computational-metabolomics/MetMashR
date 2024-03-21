@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
                         fontSize = '10pt')
 }
 
-
+library(BiocStyle)
 ```
 
 <br>
@@ -467,7 +467,6 @@ all_source_tables = lapply(c(CD,LS),predicted)
 combine_workflow = 
     combine_sources(
         source_list = all_source_tables,
-        tag_ids = TRUE,
         matching_columns = c(
             name = 'LipidName',
             name = 'compound',
@@ -538,8 +537,7 @@ in practice you would create your own (see [TODO]).
 inchikey_cache = rds_database(
     source = file.path(
         system.file('cached',package='MetMashR'),
-        'pubchem_inchikey_mtox_cache.rds'),
-    .writable = FALSE
+        'pubchem_inchikey_mtox_cache.rds')
 )
 
 id_workflow = 
@@ -605,14 +603,12 @@ non-normalised names.
 inchikey_cache2 = rds_database(
     source = file.path(
         system.file('cached',package='MetMashR'),
-        'pubchem_inchikey_mtox_cache2.rds'),
-    .writable = FALSE
+        'pubchem_inchikey_mtox_cache2.rds')
 )
 inchikey_cache3 = rds_database(
     source = file.path(
         system.file('cached',package='MetMashR'),
-        'pubchem_inchikey_mtox_cache3.rds'),
-    .writable=FALSE
+        'pubchem_inchikey_mtox_cache3.rds')
 )
 
 N = normalise_strings(
@@ -653,7 +649,7 @@ N = normalise_strings(
         output = 'stdinchikey',
         cache = inchikey_cache3
     ) +
-    combine_columns(
+    prioritise_columns(
         column_names = c('stdinchikey_opsin','InChIKey_norm','InChIKey'),
         output_name =  'inchikey',
         source_name = 'inchikey_source',

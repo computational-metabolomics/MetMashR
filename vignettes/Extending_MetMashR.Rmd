@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
+library(BiocStyle)
 ```
 
 # Introduction
@@ -95,7 +96,7 @@ AN = readRDS(
 We can convert the imported table into an `annotation_table`:
 
 ```{r}
-AT = annotation_table(AN, id_column = NULL)
+AT = annotation_table(data = AN, id_column = NULL)
 ```
 
 All `annotation_table` objects must have an id for each row in the table. This 
@@ -444,6 +445,7 @@ vignette.
 ```{r, eval=FALSE,include = TRUE}
 # refmet
 refmet = mwb_refmet_database()
+
 # pubchem caches
 pubchem_cid_cache = rds_database(
     source = system.file('cached/pubchem_cid_cache.rds',
@@ -456,9 +458,8 @@ pubchem_smile_cache = rds_database(
 ```
 
 ```{r, eval=TRUE,include=FALSE}
-refmet = rds_database(
-    source = system.file('cached/refmet_cache.rds',package = 'MetMashR')
-)
+refmet = mwb_refmet_database()
+
 pubchem_cid_cache = rds_database(
     source = file.path(
         system.file('cached',package='MetMashR'),
@@ -497,7 +498,7 @@ M = import_source() +
         records = 'best',
         delay = 0.2,
         cache = pubchem_cid_cache) +
-    combine_columns( 
+    prioritise_columns( 
         column_names = c('pubchem_cid_mwb','CID_pc'),
         output_name = 'pubchem_cid',
         source_name = 'pubchem_cid_source',

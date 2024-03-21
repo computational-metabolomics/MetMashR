@@ -7,7 +7,7 @@
 annotation_database(data = data.frame(), tag = "", ...)
 }
 \arguments{
-\item{data}{(data.frame) A data.frame of annotation data. The default is \code{data.frame()}.}
+\item{data}{(data.frame, NULL) A data.frame of annotation data. The default is \code{data.frame()}.}
 
 \item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{""}.}
 
@@ -36,7 +36,11 @@ M = annotation_database(
 }
 \seealso{
 Other {annotation databases}: 
+\code{\link{AnnotationDb_database}},
+\code{\link{GO_database}},
 \code{\link{annotation_source}},
+\code{\link{rdata_database}},
+\code{\link{rds_cache}},
 \code{\link{rds_database}}
 
 Other {annotation sources}: 

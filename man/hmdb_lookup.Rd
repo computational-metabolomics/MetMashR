@@ -46,7 +46,7 @@ M = hmdb_lookup(
 
 }
 \references{
-Temple Lang D (2023). \emph{XML: Tools for Parsing and Generating XML Within
-R and S-Plus}. R package version 3.99-0.16,
+Temple Lang D (2024). \emph{XML: Tools for Parsing and Generating XML Within
+R and S-Plus}. R package version 3.99-0.16.1,
 \url{https://CRAN.R-project.org/package=XML}.
 }

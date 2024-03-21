@@ -61,7 +61,7 @@ M = annotation_venn_chart(
 Akyol T (2019). \emph{RVenn: Set Operations for Many Sets}. R package
 version 1.1.0, \url{https://CRAN.R-project.org/package=RVenn}.
 
-Gao C (2023). \emph{ggVennDiagram: A 'ggplot2' Implement of Venn Diagram}. R
-package version 1.4.9,
+Gao C, Dusa A (2024). \emph{ggVennDiagram: A 'ggplot2' Implement of Venn
+Diagram}. R package version 1.5.2,
 \url{https://CRAN.R-project.org/package=ggVennDiagram}.
 }

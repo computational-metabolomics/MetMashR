@@ -2,10 +2,10 @@
 title: "Processing Annotations for LCMS of Daphnia samples"
 output:
   BiocStyle::html_document:
-    toc: true
-    toc_depth: 2  
-    number_sections: true  
-    toc_float: true
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+    toc_float: yes
 vignette: >
   %\VignetteIndexEntry{Processing Annotations for LCMS of Daphnia samples}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
     comment = "#>",
     fig.align = 'center'
 )
+library(BiocStyle)
 ```
 
 # Getting Started
@@ -59,8 +60,9 @@ library(patchwork)
 <br>
 
 # Import Daphina data
-TODO
+This study consists of LCMS peak tables of HILIC_POS and LIPIDS_POS assays collected from samples of *Daphnia magna*. In this section we import the tables of data for the MS1 peaks recorded for each sample. We will use this data in a workflows to align the MS2 annotations with the MS1 peaks. In practice there might be accompanying statistics e.g. t-test p-values indicating the importance of a features for a study. For brevity in this vignette we only import peak quality information, in the form of Relative Standard Deviations (RSD).
 
+Here, we import the MS1 level feature meta data for each assay and store it as a data.frame that we use later on in the workflow.
 ```{r}
 # import HILIC_POS
 HP = openxlsx::read.xlsx(
@@ -491,8 +493,8 @@ WF =
         suffix = '_abbrevchains',
         cache = cache3
     ) +
-    combine_columns(
-        c('InChIKey_pubchem','inchi_key_abbrev','inchi_key_abbrevchains'),
+    prioritise_columns(
+        column_names = c('InChIKey_pubchem','inchi_key_abbrev','inchi_key_abbrevchains'),
         output_name = 'inchikey',
         source_name = 'inchikey_src',
         source_tags = c('pubchem','lm_abbrev','lm_chains'),

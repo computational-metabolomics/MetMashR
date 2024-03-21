@@ -29,6 +29,13 @@ rds_database = function(
 #' @export
 setMethod(f="read_database",
           signature=c("rds_database"),definition = function(obj) {
+              
+              # if file doesnt exist, create it
+              check = file.exists(obj$source)
+              if (!check) {
+                  saveRDS(obj$data,file=obj$source)
+              }
+              
               # read the file
               IN = readRDS(obj$source)
               
@@ -59,7 +66,7 @@ setMethod(f="write_database",
 setMethod(f = "is_writable",
           signature = c("rds_database"),
           definition = function(obj) {
-              return(obj@.writable & file.access(obj$source,mode=2))
+              return(obj@.writable & file.access(obj$source,mode=2)==0)
           }
 )
 

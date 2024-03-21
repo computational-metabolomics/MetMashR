@@ -57,7 +57,7 @@ M = normalise_strings(
 }
 \references{
 Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.3,
+Grammar of Data Manipulation}. R package version 1.1.4,
 \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{

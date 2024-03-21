@@ -44,6 +44,7 @@ M = MTox700plus_database(
       resource_name = "bfc",
       bfc_fun = function(){},
       import_fun = function(){},
+      offline = FALSE,
       tag = character(0),
       data = data.frame(id=NA),
       source = [a ANY])
@@ -53,7 +54,7 @@ M = MTox700plus_database(
 Shepherd L, Morgan M (2023). \emph{BiocFileCache: Manage Files Across
 Sessions}. doi:10.18129/B9.bioc.BiocFileCache
 \url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
-2.10.1, \url{https://bioconductor.org/packages/BiocFileCache}.
+2.11.1, \url{https://bioconductor.org/packages/BiocFileCache}.
 
 Wickham H (2023). \emph{httr: Tools for Working with URLs and HTTP}. R
 package version 1.4.7, \url{https://CRAN.R-project.org/package=httr}.

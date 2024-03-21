@@ -1,10 +1,11 @@
 #' @eval get_description('MetFrag_source')
-#' @include annotation_table_class.R
+#' @include lcms_table_class.R
 #' @family {annotation tables}
 #' @export MetFrag_source
 MetFrag_source = function(
         source,
-        tag = 'MetFrag',...) {
+        tag = 'MetFrag',
+        ...) {
     # new object
     out = new_struct(
         'MetFrag_source',

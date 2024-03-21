@@ -8,6 +8,9 @@ cd_source = function(
         source,
         sheets = c(1,1),
         tag = 'CD',
+        mz_column = 'mz',
+        rt_column = 'rt',
+        id_column = 'id',
         ...) {
     # new object
     out = new_struct(
@@ -15,6 +18,10 @@ cd_source = function(
         source = source,
         tag = tag,
         sheets = sheets,
+        mz_column = mz_column,
+        rt_column = rt_column,
+        id_column = id_column,
+        .required = c(mz_column,rt_column,id_column),
         ...
     )
     return(out)

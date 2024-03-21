@@ -10,6 +10,7 @@ BiocFileCache_database(
   resource_name,
   bfc_fun = .cache_as_is,
   import_fun = read.csv,
+  offline = FALSE,
   ...
 )
 }
@@ -23,6 +24,8 @@ BiocFileCache_database(
 \item{bfc_fun}{(function) A function to process the object before storing it in the cache, e.g. to store an unzipped file in the cache instead of the zipped version. This would prevent needing to unzip the resource each time it is retrieved from the cache, but would mean using more space on disk. The default function does nothing to the resource. See \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::bfcdownload()}} for details.}
 
 \item{import_fun}{(function) A function to process the object after retrieving it from the cache e.g. it might need to be unzipped before importingas a data.frame. This function should take the path to the cached object as the first input and return a data.frame.}
+
+\item{offline}{(logical) If \code{offline  = FALSE} then checks to determine if the resource has expired will be skipped, and retrieved directly from the cache. The default is \code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -49,6 +52,7 @@ M = BiocFileCache_database(
       resource_name = "bfc",
       bfc_fun = function(){},
       import_fun = function(){},
+      offline = FALSE,
       tag = character(0),
       data = data.frame(id=NA),
       source = [a ANY])
@@ -58,7 +62,7 @@ M = BiocFileCache_database(
 Shepherd L, Morgan M (2023). \emph{BiocFileCache: Manage Files Across
 Sessions}. doi:10.18129/B9.bioc.BiocFileCache
 \url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
-2.10.1, \url{https://bioconductor.org/packages/BiocFileCache}.
+2.11.1, \url{https://bioconductor.org/packages/BiocFileCache}.
 }
 \seealso{
 Other {database}: 

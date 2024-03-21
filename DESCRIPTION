@@ -23,7 +23,7 @@ Description: A package to merge, filter sort, organise and otherwise mash
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.3.0),
     struct
@@ -39,17 +39,20 @@ Imports:
     ggplot2,
     utils
 Collate: 
-    'BiocFileCache_database_helpers.R'
     'generics.R'
     'zzz.R'
     'annotation_source_class.R'
     'annotation_database_class.R'
+    'AnnotationDb_database.R'
+    'AnnotationDb_select_class.R'
+    'BiocFileCache_database_helpers.R'
     'BiocFileCache_database_class.R'
     'CompoundDb_source_class.R'
     'MTox700plus_database_class.R'
     'annotation_table_class.R'
+    'lcms_table_class.R'
     'MetFrag_source_class.R'
-    'MetMashR.R'
+    'MetMashR-package.R'
     'PathBank_metabolite_database_class.R'
     'add_columns_class.R'
     'add_labels_class.R'
@@ -67,13 +70,16 @@ Collate:
     'combine_columns_class.R'
     'combine_records_class.R'
     'combine_sources.R'
-    'concatenate_strings_class.R'
     'database_lookup_class.R'
     'dictionaries.R'
+    'eutils_lookup_class.R'
+    'expand_records_class.R'
     'filter_labels_class.R'
     'filter_na_class.R'
     'filter_range_class.R'
     'filter_venn_class.R'
+    'github_file_class.R'
+    'go_database_class.R'
     'hmdb_lookup_class.R'
     'id_count_class.R'
     'import_source_class.R'
@@ -90,13 +96,18 @@ Collate:
     'normalise_strings_class.R'
     'openbabel_structure_chart.R'
     'opsin_lookup_class.R'
+    'prioritise_columns_class.R'
     'pubchem_compound_lookup_class.R'
     'pubchem_property_lookup_class.R'
     'pubchem_structure_chart_class.R'
     'pubchem_structure_lookup_class.R'
     'pubchem_widget.R'
+    'rdata_database_class.R'
     'rds_database_class.R'
+    'rds_cache_class.R'
     'rt_match_class.R'
+    'select_columns_class.R'
+    'split_column_class.R'
     'sqlite_database_class.R'
     'trim_whitespace_class.R'
 Suggests: 
@@ -122,7 +133,9 @@ Suggests:
     RVenn,
     ggVennDiagram,
     patchwork,
-    XML
+    XML,
+    GO.db,
+    tidytext
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://computational-metabolomics.github.io/MetMashR/

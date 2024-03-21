@@ -57,6 +57,7 @@ pubchem_property_lookup = function(
         'EffectiveRotorCount3D',
         'ConformerCount3D',
         'Fingerprint2D',
+        'title',
         '.all'
     )
     
@@ -111,14 +112,15 @@ pubchem_property_lookup = function(
         
         url_template = entity(
             name = 'URL template',
-            description = paste0('A template describing how the URL should be ',
-                                 'constructed from the base URL and input parameters. e.g. ',
-                                 '<base_url>/<context>/<input_item>/<search_term>/json.', 
-                                 'The url will be constructed by replacing the values ',
-                                 'enclosed in <> with the value from corresponding input ',
-                                 'parameter of the rest_api object. A term preceeded by . will ',
-                                 'assume substitute values from a column name from the  ',
-                                 'annotation table.'
+            description = paste0(
+                'A template describing how the URL should be ',
+                'constructed from the base URL and input parameters. e.g. ',
+                '<base_url>/<context>/<input_item>/<search_term>/json.', 
+                'The url will be constructed by replacing the values ',
+                'enclosed in <> with the value from corresponding input ',
+                'parameter of the rest_api object. A term preceeded by . will ',
+                'assume substitute values from a column name from the  ',
+                'annotation table.'
             ),
             value = c(
                 '<base_url>/<search_by>/<query_column>/property/<property>/JSON'
@@ -126,7 +128,7 @@ pubchem_property_lookup = function(
             max_length = 1
         ),
         
-
+        
         property = entity(
             name = 'Compound property',
             description = paste0(
@@ -155,4 +157,3 @@ pubchem_property_lookup = function(
         
     )
 )
-    

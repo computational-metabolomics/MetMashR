@@ -14,7 +14,7 @@
 #' CD = cd_source(
 #'         source = system.file(
 #'             paste0('extdata/MTox/CD/HILIC_POS.xlsx'),
-#'             package = 'MetMasheR')
+#'             package = 'MetMashR')
 #'          )
 #' 
 setGeneric("read_source",function(obj,...)standardGeneric("read_source"))
@@ -98,6 +98,7 @@ setGeneric("is_writable",function(obj,...)standardGeneric("is_writable"))
 #' 
 setGeneric("vertical_join",function(x,y,...)standardGeneric("vertical_join"))
 
+#######
 #' Required columns in an annotation source
 #' 
 #' Some `annotation_sources`, such as LCMS tables (`lcms_table`), require that 

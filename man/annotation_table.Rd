@@ -4,19 +4,14 @@
 \alias{annotation_table}
 \title{An annotation table}
 \usage{
-annotation_table(
-  data = data.frame(id = character(0)),
-  tag = "",
-  id_column = "id",
-  ...
-)
+annotation_table(data = data.frame(), tag = "", id_column = NULL, ...)
 }
 \arguments{
-\item{data}{(data.frame) A data.frame of annotation data. The default is \code{data.frame(id = character(0))}.}
+\item{data}{(data.frame, NULL) A data.frame of annotation data. The default is \code{data.frame()}.}
 
 \item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{""}.}
 
-\item{id_column}{(character) The column name of the annotation data.frame containing row identifers. If NULL This will be generated automatically. The default is \code{"id"}.}
+\item{id_column}{(character) The column name of the annotation data.frame containing row identifers. If NULL This will be generated automatically. The default is \code{NULL}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }

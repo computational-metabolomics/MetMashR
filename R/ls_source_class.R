@@ -6,12 +6,19 @@
 ls_source = function(
         source,
         tag = 'LS',
+        mz_column = 'mz',
+        rt_column = 'rt',
+        id_column = 'id',
         ...) {
     # new object
     out = new_struct(
         'ls_source',
         source = source,
         tag = tag,
+        mz_column = 'mz',
+        rt_column = 'rt',
+        id_column = 'id',
+        .required = c(mz_column,rt_column,id_column),
         ...
     )
     return(out)

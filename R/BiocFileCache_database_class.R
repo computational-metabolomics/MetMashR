@@ -8,6 +8,7 @@ BiocFileCache_database = function(
         resource_name,
         bfc_fun = .cache_as_is,
         import_fun = read.csv,
+        offline = FALSE,
         ...) {
     
     # new object
@@ -18,6 +19,7 @@ BiocFileCache_database = function(
         resource_name = resource_name,
         bfc_fun = bfc_fun,
         import_fun = import_fun,
+        offline = offline,
         ...
     )
     return(out)
@@ -29,13 +31,15 @@ BiocFileCache_database = function(
     slots = c(bfc_path = 'entity',
               resource_name = 'entity',
               bfc_fun = 'entity',
-              import_fun = 'entity'),
+              import_fun = 'entity',
+              offline = 'entity'),
     prototype = list(
         name = 'Cached database', 
         description='A cached resource using BiocFileCache.', 
         type='BiocFileCache_database',
         .writable = FALSE,
-        .params = c('bfc_path','resource_name','bfc_fun','import_fun'),
+        .params = c('bfc_path','resource_name','bfc_fun','import_fun',
+                    'offline'),
         libraries = 'BiocFileCache',
         bfc_path = entity(
             name = 'BiocFileCache options',
@@ -84,13 +88,25 @@ BiocFileCache_database = function(
             type = c('function'),
             value = function(path,params){return(data.frame())},
             max_length = 1
+        ),
+        
+        offline = entity(
+            name = 'Offline',
+            description = paste0(
+                "If `offline  = FALSE` then checks to determine if the resource ",
+                "has expired will be skipped, and retrieved directly from ",
+                "the cache."
+            ),
+            type = 'logical',
+            value = FALSE
         )
     )
 )
 
 #' @export
 setMethod(f="read_database",
-          signature=c("BiocFileCache_database"),definition = function(obj) {
+          signature=c("BiocFileCache_database"),
+          definition = function(obj) {
               
               if (is.null(obj$bfc_path)){
                   obj$bfc_path = BiocFileCache::getBFCOption("CACHE")
@@ -124,22 +140,27 @@ setMethod(f="read_database",
     if (!length(rid)) {
         rid = names(
             BiocFileCache::bfcadd(
-                bfc,
-                obj$source,
+                x = bfc,
+                fpath = obj$source,
                 rname = rname,
                 download = FALSE))
     }
     
-    # TRUE if newly added or stale
-    update = BiocFileCache::bfcneedsupdate(bfc, rid)  
+    if (rid %in% BiocFileCache::bfcquery(bfc,field='rtype',query='web')$rid) {
+        # TRUE if newly added or stale
+        update = BiocFileCache::bfcneedsupdate(bfc, rid)  
+    } else {
+        update = FALSE # cant update if not web resource
+    }
     
     # download & unzip
-    if (!isFALSE(update))  {           
+    if (update & !obj$offline)  {           
         BiocFileCache::bfcdownload(
             x = bfc, 
             rid = rid, 
             ask = FALSE, 
-            FUN = obj$bfc_fun
+            FUN = obj$bfc_fun,
+            verbose = FALSE
         )
     }
     

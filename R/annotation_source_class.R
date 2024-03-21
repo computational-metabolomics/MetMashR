@@ -35,7 +35,7 @@ annotation_source = function(
         data = entity( 
             name = 'Data',
             description = 'A data.frame of annotation data.',
-            type = 'data.frame',
+            type = c('data.frame','NULL'),
             value = data.frame()
         ),
         tag = entity(
@@ -55,8 +55,10 @@ annotation_source = function(
             max_length = Inf,
         ),
         .params=c('tag','data','source')
-    )
+    ),
 )
+
+
 
 
 #' @export
@@ -281,26 +283,36 @@ setMethod(f = "vertical_join",
               return(J)
           })
 
+.has_required = function(object) {
+    
+    # return if NULL
+    if (is.null(object$data)) {
+        return(TRUE)
+    }
+    
+    # otherwise, check for columns
+    req = object@.required
+    
+    check = is.null(req) | all(req %in% colnames(object$data))
+    
+    msg=TRUE
+    if (!check) {
+        msg = paste0('Column(s) named "',paste0(req,collapse='","'),'" ',
+                     'must be present in the data.frame for this source.')
+    }
+    return(msg)
+}
+
+setValidity('annotation_source',
+            function(object){
+                msg = .has_required(object)      
+                return(msg)
+            })
+
 #' @export
 setMethod(f = 'required_cols',
           signature = c('annotation_source'),
           definition = function(obj) {
-              
-              # collect all inherited req
-              parents = is(obj)
-              w = which(parents=='annotation_source')
-              req = NULL
-              for (k in 1:w) {
-                  
-                  req = c(req,new_struct(parents[k])@.required)
-              }
-              req = unique(req)
-              
-              # slots and values
-              L = param_list(obj)
-              L = L[req]
-              L = unlist(L)
-              
-              return(L)
+              return(obj@.required)
           }
 )

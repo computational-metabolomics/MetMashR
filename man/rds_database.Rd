@@ -34,7 +34,11 @@ M = rds_database(
 }
 \seealso{
 Other {annotation databases}: 
+\code{\link{AnnotationDb_database}},
+\code{\link{GO_database}},
 \code{\link{annotation_database}},
-\code{\link{annotation_source}}
+\code{\link{annotation_source}},
+\code{\link{rdata_database}},
+\code{\link{rds_cache}}
 }
 \concept{{annotation databases}}

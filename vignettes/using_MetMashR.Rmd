@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
                         fontSize = '10pt')
 }
 
-
+library(BiocStyle)
 ```
 
 <br>
@@ -593,6 +593,10 @@ number of other helper functions to suit
 different requirements see `?combine_records_helper_functions` for a complete 
 list.
 
+# Session Info
+```{r}
+sessionInfo()
+```
 
 
 

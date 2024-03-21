@@ -2,25 +2,28 @@
 % Please edit documentation in R/combine_columns_class.R
 \name{combine_columns}
 \alias{combine_columns}
-\title{Combine several columns into a single column.}
+\title{Combine columns}
 \usage{
 combine_columns(
   column_names,
-  output_name,
-  source_name,
-  source_tags = column_names,
+  separator = "_",
+  prefix = NULL,
+  suffix = NULL,
+  output_column = "combined",
   clean = TRUE,
   ...
 )
 }
 \arguments{
-\item{column_names}{(character) The name(s) of column(s) to be combined.}
+\item{column_names}{(character) The column name(s) in the annotation_source to combine.}
 
-\item{output_name}{(character) The name of the new column.}
+\item{separator}{(character) A string placed in between the two being joined. The default is \code{"_"}.}
 
-\item{source_name}{(character) The column name used to indicate the where the merged values originated.}
+\item{prefix}{(character, NULL) A string placed at the start of the combined strings. The default is \code{NULL}.}
 
-\item{source_tags}{(character) The tags used to identify the source of each item in the new column. A tag should be provided for each column_name. By default the column name is used.}
+\item{suffix}{(character, NULL) A string placed at the end of the combined strings. The default is \code{NULL}.}
+
+\item{output_column}{(character) The name of a column to store the combined values in. The default is \code{"combined"}.}
 
 \item{clean}{(logical) Clean old columns. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: The named columns are removed after being combined.}\item{\code{"FALSE"}: The named columns are retained after being combined.}} The default is \code{TRUE}.\cr}
 
@@ -29,11 +32,11 @@ combine_columns(
 \value{
 A  \code{combine_columns} object with the following \code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The input annotation source with the newly generated column. \cr
+\code{updated} \tab          (annotation_source) The annotation_source after combining the columns. \cr
 }
 }
 \description{
-Several columns are merged into a single column. If multiple columns contain overlapping values then priority can be given columns earlier in the list.
+A wrapper for \code{\link[=paste]{paste()}} and \code{\link[=interaction]{interaction()}}. Combines the values in multiple columns row-wise.
 }
 \section{Inheritance}{
 
@@ -44,9 +47,10 @@ A \code{combine_columns} object inherits the following \code{struct} classes: \c
 \examples{
 M = combine_columns(
       column_names = "V1",
-      output_name = "",
+      separator = "_",
+      output_column = "combined",
       clean = FALSE,
-      source_name = "source_name",
-      source_tags = "x")
+      prefix = NULL,
+      suffix = NULL)
 
 }
