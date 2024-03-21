@@ -11,9 +11,11 @@ rt_match(variable_meta, rt_column, rt_window, id_column, ...)
 
 \item{rt_column}{(character) Column name of the rt values in variable_meta.}
 
-\item{rt_window}{(numeric, integer) Rt window to use for matching. If a single value is provided then the same rt is used for both variable meta and the annotations. A named vector can also be provided e.g. c("variable_meta"=5,"annotations"=2) to use different windows for each data table.}
+\item{rt_window}{(numeric, integer) Rt window to use for matching. If a single value is provided then the same rt is used for both variable meta and the annotations. A named vector can also be provided e.g. c("variable_meta"=5,"annotations"=2) to use different ",
+"windows for each data table.}
 
-\item{id_column}{(character) Column name of the variable ids in variable_meta. id_column="rownames" will use the rownames as ids.}
+\item{id_column}{(character) Column name of the variable ids in variable_meta. ",
+"id_column="rownames" will use the rownames as ids.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }

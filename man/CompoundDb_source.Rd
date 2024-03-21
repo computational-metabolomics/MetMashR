@@ -34,7 +34,7 @@ A \code{CompoundDb_source} object inherits the following \code{struct} classes: 
 M = CompoundDb_source(
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \references{

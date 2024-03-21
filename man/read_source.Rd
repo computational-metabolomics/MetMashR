@@ -16,15 +16,16 @@ an \code{\link[=annotation_table]{annotation_table()}}, \code{\link[=annotation_
 \code{\link[=annotation_database]{annotation_database()}} object
 }
 \description{
-Import an data from e.g. a raw file and parse it into an \code{\link[=annotation_source]{annotation_source()}}
-object.
+Import an data from e.g. a raw file and parse it into an
+\code{\link[=annotation_source]{annotation_source()}} object.
 }
 \examples{
 # prepare source
-CD = cd_source(
-        source = system.file(
-            paste0('extdata/MTox/CD/HILIC_POS.xlsx'),
-            package = 'MetMashR')
-         )
+CD <- cd_source(
+    source = system.file(
+        paste0("extdata/MTox/CD/HILIC_POS.xlsx"),
+        package = "MetMashR"
+    )
+)
 
 }

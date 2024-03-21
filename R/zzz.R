@@ -1,68 +1,82 @@
 #' @importFrom utils capture.output
 #' @importFrom scales manual_pal
 
-scale_fill_Publication <- function(...){
-    #library(scales)
-    discrete_scale("fill","Publication",scales::manual_pal(
+scale_fill_Publication <- function(...) {
+    # library(scales)
+    discrete_scale("fill", "Publication", scales::manual_pal(
         values = c(
-            "#1f78b4","#e31a1c","#33a02c","#ff7f00","#6a3d9a","#b15928",
-            "#a6cee3","#fb9a99","#b2df8a","#fdbf6f","#cab2d6","#ffff99")), ...)
+            "#1f78b4", "#e31a1c", "#33a02c", "#ff7f00", "#6a3d9a", "#b15928",
+            "#a6cee3", "#fb9a99", "#b2df8a", "#fdbf6f", "#cab2d6", "#ffff99"
+        )
+    ), ...)
 }
 
-scale_color_Publication <- function(...){
-    #library(scales)
-    discrete_scale("color","Publication",scales::manual_pal(
+scale_color_Publication <- function(...) {
+    # library(scales)
+    discrete_scale("color", "Publication", scales::manual_pal(
         values = c(
-            "#1f78b4","#e31a1c","#33a02c","#ff7f00","#6a3d9a","#b15928",
-            "#a6cee3","#fb9a99","#b2df8a","#fdbf6f","#cab2d6","#ffff99")), ...)
+            "#1f78b4", "#e31a1c", "#33a02c", "#ff7f00", "#6a3d9a", "#b15928",
+            "#a6cee3", "#fb9a99", "#b2df8a", "#fdbf6f", "#cab2d6", "#ffff99"
+        )
+    ), ...)
 }
 
 #' @import ggthemes
-theme_Publication <- function(base_size=14){ #, base_family="helvetica") {
-    (theme_foundation(base_size=base_size) #, base_family=base_family)
-     + theme(plot.title = element_text(face = "bold",
-                                       size = rel(1.2), hjust = 0.5),
-             text = element_text(),
-             panel.background = element_rect(colour = '#ffffff'),
-             plot.background = element_rect(colour = '#ffffff'),
-             panel.border = element_rect(colour = NA),
-             axis.title = element_text(face = "bold",size = rel(1)),
-             axis.title.y = element_text(angle=90,vjust =2),
-             axis.title.x = element_text(vjust = -0.2),
-             axis.text = element_text(),
-             axis.line = element_line(colour="black"),
-             axis.ticks = element_line(),
-             panel.grid.major = element_line(colour="#f0f0f0"),
-             panel.grid.minor = element_blank(),
-             legend.key = element_rect(colour = '#ffffff'),
-             legend.key.size= unit(0.75, "cm"),
-             legend.spacing = unit(0.2, "cm"),
-             legend.title = element_text(face="italic"),
-             plot.margin=unit(c(10,5,5,5),"mm"),
-             strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
-             strip.text = element_text(face="bold")
-     ))
-    
+theme_Publication <- function(base_size = 14) { # , base_family="helvetica") {
+    (theme_foundation(base_size = base_size) # , base_family=base_family)
+    + theme(
+            plot.title = element_text(
+                face = "bold",
+                size = rel(1.2), hjust = 0.5
+            ),
+            text = element_text(),
+            panel.background = element_rect(colour = "#ffffff"),
+            plot.background = element_rect(colour = "#ffffff"),
+            panel.border = element_rect(colour = NA),
+            axis.title = element_text(face = "bold", size = rel(1)),
+            axis.title.y = element_text(angle = 90, vjust = 2),
+            axis.title.x = element_text(vjust = -0.2),
+            axis.text = element_text(),
+            axis.line = element_line(colour = "black"),
+            axis.ticks = element_line(),
+            panel.grid.major = element_line(colour = "#f0f0f0"),
+            panel.grid.minor = element_blank(),
+            legend.key = element_rect(colour = "#ffffff"),
+            legend.key.size = unit(0.75, "cm"),
+            legend.spacing = unit(0.2, "cm"),
+            legend.title = element_text(face = "italic"),
+            plot.margin = unit(c(10, 5, 5, 5), "mm"),
+            strip.background = element_rect(
+                colour = "#f0f0f0",
+                fill = "#f0f0f0"
+            ),
+            strip.text = element_text(face = "bold")
+        ))
 }
 
 
-# override default entity value without need to provide name, description etc 
+# override default entity value without need to provide name, description etc
 # again
-.set_entity_value = function(
-        obj, 
-        param_id,
-        ...){
+.set_entity_value <- function(obj,
+                              param_id,
+                              ...) {
     # create obj
-    obj = new_struct(obj)
+    obj <- new_struct(obj)
     # get entity
-    E = param_obj(obj,param_id)
+    E <- param_obj(obj, param_id)
     # set values
-    L = list(...)
+    L <- list(...)
     for (k in names(L)) {
-        slot(E,k) = L[[k]]
+        slot(E, k) <- L[[k]]
     }
     # return entity
     return(E)
 }
 
-
+get_description <- function(id) {
+    str <- struct::get_description(id)
+    str <- gsub("[a annotation_source]", "annotation_source()", str,
+        fixed = TRUE
+    )
+    return(str)
+}

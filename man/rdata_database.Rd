@@ -31,7 +31,7 @@ A \code{rdata_database} object inherits the following \code{struct} classes: \cr
 M = rdata_database(
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \seealso{

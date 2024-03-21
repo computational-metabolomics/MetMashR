@@ -33,12 +33,7 @@ M = mwb_refmet_database(
       bfc = character(0),
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
-
-\dontrun{
-  db = mwb_refmet_database()
-  df = read_source(db)
-}
+      source = "ANY")
 
 }
 \references{

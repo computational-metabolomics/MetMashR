@@ -39,8 +39,9 @@ current R version can be installed using BiocManager.
 
 ```{r,eval = FALSE, include = TRUE}
 # install BiocManager if not present
-if (!requireNamespace("BiocManager", quietly = TRUE))
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
+}
 
 # install MetMashR and dependencies
 BiocManager::install("MetMashR")
@@ -77,26 +78,27 @@ For this we make use of the `metabolomicsWorkbenchR` package.
 
 ```{r example-get-data,eval=FALSE,include=TRUE}
 # get annotations
-AN = do_query(
+AN <- do_query(
     context = "study",
     input_item = "analysis_id",
     input_value = "AN000465",
-    output_item = "metabolites")
+    output_item = "metabolites"
+)
 ```
 
 The imported table has 747 rows and 8 columns. For brevity in this vignette 
 we have cached the first 10 rows and stored them in the package.
 
 ```{r, include=FALSE,eval=TRUE}
-AN = readRDS(
-    system.file('extdata/AN000465_subset.rds',package='MetMashR')
+AN <- readRDS(
+    system.file("extdata/AN000465_subset.rds", package = "MetMashR")
 )
 ```
 
 We can convert the imported table into an `annotation_table`:
 
 ```{r}
-AT = annotation_table(data = AN, id_column = NULL)
+AT <- annotation_table(data = AN, id_column = NULL)
 ```
 
 All `annotation_table` objects must have an id for each row in the table. This 
@@ -164,12 +166,12 @@ names that are needed to use this object in addition to the depends/imports
 of `MetMashR`.
 
 ``` {r}
-.mwb_source<-setClass(
+.mwb_source <- setClass(
     "mwb_source",
-    contains = c('annotation_database'),
+    contains = c("annotation_database"),
     prototype = list(
-        name = 'Import from Metabolomics Workbench',
-        libraries = 'metabolomicsWorkbenchR'
+        name = "Import from Metabolomics Workbench",
+        libraries = "metabolomicsWorkbenchR"
     )
 )
 ```
@@ -185,12 +187,10 @@ including them in the function definition, in case we want to override the
 values defined in the prototype of the class definition in the previous section.
 
 ```{r}
-mwb_source = function(
-        ...) {
-    
+mwb_source <- function(...) {
     # new object
-    out = new_struct(
-        'mwb_source',
+    out <- new_struct(
+        "mwb_source",
         ...
     )
     return(out)
@@ -205,24 +205,24 @@ parse the source files into an `annotation_table`.
 Here we use `setMethod` to define the method for the new source.
 
 ```{r, eval=TRUE,include=TRUE}
-setMethod(f = "read_database",
-          signature = c("mwb_source"),
-          definition = function(obj) {
-              
-              ## get annotations using metabolomicsWorkbenchR
-              # AN = do_query(
-              #    context = "study",
-              #    input_item = "analysis_id",
-              #    input_value = M$analysis_id,
-              #    output_item = "metabolites")
-              
-              ## for vignette use locally cached subset
-              AN = readRDS(
-                  system.file('extdata/AN000465_subset.rds',package='MetMashR')
-              )
+setMethod(
+    f = "read_database",
+    signature = c("mwb_source"),
+    definition = function(obj) {
+        ## get annotations using metabolomicsWorkbenchR
+        # AN = do_query(
+        #    context = "study",
+        #    input_item = "analysis_id",
+        #    input_value = M$analysis_id,
+        #    output_item = "metabolites")
 
-              return(AN)
-          }
+        ## for vignette use locally cached subset
+        AN <- readRDS(
+            system.file("extdata/AN000465_subset.rds", package = "MetMashR")
+        )
+
+        return(AN)
+    }
 )
 ```
 
@@ -236,12 +236,12 @@ table we can use the `import_source` method:
 
 ```{r}
 # initialise source
-SRC = mwb_source(
-    source = 'AN000465'
+SRC <- mwb_source(
+    source = "AN000465"
 )
 
 # import
-AT = read_source(SRC)
+AT <- read_source(SRC)
 ```
 
 Variable `AT` is the imported and cleaned `annotation_database` from Metabolomics 
@@ -274,17 +274,18 @@ the model by providing `predicted` in the `prototype`.
 
 ```{r new-empty-removal-obj}
 set_struct_obj(
-    class_name = 'drop_empty_columns',
-    struct_obj = 'model',
+    class_name = "drop_empty_columns",
+    struct_obj = "model",
     params = character(0),
-    outputs = c(updated = 'annotation_source'),
+    outputs = c(updated = "annotation_source"),
     private = character(0),
     prototype = list(
-        name = 'Drop empty columns',
+        name = "Drop empty columns",
         description = paste0(
-            'A workflow step that removes columns from an annotation table ',
-            'where all rows are NA.'),
-        predicted = 'updated'
+            "A workflow step that removes columns from an annotation table ",
+            "where all rows are NA."
+        ),
+        predicted = "updated"
     )
 )
 ```
@@ -293,7 +294,7 @@ We can now create an instance of our new model, and use the `show` method to
 display information about it.
 
 ```{r}
-M = drop_empty_columns()
+M <- drop_empty_columns()
 show(M)
 ```
 Before we can use our new model we need to implement the `model_apply` method 
@@ -304,30 +305,29 @@ search for columns of missing values and then remove them from the
 
 ```{r}
 set_obj_method(
-    class_name = 'drop_empty_columns',
-    method_name = 'model_apply',
-    signature = c('drop_empty_columns','annotation_source'),
-    definition = function(M,D) {
-        
+    class_name = "drop_empty_columns",
+    method_name = "model_apply",
+    signature = c("drop_empty_columns", "annotation_source"),
+    definition = function(M, D) {
         # search for columns of NA
-        W = lapply( # for each column
+        W <- lapply( # for each column
             D$data, # in the annotation table
-            function(x){
+            function(x) {
                 all(is.na(x)) # return TRUE if all rows are NA
             }
         )
-        
+
         # get index of columns with all rows NA
-        idx = which(unlist(W))
-        
+        idx <- which(unlist(W))
+
         # if any found, remove from annotation table
-        if (length(idx)>0) {
-            D$data[,idx] = NULL
+        if (length(idx) > 0) {
+            D$data[, idx] <- NULL
         }
-        
+
         # update model object
-        M$updated = D
-        
+        M$updated <- D
+
         # return object
         return(M)
     }
@@ -341,7 +341,7 @@ The new model is ready to use. We can test it using the `model_apply` method,
 and check that some columns have been removed.
 
 ```{r}
-M = model_apply(M,AT)
+M <- model_apply(M, AT)
 ```
 The number of columns before was:
 ```{r}
@@ -364,48 +364,48 @@ As we did for `drop_empty_columns` we use the `set_struct_obj` and
 ```{r}
 # define new model object
 set_struct_obj(
-    class_name = 'remove_suffix',
-    struct_obj = 'model',
-    params = c(clean = 'logical',column_name = 'character'),
-    outputs = c(updated = 'annotation_source'),
+    class_name = "remove_suffix",
+    struct_obj = "model",
+    params = c(clean = "logical", column_name = "character"),
+    outputs = c(updated = "annotation_source"),
     prototype = list(
-        name = 'Remove suffix',
+        name = "Remove suffix",
         description = paste0(
-            'A workflow step that removes suffixes from molecule names by ',
-            'splitting a string at the last underscore an retaining the part',
-            'of the string before the underscore.'),
-        predicted = 'updated',
+            "A workflow step that removes suffixes from molecule names by ",
+            "splitting a string at the last underscore an retaining the part",
+            "of the string before the underscore."
+        ),
+        predicted = "updated",
         clean = FALSE,
-        column_name = 'V1'
+        column_name = "V1"
     )
 )
 
 # define method for new object
 set_obj_method(
-    class_name = 'remove_suffix',
-    method_name = 'model_apply',
-    signature = c('remove_suffix','annotation_source'),
-    definition = function(M,D) {
-        
+    class_name = "remove_suffix",
+    method_name = "model_apply",
+    signature = c("remove_suffix", "annotation_source"),
+    definition = function(M, D) {
         # get list of molecule names
-        x = D$data[[M$column_name]]
-        
+        x <- D$data[[M$column_name]]
+
         # split string at last underscore
-        s = strsplit(x, "_(?!.*_)", perl=TRUE)
-        
+        s <- strsplit(x, "_(?!.*_)", perl = TRUE)
+
         # get left hand side
-        s = lapply(s,'[',1)
-        
+        s <- lapply(s, "[", 1)
+
         # if clean replace existing column, otherwise new column
         if (M$clean) {
-            D$data[[M$column_name]] = unlist(s)
+            D$data[[M$column_name]] <- unlist(s)
         } else {
-            D$data$name.fixed = unlist(x)
+            D$data$name.fixed <- unlist(x)
         }
-        
+
         # update model object
-        M$updated = D
-        
+        M$updated <- D
+
         # return object
         return(M)
     }
@@ -444,33 +444,36 @@ vignette.
 
 ```{r, eval=FALSE,include = TRUE}
 # refmet
-refmet = mwb_refmet_database()
+refmet <- mwb_refmet_database()
 
 # pubchem caches
-pubchem_cid_cache = rds_database(
-    source = system.file('cached/pubchem_cid_cache.rds',
-                       package='MetMashR')
+pubchem_cid_cache <- rds_database(
+    source = system.file("cached/pubchem_cid_cache.rds",
+        package = "MetMashR"
+    )
 )
-pubchem_smile_cache = rds_database(
-    source = system.file('cached/pubchem_smiles_cache.rds',
-                       package='MetMashR')
+pubchem_smile_cache <- rds_database(
+    source = system.file("cached/pubchem_smiles_cache.rds",
+        package = "MetMashR"
+    )
 )
 ```
 
 ```{r, eval=TRUE,include=FALSE}
-refmet = mwb_refmet_database()
+refmet <- mwb_refmet_database()
 
-pubchem_cid_cache = rds_database(
+pubchem_cid_cache <- rds_database(
     source = file.path(
-        system.file('cached',package='MetMashR'),
-        'pubchem_cid_cache.rds')
+        system.file("cached", package = "MetMashR"),
+        "pubchem_cid_cache.rds"
+    )
 )
-pubchem_smile_cache = rds_database(
+pubchem_smile_cache <- rds_database(
     source = file.path(
-        system.file('cached',package='MetMashR'),
-        'pubchem_smiles_cache.rds')
+        system.file("cached", package = "MetMashR"),
+        "pubchem_smiles_cache.rds"
+    )
 )
-
 ```
 
 In practice it is better to create your own cache using e.g. `rds_database`, 
@@ -479,41 +482,46 @@ the vignette [TODO] for more details.
 
 ```{r,message=FALSE, include=TRUE, eval=TRUE}
 # prepare sequence
-M = import_source() +
+M <- import_source() +
     drop_empty_columns() +
     remove_suffix(
         clean = TRUE,
-        column_name = 'metabolite_name') +
+        column_name = "metabolite_name"
+    ) +
     database_lookup(
-        query_column = 'refmet_name',
-        database_column = 'name',
+        query_column = "refmet_name",
+        database_column = "name",
         database = refmet,
-        suffix = '_mwb',
-        include = 'pubchem_cid') +
+        suffix = "_mwb",
+        include = "pubchem_cid"
+    ) +
     pubchem_compound_lookup(
-        query_column = 'metabolite_name',
-        search_by = 'name',
-        suffix = '_pc',
-        output = 'cids',
-        records = 'best',
+        query_column = "metabolite_name",
+        search_by = "name",
+        suffix = "_pc",
+        output = "cids",
+        records = "best",
         delay = 0.2,
-        cache = pubchem_cid_cache) +
-    prioritise_columns( 
-        column_names = c('pubchem_cid_mwb','CID_pc'),
-        output_name = 'pubchem_cid',
-        source_name = 'pubchem_cid_source',
-        source_tags = c('mwb','pc'),
-        clean = TRUE) +
+        cache = pubchem_cid_cache
+    ) +
+    prioritise_columns(
+        column_names = c("pubchem_cid_mwb", "CID_pc"),
+        output_name = "pubchem_cid",
+        source_name = "pubchem_cid_source",
+        source_tags = c("mwb", "pc"),
+        clean = TRUE
+    ) +
     pubchem_property_lookup(
-        query_column = 'pubchem_cid',
-        search_by = 'cid',
-        suffix = '',
-        property = 'CanonicalSMILES',
+        query_column = "pubchem_cid",
+        search_by = "cid",
+        suffix = "",
+        property = "CanonicalSMILES",
         delay = 0.2,
-        cache = pubchem_smile_cache)
+        cache = pubchem_smile_cache
+    )
 
 # apply sequence
-M = model_apply(M,mwb_source(source = 'AN000465'))
+M <- model_apply(M, mwb_source(source = "AN000465"))
 ```
 
 Note that because the first step in the workflow is to import data from 
@@ -525,8 +533,8 @@ generate images of the molecular structures from SMILES.
 
 ```{r}
 # prepare chart
-C = openbabel_structure(
-    smiles_column = 'CanonicalSMILES',
+C <- openbabel_structure(
+    smiles_column = "CanonicalSMILES",
     row_index = 1,
     scale_to_fit = FALSE,
     view_port = 400,
@@ -534,14 +542,14 @@ C = openbabel_structure(
 )
 
 # loop over some records and plot some of the molecules
-G = list()
-x=1
-for (k in c(3,5)) { 
-    C$row_index = k
-    G[[x]]=chart_plot(C,predicted(M))
-    x=x+1
+G <- list()
+x <- 1
+for (k in c(3, 5)) {
+    C$row_index <- k
+    G[[x]] <- chart_plot(C, predicted(M))
+    x <- x + 1
 }
-cowplot::plot_grid(plotlist = G,nrow=1,labels='AUTO')
+cowplot::plot_grid(plotlist = G, nrow = 1, labels = "AUTO")
 ```
 
 # Summary

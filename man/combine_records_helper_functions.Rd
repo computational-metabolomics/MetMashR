@@ -49,7 +49,8 @@ are returned. Otherwise the first record is returned.}
 
 \item{na.rm}{(logical) If TRUE then NA is ignored}
 
-\item{separator}{(character, NULL) if !NULL this string is used to collapse matches with the same priority}
+\item{separator}{(character, NULL) if !NULL this string is used to collapse
+matches with the same priority}
 
 \item{na_string}{(character) NA values are replaced with this string}
 
@@ -73,7 +74,8 @@ values to characters when determining if values are unique.}
 
 \item{priority}{(character) a list of labels in priority order}
 
-\item{no_match}{(character, NULL) if !NULL  then annotations not matching any of the priority labels are replaced with this value}
+\item{no_match}{(character, NULL) if !NULL  then annotations not matching
+any of the priority labels are replaced with this value}
 
 \item{grade_col}{(character) the name of a column containing grades}
 
@@ -93,7 +95,8 @@ excluding NA. If \code{ties == TRUE} then all tied
 values are returned, otherwise the first value in
 a sorted unique list is returned (equal to min if numeric).
 If \code{na.rm = FALSE} then NA are included when searching for the modal value
-and placed last if \code{ties = FALSE} (values are returned preferentially over NA).
+and placed last if \code{ties = FALSE} (values are returned preferentially over
+NA).
 
 \item \code{.mean()}: calculates the mean value,
 excluding NA if \code{na.rm = TRUE}
@@ -143,52 +146,57 @@ and the worst grade is "Z" or "z". Any non-exact matches to a character in
 \examples{
 
 # Select matching records
-M = combine_records(
-        group_by = 'example',
-        default_fcn = .select_match(
-            match_col = 'match_column',
-            match = 'find_me',
-            separator = ', ',
-            na_string = 'NA')
-        )
+M <- combine_records(
+    group_by = "example",
+    default_fcn = .select_match(
+        match_col = "match_column",
+        match = "find_me",
+        separator = ", ",
+        na_string = "NA"
+    )
+)
 
 # Collapse unique values
-M = combine_records(
-        group_by = 'example',
-        default_fcn = .unique(
-            digits = 6,
-            separator = ', ',
-            na_string = 'NA')
-        )
+M <- combine_records(
+    group_by = "example",
+    default_fcn = .unique(
+        digits = 6,
+        separator = ", ",
+        na_string = "NA"
+    )
+)
 
 # Prioritise by source
-M = combine_records(
-        group_by = 'InChiKey',
-        default_fcn = .prioritise(
-             match_col = 'source',
-             priority = c('CD','LS'),
-             separator = '  || ')
+M <- combine_records(
+    group_by = "InChiKey",
+    default_fcn = .prioritise(
+        match_col = "source",
+        priority = c("CD", "LS"),
+        separator = "  || "
     )
+)
 
 # Do nothing to all columns
-M = combine_records(
-        group_by = 'InChiKey',
-        default_fcn = .nothing()
-    )
+M <- combine_records(
+    group_by = "InChiKey",
+    default_fcn = .nothing()
+)
 
 # Add a column with the number of records with a matching inchikey
-M = combine_records(
-        group_by = 'InChiKey',
-        fcns = list(
-            count = .count()
-        ))
+M <- combine_records(
+    group_by = "InChiKey",
+    fcns = list(
+        count = .count()
+    )
+)
 
 # Select annotation with highest (best) grade
-M = combine_records(
-        group_by = 'InChiKey',
-        default_fcn = .select_grade(
-            grade_col = 'grade',
-            keep_NA = FALSE,
-            upper_case = TRUE
-        ))
+M <- combine_records(
+    group_by = "InChiKey",
+    default_fcn = .select_grade(
+        grade_col = "grade",
+        keep_NA = FALSE,
+        upper_case = TRUE
+    )
+)
 }

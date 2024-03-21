@@ -21,9 +21,10 @@ Using it as the
 temporary folder before storing it in the cache.
 }
 \examples{
-M = BiocFileCache_database(
+M <- BiocFileCache_database(
     path = tempfile(),
-    resource_name = 'example',
-    bfc_fun=.unzip)
+    resource_name = "example",
+    bfc_fun = .unzip
+)
 
 }

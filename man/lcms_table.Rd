@@ -47,7 +47,7 @@ M = lcms_table(
       id_column = "id",
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \concept{{annotation_tables}}

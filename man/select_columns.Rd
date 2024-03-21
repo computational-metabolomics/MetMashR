@@ -34,7 +34,7 @@ A \code{select_columns} object inherits the following \code{struct} classes: \cr
 
 \examples{
 M = select_columns(
-      expression = [a call])
+      expression = call("example"))
 
 }
 \references{

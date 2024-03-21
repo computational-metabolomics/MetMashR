@@ -19,9 +19,10 @@ This helper function is for use with \code{BiocFileCache} objects. Using it will
 copy the file directly to the cache without making any changes.
 }
 \examples{
-M = BiocFileCache_database(
+M <- BiocFileCache_database(
     path = tempfile(),
-    resource_name = 'example',
-    bfc_fun=.cache_as_is)
+    resource_name = "example",
+    bfc_fun = .cache_as_is
+)
 
 }

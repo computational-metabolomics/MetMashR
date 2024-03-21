@@ -47,7 +47,7 @@ M = ls_source(
       id_column = "id",
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \seealso{

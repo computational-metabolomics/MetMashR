@@ -17,15 +17,18 @@ Authors@R: c(
            email="r.j.weber@bham.ac.uk")
         )
 Description: A package to merge, filter sort, organise and otherwise mash 
-    together metabolite annotations. Metabolite annotations can be imported from
-    multiple sources (software) and combined using workflow steps based on S4
-    class templates derived from the `struct` package.
+    together metabolite annotation tables. Metabolite annotations can be 
+    imported from multiple sources (software) and combined using workflow 
+    steps based on S4
+    class templates derived from the `struct` package. Other modular workflow
+    such as filtering, merging, splitting, normalisation and rest-api queries
+    are also included.
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
 RoxygenNote: 7.3.1
 Depends: 
-    R (>= 4.3.0),
+    R (>= 4.4.0),
     struct
 Imports: 
     dplyr,
@@ -37,7 +40,8 @@ Imports:
     ggthemes,
     cowplot,
     ggplot2,
-    utils
+    utils,
+    rlang
 Collate: 
     'generics.R'
     'zzz.R'
@@ -140,5 +144,5 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://computational-metabolomics.github.io/MetMashR/
 Roxygen: list(markdown = TRUE)
-biocViews: WorkflowStep, Metabolomics
+biocViews: WorkflowStep, Metabolomics, KEGG
 BugReports: https://github.com/computational-metabolomics/MetMashR/issues

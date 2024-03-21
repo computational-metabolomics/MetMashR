@@ -11,7 +11,8 @@ mz_match(variable_meta, mz_column, ppm_window, id_column, ...)
 
 \item{mz_column}{(character) Column name of the mz values in variable_meta.}
 
-\item{ppm_window}{(numeric, integer) Ppm window to use for matching. If a single value is provided then the same ppm is used for both variable meta and the annotations. A named vector can also be provided e.g. c("variable_meta"=5,"annotations"=2) to use different windows for each data table.}
+\item{ppm_window}{(numeric, integer) Ppm window to use for matching. If a single value is provided then the same ppm is used for both variable meta and the annotations. A named vector can also be provided e.g. c("variable_meta"=5,"annotations"=2) to use ",
+"different windows for each data table.}
 
 \item{id_column}{(character) Column name of the variable ids in variable_meta. id_column="rownames" will use the rownames as ids.}
 

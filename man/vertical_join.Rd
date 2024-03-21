@@ -21,8 +21,8 @@ create a single new data.frame with data and records from multiple sources.
 }
 \examples{
 
-M = annotation_source()
-N = annotation_source()
-O = vertical_join(M,N)
+M <- annotation_source()
+N <- annotation_source()
+O <- vertical_join(M, N)
 
 }

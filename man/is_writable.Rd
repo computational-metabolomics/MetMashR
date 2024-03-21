@@ -11,7 +11,7 @@ is_writable(obj, ...)
 }
 \value{
 TRUE if the database is writable; FALSE otherwise. This method
-checks both the .writable slot of the object and the file properties.
+does not check file properties, only the intended usage of the object.
 }
 \description{
 A function that returns TRUE if the database has been designed for use
@@ -19,7 +19,7 @@ in read and write mode.
 }
 \examples{
 
-M = annotation_database()
+M <- annotation_database()
 is.writable(M)
 
 }

@@ -27,11 +27,11 @@ used by MetMashR to ensure validity of certain objects.
 }
 \examples{
 # test if column present
-AT = annotation_source(data.frame(id = character(0)))
-check_for_columns(AT,'id') # TRUE
-check_for_columns(AT,'cake') # FALSE
+AT <- annotation_source(data.frame(id = character(0)))
+check_for_columns(AT, "id") # TRUE
+check_for_columns(AT, "cake") # FALSE
 
 # return a message if missing
-check_for_columns(AT,'cake',msg = TRUE)
+check_for_columns(AT, "cake", msg = TRUE)
 
 }

@@ -18,9 +18,9 @@ A dictionary for converting Greek characters to Romanised names. It is
 intended for use with the \code{\link[=normalise_strings]{normalise_strings()}} object.
 }
 \examples{
-M = normalise_strings(
-    search_column ='example', 
-    output_column = 'result',
+M <- normalise_strings(
+    search_column = "example",
+    output_column = "result",
     dictionary = .greek_dictionary
 )
 

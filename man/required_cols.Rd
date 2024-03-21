@@ -22,10 +22,10 @@ the object and all of its parent objects.
 }
 \examples{
 # prepare object
-M = lcms_table(id_column='id',mz_column='mz',rt_column='rt')
+M <- lcms_table(id_column = "id", mz_column = "mz", rt_column = "rt")
 
 #' # get values for required slots
-r = required(M)
+r <- required(M)
 
 # get slot names for required columns
 names(r)

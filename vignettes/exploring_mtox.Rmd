@@ -20,24 +20,27 @@ knitr::opts_chunk$set(
     comment = "#>",
     message = FALSE,
     warning = FALSE,
-    fig.align="center"
+    fig.align = "center"
 )
 
-.DT = function(x){
-    dt_options=list(
-        scrollX=TRUE,
-        pageLength=6,
-        dom='t',
+.DT <- function(x) {
+    dt_options <- list(
+        scrollX = TRUE,
+        pageLength = 6,
+        dom = "t",
         initComplete = DT::JS(
             "function(settings, json) {",
             "$(this.api().table().header()).css({'font-size':'10pt'});",
-            "}")
+            "}"
+        )
     )
-    
+
     x %>%
-        DT::datatable(options=dt_options,rownames=FALSE) %>%
-        DT::formatStyle(columns = colnames(x),
-                        fontSize = '10pt')
+        DT::datatable(options = dt_options, rownames = FALSE) %>%
+        DT::formatStyle(
+            columns = colnames(x),
+            fontSize = "10pt"
+        )
 }
 
 library(BiocStyle)
@@ -52,8 +55,9 @@ current R version can be installed using BiocManager.
 
 ```{r,eval = FALSE, include = TRUE}
 # install BiocManager if not present
-if (!requireNamespace("BiocManager", quietly = TRUE))
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
+}
 
 # install MetMashR and dependencies
 BiocManager::install("MetMashR")
@@ -100,13 +104,13 @@ It can be imported to a data.frame using the `read_database` method.
 
 ```{r}
 # prep object
-MT = MTox700plus_database(
-    version = 'latest',
-    tag = 'MTox700+'
+MT <- MTox700plus_database(
+    version = "latest",
+    tag = "MTox700+"
 )
 
 # import
-df = read_database(MT)
+df <- read_database(MT)
 
 # show contents
 .DT(df)
@@ -114,15 +118,15 @@ df = read_database(MT)
 
 ```{r}
 # prepare workflow that uses MTox700+ as a source
-M = import_source()
-    trim_whitespace(
-        column_name = '.all',
-        which = 'both',
-        whitespace = '[\\h\\v]'
-    )
+M <- import_source()
+trim_whitespace(
+    column_name = ".all",
+    which = "both",
+    whitespace = "[\\h\\v]"
+)
 
 # apply
-M = model_apply(M,MT)
+M <- model_apply(M, MT)
 ```
 
 
@@ -139,26 +143,26 @@ the database. Here we generate images of the first 6 metabolites in the database
 
 ```{r}
 # prepare chart
-C = openbabel_structure(
-    smiles_column = 'smiles',
+C <- openbabel_structure(
+    smiles_column = "smiles",
     row_index = 1,
     scale_to_fit = FALSE,
     image_size = 300,
-    title_column = 'metabolite_name',
+    title_column = "metabolite_name",
     view_port = 400
 )
 
 # first six
-G = list()
+G <- list()
 for (k in 1:6) {
     # set row idx
-    C$row_index=k
+    C$row_index <- k
     # plot
-    G[[k]] = chart_plot(C,predicted(M)) 
+    G[[k]] <- chart_plot(C, predicted(M))
 }
 
 # layout
-cowplot::plot_grid(plotlist = G,nrow=2)
+cowplot::plot_grid(plotlist = G, nrow = 2)
 ```
 
 The MTox700+ database also contains information about the structural 
@@ -171,22 +175,22 @@ are assigned to a "superclass" of molecules.
 
 ```{r,fig.height=7.5,fig.width=7.5}
 # initialise chart object
-C = annotation_bar_chart(
-    factor_name = 'superclass',
+C <- annotation_bar_chart(
+    factor_name = "superclass",
     label_rotation = TRUE,
-    label_location = 'outside',
-    label_type = 'percent',
+    label_location = "outside",
+    label_type = "percent",
     legend = TRUE
 )
 
 # plot
-g = chart_plot(C,predicted(M)) + ylim(c(0,600)) +
-    guides(fill=guide_legend(nrow=6,title = element_blank())) + 
-    theme(legend.position = 'bottom',legend.margin=margin())
+g <- chart_plot(C, predicted(M)) + ylim(c(0, 600)) +
+    guides(fill = guide_legend(nrow = 6, title = element_blank())) +
+    theme(legend.position = "bottom", legend.margin = margin())
 
 # layout
-leg = cowplot::get_legend(g)
-cowplot::plot_grid(g+theme(legend.position = 'none'),leg,nrow=2,rel_heights = c(75,25))
+leg <- cowplot::get_legend(g)
+cowplot::plot_grid(g + theme(legend.position = "none"), leg, nrow = 2, rel_heights = c(75, 25))
 ```
 
 <br>
@@ -239,24 +243,23 @@ compare the overlap between inchikey identifiers in PathBank and MTox700+.
 # object M already contains the MTox700+ database as a source
 
 # prepare PathBank as a source
-P = PathBank_metabolite_database(
-        version = 'primary',
-        tag = 'PathBank'
+P <- PathBank_metabolite_database(
+    version = "primary",
+    tag = "PathBank"
 )
 
 # import
-P = read_source(P)
+P <- read_source(P)
 
 # prepare chart
-C = annotation_venn_chart(
-    factor_name = c('inchikey','InChI.Key'),legend = FALSE,
-    fill_colour = '.group',
-    line_colour = 'white'
+C <- annotation_venn_chart(
+    factor_name = c("inchikey", "InChI.Key"), legend = FALSE,
+    fill_colour = ".group",
+    line_colour = "white"
 )
 
 # plot
-chart_plot(C,predicted(M),P)
-
+chart_plot(C, predicted(M), P)
 ```
 
 The diagram shows that less than half of the metabolites in MTox700+ are also present 
@@ -278,33 +281,34 @@ additional identifiers such as HMBD ID and KEGG ID.
 
 ```{r}
 # prepare object
-X = database_lookup(
-    query_column = 'inchikey',
+X <- database_lookup(
+    query_column = "inchikey",
     database = P$data,
-        database_column = 'InChI.Key',
-        include = c(
-            "PathBank.ID","Pathway.Name","Pathway.Subject","Species",
-            "HMDB.ID","KEGG.ID","ChEBI.ID","DrugBank.ID","SMILES"),
-        suffix = ''
+    database_column = "InChI.Key",
+    include = c(
+        "PathBank.ID", "Pathway.Name", "Pathway.Subject", "Species",
+        "HMDB.ID", "KEGG.ID", "ChEBI.ID", "DrugBank.ID", "SMILES"
+    ),
+    suffix = ""
 )
 
 # apply
-X = model_apply(X,predicted(M))
+X <- model_apply(X, predicted(M))
 ```
 
 We can now visualise e.g. the subject of the pathways captured by the MTox700+ 
 database.
 
 ```{r}
-C = annotation_bar_chart(
-    factor_name = 'Pathway.Subject',
+C <- annotation_bar_chart(
+    factor_name = "Pathway.Subject",
     label_rotation = TRUE,
-    label_location = 'outside',
-    label_type = 'percent',
+    label_location = "outside",
+    label_type = "percent",
     legend = TRUE
 )
 
-chart_plot(C,predicted(X))+ylim(c(0,17500))
+chart_plot(C, predicted(X)) + ylim(c(0, 17500))
 ```
 
 We can see that MTox700+ largely focuses on metabolites related to Disease 
@@ -340,22 +344,23 @@ do this in a `MetMashR` workflow.
 
 ```{r}
 # prepare object
-X = database_lookup(
-    query_column = 'inchikey',
+X <- database_lookup(
+    query_column = "inchikey",
     database = P$data,
-        database_column = 'InChI.Key',
-        include = c(
-            "PathBank.ID","Pathway.Name","Pathway.Subject","Species",
-            "HMDB.ID","KEGG.ID","ChEBI.ID","DrugBank.ID","SMILES"),
-        suffix = '') + 
+    database_column = "InChI.Key",
+    include = c(
+        "PathBank.ID", "Pathway.Name", "Pathway.Subject", "Species",
+        "HMDB.ID", "KEGG.ID", "ChEBI.ID", "DrugBank.ID", "SMILES"
+    ),
+    suffix = ""
+) +
     combine_records(
-        group_by = 'inchikey',
-        default_fcn = .unique(' || ')
+        group_by = "inchikey",
+        default_fcn = .unique(" || ")
     )
 
 # apply
-X = model_apply(X,predicted(M))
-
+X <- model_apply(X, predicted(M))
 ```
 
 We have used the `.unique` helper function so that records for each inchikey are
@@ -368,7 +373,7 @@ example Glycolic acid:
 
 ```{r}
 # get index of metabolite
-w = which(predicted(X)$data$metabolite_name=='Glycolic acid')
+w <- which(predicted(X)$data$metabolite_name == "Glycolic acid")
 ```
 
 The pathways associated with Glycolic acid are:

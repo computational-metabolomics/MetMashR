@@ -31,7 +31,7 @@ A \code{annotation_database} object inherits the following \code{struct} classes
 M = annotation_database(
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \seealso{

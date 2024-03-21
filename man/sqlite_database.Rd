@@ -35,7 +35,7 @@ M = sqlite_database(
       table = character(0),
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \references{

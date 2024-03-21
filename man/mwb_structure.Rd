@@ -27,8 +27,8 @@ This object makes use of functionality from the following packages:\itemize{  \i
 
 This object queries the Metabolomics Workbench API for matches to
 your query without caching the results. It is therefore intended for limited
-use. If you wish to obtain images for a large number of moelucules you should seek
-an alternative solution.
+use. If you wish to obtain images for a large number of molecules you should
+seek an alternative solution.
 }
 \section{Inheritance}{
 

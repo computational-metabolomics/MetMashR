@@ -19,9 +19,9 @@ IUPAC codes to use three letter codes for amino acids separated by hyphens.
 e.g. INK becomes Ile-Asn-Lys
 }
 \examples{
-M = normalise_strings(
-    search_column ='example', 
-    output_column = 'result',
+M <- normalise_strings(
+    search_column = "example",
+    output_column = "result",
     dictionary = .amino_acid_dictionary
 )
 

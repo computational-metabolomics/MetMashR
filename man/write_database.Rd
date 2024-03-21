@@ -16,6 +16,6 @@ Silently returns TRUE if successful, FALSE otherwise
 Writes a data.frame to a \code{annotation_database}.
 }
 \examples{
-M = rds_database(tempfile())
-write_database(M,data.frame())
+M <- rds_database(tempfile())
+write_database(M, data.frame())
 }

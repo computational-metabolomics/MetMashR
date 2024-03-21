@@ -16,7 +16,7 @@ vignette: >
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
-    fig.align = 'center'
+    fig.align = "center"
 )
 library(BiocStyle)
 ```
@@ -28,8 +28,9 @@ current R version can be installed using BiocManager.
 
 ```{r,eval = FALSE, include = TRUE}
 # install BiocManager if not present
-if (!requireNamespace("BiocManager", quietly = TRUE))
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
+}
 
 # install MetMashR and dependencies
 BiocManager::install("MetMashR")
@@ -38,14 +39,16 @@ BiocManager::install("MetMashR")
 Once installed you can activate the packages in the usual way:
 
 ```{r, eval=TRUE, include=FALSE}
-suppressWarnings({suppressPackageStartupMessages({
-    # load the packages
-    library(struct)
-    library(MetMashR)
-    library(metabolomicsWorkbenchR)
-    library(ggplot2)
-    library(patchwork)
-})})
+suppressWarnings({
+    suppressPackageStartupMessages({
+        # load the packages
+        library(struct)
+        library(MetMashR)
+        library(metabolomicsWorkbenchR)
+        library(ggplot2)
+        library(patchwork)
+    })
+})
 ```
 
 ```{r, eval=FALSE, include=TRUE}
@@ -65,35 +68,38 @@ This study consists of LCMS peak tables of HILIC_POS and LIPIDS_POS assays colle
 Here, we import the MS1 level feature meta data for each assay and store it as a data.frame that we use later on in the workflow.
 ```{r}
 # import HILIC_POS
-HP = openxlsx::read.xlsx(
-        system.file("extdata/daphnia/daphnia_example.xlsx",
-                package = 'MetMashR'),
-        sheet='HILIC_POS',
-        rowNames=FALSE,
-        colNames=TRUE)
+HP <- openxlsx::read.xlsx(
+    system.file("extdata/daphnia/daphnia_example.xlsx",
+        package = "MetMashR"
+    ),
+    sheet = "HILIC_POS",
+    rowNames = FALSE,
+    colNames = TRUE
+)
 # rename columns
-colnames(HP)[1] = 'id'
+colnames(HP)[1] <- "id"
 # append assay to feature id
-HP$id = paste0('HILIC_POS_',HP$id)
+HP$id <- paste0("HILIC_POS_", HP$id)
 # convert some columns to numeric
-HP$rsd_qc=as.numeric(HP$rsd_qc)
-HP$rsd_sample=as.numeric(HP$rsd_sample)
+HP$rsd_qc <- as.numeric(HP$rsd_qc)
+HP$rsd_sample <- as.numeric(HP$rsd_sample)
 
 # import LIPIDS_POS
-LP = openxlsx::read.xlsx(
-        system.file("extdata/daphnia/daphnia_example.xlsx",
-                package = 'MetMashR'),
-        sheet='LIPIDS_POS',
-        rowNames=FALSE,
-        colNames=TRUE)
+LP <- openxlsx::read.xlsx(
+    system.file("extdata/daphnia/daphnia_example.xlsx",
+        package = "MetMashR"
+    ),
+    sheet = "LIPIDS_POS",
+    rowNames = FALSE,
+    colNames = TRUE
+)
 # rename columns
-colnames(LP)[1] = 'id'
+colnames(LP)[1] <- "id"
 # append assay to feature id
-LP$id = paste0('LIPIDS_POS_',LP$id)
+LP$id <- paste0("LIPIDS_POS_", LP$id)
 # convert some columns to numeric
-LP$rsd_qc=as.numeric(LP$rsd_qc)
-LP$rsd_sample=as.numeric(LP$rsd_sample)
-
+LP$rsd_qc <- as.numeric(LP$rsd_qc)
+LP$rsd_sample <- as.numeric(LP$rsd_sample)
 ```
 
 <br>
@@ -106,47 +112,51 @@ retain annotations with a Full Match and disregard the rest. Finally we match th
 MS2 peaks to the MS1 peaks.
 
 ```{r}
-cd_workflow = 
+cd_workflow <-
     # import source
     import_source() +
-    
+
     # add useful labels
     add_labels(
         labels = list(
-            source_name = 'CD',
-            assay = 'placeholder')) + # placeholder replaced later
-    
+            source_name = "CD",
+            assay = "placeholder"
+        )
+    ) + # placeholder replaced later
+
     # filter low quality
     filter_labels(
-        column_name = 'compound_match',
-        labels = 'Full match',
-        mode = 'include') +
-    
+        column_name = "compound_match",
+        labels = "Full match",
+        mode = "include"
+    ) +
+
     # resolve duplicates
     combine_records(
-        group_by = c('compound','ion'),
+        group_by = c("compound", "ion"),
         default_fcn = .select_max(
-            max_col = 'mzcloud_score',
+            max_col = "mzcloud_score",
             keep_NA = FALSE,
             use_abs = TRUE
-        )) +
+        )
+    ) +
 
     # match MS1 to MS2
     mzrt_match(
         variable_meta = HP,
-        mz_column = 'mz',
-        rt_column = 'rt',
+        mz_column = "mz",
+        rt_column = "rt",
         ppm_window = 5,
         rt_window = 20,
-        id_column = 'id'
+        id_column = "id"
     ) +
-    
+
     # ppm difference MS1 vs library
     calc_ppm_diff(
-        obs_mz_column = 'mz_match',
-        ref_mz_column = 'theoretical_mz',
-        out_column = 'ms1_lib_ppm_diff'
-    ) 
+        obs_mz_column = "mz_match",
+        ref_mz_column = "theoretical_mz",
+        out_column = "ms1_lib_ppm_diff"
+    )
 ```
 
 We need to apply this workflow to each assay. For convenience we store the sources
@@ -154,26 +164,32 @@ for each assay in a list.
 
 ```{r}
 # prepare sources
-cd_sources = list(
+cd_sources <- list(
     HILIC_POS = cd_source(
         source = c(
             system.file(
-                'extdata/daphnia/HILIC_POS_EL_CD.xlsx',
-                package = 'MetMashR'),
+                "extdata/daphnia/HILIC_POS_EL_CD.xlsx",
+                package = "MetMashR"
+            ),
             system.file(
-            'extdata/daphnia/HILIC_POS_EL_CD_comp.xlsx',
-            package = 'MetMashR')),
-        sheets = c('Compounds','Compounds')
+                "extdata/daphnia/HILIC_POS_EL_CD_comp.xlsx",
+                package = "MetMashR"
+            )
+        ),
+        sheets = c("Compounds", "Compounds")
     ),
     LIPIDS_POS = cd_source(
         source = c(
             system.file(
-                'extdata/daphnia/LIPIDS_POS_EL_CD.xlsx',
-                package = 'MetMashR'),
+                "extdata/daphnia/LIPIDS_POS_EL_CD.xlsx",
+                package = "MetMashR"
+            ),
             system.file(
-            'extdata/daphnia/LIPIDS_POS_EL_CD_comp.xlsx',
-            package = 'MetMashR')),
-        sheets = c('Compounds','Compounds')
+                "extdata/daphnia/LIPIDS_POS_EL_CD_comp.xlsx",
+                package = "MetMashR"
+            )
+        ),
+        sheets = c("Compounds", "Compounds")
     )
 )
 ```
@@ -185,17 +201,17 @@ applied workflow in a list for convenience.
 
 ```{r}
 # place to store results
-CD = list()
+CD <- list()
 
 # set labels
-cd_workflow[2]$labels$assay='HILIC_POS' 
+cd_workflow[2]$labels$assay <- "HILIC_POS"
 # apply workflow
-CD$HILIC_POS = model_apply(cd_workflow,cd_sources$HILIC_POS)
+CD$HILIC_POS <- model_apply(cd_workflow, cd_sources$HILIC_POS)
 
 # set labels
-cd_workflow[2]$labels$assay='LIPIDS_POS' 
+cd_workflow[2]$labels$assay <- "LIPIDS_POS"
 # apply workflow
-CD$LIPIDS_POS = model_apply(cd_workflow,cd_sources$LIPIDS_POS)
+CD$LIPIDS_POS <- model_apply(cd_workflow, cd_sources$LIPIDS_POS)
 ```
 
 <br>
@@ -213,21 +229,21 @@ these can be excluded by adding e.g. a `filter_range` workflow step.
 
 ```{r}
 # MS2 vs library
-C = annotation_histogram(
-    factor_name = 'library_ppm_diff',
-    vline = c(-5,5)
+C <- annotation_histogram(
+    factor_name = "library_ppm_diff",
+    vline = c(-5, 5)
 )
-g1 = chart_plot(C,predicted(CD$HILIC_POS)) + ggtitle('MS2 vs library')
+g1 <- chart_plot(C, predicted(CD$HILIC_POS)) + ggtitle("MS2 vs library")
 
 # MS1 vs library
-C = annotation_histogram(
-    factor_name = 'ms1_lib_ppm_diff',
-    vline = c(-5,5)
+C <- annotation_histogram(
+    factor_name = "ms1_lib_ppm_diff",
+    vline = c(-5, 5)
 )
-g2 = chart_plot(C,predicted(CD$HILIC_POS)) + ggtitle('MS1 vs library')
+g2 <- chart_plot(C, predicted(CD$HILIC_POS)) + ggtitle("MS1 vs library")
 
 # layout
-cowplot::plot_grid(g1,g2,nrow=1)
+cowplot::plot_grid(g1, g2, nrow = 1)
 ```
 
 The ppm and retention time differences between the MS1 and MS2 features (peaks)
@@ -235,12 +251,11 @@ can also be indicative of analytical problems.
 
 ```{r,fig.width=6,fig.height=5.5}
 # prepare chart
-C = annotation_histogram2d(
-    factor_name = c('ppm_match_diff_an','rt_match_diff'),
+C <- annotation_histogram2d(
+    factor_name = c("ppm_match_diff_an", "rt_match_diff"),
     bins = 30
 )
-chart_plot(C,predicted(CD$HILIC_POS))
-
+chart_plot(C, predicted(CD$HILIC_POS))
 ```
 
 The LIPID_POS assay (not shown) only has 2 matches, so the chart is not informative for 
@@ -256,70 +271,72 @@ annotations we select the annotation with the lowest ppm difference vs the libra
 retain only LS annotations with Grades A and B.
 
 ```{r}
-
 # prepare workflow
-ls_workflow = 
-
+ls_workflow <-
     # import raw file
-    import_source() +   
-    
+    import_source() +
+
     # add labels
     add_labels(
         labels = c(
-            assay = 'placeholder', # will be replaced later
-            source_name = 'LS'
-        ))+
+            assay = "placeholder", # will be replaced later
+            source_name = "LS"
+        )
+    ) +
 
     # filter by grade
     filter_labels(
-        column_name = 'Grade',
-        labels = c('A','B'),
-        mode = 'include') +
-    
+        column_name = "Grade",
+        labels = c("A", "B"),
+        mode = "include"
+    ) +
+
     # resolve duplicates
     combine_records(
-        group_by = c('LipidIon'),
+        group_by = c("LipidIon"),
         default_fcn = .select_min(
-            min_col = 'library_ppm_diff',
+            min_col = "library_ppm_diff",
             keep_NA = FALSE,
             use_abs = TRUE
-        ) 
+        )
     ) +
-    
+
     # match MS1 to MS2
     mzrt_match(
         variable_meta = HP,
-        mz_column = 'mz',
-        rt_column = 'rt',
+        mz_column = "mz",
+        rt_column = "rt",
         ppm_window = 5,
         rt_window = 20,
-        id_column = 'id'
+        id_column = "id"
     ) +
-    
+
     # ppm difference MS1 vs library
     calc_ppm_diff(
-        obs_mz_column = 'mz_match',
-        ref_mz_column = 'theor_mass',
-        out_column = 'ms1_lib_ppm_diff'
-    ) 
+        obs_mz_column = "mz_match",
+        ref_mz_column = "theor_mass",
+        out_column = "ms1_lib_ppm_diff"
+    )
 ```
 
 Next we prepare the LipidSearch source objects:
 
 ```{r}
 # prepare sources
-ls_sources = list(
+ls_sources <- list(
     HILIC_POS = ls_source(
-        source = 
+        source =
             system.file(
-                'extdata/daphnia/HILIC_POS_EL_LS.txt',
-                package = 'MetMashR')
+                "extdata/daphnia/HILIC_POS_EL_LS.txt",
+                package = "MetMashR"
+            )
     ),
     LIPIDS_POS = ls_source(
-        source = 
+        source =
             system.file(
-                'extdata/daphnia/LIPIDS_POS_EL_LS.txt',
-                package = 'MetMashR')
+                "extdata/daphnia/LIPIDS_POS_EL_LS.txt",
+                package = "MetMashR"
+            )
     )
 )
 ```
@@ -328,17 +345,17 @@ Now we can apply the LipidSearch workflow to the LipidSearch sources:
 
 ```{r}
 # place to store results
-LS = list()
+LS <- list()
 
 # set labels
-ls_workflow[2]$labels$assay='HILIC_POS' 
+ls_workflow[2]$labels$assay <- "HILIC_POS"
 # apply workflow
-LS$HILIC_POS = model_apply(ls_workflow,ls_sources$HILIC_POS)
+LS$HILIC_POS <- model_apply(ls_workflow, ls_sources$HILIC_POS)
 
 # set labels
-ls_workflow[2]$labels$assay='LIPIDS_POS' 
+ls_workflow[2]$labels$assay <- "LIPIDS_POS"
 # apply workflow
-LS$LIPIDS_POS = model_apply(ls_workflow,ls_sources$LIPIDS_POS)
+LS$LIPIDS_POS <- model_apply(ls_workflow, ls_sources$LIPIDS_POS)
 ```
 
 <br>
@@ -350,21 +367,21 @@ before.
 
 ```{r}
 # MS2 vs library
-C = annotation_histogram(
-    factor_name = 'library_ppm_diff',
-    vline = c(-5,5)
+C <- annotation_histogram(
+    factor_name = "library_ppm_diff",
+    vline = c(-5, 5)
 )
-g1 = chart_plot(C,predicted(LS$HILIC_POS)) + ggtitle('MS2 vs library')
+g1 <- chart_plot(C, predicted(LS$HILIC_POS)) + ggtitle("MS2 vs library")
 
 # MS1 vs library
-C = annotation_histogram(
-    factor_name = 'ms1_lib_ppm_diff',
-    vline = c(-5,5)
+C <- annotation_histogram(
+    factor_name = "ms1_lib_ppm_diff",
+    vline = c(-5, 5)
 )
-g2 = chart_plot(C,predicted(LS$HILIC_POS)) + ggtitle('MS1 vs library')
+g2 <- chart_plot(C, predicted(LS$HILIC_POS)) + ggtitle("MS1 vs library")
 
 # layout
-cowplot::plot_grid(g1,g2,nrow=1)
+cowplot::plot_grid(g1, g2, nrow = 1)
 ```
 
 We can also check for analytical issue by comparing the MS1 and MS2 ppm and 
@@ -372,12 +389,11 @@ retention time differences.
 
 ```{r,fig.width=6,fig.height=5.5}
 # prepare chart
-C = annotation_histogram2d(
-    factor_name = c('ppm_match_diff_an','rt_match_diff'),
+C <- annotation_histogram2d(
+    factor_name = c("ppm_match_diff_an", "rt_match_diff"),
     bins = 30
 )
-chart_plot(C,predicted(LS$HILIC_POS))
-
+chart_plot(C, predicted(LS$HILIC_POS))
 ```
 
 <br>
@@ -401,65 +417,78 @@ possible annotations.
 For the vignette we used cached results, which we prepare now.
 
 ```{r}
-cache1=rds_database(
-    source=file.path(
-        system.file('cached',package='MetMashR'),'cache1.rds'))
-cache2=rds_database(    
- source=file.path(
-        system.file('cached',package='MetMashR'),'cache2.rds'))
-cache3=rds_database(
- source=file.path(
-        system.file('cached',package='MetMashR'),'cache3.rds'))
-cache4=rds_database(
- source=file.path(
-        system.file('cached',package='MetMashR'),'cache4.rds'))
+cache1 <- rds_database(
+    source = file.path(
+        system.file("cached", package = "MetMashR"), "cache1.rds"
+    )
+)
+cache2 <- rds_database(
+    source = file.path(
+        system.file("cached", package = "MetMashR"), "cache2.rds"
+    )
+)
+cache3 <- rds_database(
+    source = file.path(
+        system.file("cached", package = "MetMashR"), "cache3.rds"
+    )
+)
+cache4 <- rds_database(
+    source = file.path(
+        system.file("cached", package = "MetMashR"), "cache4.rds"
+    )
+)
 ```
 
 Next we prepare the workflow and then apply it.
 
 ```{r}
-WF = 
+WF <-
     combine_sources(
         list(
-             predicted(CD$LIPIDS_POS),
-             predicted(LS$HILIC_POS),
-             predicted(LS$LIPIDS_POS)),
-        source_col = 'annotation_source',
-        keep_cols = '.all',
+            predicted(CD$LIPIDS_POS),
+            predicted(LS$HILIC_POS),
+            predicted(LS$LIPIDS_POS)
+        ),
+        source_col = "annotation_source",
+        keep_cols = ".all",
         matching_columns = c(
-            Compound = 'compound', 
-            Compound = 'LipidName',
-            Ion = 'ion',
-            Ion = 'LipidIon',
-            theoretical_mz = 'theor_mass',
-            LipidClass = 'Class')
+            Compound = "compound",
+            Compound = "LipidName",
+            Ion = "ion",
+            Ion = "LipidIon",
+            theoretical_mz = "theor_mass",
+            LipidClass = "Class"
+        )
     ) +
     normalise_strings(
-        search_column = 'Compound',
-        output_column = 'normalised_compound',
+        search_column = "Compound",
+        output_column = "normalised_compound",
         dictionary = c(
             # custom dictionary
             list(
                 # replace "NP" with "Compound NP"
                 list(
-                    pattern = '^NP-',
-                    replace = 'Compound NP-'),
-                # remove terms in trailing brackets e.g." (ATP)" 
+                    pattern = "^NP-",
+                    replace = "Compound NP-"
+                ),
+                # remove terms in trailing brackets e.g." (ATP)"
                 list(
-                    pattern = '\\ \\([^\\)]*\\)$',
-                    replace = ''),
+                    pattern = "\\ \\([^\\)]*\\)$",
+                    replace = ""
+                ),
                 # replace known abbreviations
                 list(
-                    pattern = '3-Fluoro NNEI',
-                    replace = '3-Fluoro-nnei',
-                    fixed = TRUE),
-                list(
-                    pattern = 'Υ-L-Glutamyl-L-glutamic acid',
-                    replace = 'Tyr-Glu-Glu'
+                    pattern = "3-Fluoro NNEI",
+                    replace = "3-Fluoro-nnei",
+                    fixed = TRUE
                 ),
                 list(
-                    pattern = 'AcCa',
-                    replace = 'CAR'
+                    pattern = "Υ-L-Glutamyl-L-glutamic acid",
+                    replace = "Tyr-Glu-Glu"
+                ),
+                list(
+                    pattern = "AcCa",
+                    replace = "CAR"
                 )
             ),
             # update tripeptides
@@ -471,74 +500,75 @@ WF =
         )
     ) +
     pubchem_property_lookup(
-        query_column = 'normalised_compound',
-        search_by = 'name',
-        property = 'InChIKey',
-        suffix = '_pubchem',
+        query_column = "normalised_compound",
+        search_by = "name",
+        property = "InChIKey",
+        suffix = "_pubchem",
         cache = cache1
     ) +
     lipidmaps_lookup(
-        query_column = 'normalised_compound',
-        context = 'compound',
-        context_item = 'abbrev',
-        output_item = 'inchi_key',
-        suffix = '_abbrev',
+        query_column = "normalised_compound",
+        context = "compound",
+        context_item = "abbrev",
+        output_item = "inchi_key",
+        suffix = "_abbrev",
         cache = cache2
-    )+
+    ) +
     lipidmaps_lookup(
-        query_column = 'normalised_compound',
-        context = 'compound',
-        context_item = 'abbrev_chains',
-        output_item = 'inchi_key',
-        suffix = '_abbrevchains',
+        query_column = "normalised_compound",
+        context = "compound",
+        context_item = "abbrev_chains",
+        output_item = "inchi_key",
+        suffix = "_abbrevchains",
         cache = cache3
     ) +
     prioritise_columns(
-        column_names = c('InChIKey_pubchem','inchi_key_abbrev','inchi_key_abbrevchains'),
-        output_name = 'inchikey',
-        source_name = 'inchikey_src',
-        source_tags = c('pubchem','lm_abbrev','lm_chains'),
+        column_names = c("InChIKey_pubchem", "inchi_key_abbrev", "inchi_key_abbrevchains"),
+        output_name = "inchikey",
+        source_name = "inchikey_src",
+        source_tags = c("pubchem", "lm_abbrev", "lm_chains"),
         clean = TRUE
     ) +
     classyfire_lookup(
-        query_column = 'inchikey',
-        output_items = '.all',
-        output_fields = '.all',suffix = '_cf',
+        query_column = "inchikey",
+        output_items = ".all",
+        output_fields = ".all", suffix = "_cf",
         cache = cache4,
         delay = 5
     ) +
     database_lookup(
-        query_column = 'inchikey',
-        database_column = 'InChI.Key',
+        query_column = "inchikey",
+        database_column = "InChI.Key",
         database = PathBank_metabolite_database(),
-        include = c('Pathway.Name','Pathway.Subject','Species'),
-        suffix = '',
+        include = c("Pathway.Name", "Pathway.Subject", "Species"),
+        suffix = "",
         not_found = NA
     ) +
     add_columns(
-        new_columns = rbind(HP,LP),
-        by = c('mzrt_match_id'='id')
+        new_columns = rbind(HP, LP),
+        by = c("mzrt_match_id" = "id")
     ) +
     filter_na(
-        column_name = 'inchikey'
+        column_name = "inchikey"
     ) +
     combine_records(
-        group_by = 'mzrt_match_id',
+        group_by = "mzrt_match_id",
         default_fcn = .unique(
-            separator = ' || ')
+            separator = " || "
+        )
     ) +
     filter_labels(
-        column_name = 'rsd_qc',
-        labels = 'NA',
-        mode = 'exclude'
+        column_name = "rsd_qc",
+        labels = "NA",
+        mode = "exclude"
     ) +
     filter_range(
-        column_name = 'rsd_qc',
+        column_name = "rsd_qc",
         upper_limit = 20,
-        lower_limit=-Inf,
-        equal_to=FALSE
+        lower_limit = -Inf,
+        equal_to = FALSE
     )
-WF = model_apply(WF,predicted(CD$HILIC_POS))
+WF <- model_apply(WF, predicted(CD$HILIC_POS))
 ```
   
 We can explore the contents of the table. Here we generate plots to visualise 
@@ -546,11 +576,11 @@ the number of annotations from each source.
   
 ```{r,warning=FALSE,message=FALSE,fig.width=4}
 # pie chart of the sources of annotations
-C = annotation_pie_chart(
-    factor_name = 'source_name',
-    label_location = 'outside'
+C <- annotation_pie_chart(
+    factor_name = "source_name",
+    label_location = "outside"
 )
-chart_plot(C,predicted(WF)) + ggtitle('Annotations per source')
+chart_plot(C, predicted(WF)) + ggtitle("Annotations per source")
 ```
 
 Next we plot a histogram of the QC-RSD values before filtering, 
@@ -558,13 +588,13 @@ by indexing the relevant step of the workflow.
 
 ```{r}
 # histogram of the rsd-qc for annotated features (before filtering)
-C = annotation_histogram(
-    factor_name = 'rsd_qc',
+C <- annotation_histogram(
+    factor_name = "rsd_qc",
     bins = 30,
     vline = 20
 )
-chart_plot(C,predicted(WF[12])) + 
-    ggtitle('MS1 peak QC-RSD',"Features with QC-RSD<20 were removed by the workflow.")
+chart_plot(C, predicted(WF[12])) +
+    ggtitle("MS1 peak QC-RSD", "Features with QC-RSD<20 were removed by the workflow.")
 ```
 
 In this plot we present a bar chart of the different molecular classes present in
@@ -572,11 +602,11 @@ the final table.
 
 ```{r}
 # bar chart of the superclasses
-C = annotation_bar_chart(
-    factor_name = 'superclass.name_cf',
-    legend = TRUE,label_type = 'none'
+C <- annotation_bar_chart(
+    factor_name = "superclass.name_cf",
+    legend = TRUE, label_type = "none"
 )
-chart_plot(C,predicted(WF[10])) + ggtitle('Superclasses')
+chart_plot(C, predicted(WF[10])) + ggtitle("Superclasses")
 ```
 
 Finally we use the PubChem API to generate an image of the molecular structure
@@ -584,15 +614,16 @@ for one of the metabolites.
 
 ```{r}
 # display one of the metabolite structures
-C = pubchem_widget(
-        query_column = 'normalised_compound',
-        row_index=1,
-        record_type = '3D-Conformer',
-        display = FALSE,
-        hide_title = FALSE,
-        height = '820px')
+C <- pubchem_widget(
+    query_column = "normalised_compound",
+    row_index = 1,
+    record_type = "3D-Conformer",
+    display = FALSE,
+    hide_title = FALSE,
+    height = "820px"
+)
 
-chart_plot(C,predicted(WF))
+chart_plot(C, predicted(WF))
 ```
 
 

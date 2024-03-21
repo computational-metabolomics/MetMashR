@@ -35,7 +35,7 @@ A \code{mspurity_source} object inherits the following \code{struct} classes: \c
 M = mspurity_source(
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \references{

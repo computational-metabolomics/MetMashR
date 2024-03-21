@@ -16,24 +16,27 @@ vignette: >
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
-    fig.align='center'
+    fig.align = "center"
 )
 
-.DT = function(x){
-    dt_options=list(
-        scrollX=TRUE,
-        pageLength=6,
-        dom='t',
+.DT <- function(x) {
+    dt_options <- list(
+        scrollX = TRUE,
+        pageLength = 6,
+        dom = "t",
         initComplete = DT::JS(
             "function(settings, json) {",
             "$(this.api().table().header()).css({'font-size':'10pt'});",
-            "}")
+            "}"
+        )
     )
-    
+
     x %>%
-        DT::datatable(options=dt_options,rownames=FALSE) %>%
-        DT::formatStyle(columns = colnames(x),
-                        fontSize = '10pt')
+        DT::datatable(options = dt_options, rownames = FALSE) %>%
+        DT::formatStyle(
+            columns = colnames(x),
+            fontSize = "10pt"
+        )
 }
 
 library(BiocStyle)
@@ -81,8 +84,9 @@ current R version can be installed using BiocManager.
 
 ```{r,eval = FALSE, include = TRUE}
 # install BiocManager if not present
-if (!requireNamespace("BiocManager", quietly = TRUE))
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
+}
 
 # install MetMashR and dependencies
 BiocManager::install("MetMashR")
@@ -155,14 +159,15 @@ rest of the file into a table.
 
 ```{r}
 # prepare source object
-AT = ls_source(
+AT <- ls_source(
     source = system.file(
-        paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMashR')
+        paste0("extdata/MTox/LS/MTox_2023_HILIC_POS.txt"),
+        package = "MetMashR"
+    )
 )
 
 # read source
-AT = read_source(AT)
+AT <- read_source(AT)
 
 # show info
 AT
@@ -184,10 +189,10 @@ specific to the database.
 
 ```{r}
 # prepare source object
-MT = MTox700plus_database()
+MT <- MTox700plus_database()
 
 # read
-MT = read_source(MT)
+MT <- read_source(MT)
 
 # show
 MT
@@ -198,10 +203,10 @@ table directly to a data.frame.
 
 ```{r}
 # prepare source object
-MT = MTox700plus_database()
+MT <- MTox700plus_database()
 
 # read to data.frame
-df = read_database(MT)
+df <- read_database(MT)
 
 # show
 .DT(df)
@@ -240,17 +245,18 @@ to be used as the first step in a workflow.
 
 ```{r}
 # prepare source object
-AT = ls_source(
+AT <- ls_source(
     source = system.file(
-        paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMashR')
+        paste0("extdata/MTox/LS/MTox_2023_HILIC_POS.txt"),
+        package = "MetMashR"
+    )
 )
 
 # prepare workflow
-WF = import_source()
+WF <- import_source()
 
 # apply workflow to annotation source
-WF = model_apply(WF,AT)
+WF <- model_apply(WF, AT)
 
 # show
 predicted(WF)
@@ -277,25 +283,26 @@ apply a filtering step to remove records with a lower Grading.
 
 ```{r}
 # prepare source object
-AT = ls_source(
+AT <- ls_source(
     source = system.file(
-        paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMashR')
+        paste0("extdata/MTox/LS/MTox_2023_HILIC_POS.txt"),
+        package = "MetMashR"
+    )
 )
 
 # prepare workflow
-WF = 
+WF <-
     # step 1 import source from file
     import_source() +
     # step 2 filter the "Grade" column to only include "A" and "B"
     filter_labels(
-        column_name = 'Grade',
-        labels=c('A','B'),
-        mode = 'include'
+        column_name = "Grade",
+        labels = c("A", "B"),
+        mode = "include"
     )
 
 # apply workflow to annotation source
-WF = model_apply(WF,AT)
+WF <- model_apply(WF, AT)
 
 # show
 predicted(WF)
@@ -375,39 +382,40 @@ be included in a workflow and updated as more results are collected over time.
 
 ```{r}
 # prepare source object
-AT = ls_source(
+AT <- ls_source(
     source = system.file(
-        paste0('extdata/MTox/LS/MTox_2023_HILIC_POS.txt'),
-        package = 'MetMashR')
+        paste0("extdata/MTox/LS/MTox_2023_HILIC_POS.txt"),
+        package = "MetMashR"
+    )
 )
 
 # prepare cache
-TF = rds_database(
+TF <- rds_database(
     source = tempfile()
 )
 
 # prepare workflow
-WF = 
+WF <-
     # step 1 import source from file
     import_source() +
     # step 2 filter the "Grade" column to only include "A" and "B"
     filter_labels(
-        column_name = 'Grade',
-        labels=c('A','B'),
-        mode = 'include'
+        column_name = "Grade",
+        labels = c("A", "B"),
+        mode = "include"
     ) +
     # step 3 query lipidmaps api for inchikey
     lipidmaps_lookup(
-        query_column = 'LipidName',
-        context = 'compound',
-        context_item = 'abbrev',
-        output_item = 'inchi_key',
+        query_column = "LipidName",
+        context = "compound",
+        context_item = "abbrev",
+        output_item = "inchi_key",
         cache = TF,
-        suffix = ''
+        suffix = ""
     )
 
 # apply workflow to annotation source
-WF = model_apply(WF,AT)
+WF <- model_apply(WF, AT)
 
 # show
 predicted(WF)
@@ -418,16 +426,16 @@ used in workflows like any other `annotation_source`.
 
 ```{r}
 # retrieve cache
-TF = read_source(TF)
+TF <- read_source(TF)
 
 # filter records with no inchikey
-FI = 
+FI <-
     filter_na(
-        column_name = 'inchi_key'
+        column_name = "inchi_key"
     )
 
 # apply
-FI = model_apply(FI,TF)
+FI <- model_apply(FI, TF)
 
 # show
 .DT(predicted(FI)$data)
@@ -471,20 +479,20 @@ For example here we create a dictionary to convert some of the lipid abbreviatio
 to the LipidMaps standard, and replace underscores with forward slashes:
 
 ```{r}
-custom_dict = list(
+custom_dict <- list(
     list(
         pattern = "AcCa",
-        replace = 'CAR',
+        replace = "CAR",
         fixed = TRUE
     ),
     list(
         pattern = "AEA",
-        replace = 'NAE',
+        replace = "NAE",
         fixed = TRUE
     ),
     list(
         pattern = "_",
-        replace = '/',
+        replace = "/",
         fixed = TRUE
     )
 )
@@ -495,44 +503,44 @@ lipid names and (hopefully) get fewer NA when querying LipidMaps:
 
 ```{r}
 # prepare workflow
-WF = 
+WF <-
     # step 1 import source from file
     import_source() +
     # step 2 filter the "Grade" column to only include "A" and "B"
     filter_labels(
-        column_name = 'Grade',
-        labels=c('A','B'),
-        mode = 'include'
+        column_name = "Grade",
+        labels = c("A", "B"),
+        mode = "include"
     ) +
     # step 3 normalise lipid names using the custom dictionary:
     normalise_strings(
-        search_column = 'LipidName',
-        output_column = 'normalised_name',
-        dictionary = custom_dict  
+        search_column = "LipidName",
+        output_column = "normalised_name",
+        dictionary = custom_dict
     ) +
     # step 4 query lipidmaps api for inchikey using the names provided by LipidSearch
     lipidmaps_lookup(
-        query_column = 'LipidName',
-        context = 'compound',
-        context_item = 'abbrev',
-        output_item = 'inchi_key',
-        suffix = '_LipidName',
-        cache  = TF
+        query_column = "LipidName",
+        context = "compound",
+        context_item = "abbrev",
+        output_item = "inchi_key",
+        suffix = "_LipidName",
+        cache = TF
     ) +
     # step 5 query lipidmaps api for inchikey using the names provided by LipidSearch
     lipidmaps_lookup(
-        query_column = 'normalised_name',
-        context = 'compound',
-        context_item = 'abbrev',
-        output_item = 'inchi_key',
-        suffix = '_normalised'
+        query_column = "normalised_name",
+        context = "compound",
+        context_item = "abbrev",
+        output_item = "inchi_key",
+        suffix = "_normalised"
     )
 
 # apply workflow to annotation source
-WF = model_apply(WF,AT)
+WF <- model_apply(WF, AT)
 
 #  show result table for relevant columns
-.DT(predicted(WF)$data[,c('LipidName','normalised_name','inchi_key_LipidName','inchi_key_normalised')])
+.DT(predicted(WF)$data[, c("LipidName", "normalised_name", "inchi_key_LipidName", "inchi_key_normalised")])
 ```
 
 You can see that we obtained inchikey for more of the Lipids after normalising
@@ -562,18 +570,19 @@ separated by semi colons.
 
 ```{r}
 # prepare workflow
-CR = combine_records(
-    group_by = 'LipidName',
-    default_fcn = .unique(separator='; '),
+CR <- combine_records(
+    group_by = "LipidName",
+    default_fcn = .unique(separator = "; "),
     fcns = list(
-        count = .count())
+        count = .count()
+    )
 )
 
 # apply to previous output
-CR = model_apply(CR,predicted(WF))
+CR <- model_apply(CR, predicted(WF))
 
 # show output for relevant columns
-.DT(predicted(CR)$data[,c('LipidName','normalised_name','inchi_key_normalised','count')])
+.DT(predicted(CR)$data[, c("LipidName", "normalised_name", "inchi_key_normalised", "count")])
 ```
 
 You can see that there is now a single record (row) for each LipidName, and that 

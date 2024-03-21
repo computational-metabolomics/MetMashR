@@ -47,7 +47,7 @@ M = MTox700plus_database(
       offline = FALSE,
       tag = character(0),
       data = data.frame(id=NA),
-      source = [a ANY])
+      source = "ANY")
 
 }
 \references{

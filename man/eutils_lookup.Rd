@@ -11,7 +11,7 @@ eutils_lookup(query_column, database, term, result_fields = "idlist", ...)
 
 \item{database}{(character) The name of the E-utils database to search. See https://www.ncbi.nlm.nih.gov/books/NBK25501/ for details.}
 
-\item{term}{(character) A correctly formated search term to use with E-utils. See https://www.ncbi.nlm.nih.gov/books/NBK25501/ for details. that using the provided url template will automatically include the value from the \code{query_column} at the beginning of the term.}
+\item{term}{(character) A correctly formated search term to use with E-utils. See https://www.ncbi.nlm.nih.gov/books/NBK25501/ for details. When used with the provided url template will automatically include the value from the \code{query_column} at the beginning of the term.}
 
 \item{result_fields}{(character) The name of the search result field to return. For E-utils this is often "idlist". The default is \code{"idlist"}.}
 
@@ -35,10 +35,10 @@ A \code{eutils_lookup} object inherits the following \code{struct} classes: \cr\
 \examples{
 M = eutils_lookup(
       database = "gene",
-      term = "2008[pdat]",
+      term = "[pdat]",
       result_fields = "idlist",
       base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
-      url_template = "<base_url>/esearch.fcgi?db=<database>&term="<query_column>"<term>&retmode=json",
+      url_template = "<base_url>/esearch.fcgi?db=<database>&term=<query_column><term>&retmode=json",
       query_column = character(0),
       cache = NULL,
       status_codes = list(),

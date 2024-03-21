@@ -16,6 +16,6 @@ A data.frame
 Reads an annotation_database and returns the data.frame.
 }
 \examples{
-M = rds_database(tempfile())
-df = read_database(M)
+M <- rds_database(tempfile())
+df <- read_database(M)
 }

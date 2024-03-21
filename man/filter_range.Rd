@@ -31,7 +31,7 @@ A  \code{filter_range} object with the following \code{output} slots:
 }
 }
 \description{
-Removes annotations where the names column is  greater than an upper limit or less than a lower limit.
+Removes annotations where the names column is greater than an upper limit or less than a lower limit.
 }
 \section{Inheritance}{
 
