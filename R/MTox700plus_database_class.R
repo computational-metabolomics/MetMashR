@@ -58,7 +58,7 @@ MTox700plus_database <- function(version = "latest",
                 "The version number of the MTox700+ database to import. ",
                 "Available versions are listed here: ",
                 "[https://github.com/michabohealthscience/MTox700plus/releases].",
-                ' `version` should match the tag of thr release e.g. `"v1.0"`.',
+                ' `version` should match the tag of the release e.g. `"v1.0"`.',
                 ' For convenience `version = "latest"` will always retrieve ',
                 "the most recent release. To prevent unecessary downloads ",
                 "`BiocFileCache` is used to store a local copy."

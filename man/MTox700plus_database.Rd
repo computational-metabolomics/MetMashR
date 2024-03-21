@@ -12,7 +12,7 @@ MTox700plus_database(
 )
 }
 \arguments{
-\item{version}{(character) The version number of the MTox700+ database to import. Available versions are listed here: \link{https://github.com/michabohealthscience/MTox700plus/releases}. \code{version} should match the tag of thr release e.g. \code{"v1.0"}. For convenience \code{version = "latest"} will always retrieve the most recent release. To prevent unecessary downloads \code{BiocFileCache} is used to store a local copy. The default is \code{"latest"}.}
+\item{version}{(character) The version number of the MTox700+ database to import. Available versions are listed here: \link{https://github.com/michabohealthscience/MTox700plus/releases}. \code{version} should match the tag of the release e.g. \code{"v1.0"}. For convenience \code{version = "latest"} will always retrieve the most recent release. To prevent unecessary downloads \code{BiocFileCache} is used to store a local copy. The default is \code{"latest"}.}
 
 \item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache the database locally and prevent unnecessary downloads. If a path is provided then \code{BiocFileCache} will use this location. If NULL it will use the default location (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The default is \code{NULL}.}
 

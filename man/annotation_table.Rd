@@ -40,7 +40,6 @@ M = annotation_table(
 }
 \seealso{
 Other {annotation tables}: 
-\code{\link{MetFrag_source}},
 \code{\link{cd_source}},
 \code{\link{ls_source}}
 

@@ -216,6 +216,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Run CMD check
+        if: env.cmd_check == 'true'
         env:
           _R_CHECK_CRAN_INCOMING_: false
           DISPLAY: 99.0
@@ -241,6 +242,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Run BiocCheck
+        if: env.has_bioc_check == 'true'
         env:
           DISPLAY: 99.0
         run: |

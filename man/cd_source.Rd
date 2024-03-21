@@ -62,7 +62,6 @@ Other {annotation sources}:
 \code{\link{mspurity_source}}
 
 Other {annotation tables}: 
-\code{\link{MetFrag_source}},
 \code{\link{annotation_table}},
 \code{\link{ls_source}}
 }
