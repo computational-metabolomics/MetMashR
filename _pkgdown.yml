@@ -59,6 +59,8 @@ reference:
     meta data, such as molecular identifiers, pathways etc.
   contents:
   - ends_with('_database')
+  - rds_cache
+  - github_file
   - is_writable
   - read_database
   - write_database
@@ -78,7 +80,7 @@ reference:
   - add_labels
   - calc_ppm_diff
   - calc_rt_diff
-  - combine_columns
+  - prioritise_columns
   - combine_sources
   - vertical_join
   - combine_records
@@ -93,7 +95,11 @@ reference:
   - normalise_lipids
   - normalise_strings
   - trim_whitespace
-  - concatenate_columns
+  - combine_columns
+  - select_columns
+  - split_column
+  - split_records
+  - AnnotationDb_select
 - title: "Combining records"
   desc: >
     Combining records is an important step in the annotation mashing workflow.
@@ -139,10 +145,10 @@ reference:
   - ends_with('_dictionary')
 - title: "Additional functions"
   desc: >
-    Various supporting functions are used by MetMashR
+    Supporting functions are used by MetMashR
   contents:
-  - struct_venn_set
   - check_for_columns
+  - required_cols
 home:
   links:
   - text: View on Bioconductor
