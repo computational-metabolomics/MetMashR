@@ -22,11 +22,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-standard navbar-expand-lg bg-primary"><div class="container">
+    <nav class="navbar fixed-top navbar-standard navbar-expand-lg bg-primary" data-bs-theme="standard"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,13 +103,14 @@
 <div class="section level2">
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>The latest versions of <em><a href="https://bioconductor.org/packages/3.18/struct" class="external-link">struct</a></em> and
+<p>The latest versions of <em><a href="https://bioconductor.org/packages/3.19/struct" class="external-link">struct</a></em> and
 <code>MetMashR</code> that are compatible with your current R version
 can be installed using BiocManager.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install BiocManager if not present</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># install MetMashR and dependencies</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"MetMashR"</span><span class="op">)</span></span></code></pre></div>
@@ -126,37 +127,50 @@ can be installed using BiocManager.</p>
 <div class="section level2">
 <h2 id="import-daphina-data">Import Daphina data<a class="anchor" aria-label="anchor" href="#import-daphina-data"></a>
 </h2>
-<p>TODO</p>
+<p>This study consists of LCMS peak tables of HILIC_POS and LIPIDS_POS
+assays collected from samples of <em>Daphnia magna</em>. In this section
+we import the tables of data for the MS1 peaks recorded for each sample.
+We will use this data in a workflows to align the MS2 annotations with
+the MS1 peaks. In practice there might be accompanying statistics
+e.g. t-test p-values indicating the importance of a features for a
+study. For brevity in this vignette we only import peak quality
+information, in the form of Relative Standard Deviations (RSD).</p>
+<p>Here, we import the MS1 level feature meta data for each assay and
+store it as a data.frame that we use later on in the workflow.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># import HILIC_POS</span></span>
-<span><span class="va">HP</span> <span class="op">=</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html" class="external-link">read.xlsx</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/daphnia/daphnia_example.xlsx"</span>,</span>
-<span>                package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span>,</span>
-<span>        sheet<span class="op">=</span><span class="st">'HILIC_POS'</span>,</span>
-<span>        rowNames<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span>        colNames<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">HP</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html" class="external-link">read.xlsx</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/daphnia/daphnia_example.xlsx"</span>,</span>
+<span>        package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    sheet <span class="op">=</span> <span class="st">"HILIC_POS"</span>,</span>
+<span>    rowNames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    colNames <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co"># rename columns</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">HP</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">=</span> <span class="st">'id'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">HP</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"id"</span></span>
 <span><span class="co"># append assay to feature id</span></span>
-<span><span class="va">HP</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'HILIC_POS_'</span>,<span class="va">HP</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">HP</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"HILIC_POS_"</span>, <span class="va">HP</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="co"># convert some columns to numeric</span></span>
-<span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_qc</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_qc</span><span class="op">)</span></span>
-<span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_sample</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_sample</span><span class="op">)</span></span>
+<span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_qc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_qc</span><span class="op">)</span></span>
+<span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">HP</span><span class="op">$</span><span class="va">rsd_sample</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># import LIPIDS_POS</span></span>
-<span><span class="va">LP</span> <span class="op">=</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html" class="external-link">read.xlsx</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/daphnia/daphnia_example.xlsx"</span>,</span>
-<span>                package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span>,</span>
-<span>        sheet<span class="op">=</span><span class="st">'LIPIDS_POS'</span>,</span>
-<span>        rowNames<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span>        colNames<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">LP</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html" class="external-link">read.xlsx</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/daphnia/daphnia_example.xlsx"</span>,</span>
+<span>        package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    sheet <span class="op">=</span> <span class="st">"LIPIDS_POS"</span>,</span>
+<span>    rowNames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    colNames <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co"># rename columns</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">LP</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">=</span> <span class="st">'id'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">LP</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"id"</span></span>
 <span><span class="co"># append assay to feature id</span></span>
-<span><span class="va">LP</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'LIPIDS_POS_'</span>,<span class="va">LP</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">LP</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"LIPIDS_POS_"</span>, <span class="va">LP</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="co"># convert some columns to numeric</span></span>
-<span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_qc</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_qc</span><span class="op">)</span></span>
-<span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_sample</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_sample</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_qc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_qc</span><span class="op">)</span></span>
+<span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">LP</span><span class="op">$</span><span class="va">rsd_sample</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -168,71 +182,81 @@ steps. For duplicate annotations we select the annotation with the
 highest mzCloud match score. We retain annotations with a Full Match and
 disregard the rest. Finally we match the MS2 peaks to the MS1 peaks.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cd_workflow</span> <span class="op">=</span> </span>
+<code class="sourceCode R"><span><span class="va">cd_workflow</span> <span class="op">&lt;-</span></span>
 <span>    <span class="co"># import source</span></span>
 <span>    <span class="fu"><a href="../reference/import_source.html">import_source</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    </span>
+<span></span>
 <span>    <span class="co"># add useful labels</span></span>
 <span>    <span class="fu"><a href="../reference/add_labels.html">add_labels</a></span><span class="op">(</span></span>
 <span>        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>            source_name <span class="op">=</span> <span class="st">'CD'</span>,</span>
-<span>            assay <span class="op">=</span> <span class="st">'placeholder'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="co"># placeholder replaced later</span></span>
-<span>    </span>
+<span>            source_name <span class="op">=</span> <span class="st">"CD"</span>,</span>
+<span>            assay <span class="op">=</span> <span class="st">"placeholder"</span></span>
+<span>        <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span> <span class="co"># placeholder replaced later</span></span>
+<span></span>
 <span>    <span class="co"># filter low quality</span></span>
 <span>    <span class="fu"><a href="../reference/filter_labels.html">filter_labels</a></span><span class="op">(</span></span>
-<span>        column_name <span class="op">=</span> <span class="st">'compound_match'</span>,</span>
-<span>        labels <span class="op">=</span> <span class="st">'Full match'</span>,</span>
-<span>        mode <span class="op">=</span> <span class="st">'include'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    </span>
+<span>        column_name <span class="op">=</span> <span class="st">"compound_match"</span>,</span>
+<span>        labels <span class="op">=</span> <span class="st">"Full match"</span>,</span>
+<span>        mode <span class="op">=</span> <span class="st">"include"</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span></span>
 <span>    <span class="co"># resolve duplicates</span></span>
 <span>    <span class="fu"><a href="../reference/combine_records.html">combine_records</a></span><span class="op">(</span></span>
-<span>        group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'compound'</span>,<span class="st">'ion'</span><span class="op">)</span>,</span>
+<span>        group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"compound"</span>, <span class="st">"ion"</span><span class="op">)</span>,</span>
 <span>        default_fcn <span class="op">=</span> <span class="fu"><a href="../reference/combine_records_helper_functions.html">.select_max</a></span><span class="op">(</span></span>
-<span>            max_col <span class="op">=</span> <span class="st">'mzcloud_score'</span>,</span>
+<span>            max_col <span class="op">=</span> <span class="st">"mzcloud_score"</span>,</span>
 <span>            keep_NA <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>            use_abs <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>        <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
 <span></span>
 <span>    <span class="co"># match MS1 to MS2</span></span>
 <span>    <span class="fu"><a href="../reference/mzrt_match.html">mzrt_match</a></span><span class="op">(</span></span>
 <span>        variable_meta <span class="op">=</span> <span class="va">HP</span>,</span>
-<span>        mz_column <span class="op">=</span> <span class="st">'mz'</span>,</span>
-<span>        rt_column <span class="op">=</span> <span class="st">'rt'</span>,</span>
+<span>        mz_column <span class="op">=</span> <span class="st">"mz"</span>,</span>
+<span>        rt_column <span class="op">=</span> <span class="st">"rt"</span>,</span>
 <span>        ppm_window <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>        rt_window <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>        id_column <span class="op">=</span> <span class="st">'id'</span></span>
+<span>        id_column <span class="op">=</span> <span class="st">"id"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    </span>
+<span></span>
 <span>    <span class="co"># ppm difference MS1 vs library</span></span>
 <span>    <span class="fu"><a href="../reference/calc_ppm_diff.html">calc_ppm_diff</a></span><span class="op">(</span></span>
-<span>        obs_mz_column <span class="op">=</span> <span class="st">'mz_match'</span>,</span>
-<span>        ref_mz_column <span class="op">=</span> <span class="st">'theoretical_mz'</span>,</span>
-<span>        out_column <span class="op">=</span> <span class="st">'ms1_lib_ppm_diff'</span></span>
-<span>    <span class="op">)</span> </span></code></pre></div>
+<span>        obs_mz_column <span class="op">=</span> <span class="st">"mz_match"</span>,</span>
+<span>        ref_mz_column <span class="op">=</span> <span class="st">"theoretical_mz"</span>,</span>
+<span>        out_column <span class="op">=</span> <span class="st">"ms1_lib_ppm_diff"</span></span>
+<span>    <span class="op">)</span></span></code></pre></div>
 <p>We need to apply this workflow to each assay. For convenience we
 store the sources for each assay in a list.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># prepare sources</span></span>
-<span><span class="va">cd_sources</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span><span class="va">cd_sources</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    HILIC_POS <span class="op">=</span> <span class="fu"><a href="../reference/cd_source.html">cd_source</a></span><span class="op">(</span></span>
 <span>        source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>                <span class="st">'extdata/daphnia/HILIC_POS_EL_CD.xlsx'</span>,</span>
-<span>                package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span>,</span>
+<span>                <span class="st">"extdata/daphnia/HILIC_POS_EL_CD.xlsx"</span>,</span>
+<span>                package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>            <span class="op">)</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>            <span class="st">'extdata/daphnia/HILIC_POS_EL_CD_comp.xlsx'</span>,</span>
-<span>            package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        sheets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Compounds'</span>,<span class="st">'Compounds'</span><span class="op">)</span></span>
+<span>                <span class="st">"extdata/daphnia/HILIC_POS_EL_CD_comp.xlsx"</span>,</span>
+<span>                package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>            <span class="op">)</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        sheets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Compounds"</span>, <span class="st">"Compounds"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    LIPIDS_POS <span class="op">=</span> <span class="fu"><a href="../reference/cd_source.html">cd_source</a></span><span class="op">(</span></span>
 <span>        source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>                <span class="st">'extdata/daphnia/LIPIDS_POS_EL_CD.xlsx'</span>,</span>
-<span>                package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span>,</span>
+<span>                <span class="st">"extdata/daphnia/LIPIDS_POS_EL_CD.xlsx"</span>,</span>
+<span>                package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>            <span class="op">)</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>            <span class="st">'extdata/daphnia/LIPIDS_POS_EL_CD_comp.xlsx'</span>,</span>
-<span>            package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        sheets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Compounds'</span>,<span class="st">'Compounds'</span><span class="op">)</span></span>
+<span>                <span class="st">"extdata/daphnia/LIPIDS_POS_EL_CD_comp.xlsx"</span>,</span>
+<span>                package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>            <span class="op">)</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        sheets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Compounds"</span>, <span class="st">"Compounds"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now we are ready to apply the workflow to the sources. Note that
@@ -242,17 +266,17 @@ source. Again we store the applied workflow in a list for
 convenience.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># place to store results</span></span>
-<span><span class="va">CD</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">CD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># set labels</span></span>
-<span><span class="va">cd_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span><span class="op">=</span><span class="st">'HILIC_POS'</span> </span>
+<span><span class="va">cd_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span> <span class="op">&lt;-</span> <span class="st">"HILIC_POS"</span></span>
 <span><span class="co"># apply workflow</span></span>
-<span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">cd_workflow</span>,<span class="va">cd_sources</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span></span>
+<span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">cd_workflow</span>, <span class="va">cd_sources</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># set labels</span></span>
-<span><span class="va">cd_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span><span class="op">=</span><span class="st">'LIPIDS_POS'</span> </span>
+<span><span class="va">cd_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span> <span class="op">&lt;-</span> <span class="st">"LIPIDS_POS"</span></span>
 <span><span class="co"># apply workflow</span></span>
-<span><span class="va">CD</span><span class="op">$</span><span class="va">LIPIDS_POS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">cd_workflow</span>,<span class="va">cd_sources</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">CD</span><span class="op">$</span><span class="va">LIPIDS_POS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">cd_workflow</span>, <span class="va">cd_sources</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <div class="section level4">
 <h4 id="cd-quality-assurance">CD Quality Assurance<a class="anchor" aria-label="anchor" href="#cd-quality-assurance"></a>
@@ -267,31 +291,31 @@ library then these can be excluded by adding e.g. a
 <code>filter_range</code> workflow step.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># MS2 vs library</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="st">'library_ppm_diff'</span>,</span>
-<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="st">"library_ppm_diff"</span>,</span>
+<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">g1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'MS2 vs library'</span><span class="op">)</span></span>
+<span><span class="va">g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MS2 vs library"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># MS1 vs library</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="st">'ms1_lib_ppm_diff'</span>,</span>
-<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="st">"ms1_lib_ppm_diff"</span>,</span>
+<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">g2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'MS1 vs library'</span><span class="op">)</span></span>
+<span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MS1 vs library"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># layout</span></span>
-<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">g1</span>,<span class="va">g2</span>,nrow<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="daphnia_example_files/figure-html/unnamed-chunk-9-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>The ppm and retention time differences between the MS1 and MS2
 features (peaks) can also be indicative of analytical problems.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># prepare chart</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_histogram2d.html">annotation_histogram2d</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'ppm_match_diff_an'</span>,<span class="st">'rt_match_diff'</span><span class="op">)</span>,</span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_histogram2d.html">annotation_histogram2d</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ppm_match_diff_an"</span>, <span class="st">"rt_match_diff"</span><span class="op">)</span>,</span>
 <span>    bins <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="daphnia_example_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>The LIPID_POS assay (not shown) only has 2 matches, so the chart is
 not informative for that assay.</p>
@@ -306,84 +330,86 @@ filtering in later steps. For duplicate annotations we select the
 annotation with the lowest ppm difference vs the library. We retain only
 LS annotations with Grades A and B.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># prepare workflow</span></span>
-<span><span class="va">ls_workflow</span> <span class="op">=</span> </span>
-<span></span>
+<code class="sourceCode R"><span><span class="co"># prepare workflow</span></span>
+<span><span class="va">ls_workflow</span> <span class="op">&lt;-</span></span>
 <span>    <span class="co"># import raw file</span></span>
-<span>    <span class="fu"><a href="../reference/import_source.html">import_source</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>   </span>
-<span>    </span>
+<span>    <span class="fu"><a href="../reference/import_source.html">import_source</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span></span>
 <span>    <span class="co"># add labels</span></span>
 <span>    <span class="fu"><a href="../reference/add_labels.html">add_labels</a></span><span class="op">(</span></span>
 <span>        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>            assay <span class="op">=</span> <span class="st">'placeholder'</span>, <span class="co"># will be replaced later</span></span>
-<span>            source_name <span class="op">=</span> <span class="st">'LS'</span></span>
-<span>        <span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>            assay <span class="op">=</span> <span class="st">"placeholder"</span>, <span class="co"># will be replaced later</span></span>
+<span>            source_name <span class="op">=</span> <span class="st">"LS"</span></span>
+<span>        <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
 <span></span>
 <span>    <span class="co"># filter by grade</span></span>
 <span>    <span class="fu"><a href="../reference/filter_labels.html">filter_labels</a></span><span class="op">(</span></span>
-<span>        column_name <span class="op">=</span> <span class="st">'Grade'</span>,</span>
-<span>        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'A'</span>,<span class="st">'B'</span><span class="op">)</span>,</span>
-<span>        mode <span class="op">=</span> <span class="st">'include'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    </span>
+<span>        column_name <span class="op">=</span> <span class="st">"Grade"</span>,</span>
+<span>        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
+<span>        mode <span class="op">=</span> <span class="st">"include"</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span></span>
 <span>    <span class="co"># resolve duplicates</span></span>
 <span>    <span class="fu"><a href="../reference/combine_records.html">combine_records</a></span><span class="op">(</span></span>
-<span>        group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'LipidIon'</span><span class="op">)</span>,</span>
+<span>        group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LipidIon"</span><span class="op">)</span>,</span>
 <span>        default_fcn <span class="op">=</span> <span class="fu"><a href="../reference/combine_records_helper_functions.html">.select_min</a></span><span class="op">(</span></span>
-<span>            min_col <span class="op">=</span> <span class="st">'library_ppm_diff'</span>,</span>
+<span>            min_col <span class="op">=</span> <span class="st">"library_ppm_diff"</span>,</span>
 <span>            keep_NA <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>            use_abs <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>        <span class="op">)</span> </span>
+<span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    </span>
+<span></span>
 <span>    <span class="co"># match MS1 to MS2</span></span>
 <span>    <span class="fu"><a href="../reference/mzrt_match.html">mzrt_match</a></span><span class="op">(</span></span>
 <span>        variable_meta <span class="op">=</span> <span class="va">HP</span>,</span>
-<span>        mz_column <span class="op">=</span> <span class="st">'mz'</span>,</span>
-<span>        rt_column <span class="op">=</span> <span class="st">'rt'</span>,</span>
+<span>        mz_column <span class="op">=</span> <span class="st">"mz"</span>,</span>
+<span>        rt_column <span class="op">=</span> <span class="st">"rt"</span>,</span>
 <span>        ppm_window <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>        rt_window <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>        id_column <span class="op">=</span> <span class="st">'id'</span></span>
+<span>        id_column <span class="op">=</span> <span class="st">"id"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    </span>
+<span></span>
 <span>    <span class="co"># ppm difference MS1 vs library</span></span>
 <span>    <span class="fu"><a href="../reference/calc_ppm_diff.html">calc_ppm_diff</a></span><span class="op">(</span></span>
-<span>        obs_mz_column <span class="op">=</span> <span class="st">'mz_match'</span>,</span>
-<span>        ref_mz_column <span class="op">=</span> <span class="st">'theor_mass'</span>,</span>
-<span>        out_column <span class="op">=</span> <span class="st">'ms1_lib_ppm_diff'</span></span>
-<span>    <span class="op">)</span> </span></code></pre></div>
+<span>        obs_mz_column <span class="op">=</span> <span class="st">"mz_match"</span>,</span>
+<span>        ref_mz_column <span class="op">=</span> <span class="st">"theor_mass"</span>,</span>
+<span>        out_column <span class="op">=</span> <span class="st">"ms1_lib_ppm_diff"</span></span>
+<span>    <span class="op">)</span></span></code></pre></div>
 <p>Next we prepare the LipidSearch source objects:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># prepare sources</span></span>
-<span><span class="va">ls_sources</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span><span class="va">ls_sources</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    HILIC_POS <span class="op">=</span> <span class="fu"><a href="../reference/ls_source.html">ls_source</a></span><span class="op">(</span></span>
-<span>        source <span class="op">=</span> </span>
+<span>        source <span class="op">=</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>                <span class="st">'extdata/daphnia/HILIC_POS_EL_LS.txt'</span>,</span>
-<span>                package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span></span>
+<span>                <span class="st">"extdata/daphnia/HILIC_POS_EL_LS.txt"</span>,</span>
+<span>                package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>            <span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    LIPIDS_POS <span class="op">=</span> <span class="fu"><a href="../reference/ls_source.html">ls_source</a></span><span class="op">(</span></span>
-<span>        source <span class="op">=</span> </span>
+<span>        source <span class="op">=</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>                <span class="st">'extdata/daphnia/LIPIDS_POS_EL_LS.txt'</span>,</span>
-<span>                package <span class="op">=</span> <span class="st">'MetMashR'</span><span class="op">)</span></span>
+<span>                <span class="st">"extdata/daphnia/LIPIDS_POS_EL_LS.txt"</span>,</span>
+<span>                package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>            <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now we can apply the LipidSearch workflow to the LipidSearch
 sources:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># place to store results</span></span>
-<span><span class="va">LS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">LS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># set labels</span></span>
-<span><span class="va">ls_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span><span class="op">=</span><span class="st">'HILIC_POS'</span> </span>
+<span><span class="va">ls_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span> <span class="op">&lt;-</span> <span class="st">"HILIC_POS"</span></span>
 <span><span class="co"># apply workflow</span></span>
-<span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">ls_workflow</span>,<span class="va">ls_sources</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span></span>
+<span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">ls_workflow</span>, <span class="va">ls_sources</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># set labels</span></span>
-<span><span class="va">ls_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span><span class="op">=</span><span class="st">'LIPIDS_POS'</span> </span>
+<span><span class="va">ls_workflow</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">$</span><span class="va">labels</span><span class="op">$</span><span class="va">assay</span> <span class="op">&lt;-</span> <span class="st">"LIPIDS_POS"</span></span>
 <span><span class="co"># apply workflow</span></span>
-<span><span class="va">LS</span><span class="op">$</span><span class="va">LIPIDS_POS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">ls_workflow</span>,<span class="va">ls_sources</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">LS</span><span class="op">$</span><span class="va">LIPIDS_POS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">ls_workflow</span>, <span class="va">ls_sources</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <div class="section level4">
 <h4 id="ls-quality-assurance">LS Quality Assurance<a class="anchor" aria-label="anchor" href="#ls-quality-assurance"></a>
@@ -392,31 +418,31 @@ sources:</p>
 ppm and differences vs the library like we did before.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># MS2 vs library</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="st">'library_ppm_diff'</span>,</span>
-<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="st">"library_ppm_diff"</span>,</span>
+<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">g1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'MS2 vs library'</span><span class="op">)</span></span>
+<span><span class="va">g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MS2 vs library"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># MS1 vs library</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="st">'ms1_lib_ppm_diff'</span>,</span>
-<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="st">"ms1_lib_ppm_diff"</span>,</span>
+<span>    vline <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">g2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'MS1 vs library'</span><span class="op">)</span></span>
+<span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MS1 vs library"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># layout</span></span>
-<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">g1</span>,<span class="va">g2</span>,nrow<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="daphnia_example_files/figure-html/unnamed-chunk-14-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>We can also check for analytical issue by comparing the MS1 and MS2
 ppm and retention time differences.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># prepare chart</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_histogram2d.html">annotation_histogram2d</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'ppm_match_diff_an'</span>,<span class="st">'rt_match_diff'</span><span class="op">)</span>,</span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_histogram2d.html">annotation_histogram2d</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ppm_match_diff_an"</span>, <span class="st">"rt_match_diff"</span><span class="op">)</span>,</span>
 <span>    bins <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="daphnia_example_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
@@ -441,62 +467,75 @@ quality (RSD of the QC samples &lt; 30).</p>
 possible annotations.</p>
 <p>For the vignette we used cached results, which we prepare now.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cache1</span><span class="op">=</span><span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
-<span>    source<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'cached'</span>,package<span class="op">=</span><span class="st">'MetMashR'</span><span class="op">)</span>,<span class="st">'cache1.rds'</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">cache2</span><span class="op">=</span><span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span>    </span>
-<span> source<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'cached'</span>,package<span class="op">=</span><span class="st">'MetMashR'</span><span class="op">)</span>,<span class="st">'cache2.rds'</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">cache3</span><span class="op">=</span><span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
-<span> source<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'cached'</span>,package<span class="op">=</span><span class="st">'MetMashR'</span><span class="op">)</span>,<span class="st">'cache3.rds'</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">cache4</span><span class="op">=</span><span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
-<span> source<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'cached'</span>,package<span class="op">=</span><span class="st">'MetMashR'</span><span class="op">)</span>,<span class="st">'cache4.rds'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cache1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
+<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span>, <span class="st">"cache1.rds"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">cache2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
+<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span>, <span class="st">"cache2.rds"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">cache3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
+<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span>, <span class="st">"cache3.rds"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">cache4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
+<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span>, <span class="st">"cache4.rds"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Next we prepare the workflow and then apply it.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">WF</span> <span class="op">=</span> </span>
+<code class="sourceCode R"><span><span class="va">WF</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu"><a href="../reference/combine_sources.html">combine_sources</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>             <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span>,</span>
-<span>             <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span>,</span>
-<span>             <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        source_col <span class="op">=</span> <span class="st">'annotation_source'</span>,</span>
-<span>        keep_cols <span class="op">=</span> <span class="st">'.all'</span>,</span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span>,</span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span>,</span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">LS</span><span class="op">$</span><span class="va">LIPIDS_POS</span><span class="op">)</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        source_col <span class="op">=</span> <span class="st">"annotation_source"</span>,</span>
+<span>        keep_cols <span class="op">=</span> <span class="st">".all"</span>,</span>
 <span>        matching_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>            Compound <span class="op">=</span> <span class="st">'compound'</span>, </span>
-<span>            Compound <span class="op">=</span> <span class="st">'LipidName'</span>,</span>
-<span>            Ion <span class="op">=</span> <span class="st">'ion'</span>,</span>
-<span>            Ion <span class="op">=</span> <span class="st">'LipidIon'</span>,</span>
-<span>            theoretical_mz <span class="op">=</span> <span class="st">'theor_mass'</span>,</span>
-<span>            LipidClass <span class="op">=</span> <span class="st">'Class'</span><span class="op">)</span></span>
+<span>            Compound <span class="op">=</span> <span class="st">"compound"</span>,</span>
+<span>            Compound <span class="op">=</span> <span class="st">"LipidName"</span>,</span>
+<span>            Ion <span class="op">=</span> <span class="st">"ion"</span>,</span>
+<span>            Ion <span class="op">=</span> <span class="st">"LipidIon"</span>,</span>
+<span>            theoretical_mz <span class="op">=</span> <span class="st">"theor_mass"</span>,</span>
+<span>            LipidClass <span class="op">=</span> <span class="st">"Class"</span></span>
+<span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/normalise_strings.html">normalise_strings</a></span><span class="op">(</span></span>
-<span>        search_column <span class="op">=</span> <span class="st">'Compound'</span>,</span>
-<span>        output_column <span class="op">=</span> <span class="st">'normalised_compound'</span>,</span>
+<span>        search_column <span class="op">=</span> <span class="st">"Compound"</span>,</span>
+<span>        output_column <span class="op">=</span> <span class="st">"normalised_compound"</span>,</span>
 <span>        dictionary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>            <span class="co"># custom dictionary</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>                <span class="co"># replace "NP" with "Compound NP"</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                    pattern <span class="op">=</span> <span class="st">'^NP-'</span>,</span>
-<span>                    replace <span class="op">=</span> <span class="st">'Compound NP-'</span><span class="op">)</span>,</span>
-<span>                <span class="co"># remove terms in trailing brackets e.g." (ATP)" </span></span>
+<span>                    pattern <span class="op">=</span> <span class="st">"^NP-"</span>,</span>
+<span>                    replace <span class="op">=</span> <span class="st">"Compound NP-"</span></span>
+<span>                <span class="op">)</span>,</span>
+<span>                <span class="co"># remove terms in trailing brackets e.g." (ATP)"</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                    pattern <span class="op">=</span> <span class="st">'\\ \\([^\\)]*\\)$'</span>,</span>
-<span>                    replace <span class="op">=</span> <span class="st">''</span><span class="op">)</span>,</span>
+<span>                    pattern <span class="op">=</span> <span class="st">"\\ \\([^\\)]*\\)$"</span>,</span>
+<span>                    replace <span class="op">=</span> <span class="st">""</span></span>
+<span>                <span class="op">)</span>,</span>
 <span>                <span class="co"># replace known abbreviations</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                    pattern <span class="op">=</span> <span class="st">'3-Fluoro NNEI'</span>,</span>
-<span>                    replace <span class="op">=</span> <span class="st">'3-Fluoro-nnei'</span>,</span>
-<span>                    fixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>                <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                    pattern <span class="op">=</span> <span class="st">'Υ-L-Glutamyl-L-glutamic acid'</span>,</span>
-<span>                    replace <span class="op">=</span> <span class="st">'Tyr-Glu-Glu'</span></span>
+<span>                    pattern <span class="op">=</span> <span class="st">"3-Fluoro NNEI"</span>,</span>
+<span>                    replace <span class="op">=</span> <span class="st">"3-Fluoro-nnei"</span>,</span>
+<span>                    fixed <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>                <span class="op">)</span>,</span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                    pattern <span class="op">=</span> <span class="st">'AcCa'</span>,</span>
-<span>                    replace <span class="op">=</span> <span class="st">'CAR'</span></span>
+<span>                    pattern <span class="op">=</span> <span class="st">"Υ-L-Glutamyl-L-glutamic acid"</span>,</span>
+<span>                    replace <span class="op">=</span> <span class="st">"Tyr-Glu-Glu"</span></span>
+<span>                <span class="op">)</span>,</span>
+<span>                <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>                    pattern <span class="op">=</span> <span class="st">"AcCa"</span>,</span>
+<span>                    replace <span class="op">=</span> <span class="st">"CAR"</span></span>
 <span>                <span class="op">)</span></span>
 <span>            <span class="op">)</span>,</span>
 <span>            <span class="co"># update tripeptides</span></span>
@@ -508,119 +547,121 @@ possible annotations.</p>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/pubchem_property_lookup.html">pubchem_property_lookup</a></span><span class="op">(</span></span>
-<span>        query_column <span class="op">=</span> <span class="st">'normalised_compound'</span>,</span>
-<span>        search_by <span class="op">=</span> <span class="st">'name'</span>,</span>
-<span>        property <span class="op">=</span> <span class="st">'InChIKey'</span>,</span>
-<span>        suffix <span class="op">=</span> <span class="st">'_pubchem'</span>,</span>
+<span>        query_column <span class="op">=</span> <span class="st">"normalised_compound"</span>,</span>
+<span>        search_by <span class="op">=</span> <span class="st">"name"</span>,</span>
+<span>        property <span class="op">=</span> <span class="st">"InChIKey"</span>,</span>
+<span>        suffix <span class="op">=</span> <span class="st">"_pubchem"</span>,</span>
 <span>        cache <span class="op">=</span> <span class="va">cache1</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/lipidmaps_lookup.html">lipidmaps_lookup</a></span><span class="op">(</span></span>
-<span>        query_column <span class="op">=</span> <span class="st">'normalised_compound'</span>,</span>
-<span>        context <span class="op">=</span> <span class="st">'compound'</span>,</span>
-<span>        context_item <span class="op">=</span> <span class="st">'abbrev'</span>,</span>
-<span>        output_item <span class="op">=</span> <span class="st">'inchi_key'</span>,</span>
-<span>        suffix <span class="op">=</span> <span class="st">'_abbrev'</span>,</span>
+<span>        query_column <span class="op">=</span> <span class="st">"normalised_compound"</span>,</span>
+<span>        context <span class="op">=</span> <span class="st">"compound"</span>,</span>
+<span>        context_item <span class="op">=</span> <span class="st">"abbrev"</span>,</span>
+<span>        output_item <span class="op">=</span> <span class="st">"inchi_key"</span>,</span>
+<span>        suffix <span class="op">=</span> <span class="st">"_abbrev"</span>,</span>
 <span>        cache <span class="op">=</span> <span class="va">cache2</span></span>
-<span>    <span class="op">)</span><span class="op">+</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/lipidmaps_lookup.html">lipidmaps_lookup</a></span><span class="op">(</span></span>
-<span>        query_column <span class="op">=</span> <span class="st">'normalised_compound'</span>,</span>
-<span>        context <span class="op">=</span> <span class="st">'compound'</span>,</span>
-<span>        context_item <span class="op">=</span> <span class="st">'abbrev_chains'</span>,</span>
-<span>        output_item <span class="op">=</span> <span class="st">'inchi_key'</span>,</span>
-<span>        suffix <span class="op">=</span> <span class="st">'_abbrevchains'</span>,</span>
+<span>        query_column <span class="op">=</span> <span class="st">"normalised_compound"</span>,</span>
+<span>        context <span class="op">=</span> <span class="st">"compound"</span>,</span>
+<span>        context_item <span class="op">=</span> <span class="st">"abbrev_chains"</span>,</span>
+<span>        output_item <span class="op">=</span> <span class="st">"inchi_key"</span>,</span>
+<span>        suffix <span class="op">=</span> <span class="st">"_abbrevchains"</span>,</span>
 <span>        cache <span class="op">=</span> <span class="va">cache3</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/combine_columns.html">combine_columns</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'InChIKey_pubchem'</span>,<span class="st">'inchi_key_abbrev'</span>,<span class="st">'inchi_key_abbrevchains'</span><span class="op">)</span>,</span>
-<span>        output_name <span class="op">=</span> <span class="st">'inchikey'</span>,</span>
-<span>        source_name <span class="op">=</span> <span class="st">'inchikey_src'</span>,</span>
-<span>        source_tags <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'pubchem'</span>,<span class="st">'lm_abbrev'</span>,<span class="st">'lm_chains'</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/prioritise_columns.html">prioritise_columns</a></span><span class="op">(</span></span>
+<span>        column_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"InChIKey_pubchem"</span>, <span class="st">"inchi_key_abbrev"</span>, <span class="st">"inchi_key_abbrevchains"</span><span class="op">)</span>,</span>
+<span>        output_name <span class="op">=</span> <span class="st">"inchikey"</span>,</span>
+<span>        source_name <span class="op">=</span> <span class="st">"inchikey_src"</span>,</span>
+<span>        source_tags <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pubchem"</span>, <span class="st">"lm_abbrev"</span>, <span class="st">"lm_chains"</span><span class="op">)</span>,</span>
 <span>        clean <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/classyfire_lookup.html">classyfire_lookup</a></span><span class="op">(</span></span>
-<span>        query_column <span class="op">=</span> <span class="st">'inchikey'</span>,</span>
-<span>        output_items <span class="op">=</span> <span class="st">'.all'</span>,</span>
-<span>        output_fields <span class="op">=</span> <span class="st">'.all'</span>,suffix <span class="op">=</span> <span class="st">'_cf'</span>,</span>
+<span>        query_column <span class="op">=</span> <span class="st">"inchikey"</span>,</span>
+<span>        output_items <span class="op">=</span> <span class="st">".all"</span>,</span>
+<span>        output_fields <span class="op">=</span> <span class="st">".all"</span>, suffix <span class="op">=</span> <span class="st">"_cf"</span>,</span>
 <span>        cache <span class="op">=</span> <span class="va">cache4</span>,</span>
 <span>        delay <span class="op">=</span> <span class="fl">5</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/database_lookup.html">database_lookup</a></span><span class="op">(</span></span>
-<span>        query_column <span class="op">=</span> <span class="st">'inchikey'</span>,</span>
-<span>        database_column <span class="op">=</span> <span class="st">'InChI.Key'</span>,</span>
+<span>        query_column <span class="op">=</span> <span class="st">"inchikey"</span>,</span>
+<span>        database_column <span class="op">=</span> <span class="st">"InChI.Key"</span>,</span>
 <span>        database <span class="op">=</span> <span class="fu"><a href="../reference/PathBank_metabolite_database.html">PathBank_metabolite_database</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Pathway.Name'</span>,<span class="st">'Pathway.Subject'</span>,<span class="st">'Species'</span><span class="op">)</span>,</span>
-<span>        suffix <span class="op">=</span> <span class="st">''</span>,</span>
+<span>        include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Pathway.Name"</span>, <span class="st">"Pathway.Subject"</span>, <span class="st">"Species"</span><span class="op">)</span>,</span>
+<span>        suffix <span class="op">=</span> <span class="st">""</span>,</span>
 <span>        not_found <span class="op">=</span> <span class="cn">NA</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/add_columns.html">add_columns</a></span><span class="op">(</span></span>
-<span>        new_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">HP</span>,<span class="va">LP</span><span class="op">)</span>,</span>
-<span>        by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'mzrt_match_id'</span><span class="op">=</span><span class="st">'id'</span><span class="op">)</span></span>
+<span>        new_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">HP</span>, <span class="va">LP</span><span class="op">)</span>,</span>
+<span>        by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mzrt_match_id"</span> <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/filter_na.html">filter_na</a></span><span class="op">(</span></span>
-<span>        column_name <span class="op">=</span> <span class="st">'inchikey'</span></span>
+<span>        column_name <span class="op">=</span> <span class="st">"inchikey"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/combine_records.html">combine_records</a></span><span class="op">(</span></span>
-<span>        group_by <span class="op">=</span> <span class="st">'mzrt_match_id'</span>,</span>
+<span>        group_by <span class="op">=</span> <span class="st">"mzrt_match_id"</span>,</span>
 <span>        default_fcn <span class="op">=</span> <span class="fu"><a href="../reference/combine_records_helper_functions.html">.unique</a></span><span class="op">(</span></span>
-<span>            separator <span class="op">=</span> <span class="st">' || '</span><span class="op">)</span></span>
+<span>            separator <span class="op">=</span> <span class="st">" || "</span></span>
+<span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/filter_labels.html">filter_labels</a></span><span class="op">(</span></span>
-<span>        column_name <span class="op">=</span> <span class="st">'rsd_qc'</span>,</span>
-<span>        labels <span class="op">=</span> <span class="st">'NA'</span>,</span>
-<span>        mode <span class="op">=</span> <span class="st">'exclude'</span></span>
+<span>        column_name <span class="op">=</span> <span class="st">"rsd_qc"</span>,</span>
+<span>        labels <span class="op">=</span> <span class="st">"NA"</span>,</span>
+<span>        mode <span class="op">=</span> <span class="st">"exclude"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/filter_range.html">filter_range</a></span><span class="op">(</span></span>
-<span>        column_name <span class="op">=</span> <span class="st">'rsd_qc'</span>,</span>
+<span>        column_name <span class="op">=</span> <span class="st">"rsd_qc"</span>,</span>
 <span>        upper_limit <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>        lower_limit<span class="op">=</span><span class="op">-</span><span class="cn">Inf</span>,</span>
-<span>        equal_to<span class="op">=</span><span class="cn">FALSE</span></span>
+<span>        lower_limit <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>,</span>
+<span>        equal_to <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>    <span class="op">)</span></span>
-<span><span class="va">WF</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">WF</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We can explore the contents of the table. Here we generate plots to
 visualise the number of annotations from each source.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># pie chart of the sources of annotations</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_pie_chart.html">annotation_pie_chart</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="st">'source_name'</span>,</span>
-<span>    label_location <span class="op">=</span> <span class="st">'outside'</span></span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_pie_chart.html">annotation_pie_chart</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="st">"source_name"</span>,</span>
+<span>    label_location <span class="op">=</span> <span class="st">"outside"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'Annotations per source'</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Annotations per source"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="daphnia_example_files/figure-html/unnamed-chunk-18-1.png" width="384" style="display: block; margin: auto;"></p>
 <p>Next we plot a histogram of the QC-RSD values before filtering, by
 indexing the relevant step of the workflow.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># histogram of the rsd-qc for annotated features (before filtering)</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="st">'rsd_qc'</span>,</span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_histogram.html">annotation_histogram</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="st">"rsd_qc"</span>,</span>
 <span>    bins <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    vline <span class="op">=</span> <span class="fl">20</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">[</span><span class="fl">12</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'MS1 peak QC-RSD'</span>,<span class="st">"Features with QC-RSD&lt;20 were removed by the workflow."</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">[</span><span class="fl">12</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"MS1 peak QC-RSD"</span>, <span class="st">"Features with QC-RSD&lt;20 were removed by the workflow."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="daphnia_example_files/figure-html/unnamed-chunk-19-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>In this plot we present a bar chart of the different molecular
 classes present in the final table.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># bar chart of the superclasses</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotation_bar_chart.html">annotation_bar_chart</a></span><span class="op">(</span></span>
-<span>    factor_name <span class="op">=</span> <span class="st">'superclass.name_cf'</span>,</span>
-<span>    legend <span class="op">=</span> <span class="cn">TRUE</span>,label_type <span class="op">=</span> <span class="st">'none'</span></span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_bar_chart.html">annotation_bar_chart</a></span><span class="op">(</span></span>
+<span>    factor_name <span class="op">=</span> <span class="st">"superclass.name_cf"</span>,</span>
+<span>    legend <span class="op">=</span> <span class="cn">TRUE</span>, label_type <span class="op">=</span> <span class="st">"none"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'Superclasses'</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Superclasses"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="daphnia_example_files/figure-html/unnamed-chunk-20-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Finally we use the PubChem API to generate an image of the molecular
 structure for one of the metabolites.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># display one of the metabolite structures</span></span>
-<span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="../reference/pubchem_widget.html">pubchem_widget</a></span><span class="op">(</span></span>
-<span>        query_column <span class="op">=</span> <span class="st">'normalised_compound'</span>,</span>
-<span>        row_index<span class="op">=</span><span class="fl">1</span>,</span>
-<span>        record_type <span class="op">=</span> <span class="st">'3D-Conformer'</span>,</span>
-<span>        display <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>        hide_title <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>        height <span class="op">=</span> <span class="st">'820px'</span><span class="op">)</span></span>
+<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pubchem_widget.html">pubchem_widget</a></span><span class="op">(</span></span>
+<span>    query_column <span class="op">=</span> <span class="st">"normalised_compound"</span>,</span>
+<span>    row_index <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    record_type <span class="op">=</span> <span class="st">"3D-Conformer"</span>,</span>
+<span>    display <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    hide_title <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    height <span class="op">=</span> <span class="st">"820px"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>,<span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/chart_plot.html" class="external-link">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <iframe class="pubchem-widget" src="https://pubchem.ncbi.nlm.nih.gov/compound/Aminoethylethanolamine#section=3D-Conformer&amp;embed=true" style="width: 100%; height: 820px; border: 0;"></iframe>
 <p><br></p>
 </div>
@@ -629,9 +670,9 @@ structure for one of the metabolites.</p>
 </h2>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.3.2 (2023-10-31)</span></span>
-<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.3 LTS</span></span>
+<span><span class="co">#&gt; R Under development (unstable) (2024-03-13 r86113)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.4 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -652,62 +693,59 @@ structure for one of the metabolites.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] patchwork_1.2.0               ggplot2_3.4.4                </span></span>
-<span><span class="co">#&gt; [3] metabolomicsWorkbenchR_1.12.0 MetMashR_0.1.0               </span></span>
-<span><span class="co">#&gt; [5] struct_1.14.0                 BiocStyle_2.30.0             </span></span>
+<span><span class="co">#&gt; [1] patchwork_1.2.0               ggplot2_3.5.0                </span></span>
+<span><span class="co">#&gt; [3] metabolomicsWorkbenchR_1.13.0 MetMashR_0.99.0              </span></span>
+<span><span class="co">#&gt; [5] struct_1.15.4                 BiocStyle_2.31.0             </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] DBI_1.2.1                   bitops_1.0-7               </span></span>
-<span><span class="co">#&gt;   [3] gridExtra_2.3               rlang_1.1.3                </span></span>
-<span><span class="co">#&gt;   [5] magrittr_2.0.3              matrixStats_1.2.0          </span></span>
-<span><span class="co">#&gt;   [7] e1071_1.7-14                compiler_4.3.2             </span></span>
-<span><span class="co">#&gt;   [9] RSQLite_2.3.4               systemfonts_1.0.5          </span></span>
-<span><span class="co">#&gt;  [11] vctrs_0.6.5                 stringr_1.5.1              </span></span>
-<span><span class="co">#&gt;  [13] pkgconfig_2.0.3             crayon_1.5.2               </span></span>
-<span><span class="co">#&gt;  [15] fastmap_1.1.1               dbplyr_2.4.0               </span></span>
-<span><span class="co">#&gt;  [17] XVector_0.42.0              labeling_0.4.3             </span></span>
-<span><span class="co">#&gt;  [19] utf8_1.2.4                  rmarkdown_2.25             </span></span>
-<span><span class="co">#&gt;  [21] structToolbox_1.14.0        ragg_1.2.7                 </span></span>
-<span><span class="co">#&gt;  [23] purrr_1.0.2                 bit_4.0.5                  </span></span>
-<span><span class="co">#&gt;  [25] xfun_0.41                   MultiAssayExperiment_1.28.0</span></span>
-<span><span class="co">#&gt;  [27] zlibbioc_1.48.0             cachem_1.0.8               </span></span>
-<span><span class="co">#&gt;  [29] GenomeInfoDb_1.38.5         jsonlite_1.8.8             </span></span>
-<span><span class="co">#&gt;  [31] blob_1.2.4                  highr_0.10                 </span></span>
-<span><span class="co">#&gt;  [33] DelayedArray_0.28.0         R6_2.5.1                   </span></span>
-<span><span class="co">#&gt;  [35] bslib_0.6.1                 stringi_1.8.3              </span></span>
-<span><span class="co">#&gt;  [37] GenomicRanges_1.54.1        jquerylib_0.1.4            </span></span>
-<span><span class="co">#&gt;  [39] Rcpp_1.0.12                 bookdown_0.37              </span></span>
-<span><span class="co">#&gt;  [41] SummarizedExperiment_1.32.0 knitr_1.45                 </span></span>
-<span><span class="co">#&gt;  [43] IRanges_2.36.0              Matrix_1.6-5               </span></span>
-<span><span class="co">#&gt;  [45] tidyselect_1.2.0            abind_1.4-5                </span></span>
-<span><span class="co">#&gt;  [47] yaml_2.3.8                  curl_5.2.0                 </span></span>
-<span><span class="co">#&gt;  [49] lattice_0.22-5              tibble_3.2.1               </span></span>
-<span><span class="co">#&gt;  [51] plyr_1.8.9                  Biobase_2.62.0             </span></span>
-<span><span class="co">#&gt;  [53] withr_3.0.0                 evaluate_0.23              </span></span>
-<span><span class="co">#&gt;  [55] ontologyIndex_2.11          desc_1.4.3                 </span></span>
-<span><span class="co">#&gt;  [57] sf_1.0-15                   units_0.8-5                </span></span>
-<span><span class="co">#&gt;  [59] proxy_0.4-27                BiocFileCache_2.10.1       </span></span>
-<span><span class="co">#&gt;  [61] zip_2.3.0                   pillar_1.9.0               </span></span>
-<span><span class="co">#&gt;  [63] BiocManager_1.30.22         filelock_1.0.3             </span></span>
-<span><span class="co">#&gt;  [65] MatrixGenerics_1.14.0       KernSmooth_2.23-22         </span></span>
-<span><span class="co">#&gt;  [67] stats4_4.3.2                generics_0.1.3             </span></span>
-<span><span class="co">#&gt;  [69] sp_2.1-2                    RCurl_1.98-1.14            </span></span>
-<span><span class="co">#&gt;  [71] S4Vectors_0.40.2            munsell_0.5.0              </span></span>
-<span><span class="co">#&gt;  [73] scales_1.3.0                class_7.3-22               </span></span>
-<span><span class="co">#&gt;  [75] glue_1.7.0                  tools_4.3.2                </span></span>
-<span><span class="co">#&gt;  [77] data.table_1.14.10          openxlsx_4.2.5.2           </span></span>
-<span><span class="co">#&gt;  [79] fs_1.6.3                    cowplot_1.1.2              </span></span>
-<span><span class="co">#&gt;  [81] grid_4.3.2                  colorspace_2.1-0           </span></span>
-<span><span class="co">#&gt;  [83] GenomeInfoDbData_1.2.11     cli_3.6.2                  </span></span>
-<span><span class="co">#&gt;  [85] textshaping_0.3.7           fansi_1.0.6                </span></span>
-<span><span class="co">#&gt;  [87] ggthemes_5.0.0              S4Arrays_1.2.0             </span></span>
-<span><span class="co">#&gt;  [89] dplyr_1.1.4                 gtable_0.3.4               </span></span>
-<span><span class="co">#&gt;  [91] sass_0.4.8                  digest_0.6.34              </span></span>
-<span><span class="co">#&gt;  [93] BiocGenerics_0.48.1         classInt_0.4-10            </span></span>
-<span><span class="co">#&gt;  [95] SparseArray_1.2.3           farver_2.1.1               </span></span>
-<span><span class="co">#&gt;  [97] memoise_2.0.1               htmltools_0.5.7            </span></span>
-<span><span class="co">#&gt;  [99] pkgdown_2.0.7               lifecycle_1.0.4            </span></span>
-<span><span class="co">#&gt; [101] httr_1.4.7                  bit64_4.0.5</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] tidyselect_1.2.1            blob_1.2.4                 </span></span>
+<span><span class="co">#&gt;  [3] dplyr_1.1.4                 farver_2.1.1               </span></span>
+<span><span class="co">#&gt;  [5] filelock_1.0.3              bitops_1.0-7               </span></span>
+<span><span class="co">#&gt;  [7] fastmap_1.1.1               RCurl_1.98-1.14            </span></span>
+<span><span class="co">#&gt;  [9] BiocFileCache_2.11.1        digest_0.6.35              </span></span>
+<span><span class="co">#&gt; [11] lifecycle_1.0.4             RSQLite_2.3.5              </span></span>
+<span><span class="co">#&gt; [13] magrittr_2.0.3              compiler_4.4.0             </span></span>
+<span><span class="co">#&gt; [15] rlang_1.1.3                 sass_0.4.9                 </span></span>
+<span><span class="co">#&gt; [17] tools_4.4.0                 utf8_1.2.4                 </span></span>
+<span><span class="co">#&gt; [19] yaml_2.3.8                  data.table_1.15.2          </span></span>
+<span><span class="co">#&gt; [21] knitr_1.45                  S4Arrays_1.3.6             </span></span>
+<span><span class="co">#&gt; [23] labeling_0.4.3              htmlwidgets_1.6.4          </span></span>
+<span><span class="co">#&gt; [25] sp_2.1-3                    curl_5.2.1                 </span></span>
+<span><span class="co">#&gt; [27] bit_4.0.5                   ontologyIndex_2.12         </span></span>
+<span><span class="co">#&gt; [29] DelayedArray_0.29.9         plyr_1.8.9                 </span></span>
+<span><span class="co">#&gt; [31] abind_1.4-5                 withr_3.0.0                </span></span>
+<span><span class="co">#&gt; [33] purrr_1.0.2                 BiocGenerics_0.49.1        </span></span>
+<span><span class="co">#&gt; [35] desc_1.4.3                  grid_4.4.0                 </span></span>
+<span><span class="co">#&gt; [37] stats4_4.4.0                fansi_1.0.6                </span></span>
+<span><span class="co">#&gt; [39] colorspace_2.1-0            scales_1.3.0               </span></span>
+<span><span class="co">#&gt; [41] MultiAssayExperiment_1.29.1 SummarizedExperiment_1.33.3</span></span>
+<span><span class="co">#&gt; [43] cli_3.6.2                   rmarkdown_2.26             </span></span>
+<span><span class="co">#&gt; [45] crayon_1.5.2                ragg_1.3.0                 </span></span>
+<span><span class="co">#&gt; [47] generics_0.1.3              httr_1.4.7                 </span></span>
+<span><span class="co">#&gt; [49] DBI_1.2.2                   cachem_1.0.8               </span></span>
+<span><span class="co">#&gt; [51] stringr_1.5.1               zlibbioc_1.49.3            </span></span>
+<span><span class="co">#&gt; [53] ggthemes_5.1.0              BiocManager_1.30.22        </span></span>
+<span><span class="co">#&gt; [55] XVector_0.43.1              matrixStats_1.2.0          </span></span>
+<span><span class="co">#&gt; [57] vctrs_0.6.5                 structToolbox_1.15.1       </span></span>
+<span><span class="co">#&gt; [59] Matrix_1.6-5                jsonlite_1.8.8             </span></span>
+<span><span class="co">#&gt; [61] bookdown_0.38               IRanges_2.37.1             </span></span>
+<span><span class="co">#&gt; [63] S4Vectors_0.41.5            bit64_4.0.5                </span></span>
+<span><span class="co">#&gt; [65] systemfonts_1.0.6           jquerylib_0.1.4            </span></span>
+<span><span class="co">#&gt; [67] glue_1.7.0                  pkgdown_2.0.7.9000         </span></span>
+<span><span class="co">#&gt; [69] cowplot_1.1.3               stringi_1.8.3              </span></span>
+<span><span class="co">#&gt; [71] gtable_0.3.4                GenomeInfoDb_1.39.9        </span></span>
+<span><span class="co">#&gt; [73] GenomicRanges_1.55.4        munsell_0.5.0              </span></span>
+<span><span class="co">#&gt; [75] tibble_3.2.1                pillar_1.9.0               </span></span>
+<span><span class="co">#&gt; [77] htmltools_0.5.7             GenomeInfoDbData_1.2.11    </span></span>
+<span><span class="co">#&gt; [79] dbplyr_2.5.0                R6_2.5.1                   </span></span>
+<span><span class="co">#&gt; [81] textshaping_0.3.7           evaluate_0.23              </span></span>
+<span><span class="co">#&gt; [83] lattice_0.22-6              Biobase_2.63.0             </span></span>
+<span><span class="co">#&gt; [85] highr_0.10                  openxlsx_4.2.5.2           </span></span>
+<span><span class="co">#&gt; [87] memoise_2.0.1               bslib_0.6.1                </span></span>
+<span><span class="co">#&gt; [89] Rcpp_1.0.12                 zip_2.3.1                  </span></span>
+<span><span class="co">#&gt; [91] gridExtra_2.3               SparseArray_1.3.4          </span></span>
+<span><span class="co">#&gt; [93] xfun_0.42                   fs_1.6.3                   </span></span>
+<span><span class="co">#&gt; [95] MatrixGenerics_1.15.0       pkgconfig_2.0.3</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -722,7 +760,7 @@ structure for one of the metabolites.</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.9000.</p>
 </div>
 
     </footer>

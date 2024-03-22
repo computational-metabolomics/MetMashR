@@ -6,11 +6,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-standard navbar-expand-lg bg-primary"><div class="container">
+    <nav class="navbar fixed-top navbar-standard navbar-expand-lg bg-primary" data-bs-theme="standard"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,11 +87,6 @@
         <dd>Import CompDB source</dd>
       </dl><dl><dt>
           
-          <code><a href="MetFrag_source.html">MetFrag_source()</a></code> 
-        </dt>
-        <dd>LCMS table</dd>
-      </dl><dl><dt>
-          
           <code><a href="annotation_source.html">annotation_source()</a></code> 
         </dt>
         <dd>An annotation database</dd>
@@ -140,7 +135,7 @@
           
           <code><a href="lcms_table.html">lcms_table()</a></code> 
         </dt>
-        <dd>An annotation table</dd>
+        <dd>LCMS table</dd>
       </dl></div><div class="section level2">
       <h2 id="annotation-databases">Annotation databases<a class="anchor" aria-label="anchor" href="#annotation-databases"></a></h2>
       
@@ -154,9 +149,19 @@
 
       <dl><dt>
           
+          <code><a href="AnnotationDb_database.html">AnnotationDb_database()</a></code> 
+        </dt>
+        <dd>AnnotationDb database</dd>
+      </dl><dl><dt>
+          
           <code><a href="BiocFileCache_database.html">BiocFileCache_database()</a></code> 
         </dt>
         <dd>Cached database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="GO_database.html">GO_database()</a></code> 
+        </dt>
+        <dd>GO.db</dd>
       </dl><dl><dt>
           
           <code><a href="MTox700plus_database.html">MTox700plus_database()</a></code> 
@@ -179,6 +184,11 @@
         <dd>mwb_refmet_database</dd>
       </dl><dl><dt>
           
+          <code><a href="rdata_database.html">rdata_database()</a></code> 
+        </dt>
+        <dd>rdata database</dd>
+      </dl><dl><dt>
+          
           <code><a href="rds_database.html">rds_database()</a></code> 
         </dt>
         <dd>rds database</dd>
@@ -197,6 +207,16 @@
           <code><a href="write_database.html">write_database()</a></code> 
         </dt>
         <dd>Write to a database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="rds_cache.html">rds_cache()</a></code> 
+        </dt>
+        <dd>rds cache</dd>
+      </dl><dl><dt>
+          
+          <code><a href="github_file.html">github_file()</a></code> 
+        </dt>
+        <dd>GitHub file</dd>
       </dl><dl><dt>
           
           <code><a href="is_writable.html">is_writable()</a></code> 
@@ -228,6 +248,11 @@
           <code><a href="database_lookup.html">database_lookup()</a></code> 
         </dt>
         <dd>ID lookup by database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="eutils_lookup.html">eutils_lookup()</a></code> 
+        </dt>
+        <dd>NCBI E-utils query</dd>
       </dl><dl><dt>
           
           <code><a href="hmdb_lookup.html">hmdb_lookup()</a></code> 
@@ -296,7 +321,7 @@
         <dd>Calculate RT difference</dd>
       </dl><dl><dt>
           
-          <code><a href="combine_columns.html">combine_columns()</a></code> 
+          <code><a href="prioritise_columns.html">prioritise_columns()</a></code> 
         </dt>
         <dd>Combine several columns into a single column.</dd>
       </dl><dl><dt>
@@ -371,9 +396,29 @@
         <dd>Trim whitespace</dd>
       </dl><dl><dt>
           
-          <code><a href="concatenate_columns.html">concatenate_columns()</a></code> 
+          <code><a href="combine_columns.html">combine_columns()</a></code> 
         </dt>
-        <dd>Concatenate columns</dd>
+        <dd>Combine columns</dd>
+      </dl><dl><dt>
+          
+          <code><a href="select_columns.html">select_columns()</a></code> 
+        </dt>
+        <dd>Select columns</dd>
+      </dl><dl><dt>
+          
+          <code><a href="split_column.html">split_column()</a></code> 
+        </dt>
+        <dd>Split a column</dd>
+      </dl><dl><dt>
+          
+          <code><a href="split_records.html">split_records()</a></code> 
+        </dt>
+        <dd>Expand records</dd>
+      </dl><dl><dt>
+          
+          <code><a href="AnnotationDb_select.html">AnnotationDb_select()</a></code> 
+        </dt>
+        <dd>Select columns from AnnotationDb database</dd>
       </dl></div><div class="section level2">
       <h2 id="combining-records">Combining records<a class="anchor" aria-label="anchor" href="#combining-records"></a></h2>
       
@@ -496,7 +541,7 @@
       </dl></div><div class="section level2">
       <h2 id="additional-functions">Additional functions<a class="anchor" aria-label="anchor" href="#additional-functions"></a></h2>
       
-      <p class="section-desc"></p><p>Various supporting functions are used by MetMashR</p>
+      <p class="section-desc"></p><p>Supporting functions are used by MetMashR</p>
 
       
     </div><div id="" class="section level2">
@@ -506,14 +551,14 @@
 
       <dl><dt>
           
-          <code><a href="struct_venn_set.html">struct_venn_set()</a></code> 
-        </dt>
-        <dd>Annotation venn chart</dd>
-      </dl><dl><dt>
-          
           <code><a href="check_for_columns.html">check_for_columns()</a></code> 
         </dt>
         <dd>Check for columns in an <code>annotation_source</code></dd>
+      </dl><dl><dt>
+          
+          <code><a href="required_cols.html">required_cols()</a></code> 
+        </dt>
+        <dd>Required columns in an annotation source</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
@@ -524,7 +569,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.9000.</p>
 </div>
 
     </footer></div>

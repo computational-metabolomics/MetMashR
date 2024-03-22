@@ -34,19 +34,25 @@
     <loc>https://computational-metabolomics.github.io/MetMashR/news/index.html</loc>
   </url>
   <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/AnnotationDb_database.html</loc>
+  </url>
+  <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/AnnotationDb_select.html</loc>
+  </url>
+  <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/BiocFileCache_database.html</loc>
   </url>
   <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/CompoundDb_source.html</loc>
   </url>
   <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/GO_database.html</loc>
+  </url>
+  <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/MTox700plus_database.html</loc>
   </url>
   <url>
-    <loc>https://computational-metabolomics.github.io/MetMashR/reference/MetFrag_source.html</loc>
-  </url>
-  <url>
-    <loc>https://computational-metabolomics.github.io/MetMashR/reference/MetMasheR.html</loc>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/MetMashR-package.html</loc>
   </url>
   <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/PathBank_metabolite_database.html</loc>
@@ -109,9 +115,6 @@
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/combine_sources.html</loc>
   </url>
   <url>
-    <loc>https://computational-metabolomics.github.io/MetMashR/reference/concatenate_columns.html</loc>
-  </url>
-  <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/database_lookup.html</loc>
   </url>
   <url>
@@ -130,6 +133,9 @@
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/dot-unzip.html</loc>
   </url>
   <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/eutils_lookup.html</loc>
+  </url>
+  <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/filter_labels.html</loc>
   </url>
   <url>
@@ -140,6 +146,9 @@
   </url>
   <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/filter_venn.html</loc>
+  </url>
+  <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/github_file.html</loc>
   </url>
   <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/hmdb_lookup.html</loc>
@@ -199,6 +208,9 @@
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/opsin_lookup.html</loc>
   </url>
   <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/prioritise_columns.html</loc>
+  </url>
+  <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/pubchem_compound_lookup.html</loc>
   </url>
   <url>
@@ -211,6 +223,12 @@
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/pubchem_widget.html</loc>
   </url>
   <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/rdata_database.html</loc>
+  </url>
+  <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/rds_cache.html</loc>
+  </url>
+  <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/rds_database.html</loc>
   </url>
   <url>
@@ -220,16 +238,25 @@
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/read_source.html</loc>
   </url>
   <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/required_cols.html</loc>
+  </url>
+  <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/rest_api.html</loc>
   </url>
   <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/rt_match.html</loc>
   </url>
   <url>
-    <loc>https://computational-metabolomics.github.io/MetMashR/reference/sqlite_database.html</loc>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/select_columns.html</loc>
   </url>
   <url>
-    <loc>https://computational-metabolomics.github.io/MetMashR/reference/struct_venn_set.html</loc>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/split_column.html</loc>
+  </url>
+  <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/split_records.html</loc>
+  </url>
+  <url>
+    <loc>https://computational-metabolomics.github.io/MetMashR/reference/sqlite_database.html</loc>
   </url>
   <url>
     <loc>https://computational-metabolomics.github.io/MetMashR/reference/trim_whitespace.html</loc>

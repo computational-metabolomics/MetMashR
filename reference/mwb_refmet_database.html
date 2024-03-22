@@ -6,11 +6,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-standard navbar-expand-lg bg-primary"><div class="container">
+    <nav class="navbar fixed-top navbar-standard navbar-expand-lg bg-primary" data-bs-theme="standard"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,14 +108,14 @@ mwb_refmet_database
     <h2 id="inheritance">Inheritance<a class="anchor" aria-label="anchor" href="#inheritance"></a></h2>
     
 
-<p>A <code>mwb_refmet_database</code> object inherits the following <code>struct</code> classes: <br><br><code>mwb_refmet_database()</code> ⭢ <code><a href="annotation_database.html">annotation_database()</a></code> ⭢ <code><a href="annotation_source.html">annotation_source()</a></code> ⭢ <code>struct_class()</code></p>
+<p>A <code>mwb_refmet_database</code> object inherits the following <code>struct</code> classes: <br><br><code>[mwb_refmet_database]</code> &gt;&gt; <code>[annotation_database]</code> &gt;&gt; <code>[annotation_source]</code> &gt;&gt; <code>[struct_class]</code></p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Shepherd L, Morgan M (2023). <em>BiocFileCache: Manage Files Across
 Sessions</em>. doi:10.18129/B9.bioc.BiocFileCache
 <a href="https://doi.org/10.18129/B9.bioc.BiocFileCache" class="external-link">https://doi.org/10.18129/B9.bioc.BiocFileCache</a>, R package version
-2.10.1, <a href="https://bioconductor.org/packages/BiocFileCache" class="external-link">https://bioconductor.org/packages/BiocFileCache</a>.</p>
+2.11.1, <a href="https://bioconductor.org/packages/BiocFileCache" class="external-link">https://bioconductor.org/packages/BiocFileCache</a>.</p>
 <p>Wickham H (2023). <em>httr: Tools for Working with URLs and HTTP</em>. R
 package version 1.4.7, <a href="https://CRAN.R-project.org/package=httr" class="external-link">https://CRAN.R-project.org/package=httr</a>.</p>
 <p>Wickham H (2011). "The Split-Apply-Combine Strategy for Data Analysis."
@@ -125,7 +125,13 @@ package version 1.4.7, <a href="https://CRAN.R-project.org/package=httr" class="
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">mwb_refmet_database</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      bfc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id<span class="op">=</span><span class="cn">NA</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      source <span class="op">=</span> <span class="st">"ANY"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
@@ -136,7 +142,7 @@ package version 1.4.7, <a href="https://CRAN.R-project.org/package=httr" class="
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.9000.</p>
 </div>
 
     </footer></div>
