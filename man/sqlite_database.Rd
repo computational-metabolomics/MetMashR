@@ -40,7 +40,7 @@ M = sqlite_database(
 }
 \references{
 Müller K, Wickham H, James DA, Falcon S (2024). \emph{RSQLite: SQLite
-Interface for R}. R package version 2.3.5,
+Interface for R}. R package version 2.3.6,
 \url{https://CRAN.R-project.org/package=RSQLite}.
 }
 \seealso{

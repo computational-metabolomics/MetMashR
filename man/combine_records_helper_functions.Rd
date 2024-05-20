@@ -33,7 +33,7 @@
 
 .select_exact(match_col, match, separator, na_string = "NA")
 
-.unique(separator, na_string = "NA", digits = 6)
+.unique(separator, na_string = "NA", digits = 6, drop_na = FALSE)
 
 .prioritise(match_col, priority, separator, no_match = NA, na_string = "NA")
 

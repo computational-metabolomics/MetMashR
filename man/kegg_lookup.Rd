@@ -53,7 +53,7 @@ M = kegg_lookup(
 Tenenbaum D, Maintainer B (2023). \emph{KEGGREST: Client-side REST access to
 the Kyoto Encyclopedia of Genes and Genomes (KEGG)}.
 doi:10.18129/B9.bioc.KEGGREST
-\url{https://doi.org/10.18129/B9.bioc.KEGGREST}, R package version 1.43.0,
+\url{https://doi.org/10.18129/B9.bioc.KEGGREST}, R package version 1.42.0,
 \url{https://bioconductor.org/packages/KEGGREST}.
 
 Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A

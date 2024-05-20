@@ -100,6 +100,11 @@ reference:
   - split_column
   - split_records
   - AnnotationDb_select
+  - compute_column
+  - compute_record
+  - pivot_columns
+  - rename_columns
+  - unique_records
 - title: "Combining records"
   desc: >
     Combining records is an important step in the annotation mashing workflow.

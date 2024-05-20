@@ -4,12 +4,25 @@
 \alias{normalise_lipids}
 \title{Normalise Lipids nomenclature}
 \usage{
-normalise_lipids(column_name, grammar, ...)
+normalise_lipids(
+  column_name,
+  grammar = ".all",
+  columns = ".all",
+  suffix = "_goslin",
+  batch_size = 10000,
+  ...
+)
 }
 \arguments{
 \item{column_name}{(character) The name of the column containing Lipids names to normalise.}
 
-\item{grammar}{(character) The grammar to use for normalising lipid names. Allowed values are: Shorthand2020, Goslin, FattyAcids, LipidMaps, SwissLipids, HMDB or .all.}
+\item{grammar}{(character) The grammar to use for normalising lipid names. Allowed values are: Shorthand2020, Goslin, FattyAcids, LipidMaps, SwissLipids, HMDB or .all. The default is \code{".all"}.}
+
+\item{columns}{(character) Column names to include from the goslin output. Can be any of "Normalized.Name", "Original.Name", "Grammar", "Adduct", "Adduct.Charge", "Lipid.Maps.Category", "Lipid.Maps.Main.Class", "Species.Name", "Extended.Species.Name", "Molecular.Species.Name", "Sn.Position.Name", "Structure.Defined.Name", "Full.Structure.Name", "Functional.Class.Abbr", "Functional.Class.Synonyms", "Level", "Total.C", "Total.OH", "Total.O", "Total.DB", "Mass", "Sum.Formula".".all" will return all columns. ". The default is \code{".all"}.}
+
+\item{suffix}{(character) A suffic added to the column names of the goslin output. The default is \code{"_goslin"}.}
+
+\item{batch_size}{(numeric, integer) The maximum number of annotations to be parsed by rgoslin at a time. If the batch size is less than the total number of records then the records will be split into multiple batches to help prevent crashes. The default is \code{10000}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -34,7 +47,10 @@ A \code{normalise_lipids} object inherits the following \code{struct} classes: \
 \examples{
 M = normalise_lipids(
       column_name = "V1",
-      grammar = ".all")
+      grammar = ".all",
+      columns = ".all",
+      suffix = "_goslin",
+      batch_size = 10000)
 
 }
 \references{

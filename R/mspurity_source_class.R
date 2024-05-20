@@ -2,9 +2,10 @@
 #' @include annotation_source_class.R
 #' @family {annotation sources}
 #' @export mspurity_source
-mspurity_source <- function(source,
-                            tag = "msPurity",
-                            ...) {
+mspurity_source <- function(
+        source,
+        tag = "msPurity",
+        ...) {
     # new object
     out <- new_struct(
         "mspurity_source",
@@ -80,19 +81,19 @@ setMethod(
             )
             df <- data.frame(matrix(NA, nrow = 0, ncol = length(cols)))
             colnames(df) <- cols
-
+            
             D$data <- df
             D$mz_column <- "mz"
             D$rt_column <- "rt"
             D$id_column <- "id"
             D$tag <- M$tag
             M$imported <- D
-
+            
             return(M)
         }
-
+        
         mtox_output <- read.csv(file = M$source, sep = ",", row.names = 1)
-
+        
         # split library ascension
         S <- lapply(mtox_output$library_accession, function(x) {
             s <- strsplit(x = x, split = "|", fixed = TRUE)[[1]]
@@ -101,50 +102,50 @@ setMethod(
             s <- gsub("MZ:", "", s, fixed = TRUE)
             s <- gsub("RT:", "", s, fixed = TRUE)
             names(s) <- paste0("library_accession.",
-                c("MZ", "RT", "name", "ion", "hmdb_id", "assay"),
-                sep = ""
+                               c("MZ", "RT", "name", "ion", "hmdb_id", "assay"),
+                               sep = ""
             )
             df <- as.data.frame(t(as.data.frame(s)))
             rownames(df) <- names(x)
             return(df)
         })
         S <- do.call(rbind, S)
-
+        
         # append to annotations
         mtox_output <- cbind(mtox_output, S)
-
+        
         # convert to char and add id
         mtox_output$id <- as.character(seq_len(nrow(mtox_output)))
-
+        
         # calc ppm diff
         mtox_output$library_ppm_diff <-
             1e6 * (mtox_output$query_precursor_mz -
-                mtox_output$library_precursor_mz) /
-                mtox_output$library_precursor_mz
-
+                       mtox_output$library_precursor_mz) /
+            mtox_output$library_precursor_mz
+        
         # make ions consistent with CD
         ions <- mtox_output$library_accession.ion
         # any ion ending with + or - becomes +1 or -1
         ions <- gsub("[\\+]+$", "+1", ions, perl = TRUE)
         ions <- gsub("[\\-]+$", "-1", ions, perl = TRUE)
         mtox_output$library_accession.ion <- ions
-
+        
         # add extra columns if requested
         if (length(M$add_cols) > 0) {
             for (g in seq_len(length(M$add_cols))) {
                 mtox_output[[names(M$add_cols)[g]]] <- M$add_cols[[g]]
             }
         }
-
+        
         D$data <- mtox_output
-
+        
         D$mz_column <- "mz"
         D$rt_column <- "rt"
         D$id_column <- "id"
         D$tag <- M$tag
-
+        
         M$imported <- D
-
+        
         return(M)
     }
 )

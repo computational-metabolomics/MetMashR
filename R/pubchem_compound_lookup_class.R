@@ -1,13 +1,15 @@
 #' @eval get_description('pubchem_compound_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R
-pubchem_compound_lookup <- function(query_column,
-                                    search_by,
-                                    suffix = "_pubchem",
-                                    output = "cids",
-                                    records = "best",
-                                    ...) {
-    out <- struct::new_struct("pubchem_compound_lookup",
+pubchem_compound_lookup <- function(
+        query_column,
+        search_by,
+        suffix = "_pubchem",
+        output = "cids",
+        records = "best",
+        ...) {
+    out <- struct::new_struct(
+        "pubchem_compound_lookup",
         query_column = query_column,
         search_by = search_by,
         suffix = suffix,
@@ -15,7 +17,7 @@ pubchem_compound_lookup <- function(query_column,
         records = records,
         ...
     )
-
+    
     return(out)
 }
 

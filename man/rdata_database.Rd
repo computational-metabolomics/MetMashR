@@ -40,6 +40,7 @@ Other {annotation databases}:
 \code{\link{GO_database}},
 \code{\link{annotation_database}},
 \code{\link{annotation_source}},
+\code{\link{excel_database}},
 \code{\link{rds_cache}},
 \code{\link{rds_database}}
 }

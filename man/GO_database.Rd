@@ -46,7 +46,7 @@ Pagès H, Carlson M, Falcon S, Li N (2023). \emph{AnnotationDbi: Manipulation
 of SQLite-based annotations in Bioconductor}.
 doi:10.18129/B9.bioc.AnnotationDbi
 \url{https://doi.org/10.18129/B9.bioc.AnnotationDbi}, R package version
-1.65.2, \url{https://bioconductor.org/packages/AnnotationDbi}.
+1.64.1, \url{https://bioconductor.org/packages/AnnotationDbi}.
 }
 \seealso{
 \code{\link[GO.db:GOBASE]{GO.db::GO()}}
@@ -55,6 +55,7 @@ Other {annotation databases}:
 \code{\link{AnnotationDb_database}},
 \code{\link{annotation_database}},
 \code{\link{annotation_source}},
+\code{\link{excel_database}},
 \code{\link{rdata_database}},
 \code{\link{rds_cache}},
 \code{\link{rds_database}}

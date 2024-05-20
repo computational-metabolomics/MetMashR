@@ -64,7 +64,7 @@ M = pubchem_widget(
 
 }
 \references{
-Cheng J, Sievert C, Schloerke B, Chang W, Xie Y, Allen J (2023).
-\emph{htmltools: Tools for HTML}. R package version 0.5.7,
+Cheng J, Sievert C, Schloerke B, Chang W, Xie Y, Allen J (2024).
+\emph{htmltools: Tools for HTML}. R package version 0.5.8.1,
 \url{https://CRAN.R-project.org/package=htmltools}.
 }

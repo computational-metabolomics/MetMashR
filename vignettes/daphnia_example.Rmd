@@ -47,6 +47,7 @@ suppressWarnings({
         library(metabolomicsWorkbenchR)
         library(ggplot2)
         library(patchwork)
+        library(tidyr)
     })
 })
 ```

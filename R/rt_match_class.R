@@ -166,7 +166,7 @@ setMethod(
             }
             OUT[[k]] <- record_list
         }
-        OUT <- do.call(rbind, OUT)
+        OUT <- plyr::rbind.fill(OUT)
 
         # remove extra columns
         w <- which(colnames(OUT) %in% c(".id", ".rt_min", ".rt_max"))

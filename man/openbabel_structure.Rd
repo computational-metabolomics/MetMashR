@@ -78,9 +78,10 @@ M = openbabel_structure(
 
 }
 \references{
-Horan K, Girke T (2024). \emph{ChemmineOB: R interface to a subset of
-OpenBabel functionalities}. R package version 1.41.2,
-\url{https://github.com/girke-lab/ChemmineOB}.
+Horan K, Girke T (2023). \emph{ChemmineOB: R interface to a subset of
+OpenBabel functionalities}. doi:10.18129/B9.bioc.ChemmineOB
+\url{https://doi.org/10.18129/B9.bioc.ChemmineOB}, R package version
+1.40.0, \url{https://bioconductor.org/packages/ChemmineOB}.
 
 Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot Annotations
 for 'ggplot2'}. R package version 1.1.3,

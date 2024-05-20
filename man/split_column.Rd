@@ -4,14 +4,23 @@
 \alias{split_column}
 \title{Split a column}
 \usage{
-split_column(column_name, separator = "_", padding = NA, clean = TRUE, ...)
+split_column(
+  column_name,
+  separator = "_",
+  padding = NA,
+  keep_indices = NULL,
+  clean = TRUE,
+  ...
+)
 }
 \arguments{
 \item{column_name}{(character) The column name in the annotation_source split.}
 
 \item{separator}{(character) A substring to split the column by. The default is \code{"_"}.}
 
-\item{padding}{(character, logical) Pad missing values. Allowed values are limited to the following: \itemize{\item{A character string used to represent missing and zero length .}\item{Strings if after splitting.}} The default is \code{NA}.\cr}
+\item{padding}{(character, logical) A character string used to represent missing and zero length strings after splitting. The default is \code{NA}.\cr}
+
+\item{keep_indices}{(numeric, integer) The indices of columns to keep after splitting. If NULL then all columns are retained. The default is \code{NULL}.}
 
 \item{clean}{(logical) Clean old columns. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: The named columns are removed after being split.}\item{\code{"FALSE"}: The named columns are retained after being split.}} The default is \code{TRUE}.\cr}
 
@@ -37,6 +46,7 @@ M = split_column(
       column_name = "V1",
       separator = "_",
       clean = FALSE,
-      padding = "")
+      padding = FALSE,
+      keep_indices = numeric(0))
 
 }

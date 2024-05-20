@@ -1,17 +1,20 @@
 #' @eval get_description('split_column')
 #' @export
 #' @include annotation_source_class.R
-split_column <- function(column_name,
-                         separator = "_",
-                         padding = NA,
-                         clean = TRUE,
-                         ...) {
+split_column <- function(
+        column_name,
+        separator = "_",
+        padding = NA,
+        keep_indices = NULL,
+        clean = TRUE,
+        ...) {
     out <- struct::new_struct(
         "split_column",
         column_name = column_name,
         separator = separator,
         padding = padding,
         clean = clean,
+        keep_indices = keep_indices,
         ...
     )
     return(out)
@@ -25,7 +28,8 @@ split_column <- function(column_name,
         separator = "entity",
         padding = "entity",
         updated = "entity",
-        clean = "entity"
+        clean = "entity",
+        keep_indices = 'entity'
     ),
     prototype = list(
         name = "Split a column",
@@ -35,7 +39,7 @@ split_column <- function(column_name,
         ),
         type = "processing",
         predicted = "updated",
-        .params = c("column_name", "separator", "clean", "padding"),
+        .params = c("column_name", "separator", "clean", "padding",'keep_indices'),
         .outputs = c("updated"),
         column_name = entity(
             name = "Column names",
@@ -75,13 +79,21 @@ split_column <- function(column_name,
         ),
         padding = entity(
             name = "Pad missing values",
-            description = c(
+            description = paste0(
                 "A character string used to represent missing and zero length ",
-                "strings if after splitting."
+                "strings after splitting."
             ),
-            value = "",
+            value = NA,
             type = c("character", "logical"),
             max_length = 1
+        ),
+        keep_indices = entity(
+            name = 'Indices to keep',
+            description = paste0('The indices of columns to keep after ',
+                'splitting. If NULL then all columns are retained.'),
+            value = NULL,
+            type = c('numeric','integer'),
+            max_length = Inf
         )
     )
 )
@@ -100,25 +112,28 @@ setMethod(
             df <- as.data.frame(matrix(x, nrow = 1, byrow = TRUE))
             return(df)
         })
-        s <- plyr::rbind.fill(s)
-        s[is.na(s)] <- M$padding
-
+        s = plyr::rbind.fill(s)
+        s[is.na(s)] = M$padding
+        
+        # keep selected columns by index
+        s=s[,M$keep_indices,drop=FALSE]
+        
         # new column names
         colnames(s) <- paste0(M$column_name, "_", seq_len(ncol(s)))
-
+        
         # bind with original data
         s <- cbind(D$data, s)
-
+        
         # clean
         if (M$clean) {
             w <- which(colnames(s) == M$column_name)
             s <- s[, -w]
         }
         D$data <- s
-
+        
         # update object
         M$updated <- D
-
+        
         return(M)
     }
 )

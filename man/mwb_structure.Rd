@@ -50,6 +50,6 @@ for 'ggplot2'}. R package version 1.1.3,
 Lloyd GR, Weber RJM (2023). \emph{metabolomicsWorkbenchR: Metabolomics
 Workbench in R}. doi:10.18129/B9.bioc.metabolomicsWorkbenchR
 \url{https://doi.org/10.18129/B9.bioc.metabolomicsWorkbenchR}, R package
-version 1.13.0,
+version 1.12.0,
 \url{https://bioconductor.org/packages/metabolomicsWorkbenchR}.
 }

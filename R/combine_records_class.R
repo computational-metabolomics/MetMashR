@@ -414,11 +414,20 @@ NULL
 #'     )
 #' )
 #' @export
-.unique <- function(separator, na_string = "NA", digits = 6) {
+.unique <- function(separator, na_string = "NA", digits = 6, drop_na = FALSE) {
     fcn <- expr(function(x) {
         if (is.numeric(x)) {
             x <- round(as.numeric(x), !!digits)
         }
+        
+        # drop NA if requested
+        if (drop_na) {
+            w=which(is.na(x))
+            if (length(w)>0){
+                x=x[-w]
+            }
+        }
+        
         x[is.na(x)] <- !!na_string
         x <- unique(x)
         paste0(x, collapse = !!separator)

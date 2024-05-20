@@ -90,7 +90,8 @@ setMethod(
             output = ".output",
             input = ".original",
             token = "regex",
-            pattern = M$separator
+            pattern = M$separator,
+            to_lower = FALSE
         )
 
         # fix column names

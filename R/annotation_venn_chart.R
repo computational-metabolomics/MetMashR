@@ -2,13 +2,14 @@
 #' @include annotation_source_class.R
 #'
 #' @export
-annotation_venn_chart <- function(factor_name,
-                                  group_column = NULL,
-                                  fill_colour = "white",
-                                  line_colour = "black",
-                                  labels = TRUE,
-                                  legend = FALSE,
-                                  ...) {
+annotation_venn_chart <- function(
+        factor_name,
+        group_column = NULL,
+        fill_colour = "white",
+        line_colour = "black",
+        labels = TRUE,
+        legend = FALSE,
+        ...) {
     out <- struct::new_struct(
         "annotation_venn_chart",
         factor_name = factor_name,
@@ -19,7 +20,7 @@ annotation_venn_chart <- function(factor_name,
         legend = legend,
         ...
     )
-
+    
     return(out)
 }
 
@@ -126,17 +127,17 @@ setMethod(
     definition = function(obj, dobj, ...) {
         # check for dots
         L <- list(...)
-
+        
         # if we got more than one table...
         if (length(L) > 0) {
             # gather all annotation_sources
             L <- c(list(dobj), L)
-
+            
             # if only one column name, assume same column in all sources
             if (length(obj$factor_name) == 1) {
                 obj$factor_name <- rep(obj$factor_name, length(L))
             }
-
+            
             # check we have a column for all sources
             if (length(obj$factor_name) != length(L)) {
                 stop(
@@ -146,14 +147,14 @@ setMethod(
                 )
                 obj$factor_name <- obj$factor_name[1]
             }
-
+            
             # get tags
             tags <- lapply(L, param_value, name = "tag")
             names(L) <- tags
-
+            
             # get tables
             L <- lapply(L, param_value, name = "data")
-
+            
             # get columns
             L <- mapply("[[", L, obj$factor_name)
         } else if (length(obj$factor_name) > 1) {
@@ -162,7 +163,7 @@ setMethod(
         } else {
             # if we only got one table and one factor...
             u <- unique(dobj$data[[obj$group_column]])
-
+            
             # construct list for Venn
             L <- list()
             for (k in u) {
@@ -170,7 +171,7 @@ setMethod(
                 L[[k]] <- this[dobj$data[[obj$group_column]] == k]
             }
         }
-
+        
         # max 7(!) groups
         if (length(L) > 7) {
             stop(
@@ -179,7 +180,7 @@ setMethod(
                 "instead."
             )
         }
-
+        
         # plot
         g <- venn_this(obj, L)
         return(g)
@@ -206,13 +207,13 @@ venn_this <- function(obj, L) {
     if (length(L) == 2) {
         shape <- "201"
     }
-
+    
     # venn
     this <- ggVennDiagram::process_data(RVenn::Venn(L), shape_id = shape)
-
+    
     # ellipse
     vE <- ggVennDiagram::venn_setedge(this)
-
+    
     # plot params
     Sfill <- list(
         data = vE,
@@ -227,7 +228,7 @@ venn_this <- function(obj, L) {
         show.legend = FALSE,
         mapping = aes(x = X, y = Y, group = id)
     )
-
+    
     # colours
     if (obj$fill_colour == ".group") {
         Sfill$mapping <- aes(x = X, y = Y, group = id, fill = .data[["id"]])
@@ -243,30 +244,30 @@ venn_this <- function(obj, L) {
     } else {
         Sline$colour <- obj$line_colour
     }
-
+    
     # plot
     g <- ggplot() +
         # fill layer
         do.call(geom_polygon, Sfill)
-
+    
     g <- g +
         # line layer
         do.call(geom_path, Sline)
-
+    
     # region labels
     g <- g +
         geom_text(aes(x = X, y = Y, label = .data[["count"]]),
-            data = ggVennDiagram::venn_regionlabel(this)
+                  data = ggVennDiagram::venn_regionlabel(this)
         )
-
+    
     if (obj$labels) {
         # set labels
         g <- g +
             geom_text(aes(x = X, y = Y, label = .data[["name"]]),
-                data = ggVennDiagram::venn_setlabel(this)
+                      data = ggVennDiagram::venn_setlabel(this)
             )
     }
-
+    
     vsl <- ggVennDiagram::venn_setlabel(this)
     # theme
     g <- g +
@@ -274,13 +275,13 @@ venn_this <- function(obj, L) {
         scale_x_continuous(expand = expansion(mult = 0.2)) +
         scale_color_Publication(name = "Group", labels = vsl$name) +
         scale_fill_Publication(name = "Group", labels = vsl$name)
-
+    
     if (!obj$legend) {
         g <- g + theme(legend.position = "none")
     } else {
         g <- g + theme(legend.position = "right")
     }
     g <- g + coord_fixed()
-
+    
     return(g)
 }

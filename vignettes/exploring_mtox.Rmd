@@ -9,70 +9,72 @@ output:
     number_sections: true  
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{Exploring the MTox700+ library}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{Exploring the MTox700+ library}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
 ---
 
+
+  
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-    collapse = TRUE,
-    comment = "#>",
-    message = FALSE,
-    warning = FALSE,
-    fig.align = "center"
-)
-
-.DT <- function(x) {
-    dt_options <- list(
-        scrollX = TRUE,
-        pageLength = 6,
-        dom = "t",
-        initComplete = DT::JS(
-            "function(settings, json) {",
-            "$(this.api().table().header()).css({'font-size':'10pt'});",
-            "}"
-        )
-    )
-
-    x %>%
-        DT::datatable(options = dt_options, rownames = FALSE) %>%
-        DT::formatStyle(
-            columns = colnames(x),
-            fontSize = "10pt"
-        )
-}
-
-library(BiocStyle)
+  knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+  )
+  
+  .DT <- function(x) {
+  dt_options <- list(
+  scrollX = TRUE,
+  pageLength = 6,
+  dom = "t",
+  initComplete = DT::JS(
+  "function(settings, json) {",
+  "$(this.api().table().header()).css({'font-size':'10pt'});",
+  "}"
+  )
+  )
+  
+  x %>%
+  DT::datatable(options = dt_options, rownames = FALSE) %>%
+  DT::formatStyle(
+  columns = colnames(x),
+  fontSize = "10pt"
+  )
+  }
+  
+  library(BiocStyle)
 ```
-
-<br>
-
-# Getting Started
-The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible 
-with your 
-current R version can be installed using BiocManager.
-
+  
+  <br>
+  
+  # Getting Started
+  The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible 
+  with your 
+  current R version can be installed using BiocManager.
+  
 ```{r,eval = FALSE, include = TRUE}
-# install BiocManager if not present
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-    install.packages("BiocManager")
-}
-
-# install MetMashR and dependencies
-BiocManager::install("MetMashR")
+  # install BiocManager if not present
+  if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+  }
+  
+  # install MetMashR and dependencies
+  BiocManager::install("MetMashR")
 ```
-
-Once installed you can activate the packages in the usual way:
-
+  
+  Once installed you can activate the packages in the usual way:
+  
 ```{r, eval=TRUE, include=FALSE}
-suppressWarnings(suppressPackageStartupMessages({
-    # load the packages
-    library(MetMashR)
-    library(ggplot2)
-    library(structToolbox)
-    library(dplyr)
-    library(DT)
+  suppressWarnings(suppressPackageStartupMessages({
+# load the packages
+library(MetMashR)
+library(ggplot2)
+library(structToolbox)
+library(dplyr)
+library(DT)
 }))
 ```
 
@@ -118,12 +120,13 @@ df <- read_database(MT)
 
 ```{r}
 # prepare workflow that uses MTox700+ as a source
-M <- import_source()
-trim_whitespace(
-    column_name = ".all",
-    which = "both",
-    whitespace = "[\\h\\v]"
-)
+M <- 
+    import_source() +
+    trim_whitespace(
+        column_name = ".all",
+        which = "both",
+        whitespace = "[\\h\\v]"
+    )
 
 # apply
 M <- model_apply(M, MT)

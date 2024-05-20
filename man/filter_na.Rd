@@ -2,12 +2,14 @@
 % Please edit documentation in R/filter_na_class.R
 \name{filter_na}
 \alias{filter_na}
-\title{Filter by range}
+\title{Filter by missing values}
 \usage{
-filter_na(column_name, ...)
+filter_na(column_name, mode = "exclude", ...)
 }
 \arguments{
-\item{column_name}{(character) The column name to filter.}
+\item{column_name}{(character) The column name to use for filtering.}
+
+\item{mode}{(character) Filter mode. Allowed values are limited to the following: \itemize{ \item{\code{"include"}: Rows with NA are kept and all others removed.}\item{\code{"exclude"}: Rows with NA are excluded and all other kept.}} The default is \code{"exclude"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -19,7 +21,7 @@ A  \code{filter_na} object with the following \code{output} slots:
 }
 }
 \description{
-Removes annotations where the names column is  greater than an upper limit or less than a lower limit.
+Filters annotations where the named column is NA
 }
 \section{Inheritance}{
 
@@ -29,6 +31,7 @@ A \code{filter_na} object inherits the following \code{struct} classes: \cr\cr
 
 \examples{
 M = filter_na(
-      column_name = "V1")
+      column_name = "V1",
+      mode = "exclude")
 
 }
