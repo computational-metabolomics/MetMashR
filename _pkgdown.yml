@@ -88,6 +88,7 @@ reference:
   - filter_range
   - filter_na
   - filter_venn
+  - filter_records
   - id_counts
   - mz_match
   - rt_match
@@ -154,6 +155,7 @@ reference:
   contents:
   - check_for_columns
   - required_cols
+  - wherever
 home:
   links:
   - text: View on Bioconductor

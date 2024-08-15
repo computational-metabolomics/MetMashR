@@ -1,3 +1,6 @@
+#' @import struct
+#' @import patchwork
+#' @importFrom utils URLencode modifyList read.csv stack unzip
 #' @keywords internal
 "_PACKAGE"
 

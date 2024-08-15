@@ -78,5 +78,8 @@ get_description <- function(id) {
     str <- gsub("[a annotation_source]", "annotation_source()", str,
         fixed = TRUE
     )
+    str <- gsub("[a quosures]", "wherever(A>10)", str,
+                fixed = TRUE
+    )
     return(str)
 }

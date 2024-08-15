@@ -402,6 +402,7 @@ NULL
 #' values.
 #' @param digits (numeric) the number of digits to use when converting numerical
 #' values to characters when determining if values are unique.
+#' @param sort (logical) sort the values before collapsing.
 #' @examples
 #'
 #' # Collapse unique values
@@ -410,11 +411,14 @@ NULL
 #'     default_fcn = .unique(
 #'         digits = 6,
 #'         separator = ", ",
-#'         na_string = "NA"
+#'         na_string = "NA",
+#'         sort = FALSE
 #'     )
 #' )
 #' @export
-.unique <- function(separator, na_string = "NA", digits = 6, drop_na = FALSE) {
+.unique <- function(separator, na_string = "NA", digits = 6, drop_na = FALSE,
+                    sort = FALSE
+                    ) {
     fcn <- expr(function(x) {
         if (is.numeric(x)) {
             x <- round(as.numeric(x), !!digits)
@@ -430,6 +434,9 @@ NULL
         
         x[is.na(x)] <- !!na_string
         x <- unique(x)
+        if (sort){
+            x=sort(x)
+        }
         paste0(x, collapse = !!separator)
     })
     return(eval(fcn))

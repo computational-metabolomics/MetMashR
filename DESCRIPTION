@@ -84,6 +84,7 @@ Collate:
     'filter_labels_class.R'
     'filter_na_class.R'
     'filter_range_class.R'
+    'filter_records_class.R'
     'filter_venn_class.R'
     'github_file_class.R'
     'go_database_class.R'

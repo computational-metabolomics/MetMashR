@@ -64,13 +64,13 @@ setMethod(
     signature = c("select_columns", "annotation_source"),
     definition = function(M, D) {
         # column indexes matching expression
-        loc <- tidyselect::eval_select(M$expression, data = D$data)
+        loc = tidyselect::eval_select(M$expression, data = D$data)
 
         # update names
-        D$data <- rlang::set_names(D$data[loc], names(loc))
+        D$data = rlang::set_names(D$data[loc], names(loc))
 
         # update object
-        M$updated <- D
+        M$updated = D
 
         return(M)
     }

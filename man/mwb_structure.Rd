@@ -47,9 +47,6 @@ Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot Annotations
 for 'ggplot2'}. R package version 1.1.3,
 \url{https://CRAN.R-project.org/package=cowplot}.
 
-Lloyd GR, Weber RJM (2023). \emph{metabolomicsWorkbenchR: Metabolomics
-Workbench in R}. doi:10.18129/B9.bioc.metabolomicsWorkbenchR
-\url{https://doi.org/10.18129/B9.bioc.metabolomicsWorkbenchR}, R package
-version 1.12.0,
-\url{https://bioconductor.org/packages/metabolomicsWorkbenchR}.
+Lloyd GR, Weber RJM (????). \emph{metabolomicsWorkbenchR: Metabolomics
+Workbench in R}. R package version 1.14.1.
 }

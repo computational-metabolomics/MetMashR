@@ -33,7 +33,7 @@
 
 .select_exact(match_col, match, separator, na_string = "NA")
 
-.unique(separator, na_string = "NA", digits = 6, drop_na = FALSE)
+.unique(separator, na_string = "NA", digits = 6, drop_na = FALSE, sort = FALSE)
 
 .prioritise(match_col, priority, separator, no_match = NA, na_string = "NA")
 
@@ -71,6 +71,8 @@ locating values in the matching column.}
 
 \item{digits}{(numeric) the number of digits to use when converting numerical
 values to characters when determining if values are unique.}
+
+\item{sort}{(logical) sort the values before collapsing.}
 
 \item{priority}{(character) a list of labels in priority order}
 
@@ -162,7 +164,8 @@ M <- combine_records(
     default_fcn = .unique(
         digits = 6,
         separator = ", ",
-        na_string = "NA"
+        na_string = "NA",
+        sort = FALSE
     )
 )
 
