@@ -148,7 +148,8 @@ Suggests:
     GO.db,
     tidytext,
     tidyr,
-    tidyselect
+    tidyselect,
+    ComplexUpset
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://computational-metabolomics.github.io/MetMashR/
