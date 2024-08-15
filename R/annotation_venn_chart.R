@@ -145,7 +145,6 @@ setMethod(
                     "present in all sources, or provide a factor_name ",
                     "for each source.\n"
                 )
-                obj$factor_name <- obj$factor_name[1]
             }
             
             # get tags
@@ -192,10 +191,10 @@ setMethod(
     f = "chart_plot",
     signature = c("annotation_venn_chart", "list"),
     definition = function(obj, dobj) {
-        L <- c(list(obj), dobj)
-        names(L)[1] <- "obj"
-        names(L)[2] <- "dobj"
-        names(L)[3] <- "gobj"
+        L <- c(obj, dobj)
+        names(L)[1] = "obj"
+        names(L)[2] = 'dobj'
+        
         g <- do.call(chart_plot, L)
         return(g)
     }

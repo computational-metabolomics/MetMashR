@@ -423,7 +423,7 @@ Here, we compare the compound names for each assay within each source, to see
 if there is any overlap i.e. the same metabolite detecting in several assays.
 
 ```{r}
-# prepare chart object
+# prepare venn chart object
 C <- annotation_venn_chart(
     factor_name = "compound",
     line_colour = "white",
@@ -442,8 +442,17 @@ C$factor_name <- "LipidName"
 ls <- lapply(LS, predicted)
 g2 <- chart_plot(C, ls) + ggtitle("Compounds in LS per assay")
 
+# prepare upset object
+C2 = annotation_upset_chart(
+    factor_name = 'compound',
+    n_intersections = 10
+)
+g3 = chart_plot(C2, cd)
+C2$factor_name <- "LipidName"
+g4 = chart_plot(C2, ls)
+
 # layout
-cowplot::plot_grid(g1, g2, nrow = 2)
+cowplot::plot_grid(g1, g2, g3, g4, nrow = 2)
 ```
 
 
@@ -455,9 +464,9 @@ informative. However, we are clearly detecting a larger number of annotations in
 the LIPIDS assays, which is to be expected as the LS 
 software is designed to annotate lipids molecules.
 
-Here the `annotation_venn_chart` object was used to compare the same column 
-across several `annotation_tables`. The same object can also compare groups
+Here the `annotation_venn_chart` and `annotation_upset_chart` objects were used to compare the same column across several `annotation_tables`. The same objects can also compare groups
 from within the same table, which we will explore later. 
+
 First, we need to combine the CD and LS tables.
 
 # Combining Annotation Sources
@@ -711,6 +720,18 @@ chart_plot(C, predicted(N[3])) +
         colour = guide_legend(title = "Source")
     ) +
     theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm"))
+```
+
+Due to complexity, Venn charts are limited to 7 sets. UpSet plots are an alternative chart than can accomodate many more sets. Each veritcal bar in the UpSet plot corresponds to a region in the venn diagram.
+
+```{r}
+# upset inchikey columns
+C <- annotation_upset_chart(
+    factor_name = c("InChIKey", "InChIKey_norm", "stdinchikey_opsin"),
+    min_size=0,
+    n_intersections = 10
+)
+chart_plot(C, predicted(N[3])) 
 ```
 
 In the next chart we visualise the proportion of annotations from each query,

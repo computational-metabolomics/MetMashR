@@ -242,7 +242,7 @@ toxicologial relevance, and PathBank is more general.
 In th example below we import PathBank as a source, and use a venn diagram to 
 compare the overlap between inchikey identifiers in PathBank and MTox700+.
 
-```{r,fig.width=4}
+```{r,fig.width=8,warning=FALSE}
 # object M already contains the MTox700+ database as a source
 
 # prepare PathBank as a source
@@ -262,10 +262,16 @@ C <- annotation_venn_chart(
 )
 
 # plot
-chart_plot(C, predicted(M), P)
+g1=chart_plot(C, predicted(M), P) 
+
+C = annotation_upset_chart(
+    factor_name = c("inchikey","InChI.Key")
+)
+g2=chart_plot(C,predicted(M),P) 
+cowplot::plot_grid(g1,g2,nrow=1,labels = c('Venn diagram','UpSet plot'))
 ```
 
-The diagram shows that less than half of the metabolites in MTox700+ are also present 
+The charts show that less than half of the metabolites in MTox700+ are also present 
 in the PathBank database for primary pathways.
 
 <br>
