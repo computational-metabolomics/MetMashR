@@ -98,6 +98,7 @@ reference:
   - trim_whitespace
   - combine_columns
   - select_columns
+  - remove_columns
   - split_column
   - split_records
   - AnnotationDb_select

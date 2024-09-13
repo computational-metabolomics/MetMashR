@@ -40,6 +40,8 @@ env:
   has_RUnit: 'false'
   cache-version: 'cache-v2'
   run_docker: 'false'
+  run_cmd_check: 'false'
+  run_bioccheck: 'false'
 
 jobs:
   build-check:
@@ -194,13 +196,13 @@ jobs:
         shell: Rscript {0}
 
       - name: Install covr
-        if: github.ref == 'refs/heads/devel' && env.run_covr == 'true' && runner.os == 'Linux'
+        if: env.run_covr == 'true' && runner.os == 'Linux' ##github.ref == 'refs/heads/devel' && 
         run: |
           remotes::install_cran("covr")
         shell: Rscript {0}
 
       - name: Install pkgdown
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: env.run_pkgdown == 'true' && runner.os == 'Linux' ## github.ref == 'refs/heads/devel' && 
         run: |
           remotes::install_github("r-lib/pkgdown")
         shell: Rscript {0}
@@ -216,6 +218,7 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
           DISPLAY: 99.0
+        if: env.run_cmd_check == 'true'
         run: |
           options(crayon.enabled = TRUE)
           rcmdcheck::rcmdcheck(
@@ -240,6 +243,7 @@ jobs:
       - name: Run BiocCheck
         env:
           DISPLAY: 99.0
+        if: env.run_bioc_check == 'true'
         run: |
           BiocCheck::BiocCheck(
               dir('check', 'tar.gz$', full.names = TRUE),
@@ -250,17 +254,17 @@ jobs:
         shell: Rscript {0}
 
       - name: Test coverage
-        if: github.ref == 'refs/heads/devel' && env.run_covr == 'true' && runner.os == 'Linux'
+        if: env.run_covr == 'true' && runner.os == 'Linux'
         run: |
           covr::codecov(coverage = covr::package_coverage(type = "all"))
         shell: Rscript {0}
 
       - name: Install package
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: R CMD INSTALL .
 
       - name: Build pkgdown site
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
         ## Note that you need to run pkgdown::deploy_to_branch(new_process = FALSE)
@@ -269,12 +273,12 @@ jobs:
         ## makes the git history recognizable by pkgdown.
 
       - name: Install deploy dependencies
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           apt-get update && apt-get -y install rsync
 
       - name: Deploy pkgdown site to GitHub pages 🚀
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: env.run_pkgdown == 'true' && runner.os == 'Linux'
         uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
           clean: false
