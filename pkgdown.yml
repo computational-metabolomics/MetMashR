@@ -1,14 +1,13 @@
-pandoc: '3.2'
-pkgdown: 2.0.9.9000
-pkgdown_sha: 5761658b7582743d0962136cd0c1e6e8d42b56d5
+pandoc: '3.3'
+pkgdown: 2.1.0.9000
+pkgdown_sha: ee72108bc3a9827dcf313817525652dbd9d4284d
 articles:
   annotate_mixtures: annotate_mixtures.html
   daphnia_example: daphnia_example.html
   exploring_mtox: exploring_mtox.html
   Extending_MetMashR: Extending_MetMashR.html
   using_MetMashR: using_MetMashR.html
-last_built: 2024-05-20T16:21Z
+last_built: 2024-09-13T13:36Z
 urls:
   reference: https://computational-metabolomics.github.io/MetMashR/reference
   article: https://computational-metabolomics.github.io/MetMashR/articles
-
