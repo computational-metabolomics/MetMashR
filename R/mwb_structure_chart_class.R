@@ -4,16 +4,17 @@
 #' use. If you wish to obtain images for a large number of molecules you should
 #' seek an alternative solution.
 #' @export
-mwb_structure <- function(query_column,
-                          row_index,
-                          ...) {
+mwb_structure <- function(
+        query_column,
+        row_index,
+        ...) {
     out <- struct::new_struct(
         "mwb_structure",
         query_column = query_column,
         row_index = row_index,
         ...
     )
-
+    
     return(out)
 }
 
@@ -62,7 +63,7 @@ setMethod(
     definition = function(obj, dobj) {
         # get row
         dobj$data <- dobj$data[obj$row_index, ]
-
+        
         # use api
         P <- mwb_compound_lookup(
             input_item = "regno",
@@ -75,7 +76,7 @@ setMethod(
                 }
             )
         )
-
+        
         P <- model_apply(P, dobj)
         img <- P$updated$data[["png_.mwb_img"]][[1]]
         g <- cowplot::ggdraw() + cowplot::draw_image(img, scale = 0.95)

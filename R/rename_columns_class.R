@@ -1,17 +1,18 @@
 #' @eval get_description('rename_columns')
 #' @export
 #' @include annotation_source_class.R
-rename_columns <- function(expression,
-                           ...) {
+rename_columns <- function(
+        expression,
+        ...) {
     # capture
     ex <- rlang::enexpr(expression)
-
+    
     out <- struct::new_struct(
         "rename_columns",
         expression = ex,
         ...
     )
-
+    
     return(out)
 }
 
@@ -62,15 +63,15 @@ setMethod(
     definition = function(M, D) {
         # column indexes matching expression
         loc <- tidyselect::eval_select(M$expression, data = D$data)
-
+        
         # update names
         n <- colnames(D$data)
         n[loc] <- names(loc)
         colnames(D$data) <- n
-
+        
         # update object
         M$updated <- D
-
+        
         return(M)
     }
 )

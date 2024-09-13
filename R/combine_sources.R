@@ -1,37 +1,42 @@
 #' @eval get_description('combine_sources')
 #' @export
 #' @include annotation_source_class.R
-combine_sources <- function(source_list,
-                            matching_columns = NULL,
-                            keep_cols = NULL,
-                            source_col = "annotation_source",
-                            exclude_cols = NULL,
-                            tag = "combined",
-                            as = annotation_source(
-                                name = "combined",
-                                description = paste0(
-                                    "A source created by combining two or ",
-                                    "more sources"
-                                )
-                            ),
-                            ...) {
+combine_sources <- function(
+        source_list,
+        matching_columns = NULL,
+        keep_cols = NULL,
+        source_col = "annotation_source",
+        exclude_cols = NULL,
+        tag = "combined",
+        as = annotation_source(
+            name = "combined",
+            description = paste0(
+                "A source created by combining two or ",
+                "more sources"
+            )
+        ),
+        ...) {
     # if source list is an annotation_source, make it a list
     if (is(source_list, "annotation_source")) {
         source_list <- list(source_list)
     }
-
+    
     # check fcns are all functions
     if (is(source_list, "list")) {
         if (length(source_list) > 0) {
-            check <- all(unlist(lapply(source_list, is,
-                class2 = "annotation_source"
-            )))
+            check <- all(
+                unlist(
+                    lapply(
+                        source_list, 
+                        is,
+                        class2 = "annotation_source"
+                    )))
             if (!check) {
                 stop("all source_list items must be annotation_source objects.")
             }
         }
     }
-
+    
     out <- struct::new_struct(
         "combine_sources",
         source_list = source_list,
@@ -159,7 +164,7 @@ setMethod(
             as = M$as
         )
         M$combined_table$tag <- M$tag
-
+        
         return(M)
     }
 )
@@ -172,7 +177,7 @@ setMethod(
     definition = function(M, D) {
         # make a list
         A <- c(M$source_list, D)
-
+        
         # join
         M$combined_table <- vertical_join(
             x = A,
@@ -181,10 +186,10 @@ setMethod(
             source_col = M$source_col,
             exclude_cols = M$exclude_cols, as = M$as
         )
-
+        
         # update tag
         M$combined_table$tag <- M$tag
-
+        
         return(M)
     }
 )

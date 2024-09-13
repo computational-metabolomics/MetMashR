@@ -1,12 +1,13 @@
 #' @eval get_description('annotation_histogram')
 #' @export
-annotation_histogram <- function(factor_name,
-                                 bins = 30,
-                                 bin_edge = "grey",
-                                 bin_fill = "lightgrey",
-                                 vline = NULL,
-                                 vline_colour = "red",
-                                 ...) {
+annotation_histogram <- function(
+        factor_name,
+        bins = 30,
+        bin_edge = "grey",
+        bin_fill = "lightgrey",
+        vline = NULL,
+        vline_colour = "red",
+        ...) {
     out <- struct::new_struct(
         "annotation_histogram",
         factor_name = factor_name,
@@ -17,7 +18,7 @@ annotation_histogram <- function(factor_name,
         vline_colour = vline_colour,
         ...
     )
-
+    
     return(out)
 }
 
@@ -112,7 +113,7 @@ setMethod(
         # force numeric
         dobj$data[[obj$factor_name]] <-
             as.numeric(dobj$data[[obj$factor_name]])
-
+        
         g <- ggplot(data = dobj$data) +
             geom_histogram(
                 mapping = aes(x = .data[[obj$factor_name]]),
@@ -120,7 +121,7 @@ setMethod(
                 colour = obj$bin_edge,
                 fill = obj$bin_fill
             )
-
+        
         if (!is.null(obj$vline)) {
             for (k in seq_len(length(obj$vline))) {
                 g <- g +
@@ -132,7 +133,7 @@ setMethod(
                     )
             }
         }
-
+        
         g <- g + theme_Publication(12)
         return(g)
     }

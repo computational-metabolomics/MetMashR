@@ -2,12 +2,13 @@
 #' @export
 #' @include annotation_table_class.R
 calc_rt_diff <- function(
-    obs_rt_column,
-    ref_rt_column,
-    out_column,
-    check_names = "unique",
-    ...) {
-    out <- struct::new_struct("calc_rt_diff",
+        obs_rt_column,
+        ref_rt_column,
+        out_column,
+        check_names = "unique",
+        ...) {
+    out <- struct::new_struct(
+        "calc_rt_diff",
         obs_rt_column = obs_rt_column,
         ref_rt_column = ref_rt_column,
         out_column = out_column,
@@ -102,10 +103,10 @@ setMethod(
         # calculate RT difference
         rt_diff <- as.numeric(D$data[[M$obs_rt_column]]) -
             as.numeric(D$data[[M$ref_rt_column]])
-
+        
         # check column names
         colname_check <- M$out_column %in% colnames(D$data)
-
+        
         # respond as user requested
         if (M$check_names == "stop" & colname_check) {
             stop(
@@ -121,9 +122,9 @@ setMethod(
         } else {
             D$data[[M$out_column]] <- rt_diff
         }
-
+        
         M$updated <- D
-
+        
         return(M)
     }
 )

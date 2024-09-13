@@ -3,12 +3,13 @@
 #' @include annotation_source_class.R
 #' @seealso [dplyr::left_join()]
 #' @seealso [AnnotationDbi::select()]
-AnnotationDb_select <- function(database,
-                                key_column,
-                                key_type,
-                                database_columns,
-                                drop_na = TRUE,
-                                ...) {
+AnnotationDb_select <- function(
+        database,
+        key_column,
+        key_type,
+        database_columns,
+        drop_na = TRUE,
+        ...) {
     out <- struct::new_struct(
         "AnnotationDb_select",
         database = database,
@@ -123,16 +124,16 @@ setMethod(
     definition = function(M, D) {
         # get db
         db <- do.call(`::`, list(M$database, M$database))
-
+        
         # prepare from:to for left join
         by <- M$key_type
         names(by) <- M$key_column
-
+        
         # columns
         if (any(M$database_columns == ".all")) {
             M$database_columns <- AnnotationDbi::columns(db)
         }
-
+        
         # select
         db <- AnnotationDbi::select(
             x = db,
@@ -140,7 +141,7 @@ setMethod(
             columns = M$database_columns,
             keytype = M$key_type
         )
-
+        
         # remove NA
         if (M$drop_na) {
             na <- apply(db, 1, function(x) {
@@ -148,20 +149,20 @@ setMethod(
             })
             db <- db[!na, ]
         }
-
+        
         # unique rows
         db <- unique(db)
-
+        
         # add the columns
         M2 <- add_columns(
             new_columns = db,
             by = by
         )
         M2 <- model_apply(M2, D)
-
+        
         # assign to object
         M$updated <- predicted(M2)
-
+        
         return(M)
     }
 )

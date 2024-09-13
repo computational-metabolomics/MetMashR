@@ -2,17 +2,18 @@
 #' @export
 #' @include annotation_source_class.R rest_api_class.R
 #' @family {REST API's}
-lipidmaps_lookup <- function(query_column,
-                             context,
-                             context_item,
-                             output_item = "all",
-                             suffix = "_lipidmaps",
-                             ...) {
+lipidmaps_lookup <- function(
+        query_column,
+        context,
+        context_item,
+        output_item = "all",
+        suffix = "_lipidmaps",
+        ...) {
     # check context
     if (!(context %in% c("compound", "gene", "protein"))) {
         stop("context is not valid. See https://lipidmaps.org/resources/rest")
     }
-
+    
     # check context_item
     allowed <- list(
         compound = c(
@@ -26,14 +27,14 @@ lipidmaps_lookup <- function(query_column,
             "protein_name", "uniprot_id"
         )
     )
-
+    
     if (!all(context_item %in% allowed[[context]])) {
         stop(
             "A context_item is not valid for the current context. ",
             "See https://lipidmaps.org/resources/rest"
         )
     }
-
+    
     # check output_item
     allowed <- list(
         compound = c(
@@ -54,8 +55,8 @@ lipidmaps_lookup <- function(query_column,
             "seq", "all"
         )
     )
-
-
+    
+    
     if (length(output_item) > 1) {
         if (!all(output_item %in% allowed[[context]])) {
             stop(
@@ -66,8 +67,9 @@ lipidmaps_lookup <- function(query_column,
         # collapse if length >1
         output_item <- paste0(output_item, collapse = ",")
     }
-
-    out <- struct::new_struct("lipidmaps_lookup",
+    
+    out <- struct::new_struct(
+        "lipidmaps_lookup",
         query_column = query_column,
         context = context,
         context_item = context_item,

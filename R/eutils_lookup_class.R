@@ -1,11 +1,12 @@
 #' @eval get_description('eutils_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R
-eutils_lookup <- function(query_column,
-                          database,
-                          term,
-                          result_fields = "idlist",
-                          ...) {
+eutils_lookup <- function(
+        query_column,
+        database,
+        term,
+        result_fields = "idlist",
+        ...) {
     out <- struct::new_struct(
         "eutils_lookup",
         query_column = query_column,

@@ -3,10 +3,11 @@
 #' @family {annotation databases}
 #' @export
 #' @import methods
-annotation_source <- function(source = character(0),
-                              data = data.frame(),
-                              tag = "",
-                              ...) {
+annotation_source <- function(
+        source = character(0),
+        data = data.frame(),
+        tag = "",
+        ...) {
     # new object
     out <- new_struct(
         "annotation_source",
@@ -15,7 +16,7 @@ annotation_source <- function(source = character(0),
         tag = tag,
         ...
     )
-
+    
     return(out)
 }
 
@@ -111,7 +112,7 @@ setMethod(
     definition = function(M, D) {
         # for each method in the list
         S <- D # for first in list the input D is the data object
-
+        
         for (i in seq_len(length(M))) {
             if (M[i]@seq_in != "data") {
                 # apply transformation
@@ -121,7 +122,7 @@ setMethod(
             }
             # use current data
             M[i] <- model_apply(M[i], D)
-
+            
             # set the output of this method as the input for the next method
             S <- predicted(M[i])
             if (is(S, "annotation_source")) {
@@ -148,12 +149,12 @@ setMethod(
     definition = function(object) {
         # print struct generic info
         callNextMethod()
-
+        
         cat("annotations:   ", nrow(object$data), " rows x ",
             ncol(object$data), " columns\n",
             sep = ""
         )
-
+        
         utils::head(object$data)
     }
 )
@@ -177,20 +178,20 @@ setMethod(
     signature = c("annotation_source"),
     definition = function(obj, ..., msg = FALSE) {
         L <- unlist(list(...))
-
+        
         w <- which(!(L %in% colnames(obj$data)))
-
+        
         if (length(w) == 0) {
             return(TRUE)
         }
-
+        
         if (msg) {
             msg <- paste0(
                 "The following columns are missing from the ",
                 "data.frame: ",
                 paste0('"', L[w], '"', collapse = " ,")
             )
-
+            
             if (!is.null(names(L))) {
                 msg <- c(
                     msg,
@@ -201,7 +202,7 @@ setMethod(
                     )
                 )
             }
-
+            
             return(msg)
         } else {
             return(FALSE)
@@ -215,18 +216,24 @@ setMethod(
 setMethod(
     f = "vertical_join",
     signature = c("annotation_source", "annotation_source"),
-    definition = function(x, y, matching_columns = NULL, keep_cols = NULL,
-                          source_col = "annotation_source",
-                          exclude_cols = NULL, as = annotation_source()) {
+    definition = function(
+        x, 
+        y, 
+        matching_columns = NULL, 
+        keep_cols = NULL,
+        source_col = "annotation_source",
+        exclude_cols = NULL, 
+        as = annotation_source()) {
+        
         xd <- x$data
         yd <- y$data
-
+        
         # rename columns
         if (!is.null(matching_columns)) {
             xd <- x$data %>% rename(any_of(matching_columns))
             yd <- y$data %>% rename(any_of(matching_columns))
         }
-
+        
         # add source columns
         if (nrow(xd) > 0) {
             xd[[source_col]] <- x$tag
@@ -234,10 +241,10 @@ setMethod(
         if (nrow(yd) > 0) {
             yd[[source_col]] <- y$tag
         }
-
+        
         # bind
         zd <- plyr::rbind.fill(xd, yd)
-
+        
         # select columns
         if (length(keep_cols) > 0) {
             if (keep_cols[1] == ".all") {
@@ -260,9 +267,9 @@ setMethod(
                 source_col
             )
         )
-
+        
         zd <- zd %>% select(any_of(keep_cols))
-
+        
         # update provided object
         OUT <- as
         OUT$data <- zd
@@ -274,11 +281,16 @@ setMethod(
 setMethod(
     f = "vertical_join",
     signature = c("list", "missing"),
-    definition = function(x, y, matching_columns = NULL, keep_cols = NULL,
-                          source_col = "annotation_source",
-                          exclude_cols = NULL, as = annotation_source()) {
+    definition = function(
+        x, 
+        y, 
+        matching_columns = NULL, 
+        keep_cols = NULL,
+        source_col = "annotation_source",
+        exclude_cols = NULL, as = annotation_source()) {
+        
         A <- x
-
+        
         J <- A[[1]]
         AT <- rep(J$tag, nrow(J$data))
         for (k in 2:length(A)) {
@@ -292,11 +304,11 @@ setMethod(
                 exclude_cols = exclude_cols,
                 as = as
             )
-
+            
             AT_new <- C$data[[source_col]]
             AT_new[seq_len(length(AT))] <- AT
             AT <- AT_new
-
+            
             J <- C
         }
         J$data[[source_col]] <- AT
@@ -309,12 +321,12 @@ setMethod(
     if (is.null(object$data)) {
         return(TRUE)
     }
-
+    
     # otherwise, check for columns
     req <- object@.required
-
+    
     check <- is.null(req) | all(req %in% colnames(object$data))
-
+    
     msg <- TRUE
     if (!check) {
         msg <- paste0(

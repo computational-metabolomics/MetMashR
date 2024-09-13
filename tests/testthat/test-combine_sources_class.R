@@ -177,7 +177,7 @@ test_that("combine sources works for lcms_tables", {
     )
 
     AN1 <- lcms_table(df1, tag = "A", id_column = "id", rt_column = "rt", 
-                      mz_column = "mz")
+                        mz_column = "mz")
 
 
     df2 <- data.frame(
@@ -191,7 +191,7 @@ test_that("combine sources works for lcms_tables", {
     )
 
     AN2 <- lcms_table(df2, tag = "B", id_column = "id", rt_column = "rt", 
-                      mz_column = "mz")
+                        mz_column = "mz")
 
     M <- combine_sources(
         source_list = AN2,
@@ -243,7 +243,7 @@ test_that("combine sources works with .all and exclude_cols", {
     )
 
     AN1 <- lcms_table(df1, tag = "A", id_column = "id", rt_column = "rt", 
-                      mz_column = "mz")
+                        mz_column = "mz")
 
 
     df2 <- data.frame(
@@ -257,7 +257,7 @@ test_that("combine sources works with .all and exclude_cols", {
     )
 
     AN2 <- lcms_table(df2, tag = "B", id_column = "id", rt_column = "rt", 
-                      mz_column = "mz")
+                        mz_column = "mz")
 
     M <- combine_sources(
         source_list = AN2,

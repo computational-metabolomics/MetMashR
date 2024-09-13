@@ -1,13 +1,14 @@
 #' @eval get_description('combine_columns')
 #' @export
 #' @include annotation_source_class.R
-combine_columns <- function(column_names,
-                            separator = "_",
-                            prefix = NULL,
-                            suffix = NULL,
-                            output_column = "combined",
-                            clean = TRUE,
-                            ...) {
+combine_columns <- function(
+        column_names,
+        separator = "_",
+        prefix = NULL,
+        suffix = NULL,
+        output_column = "combined",
+        clean = TRUE,
+        ...) {
     out <- struct::new_struct(
         "combine_columns",
         column_names = column_names,
@@ -120,10 +121,10 @@ setMethod(
     definition = function(M, D) {
         L <- as.list(D$data[M$column_names])
         L[["sep"]] <- M$separator
-
+        
         # cat columns
         out <- as.character(do.call(paste, L))
-
+        
         # add prefix
         if (!is.null(M$prefix)) {
             out <- paste0(M$prefix, M$separator, out)
@@ -132,30 +133,30 @@ setMethod(
         if (!is.null(M$suffix)) {
             out <- paste0(out, M$separator, M$suffix)
         }
-
+        
         # update table
         D$data[, M$output_column] <- out
-
+        
         # remove old columns if requested
         if (M$clean) {
             torem <- M$column_names
-
+            
             # dont remove the output column
             w <- which(torem %in% M$output_column)
             if (length(w) > 0) {
                 torem <- torem[-w]
             }
-
+            
             #
             w <- which(colnames(D$data) %in% torem)
             if (length(w) > 0) {
                 D$data <- D$data[, -w]
             }
         }
-
+        
         # update object
         M$updated <- D
-
+        
         return(M)
     }
 )

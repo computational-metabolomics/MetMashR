@@ -2,11 +2,12 @@
 #' @export
 #' @include annotation_source_class.R rest_api_class.R zzz.R
 #' @family {REST API's}
-mwb_compound_lookup <- function(input_item = "inchi_key",
-                                query_column,
-                                output_item = "pubchem_id",
-                                suffix = "_mwb",
-                                ...) {
+mwb_compound_lookup <- function(
+        input_item = "inchi_key",
+        query_column,
+        output_item = "pubchem_id",
+        suffix = "_mwb",
+        ...) {
     allowed <- c(
         "all",
         "regno",
@@ -27,12 +28,13 @@ mwb_compound_lookup <- function(input_item = "inchi_key",
     if (!all(output_item %in% allowed)) {
         stop("Please specify a valid output item.")
     }
-
+    
     if (length(output_item) > 1) {
         output_item <- paste0(output_item, collapse = ",")
     }
-
-    out <- struct::new_struct("mwb_compound_lookup",
+    
+    out <- struct::new_struct(
+        "mwb_compound_lookup",
         input_item = input_item,
         query_column = query_column,
         output_item = output_item,

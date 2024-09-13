@@ -1,13 +1,14 @@
 #' @eval get_description('mwb_refmet_database')
 #' @export
 #' @include annotation_database_class.R
-mwb_refmet_database <- function(bfc = NULL,
-                                ...) {
+mwb_refmet_database <- function(
+        bfc = NULL,
+        ...) {
     # replace NULL with default
     if (is.null(bfc)) {
         bfc <- BiocFileCache::getBFCOption("CACHE")
     }
-
+    
     # new object
     out <- struct::new_struct(
         "mwb_refmet_database",
@@ -51,18 +52,18 @@ setMethod(
     signature = c("mwb_refmet_database"), definition = function(obj) {
         # url
         u <- "https://www.metabolomicsworkbench.org/rest/refmet/all"
-
+        
         # cache
         bfc <- BiocFileCache::BiocFileCache(obj$bfc)
         path <- BiocFileCache::bfcrpath(bfc, u)
-
+        
         # read
         df <- jsonlite::fromJSON(path)
-
+        
         # convert to df
         df <- lapply(df, as.data.frame)
         df <- plyr::rbind.fill(df)
-
+        
         # return
         return(df)
     }

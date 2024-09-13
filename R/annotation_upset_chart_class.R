@@ -1,15 +1,16 @@
 #' @export
-annotation_upset_chart <- function(factor_name,
-                                   group_column = NULL,
-                                   width_ratio = 0.2,
-                                   xlabel = "group",
-                                   sort_intersections = "descending",
-                                   intersections = "observed",
-                                   n_intersections = NULL,
-                                   min_size = 0,
-                                   queries = list(),
-                                   keep_empty_groups = FALSE,
-                                   ...) {
+annotation_upset_chart <- function(
+        factor_name,
+        group_column = NULL,
+        width_ratio = 0.2,
+        xlabel = "group",
+        sort_intersections = "descending",
+        intersections = "observed",
+        n_intersections = NULL,
+        min_size = 0,
+        queries = list(),
+        keep_empty_groups = FALSE,
+        ...) {
     out <- struct::new_struct(
         "annotation_upset_chart",
         factor_name = factor_name,
@@ -24,7 +25,7 @@ annotation_upset_chart <- function(factor_name,
         keep_empty_groups = keep_empty_groups,
         ...
     )
-
+    
     return(out)
 }
 
@@ -168,16 +169,16 @@ setMethod(
     signature = c("annotation_upset_chart", "annotation_source"),
     definition = function(obj, dobj, ...) {
         L <- list(...)
-
+        
         if (length(L) > 0) {
             # more than one dobj
             L <- c(dobj, L)
-
+            
             # if only one column name, assume same column in all sources
             if (length(obj$factor_name) == 1) {
                 obj$factor_name <- rep(obj$factor_name, length(L))
             }
-
+            
             # check we have a column for all sources
             if (length(obj$factor_name) != length(L)) {
                 stop(
@@ -186,15 +187,15 @@ setMethod(
                     "for each source.\n"
                 )
             }
-
+            
             # get tags
             tags <- lapply(L, param_value, name = "tag")
             names(L) <- tags
             L <- lapply(L, param_value, name = "data")
-
+            
             # get columns
             L <- mapply("[[", L, obj$factor_name)
-
+            
             ## create upset table
             # unique across all sets
             u <- unique(unlist(L))
@@ -228,12 +229,12 @@ setMethod(
             colnames(G) <- L
             rownames(G) <- U
         }
-
+        
         srt <- obj$sort_intersections
         if (srt == "none") {
             srt <- FALSE
         }
-
+        
         g <- ComplexUpset::upset(
             G,
             colnames(G),
@@ -246,7 +247,7 @@ setMethod(
             queries = obj$queries,
             keep_empty_groups = obj$keep_empty_groups
         )
-
+        
         return(g)
     }
 )
@@ -259,7 +260,7 @@ setMethod(
         L <- c(obj, dobj)
         names(L)[1] <- "obj"
         names(L)[2] <- "dobj"
-
+        
         g <- do.call(chart_plot, L)
         return(g)
     }

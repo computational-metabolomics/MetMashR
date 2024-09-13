@@ -2,9 +2,10 @@
 #' @export
 #' @include annotation_database_class.R
 #' @family {annotation databases}
-rdata_database <- function(source = character(0),
-                           variable_name,
-                           ...) {
+rdata_database <- function(
+        source = character(0),
+        variable_name,
+        ...) {
     # new object
     out <- struct::new_struct(
         "rds_database",
@@ -45,16 +46,16 @@ setMethod(
     signature = c("rdata_database"), definition = function(obj) {
         # new environment
         IN <- new.env()
-
+        
         # import
         load(obj$source, envir = IN)
-
+        
         if (is.character(obj$variable_name)) {
             OUT <- IN[[obj$variable_name]]
         } else { # assume function
             OUT <- obj$variable_name(IN)
         }
-
+        
         # return
         return(OUT)
     }

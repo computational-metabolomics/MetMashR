@@ -3,9 +3,10 @@
 #' @include annotation_database_class.R
 #' @family {annotation databases}
 #' @seealso [AnnotationDbi::AnnotationDb]
-AnnotationDb_database <- function(source,
-                                  table,
-                                  ...) {
+AnnotationDb_database <- function(
+        source,
+        table,
+        ...) {
     # new object
     out <- struct::new_struct(
         "AnnotationDb_database",

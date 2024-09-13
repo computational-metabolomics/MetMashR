@@ -1,10 +1,11 @@
 #' @eval get_description('combine_records')
 #' @export
 #' @include annotation_source_class.R
-combine_records <- function(group_by,
-                            default_fcn = .collapse(separator = " || "),
-                            fcns = list(),
-                            ...) {
+combine_records <- function(
+        group_by,
+        default_fcn = .collapse(separator = " || "),
+        fcns = list(),
+        ...) {
     # check fcns are all functions
     if (length(fcns) > 0) {
         check <- all(unlist(lapply(fcns, function(x) {
@@ -14,8 +15,9 @@ combine_records <- function(group_by,
             stop("all fcns list items must be functions or calls.")
         }
     }
-
-    out <- struct::new_struct("combine_records",
+    
+    out <- struct::new_struct(
+        "combine_records",
         default_fcn = default_fcn,
         fcns = fcns,
         group_by = group_by,
@@ -106,7 +108,7 @@ setMethod(
     signature = c("combine_records", "annotation_source"),
     definition = function(M, D) {
         X <- D$data
-
+        
         # for any NA, generate a unique id so that we dont lose them during
         # grouping
         for (k in M$group_by) {
@@ -115,7 +117,7 @@ setMethod(
                 X[[k]][w] <- paste0("._", k, "_NA_", w)
             }
         }
-
+        
         # if length(group_by) > 1 then combine into single column
         clean <- FALSE
         orig_group <- M$group_by
@@ -125,44 +127,44 @@ setMethod(
             M$group_by <- str
             clean <- TRUE
         }
-
+        
         # create list of default functions
         FCNS <- rep(list(M$default_fcn), ncol(X))
         names(FCNS) <- colnames(X)
-
+        
         # add functions for specific columns
         FCNS[names(M$fcns)] <- M$fcns
-
+        
         # prep for summarise
         for (k in names(FCNS)) {
             if (k %in% colnames(X)) {
                 FCNS[[k]] <- expr(across(all_of(!!k), !!FCNS[[k]],
-                    .names = !!paste0(".", k)
+                                        .names = !!paste0(".", k)
                 ))
             } else {
                 FCNS[[k]] <- as.call(FCNS[k])
             }
         }
-
+        
         # remove group by column fcn
         FCNS[M$group_by] <- NULL
-
+        
         # split into existing and new columns
         FCNSE <- FCNS[names(FCNS) %in% colnames(X)]
         FCNSN <- FCNS[!(names(FCNS) %in% colnames(X))]
         Y <- X %>% group_by_at(M$group_by)
         Z <- do.call(reframe, c(list(".data" = Y), unname(FCNSE), FCNSN))
-
+        
         Z <- as.data.frame(Z)
-
+        
         colnames(Z)[2:ncol(Z)] <- names(FCNS)
-
+        
         # remove extra column if created
         if (clean) {
             Z[[M$group_by]] <- NULL
             M$group_by <- orig_group
         }
-
+        
         # remove generated ids for NA if created
         for (k in M$group_by) {
             w <- which(grepl(
@@ -173,11 +175,11 @@ setMethod(
                 Z[[k]][w] <- NA
             }
         }
-
+        
         D$data <- Z
         M$updated <- D
-
-
+        
+        
         return(M)
     }
 )
@@ -211,7 +213,7 @@ NULL
         }
         if (anyNA(x) & !!na.rm) x <- x[!is.na(x)]
         ux <- sort(unique(x), na.last = TRUE)
-
+        
         if (!(!!ties)) {
             out <- ux[which.max(tabulate(match(x, ux)))]
         } else {
@@ -282,7 +284,7 @@ NULL
         if (!!use_abs) {
             vals <- abs(vals)
         }
-
+        
         w2 <- integer()
         if (!all(is.na(vals))) {
             # get index of max
@@ -290,12 +292,12 @@ NULL
             # find all matches to the min
             w2 <- which(vals == max(vals, na.rm = TRUE))
         }
-
+        
         # find NA if requested
         if (!!keep_NA) {
             w2 <- c(w2, which(is.na(vals)))
         }
-
+        
         return(x[w2])
     })
     return(eval(fcn))
@@ -313,12 +315,12 @@ NULL
     fcn <- expr(function(x) {
         # get values
         vals <- as.numeric(pick(!!min_col)[[1]])
-
+        
         # use abs if requested
         if (!!use_abs) {
             vals <- abs(vals)
         }
-
+        
         w2 <- integer()
         if (!all(is.na(vals))) {
             # get index of min
@@ -326,12 +328,12 @@ NULL
             # find all matches to the min
             w2 <- which(vals == min(vals, na.rm = TRUE))
         }
-
+        
         # find NA if requested
         if (!!keep_NA) {
             w2 <- c(w2, which(is.na(vals)))
         }
-
+        
         return(x[w2])
     })
     return(eval(fcn))
@@ -383,7 +385,7 @@ NULL
 .select_exact <- function(match_col, match, separator, na_string = "NA") {
     fcn <- expr(function(x) {
         x <- x[which(pick(!!match_col) == !!match)]
-
+        
         if (!is.null(!!separator)) {
             x[is.na(x)] <- !!na_string
             x <- unique(x)
@@ -416,13 +418,17 @@ NULL
 #'     )
 #' )
 #' @export
-.unique <- function(separator, na_string = "NA", digits = 6, drop_na = FALSE,
-                    sort = FALSE) {
+.unique <- function(
+        separator, 
+        na_string = "NA", 
+        digits = 6, 
+        drop_na = FALSE,
+        sort = FALSE) {
     fcn <- expr(function(x) {
         if (is.numeric(x)) {
             x <- round(as.numeric(x), !!digits)
         }
-
+        
         # drop NA if requested
         if (drop_na) {
             w <- which(is.na(x))
@@ -430,7 +436,7 @@ NULL
                 x <- x[-w]
             }
         }
-
+        
         x[is.na(x)] <- !!na_string
         x <- unique(x)
         if (sort) {
@@ -464,8 +470,12 @@ NULL
 #'     )
 #' )
 #' @export
-.prioritise <- function(match_col, priority, separator, no_match = NA,
-                        na_string = "NA") {
+.prioritise <- function(
+        match_col, 
+        priority, 
+        separator, 
+        no_match = NA,
+        na_string = "NA") {
     if (!is.list(priority)) {
         # convert to list if not formatted as one
         priority <- as.list(priority)
@@ -490,7 +500,7 @@ NULL
             }
         } else {
             x <- x[w]
-
+            
             # if separator is not NULL then collapse
             if (!is.null(!!separator)) {
                 x[is.na(x)] <- !!na_string
@@ -571,13 +581,13 @@ NULL
     fcn <- expr(function(x) {
         # get values
         vals <- pick(!!grade_col)
-
+        
         if (!!upper_case) {
             vals <- match(vals, LETTERS)
         } else {
             vals <- match(vals, letters)
         }
-
+        
         w2 <- integer()
         if (!all(is.na(vals))) {
             # get index of min
@@ -585,12 +595,12 @@ NULL
             # find all matches to the min
             w2 <- which(vals == min(vals, na.rm = TRUE))
         }
-
+        
         # find NA if requested
         if (!!keep_NA) {
             w2 <- c(w2, which(is.na(vals)))
         }
-
+        
         return(x[w2])
     })
     return(eval(fcn))

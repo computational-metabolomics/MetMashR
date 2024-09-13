@@ -3,19 +3,20 @@
 #' @include zzz.R rest_api_parsers.R
 #' @import httr
 #' @family {REST API's}
-rest_api <- function(base_url,
-                     url_template,
-                     suffix,
-                     status_codes,
-                     delay,
-                     cache = NULL,
-                     query_column,
-                     ...) {
+rest_api <- function(
+        base_url,
+        url_template,
+        suffix,
+        status_codes,
+        delay,
+        cache = NULL,
+        query_column,
+        ...) {
     # check supplied cache is writable
     if (!is.null(cache)) {
         stopifnot(is_writable(cache))
     }
-
+    
     out <- struct::new_struct(
         "rest_api",
         base_url = base_url,
@@ -154,15 +155,15 @@ setMethod(
         if (!check) {
             stop("query_column is not in the annotation table")
         }
-
-
+        
+        
         # check for 0 annotations
         if (nrow(D$data) == 0) {
             # nothing to do, so return
             M$updated <- D
             return(M)
         }
-
+        
         # import cache
         cached <- NULL
         if (!is.null(M$cache)) {
@@ -174,16 +175,16 @@ setMethod(
             } else {
                 cached <- cached$data
             }
-
+            
             # must have a search column
             if (!(".search" %in% colnames(cached))) {
                 stop('Cache does not contain a ".search" column')
             }
         }
-
-
-
-
+        
+        
+        
+        
         collected <- list()
         # for each query term
         for (k in D$data[[M$query_column]]) {
@@ -191,10 +192,10 @@ setMethod(
                 # if NA then don't submit query
                 next
             }
-
+            
             # build url
             u <- .build_api_url(M, query_column = as.character(k))
-
+            
             # check cache if used
             parsed <- NULL
             if (!is.null(cached)) {
@@ -202,7 +203,7 @@ setMethod(
                 parsed <-
                     cached %>%
                     filter(.data[[".search"]] == k)
-
+                
                 # if no hits, reset to null
                 if (nrow(parsed) == 0) {
                     parsed <- NULL
@@ -212,19 +213,19 @@ setMethod(
                         M$query_column
                 }
             }
-
+            
             # if not using cache, or no hits in cache
             if (is.null(parsed)) {
                 # delay
                 Sys.sleep(M$delay)
-
+                
                 # submit query api
                 parsed <- .submit_api_query(
                     URL = u,
                     FUN = .submit_fun,
                     params = param_list(M)
                 )
-
+                
                 # if we dont get a data.frame then create
                 if (!is.data.frame(parsed)) {
                     parsed <- list()
@@ -237,17 +238,17 @@ setMethod(
                     parsed[[M$query_column]] <- k
                     parsed <- as.data.frame(parsed)
                 }
-
+                
                 # make sure the search term is included in the data.frame
                 parsed[[M$query_column]] <- k
-
+                
                 # update cached (even if not saving cache,
                 # to avoid same query multiple times)
                 forcache <- parsed
                 colnames(forcache)[colnames(parsed) == M$query_column] <-
                     ".search"
                 cached <- plyr::rbind.fill(cached, forcache)
-
+                
                 if (!is.null(M$cache)) {
                     # keep unique records
                     cached <- unique(cached)
@@ -260,13 +261,13 @@ setMethod(
                     }
                 }
             }
-
+            
             # collect results
             collected[[k]] <- parsed
         }
         # join results, pad missing columns with NA to get all columns
         collected <- plyr::rbind.fill(collected)
-
+        
         # update cache if using
         if (!is.null(M$cache)) {
             # keep unique records
@@ -278,22 +279,24 @@ setMethod(
                 warning("Cache is not writable and could not be updated.")
             }
         }
-
+        
         # add suffix
         colnames(collected) <- paste0(colnames(collected), M$suffix)
-
+        
         # join with annotations
         by <- paste0(M$query_column, M$suffix)
         names(by) <- M$query_column
-        X <- dplyr::left_join(D$data, collected,
+        X <- dplyr::left_join(
+            D$data, 
+            collected,
             by = by,
             relationship = "many-to-many"
         )
-
+        
         # update object
         D$data <- X
         M$updated <- D
-
+        
         # return
         return(M)
     }
@@ -303,25 +306,26 @@ setMethod(
 .build_api_url <- function(M, ...) {
     # get template
     template <- M$url_template
-
+    
     # get params between <>
     found <- regmatches(
         template,
-        gregexpr("(?<=\\<)[^<>]+(?=\\>)",
+        gregexpr(
+            "(?<=\\<)[^<>]+(?=\\>)",
             template,
             perl = TRUE
         )
     )[[1]]
-
+    
     # get list of params and values
     L <- param_list(M)
-
+    
     # replace search terms
     IN <- list(...)
     for (n in names(IN)) {
         L[[n]] <- IN[[n]]
     }
-
+    
     # for each param, replace it in the template with its value in the object
     for (k in found) {
         # only encode if not base_url
@@ -336,7 +340,7 @@ setMethod(
             x = template, fixed = TRUE
         )
     }
-
+    
     return(template)
 }
 
@@ -347,7 +351,7 @@ setMethod(
     # https://contributions.bioconductor.org/querying-web-resources.html
     N.TRIES <- as.integer(N.TRIES)
     stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
-
+    
     while (N.TRIES > 0L) {
         result <- tryCatch(
             FUN(
@@ -356,14 +360,14 @@ setMethod(
             ),
             error = identity
         )
-
+        
         if (!inherits(result, "error")) {
             break
         } else {
             N.TRIES <- N.TRIES - 1L
         }
     }
-
+    
     if (N.TRIES == 0L) {
         stop(
             "'getURL()' failed:",
@@ -371,23 +375,23 @@ setMethod(
             "\n  error: ", conditionMessage(result)
         )
     }
-
+    
     result
 }
 
 # internal function to submit an api query
 .submit_fun <- function(URL, params = NULL) {
     response <- GET(URL, timeout(getOption("timeout")))
-
+    
     # get status code
     s <- as.character(status_code(response))
-
+    
     # respond as specified
     if (s %in% names(params$status_codes)) {
         out <- params$status_codes[[s]](response, params)
         return(out)
     }
-
+    
     # otherwise check for status
     stop_for_status(response)
 }

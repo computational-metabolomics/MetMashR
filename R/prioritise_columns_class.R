@@ -1,13 +1,15 @@
 #' @eval get_description('prioritise_columns')
 #' @export
 #' @include annotation_source_class.R zzz.R
-prioritise_columns <- function(column_names,
-                               output_name,
-                               source_name,
-                               source_tags = column_names,
-                               clean = TRUE,
-                               ...) {
-    out <- struct::new_struct("prioritise_columns",
+prioritise_columns <- function(
+        column_names,
+        output_name,
+        source_name,
+        source_tags = column_names,
+        clean = TRUE,
+        ...) {
+    out <- struct::new_struct(
+        "prioritise_columns",
         column_names = column_names,
         output_name = output_name,
         clean = clean,
@@ -107,14 +109,14 @@ setMethod(
     signature = c("prioritise_columns", "annotation_source"),
     definition = function(M, D) {
         X <- D$data
-
+        
         # M=check_unique('source_name',colnames(X),M)
         # M=check_unique('output_name',colnames(X),M)
-
+        
         # the new column
         new_column <- X[, M$column_names[1], drop = TRUE]
         selected <- rep(M$source_tags[1], length(new_column))
-
+        
         # for each column
         for (k in 2:length(M$column_names)) {
             # replace NA with next column
@@ -122,18 +124,18 @@ setMethod(
             new_column[w] <- X[w, M$column_names[k], drop = TRUE]
             selected[w] <- M$source_tags[k]
         }
-
+        
         X[[M$output_name]] <- new_column
         X[[M$source_name]] <- selected
-
+        
         if (M$clean) {
             w <- which((colnames(X) %in% M$column_names) &
-                !(colnames(X) %in% M$output_name))
+                            !(colnames(X) %in% M$output_name))
             X <- X[, -w]
         }
         D$data <- X
         M$updated <- D
-
+        
         return(M)
     }
 )

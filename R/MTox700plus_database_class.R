@@ -1,10 +1,11 @@
 #' @eval get_description('MTox700plus_database')
 #' @export
 #' @include annotation_database_class.R BiocFileCache_database_class.R zzz.R
-MTox700plus_database <- function(version = "latest",
-                                 bfc_path = NULL,
-                                 resource_name = "MetMashR_MTox700plus",
-                                 ...) {
+MTox700plus_database <- function(
+        version = "latest",
+        bfc_path = NULL,
+        resource_name = "MetMashR_MTox700plus",
+        ...) {
     # new object
     out <- struct::new_struct(
         "MTox700plus_database",
@@ -102,12 +103,12 @@ setMethod(
         httr::stop_for_status(response)
         # otherwise parse content
         J <- httr::content(response, as = "parsed")
-
+        
         # Use BiocFileCache database
         obj$source <- J$zipball_url
         obj$resource_name <- paste0(obj$resource_name, "_", J$tag_name)
         df <- callNextMethod(obj)
-
+        
         # return
         return(df)
     }

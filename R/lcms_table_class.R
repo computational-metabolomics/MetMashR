@@ -2,12 +2,13 @@
 #' @include annotation_table_class.R
 #' @export lcms_table
 #' @family {annotation_tables}
-lcms_table <- function(data = NULL,
-                       tag = "",
-                       id_column = "id",
-                       mz_column = "mz",
-                       rt_column = "rt",
-                       ...) {
+lcms_table <- function(
+        data = NULL,
+        tag = "",
+        id_column = "id",
+        mz_column = "mz",
+        rt_column = "rt",
+        ...) {
     if (is.null(data)) {
         data <- data.frame(
             id = character(0),
@@ -20,7 +21,7 @@ lcms_table <- function(data = NULL,
             rt_column
         )
     }
-
+    
     # new object
     out <- new_struct(
         "lcms_table",

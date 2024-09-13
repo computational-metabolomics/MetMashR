@@ -1,13 +1,14 @@
 #' @eval get_description('pubchem_property_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R
-pubchem_property_lookup <- function(query_column,
-                                    search_by,
-                                    suffix = "_pubchem",
-                                    property = "InChIKey",
-                                    ...) {
+pubchem_property_lookup <- function(
+        query_column,
+        search_by,
+        suffix = "_pubchem",
+        property = "InChIKey",
+        ...) {
     # check properties
-
+    
     allowed <- c(
         "MolecularFormula",
         "MolecularWeight",
@@ -56,38 +57,39 @@ pubchem_property_lookup <- function(query_column,
         "title",
         ".all"
     )
-
+    
     # check valid property
     check <- all(property %in% allowed)
     if (!check) {
         w <- which(!(property %in% allowed))
         stop("Invalid properties: ", paste0(property[w], collapse = ","))
     }
-
+    
     # check for all
     if (any(property == ".all")) {
         property <- allowed
     }
-
+    
     # remove .all
     w <- which(property == ".all")
     if (length(w) > 0) {
         property <- property[-w]
     }
-
+    
     # if vector, collapse to comma separated
     if (length(property) > 1) {
         property <- paste0(property, collapse = ",")
     }
-
-    out <- struct::new_struct("pubchem_property_lookup",
+    
+    out <- struct::new_struct(
+        "pubchem_property_lookup",
         query_column = query_column,
         search_by = search_by,
         suffix = suffix,
         property = property,
         ...
     )
-
+    
     return(out)
 }
 
@@ -100,7 +102,8 @@ pubchem_property_lookup <- function(query_column,
     ),
     prototype = list(
         name = "Compound property lookup via pubchem",
-        description = paste0("Uses the PubChem API to search for CID based on",
+        description = paste0(
+            "Uses the PubChem API to search for CID based on",
             "the input annotation column and returns property information."),
         type = "rest_api",
         predicted = "updated",

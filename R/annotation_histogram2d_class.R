@@ -1,13 +1,14 @@
 #' @eval get_description('annotation_histogram2d')
 #' @include annotation_histogram_class.R
 #' @export
-annotation_histogram2d <- function(factor_name,
-                                   bins = 30,
-                                   bin_edge = "grey",
-                                   bin_fill = "lightgrey",
-                                   vline = NULL,
-                                   vline_colour = "red",
-                                   ...) {
+annotation_histogram2d <- function(
+        factor_name,
+        bins = 30,
+        bin_edge = "grey",
+        bin_fill = "lightgrey",
+        vline = NULL,
+        vline_colour = "red",
+        ...) {
     out <- struct::new_struct(
         "annotation_histogram2d",
         factor_name = factor_name,
@@ -18,7 +19,7 @@ annotation_histogram2d <- function(factor_name,
         vline_colour = vline_colour,
         ...
     )
-
+    
     return(out)
 }
 
@@ -122,7 +123,7 @@ setMethod(
                 )
             }
         }
-
+        
         # 2d histogram
         g1 <- ggplot(
             data = dobj$data,
@@ -140,14 +141,14 @@ setMethod(
             ) +
             xlab(obj$factor_name[1]) +
             ylab(obj$factor_name[2])
-
+        
         # 1d histograms
         C <- annotation_histogram(
             factor_name = obj$factor_name[1],
             bins = obj$bins,
             vline = obj$vline[[1]]
         )
-
+        
         g2 <- chart_plot(C, dobj) +
             xlab(element_blank()) +
             theme(
@@ -156,14 +157,14 @@ setMethod(
                 panel.border = element_rect(fill = NA, colour = "black"),
                 axis.text.x = element_blank()
             )
-
-
+        
+        
         C <- annotation_histogram(
             factor_name = obj$factor_name[2],
             bins = obj$bins,
             vline = obj$vline[[2]]
         )
-
+        
         g3 <- chart_plot(C, dobj) +
             xlab(element_blank()) +
             theme(
@@ -172,14 +173,14 @@ setMethod(
                 panel.border = element_rect(fill = NA, colour = "black"),
                 axis.text.y = element_blank()
             )
-
+        
         # build plots, get x and y lims
         xlims <- .get_limits(g1, "x")
         xlims <- rbind(xlims, .get_limits(g2, "x"))
-
+        
         ylims <- .get_limits(g1, "y")
         ylims <- rbind(ylims, .get_limits(g3, "x"))
-
+        
         g <- wrap_plots(
             g2 + coord_cartesian(xlim = (c(min(xlims$lo), max(xlims$hi)))),
             plot_spacer(),

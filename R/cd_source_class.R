@@ -4,13 +4,14 @@
 #' @family {annotation tables}
 #' @rawNamespace import(dplyr, except = as_data_frame)
 #' @export
-cd_source <- function(source,
-                      sheets = c(1, 1),
-                      tag = "CD",
-                      mz_column = "mz",
-                      rt_column = "rt",
-                      id_column = "id",
-                      ...) {
+cd_source <- function(
+        source,
+        sheets = c(1, 1),
+        tag = "CD",
+        mz_column = "mz",
+        rt_column = "rt",
+        id_column = "id",
+        ...) {
     # new object
     out <- new_struct(
         "cd_source",
@@ -91,24 +92,24 @@ setMethod(
         # read files
         TB1 <- .read_cd_compounds_file(M, 1)
         TB2 <- .read_cd_isomers_file(M, 2)
-
+        
         # join blue and orange
         L <- list()
         L[[1]] <- left_join(TB1$blue, TB1$orange,
-            by = join_by(blue_id),
-            suffix = c(".blue", ".orange")
+                            by = join_by(blue_id),
+                            suffix = c(".blue", ".orange")
         )
         L[[2]] <- left_join(TB2$blue, TB2$orange,
-            by = join_by(blue_id),
-            suffix = c(".blue", ".orange")
+                            by = join_by(blue_id),
+                            suffix = c(".blue", ".orange")
         )
-
+        
         # join grey
         L[[1]] <- left_join(L[[1]], TB1$grey, by = join_by(
             blue_id == blue_id,
             orange_id == orange_id
         ), suffix = c(".blueorange", ".grey"))
-
+        
         # summarise
         L[[1]] <- L[[1]] %>%
             group_by(blue_id, Ion) %>%
@@ -116,24 +117,24 @@ setMethod(
                 Compound = unique(Name),
                 Formula = unique(Formula),
                 RT = mean(as.numeric(.data[["RT [min].grey"]]) * 60,
-                    na.rm = TRUE
+                            na.rm = TRUE
                 ),
                 mzcloud_score = mean(as.numeric(mzCloud.Best.Match),
-                    na.rm = TRUE
+                                        na.rm = TRUE
                 ),
                 Charge = unique(Charge),
                 mz = mean(as.numeric(.data[["m/z.grey"]]), na.rm = TRUE),
                 area = max(Area),
                 file_count = n()
             )
-
+        
         # join compounds and isomers
         OUT <- left_join(L[[1]], L[[2]],
-            by = join_by(blue_id),
-            relationship = "many-to-many", suffix = c(".cpd", ".iso")
+                        by = join_by(blue_id),
+                        relationship = "many-to-many", suffix = c(".cpd", ".iso")
         )
-
-
+        
+        
         OUT <- OUT %>%
             # select relevant columns
             select(
@@ -170,17 +171,17 @@ setMethod(
                     "theoretical_mass"
                 ), as.numeric)
             )
-
+        
         # calc theoretical mz
         OUT$theoretical_mz <- OUT$mz * 1e6 /
             (OUT$library_ppm_diff + 1e6)
-
+        
         # id row id
         OUT$id <- as.character(seq_len(nrow(OUT)))
-
+        
         # update object
         M$data <- as.data.frame(OUT)
-
+        
         # return
         return(M)
     }
@@ -191,26 +192,26 @@ setMethod(
     # COMP FILE
     input_file <- M$source[idx]
     sheet <- M$sheets[idx]
-
+    
     cd <- openxlsx::read.xlsx(
         input_file,
         sheet
     )
-
+    
     # add some ids for joining later
     cd$blue_id <- NA
     cd$orange_id <- NA
-
+    
     for (k in seq_len(nrow(cd))) {
         n <- sum(cd$Checked[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
         cd$blue_id[k] <- n
         n <- sum(cd$Name[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
         cd$orange_id[k] <- n
     }
-
+    
     ## blue rows
     blue <- cd %>% filter(Checked == "FALSE")
-
+    
     ## orange rows
     # find colnames
     w <- which(cd$Checked == "Tags")
@@ -223,7 +224,7 @@ setMethod(
     orange <- cd %>%
         select(all_of(x)) %>%
         filter(Checked %in% c("TRUE", "FALSE"))
-
+    
     return(
         list(
             blue = blue,
@@ -238,23 +239,23 @@ setMethod(
         M$source[idx],
         M$sheets[idx]
     )
-
+    
     # add some ids for joining later
     cd$blue_id <- NA
     cd$orange_id <- NA
-
+    
     for (k in seq_len(nrow(cd))) {
         n <- sum(cd$Checked[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
         cd$blue_id[k] <- n
         n <- sum(cd$Name[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
         cd$orange_id[k] <- n
     }
-
+    
     ## blue rows
     blue <- cd %>%
         filter(Checked == "FALSE") %>%
         select(-orange_id)
-
+    
     ## orange rows
     # find colnames
     w <- which(cd$Checked == "Tags")
@@ -267,7 +268,7 @@ setMethod(
     orange <- cd %>%
         select(all_of(x)) %>%
         filter(Checked %in% c("TRUE", "FALSE"))
-
+    
     ## grey rows
     # find colnames
     w <- which(cd$Name == "Tags")
@@ -280,7 +281,7 @@ setMethod(
     grey <- cd %>%
         select(all_of(x)) %>%
         filter(Checked == "FALSE")
-
+    
     return(
         list(
             blue = blue,

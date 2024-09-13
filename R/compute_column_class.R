@@ -1,10 +1,11 @@
 #' @eval get_description('compute_column')
 #' @export
 #' @include annotation_source_class.R
-compute_column <- function(input_columns,
-                           output_column,
-                           fcn,
-                           ...) {
+compute_column <- function(
+        input_columns,
+        output_column,
+        fcn,
+        ...) {
     out <- struct::new_struct(
         "compute_column",
         input_columns = input_columns,
@@ -12,7 +13,7 @@ compute_column <- function(input_columns,
         fcn = fcn,
         ...
     )
-
+    
     return(out)
 }
 
@@ -77,7 +78,7 @@ setMethod(
     definition = function(M, D) {
         new_col <- M$fcn(D$data[, M$input_columns, drop = FALSE])
         D$data[[M$output_column]] <- new_col
-
+        
         M$updated <- D
         return(M)
     }

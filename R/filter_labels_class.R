@@ -1,14 +1,16 @@
 #' @eval get_description('filter_labels')
 #' @export
 #' @include annotation_source_class.R
-filter_labels <- function(column_name,
-                          labels,
-                          mode = "exclude",
-                          perl = FALSE,
-                          fixed = FALSE,
-                          match_na = FALSE,
-                          ...) {
-    out <- struct::new_struct("filter_labels",
+filter_labels <- function(
+        column_name,
+        labels,
+        mode = "exclude",
+        perl = FALSE,
+        fixed = FALSE,
+        match_na = FALSE,
+        ...) {
+    out <- struct::new_struct(
+        "filter_labels",
         column_name = column_name,
         labels = labels,
         mode = mode,
@@ -135,47 +137,47 @@ setMethod(
     signature = c("filter_labels", "annotation_source"),
     definition = function(M, D) {
         X <- D$data
-
+        
         if (nrow(X) == 0) {
             M$filtered <- D
             return(M)
         }
-
+        
         # convert to char for comparison
         X[[M$column_name]] <- as.character(X[[M$column_name]])
-
+        
         # flag if found
         G <- lapply(M$labels, grepl,
-            x = X[[M$column_name]], perl = M$perl,
-            fixed = M$fixed
+                    x = X[[M$column_name]], perl = M$perl,
+                    fixed = M$fixed
         )
         names(G) <- M$labels
         G <- as.data.frame(G)
         IN <- apply(G, 1, any)
-
+        
         # set NA to true if requested
         if (M$match_na) {
             IN <- IN | is.na(X[[M$column_name]])
         }
-
+        
         if (M$mode == "include") {
             w <- which(IN)
         } else {
             w <- which(!IN)
         }
-
+        
         flags <- data.frame(G, flag = IN, value = X[[M$column_name]])
         rownames(flags) <- rownames(X)
-
+        
         M$flags <- flags
-
+        
         # keep flagged
         X <- X[w, ]
-
+        
         D$data <- X
-
+        
         M$filtered <- D
-
+        
         return(M)
     }
 )

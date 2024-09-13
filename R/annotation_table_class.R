@@ -3,15 +3,16 @@
 #' @family {annotation tables}
 #' @family {annotation sources}
 #' @export
-annotation_table <- function(data = data.frame(),
-                             tag = "",
-                             id_column = NULL,
-                             ...) {
+annotation_table <- function(
+        data = data.frame(),
+        tag = "",
+        id_column = NULL,
+        ...) {
     if (is.null(id_column)) {
         data$.MetMashR_id <- seq_len(nrow(data))
         id_column <- ".MetMashR_id"
     }
-
+    
     # new object
     out <- new_struct(
         "annotation_table",
@@ -21,7 +22,7 @@ annotation_table <- function(data = data.frame(),
         .required = id_column,
         ...
     )
-
+    
     return(out)
 }
 

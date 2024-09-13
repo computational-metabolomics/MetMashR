@@ -1,10 +1,11 @@
 #' @eval get_description('hmdb_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R
-hmdb_lookup <- function(query_column,
-                        suffix = "_hmdb",
-                        output = "inchikey",
-                        ...) {
+hmdb_lookup <- function(
+        query_column,
+        suffix = "_hmdb",
+        output = "inchikey",
+        ...) {
     out <- struct::new_struct(
         "hmdb_lookup",
         query_column = query_column,
@@ -12,7 +13,7 @@ hmdb_lookup <- function(query_column,
         output = output,
         ...
     )
-
+    
     return(out)
 }
 

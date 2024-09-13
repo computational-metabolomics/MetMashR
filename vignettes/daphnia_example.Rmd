@@ -525,7 +525,7 @@ WF <-
     ) +
     prioritise_columns(
         column_names = c("InChIKey_pubchem", "inchi_key_abbrev", 
-                         "inchi_key_abbrevchains"),
+                            "inchi_key_abbrevchains"),
         output_name = "inchikey",
         source_name = "inchikey_src",
         source_tags = c("pubchem", "lm_abbrev", "lm_chains"),

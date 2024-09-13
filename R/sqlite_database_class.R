@@ -2,9 +2,10 @@
 #' @export
 #' @include annotation_database_class.R
 #' @family {database}
-sqlite_database <- function(source,
-                            table = "annotation_database",
-                            ...) {
+sqlite_database <- function(
+        source,
+        table = "annotation_database",
+        ...) {
     # new object
     out <- struct::new_struct(
         "sqlite_database",
@@ -41,15 +42,15 @@ setMethod(
     signature = c("sqlite_database"), definition = function(obj) {
         # connect to database; create if doesnt exist
         conn <- RSQLite::dbConnect(RSQLite::SQLite(), obj$source)
-
+        
         # read the table
         IN <- RSQLite::dbGetQuery(conn, paste0(
             "SELECT * FROM ", obj$table
         ))
-
+        
         # disconnect
         RSQLite::dbDisconnect(conn)
-
+        
         # return
         return(IN)
     }
@@ -61,13 +62,13 @@ setMethod(
     signature = c("sqlite_database"), definition = function(obj, cache) {
         # connect to database; create if doesnt exist
         conn <- RSQLite::dbConnect(RSQLite::SQLite(), obj$source)
-
+        
         # write df to database
         RSQLite::dbWriteTable(conn, obj$table, cache, overwrite = TRUE)
-
+        
         # disconnect
         RSQLite::dbDisconnect(conn)
-
+        
         # return
         return(invisible(TRUE))
     }

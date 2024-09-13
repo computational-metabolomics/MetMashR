@@ -2,12 +2,13 @@
 #' @export
 #' @include annotation_database_class.R
 #' @family {annotation databases}
-excel_database <- function(source = character(0),
-                           sheet = 1,
-                           rowNames = FALSE,
-                           colNames = TRUE,
-                           startRow = 1,
-                           ...) {
+excel_database <- function(
+        source = character(0),
+        sheet = 1,
+        rowNames = FALSE,
+        colNames = TRUE,
+        startRow = 1,
+        ...) {
     # new object
     out <- struct::new_struct(
         "excel_database",

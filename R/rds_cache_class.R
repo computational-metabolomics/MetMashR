@@ -2,11 +2,12 @@
 #' @export
 #' @include rds_database_class.R
 #' @family {annotation databases}
-rds_cache <- function(source = character(0),
-                      data = data.frame(
-                          .search = character(0)
-                      ),
-                      ...) {
+rds_cache <- function(
+        source = character(0),
+        data = data.frame(
+            .search = character(0)
+        ),
+        ...) {
     # new object
     out <- struct::new_struct(
         "rds_cache",

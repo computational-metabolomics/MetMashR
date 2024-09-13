@@ -2,13 +2,14 @@
 #' @export
 #' @include annotation_database_class.R BiocFileCache_database_helpers.R
 #' @family {database}
-BiocFileCache_database <- function(source,
-                                   bfc_path = NULL,
-                                   resource_name,
-                                   bfc_fun = .cache_as_is,
-                                   import_fun = read.csv,
-                                   offline = FALSE,
-                                   ...) {
+BiocFileCache_database <- function(
+        source,
+        bfc_path = NULL,
+        resource_name,
+        bfc_fun = .cache_as_is,
+        import_fun = read.csv,
+        offline = FALSE,
+        ...) {
     # new object
     out <- struct::new_struct(
         "BiocFileCache_database",
@@ -117,13 +118,13 @@ setMethod(
         if (is.null(obj$bfc_path)) {
             obj$bfc_path <- BiocFileCache::getBFCOption("CACHE")
         }
-
+        
         # get path
         path <- .get_cached_path(obj)
-
+        
         # read
         df <- obj$import_fun(path)
-
+        
         # return
         return(df)
     }
@@ -142,7 +143,7 @@ setMethod(
         query = obj$source,
         field = "fpath", exact = TRUE
     )$rid
-
+    
     # if not present, then add it
     if (!length(rid)) {
         rid <- names(
@@ -154,10 +155,11 @@ setMethod(
             )
         )
     }
-
-    if (rid %in% BiocFileCache::bfcquery(bfc,
-        field = "rtype", query = "web"
-    )$rid) {
+    
+    if (rid %in% BiocFileCache::bfcquery(
+        bfc,
+        field = "rtype", 
+        query = "web")$rid) {
         # TRUE if newly added or stale
         update <- BiocFileCache::bfcneedsupdate(bfc, rid)
         if (is.na(update)) { # FALSE if NA
@@ -166,8 +168,8 @@ setMethod(
     } else {
         update <- FALSE # cant update if not web resource
     }
-
-
+    
+    
     # download & unzip
     if (update & !obj$offline) {
         BiocFileCache::bfcdownload(
@@ -178,9 +180,9 @@ setMethod(
             verbose = FALSE
         )
     }
-
+    
     # get path
     path <- BiocFileCache::bfcrpath(bfc, rids = rid)
-
+    
     return(path)
 }

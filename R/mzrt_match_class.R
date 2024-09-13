@@ -1,13 +1,14 @@
 #' @eval get_description('mzrt_match')
 #' @export
 #' @include annotation_source_class.R
-mzrt_match <- function(variable_meta,
-                       mz_column,
-                       rt_column,
-                       ppm_window,
-                       rt_window,
-                       id_column,
-                       ...) {
+mzrt_match <- function(
+        variable_meta,
+        mz_column,
+        rt_column,
+        ppm_window,
+        rt_window,
+        id_column,
+        ...) {
     # make rt_window length 2
     if (length(ppm_window) == 1) {
         ppm_window <- c(
@@ -15,7 +16,7 @@ mzrt_match <- function(variable_meta,
             "annotations" = ppm_window
         )
     }
-
+    
     # check ppm window is named if length == 2 in case user-provided
     if (!all(names(ppm_window) %in% c("variable_meta", "annotations")) |
         is.null(names(ppm_window))) {
@@ -24,12 +25,12 @@ mzrt_match <- function(variable_meta,
             'e.g. c("variable_meta" = 5, "annotations"= 2)'
         )
     }
-
+    
     # make rt_window length 2
     if (length(rt_window) == 1) {
         rt_window <- c("variable_meta" = rt_window, "annotations" = rt_window)
     }
-
+    
     # check rt window is named if length == 2 in case user-provided
     if (!all(names(rt_window) %in% c("variable_meta", "annotations")) |
         is.null(names(rt_window))) {
@@ -38,8 +39,9 @@ mzrt_match <- function(variable_meta,
             'be named e.g. c("variable_meta" = 5, "annotations"= 2)'
         )
     }
-
-    out <- struct::new_struct("mzrt_match",
+    
+    out <- struct::new_struct(
+        "mzrt_match",
         variable_meta = variable_meta,
         mz_column = mz_column,
         rt_column = rt_column,
@@ -163,8 +165,8 @@ setMethod(
             M$updated <- D
             return(M)
         }
-
-
+        
+        
         N <- mz_match(
             variable_meta = M$variable_meta,
             mz_column = M$mz_column,
@@ -178,17 +180,17 @@ setMethod(
                 id_column = M$id_column
             )
         N <- model_apply(N, D)
-
+        
         # only keep annotations where rt id and mz id match
         D <- predicted(N)
         w <- which(D$data$mz_match_id == D$data$rt_match_id)
         D$data <- D$data[w, ]
-
+        
         # add mzrt_match_id and remove mz_match_id and rt_match_id
         D$data$mzrt_match_id <- D$data$mz_match_id
         w <- which(colnames(D$data) %in% c("mz_match_id", "rt_match_id"))
         D$data <- D$data[, -w]
-
+        
         # add a combined score for mz and rt matching
         D$data$mzrt_match_score <- sqrt((mean(c(
             D$data$ppm_match_diff_an,
@@ -196,7 +198,7 @@ setMethod(
         ))^2) +
             (D$data$rt_match_diff^2))
         M$updated <- D
-
+        
         return(M)
     }
 )
