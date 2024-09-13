@@ -11,31 +11,35 @@ rds_cache(
 )
 }
 \arguments{
-\item{source}{(ANY) The source of annotation data. The default is \code{character(0)}.}
+\item{source}{(ANY) The source of annotation data. The default is
+\code{character(0)}.}
 
-\item{data}{(data.frame, NULL) A data.frame of annotation data. The default is \code{data.frame(.search = character(0))}.}
+\item{data}{(data.frame, NULL) A data.frame of annotation data. The
+default is \code{data.frame(.search = character(0))}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 rds_cache
 } object. This object has no \code{output} slots.
 }
 \description{
-A data.frame stored as an RDS file. Intended to be used with \code{rest_api} objects as mechanism for caching search results. The data.frame for an \code{rds_cache} object must have a column named ".search".
+A data.frame stored as an RDS file. Intended to be used
+with \code{rest_api} objects as mechanism for caching search results. The
+data.frame for an \code{rds_cache} object must have a column named
+".search".
 }
 \section{Inheritance}{
 
 A \code{rds_cache} object inherits the following \code{struct} classes: \cr\cr
-\verb{[rds_cache]} >> \verb{[rds_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+\verb{[rds_cache]} -> \verb{[rds_database]} -> \verb{[annotation_database]} ->
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = rds_cache(
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = rds_cache( tag = character(0), data = data.frame(id=NA), source =
+"ANY")
 
 }
 \seealso{

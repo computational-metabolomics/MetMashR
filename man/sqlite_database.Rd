@@ -9,12 +9,13 @@ sqlite_database(source, table = "annotation_database", ...)
 \arguments{
 \item{source}{(ANY) The source of annotation data.}
 
-\item{table}{(character) The name of a table in the SQLite database. The default is \code{"annotation_database"}.}
+\item{table}{(character) The name of a table in the SQLite database.
+The default is \code{"annotation_database"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 sqlite_database
 } object. This object has no \code{output} slots.
 }
@@ -22,25 +23,25 @@ sqlite_database
 A data.frame stored in an SQLite database.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{RSQLite}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{RSQLite}}}
 }
 \section{Inheritance}{
 
-A \code{sqlite_database} object inherits the following \code{struct} classes: \cr\cr
-\verb{[sqlite_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{sqlite_database} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[sqlite_database]} -> \verb{[annotation_database]} ->
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = sqlite_database(
-      table = character(0),
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = sqlite_database( table = character(0), tag = character(0), data =
+data.frame(id=NA), source = "ANY")
 
 }
 \references{
-Müller K, Wickham H, James DA, Falcon S (2024). \emph{RSQLite: SQLite
-Interface for R}. R package version 2.3.6,
+Müller K, Wickham H, James DA, Falcon S (2024). \emph{RSQLite:
+SQLite Interface for R}. R package version 2.3.6,
 \url{https://CRAN.R-project.org/package=RSQLite}.
 }
 \seealso{

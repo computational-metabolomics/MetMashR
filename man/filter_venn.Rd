@@ -16,46 +16,61 @@ filter_venn(
 )
 }
 \arguments{
-\item{factor_name}{(character) The name of the column(s) in the \code{annotation_source} to generate a chart from. Up to seven columns can be compared for a single \code{annotation_source}.}
+\item{factor_name}{(character) The name of the column(s) in the
+\code{annotation_source} to generate a chart from. Up to seven columns can
+be compared for a single \code{annotation_source}.}
 
-\item{group_column}{(character, NULL) The name of the column in the \code{annotation_source} to create groups from in the Venn diagram. This parameter is ignored if \code{!is.null(tables)}, as each table is considered to be a group. This parameter is also ignored if more than one \code{factor_name} is provided, as each column is considered a group. The default is \code{NULL}.}
+\item{group_column}{(character, NULL) The name of the column in the
+\code{annotation_source} to create groups from in the Venn diagram. This
+parameter is ignored if \code{!is.null(tables)}, as each table is
+considered to be a group. This parameter is also ignored if more than
+one \code{factor_name} is provided, as each column is considered a group.
+The default is \code{NULL}.}
 
-\item{tables}{(list, NULL) A list of \code{annotation_sources} to generate the venn groups from. If the only table of interest is the table coming in from \code{model_apply} then set \code{tables = NULL} and use \code{group_column}. The default is \code{NULL}.}
+\item{tables}{(list, NULL) A list of \code{annotation_sources} to generate
+the venn groups from. If the only table of interest is the table
+coming in from \code{model_apply} then set \code{tables = NULL} and use
+\code{group_column}. The default is \code{NULL}.}
 
 \item{levels}{(character) The venn diagram levels to filter by.}
 
-\item{mode}{(character) Filter mode. Allowed values are limited to the following: \itemize{ \item{\code{"exclude"}: The specified levels are removed from the annotation table.}\item{\code{"include"}: Only the specified levels are retained in the annotation table.}} The default is \code{"exclude"}.}
+\item{mode}{(character) Filter mode. Allowed values are limited to
+the following: \itemize{ \item{\code{"exclude"}: The specified levels
+are removed from the annotation table.}\item{\code{"include"}: Only
+the specified levels are retained in the annotation table.}} The
+default is \code{"exclude"}.}
 
-\item{perl}{(logical) Use a Perl-compatible regex. The default is \code{FALSE}.\cr}
+\item{perl}{(logical) Use a Perl-compatible regex. The default is
+\code{FALSE}.\cr}
 
-\item{fixed}{(logical) Use exact matching. The default is \code{FALSE}.\cr}
+\item{fixed}{(logical) Use exact matching. The default is
+\code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{filter_venn} object with the following \code{output} slots:
+A \code{filter_venn} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{filtered} \tab          (annotation_source) Annotation_source after filtering. \cr
-\code{flags} \tab          (data.frame) A list of flags indicating which annotations were removed. \cr
+\code{filtered} \tab (annotation_source) Annotation_source after
+filtering. \cr
+\code{flags} \tab (data.frame) A list of flags indicating which
+annotations were removed. \cr
 }
 }
 \description{
-Removes (or includes) annotations such that the named column excludes (or includes) the specified levels.
+Removes (or includes) annotations such that the named
+column excludes (or includes) the specified levels.
 }
 \section{Inheritance}{
 
-A \code{filter_venn} object inherits the following \code{struct} classes: \cr\cr
-\verb{[filter_venn]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{filter_venn} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[filter_venn]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = filter_venn(
-      factor_name = "V1",
-      group_column = NULL,
-      tables = NULL,
-      levels = "",
-      mode = "exclude",
-      perl = FALSE,
-      fixed = FALSE)
+M = filter_venn( factor_name = "V1", group_column = NULL, tables =
+NULL, levels = "", mode = "exclude", perl = FALSE, fixed = FALSE)
 
 }

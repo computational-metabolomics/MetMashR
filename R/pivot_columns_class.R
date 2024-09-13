@@ -1,18 +1,16 @@
 #' @eval get_description('pivot_columns')
 #' @export
 #' @include annotation_source_class.R
-pivot_columns <- function(
-        column_groups, 
-        group_labels,
-        ...) {
-    
+pivot_columns <- function(column_groups,
+                          group_labels,
+                          ...) {
     out <- struct::new_struct(
         "pivot_columns",
-        column_groups = column_groups, 
+        column_groups = column_groups,
         group_labels = group_labels,
         ...
     )
-    
+
     return(out)
 }
 
@@ -28,12 +26,12 @@ pivot_columns <- function(
     prototype = list(
         name = "Pivot longer",
         description = paste0(
-            "Combine multiple groups of columns into a single group of columns ",
-            "with group labels."
+            "Combine multiple groups of columns into a single group of ",
+            "columns with group labels."
         ),
         type = "pivot",
         predicted = "updated",
-        .params = c("group_labels",'column_groups'),
+        .params = c("group_labels", "column_groups"),
         .outputs = c("updated"),
         libraries = "dplyr",
         updated = entity(
@@ -52,7 +50,6 @@ pivot_columns <- function(
             type = "list",
             value = list()
         ),
-
         column_groups = entity(
             name = "Column groups",
             description = paste0(
@@ -71,28 +68,29 @@ setMethod(
     f = "model_apply",
     signature = c("pivot_columns", "annotation_source"),
     definition = function(M, D) {
-        
         # get columns common to all groups i.e those not named in a group
-        common_cols = colnames(D$data)[!(colnames(D$data) %in% unlist(M$column_groups))]
-        
-        L = list()
+        common_cols <- 
+            colnames(D$data)[!(colnames(D$data) %in% unlist(M$column_groups))]
+
+        L <- list()
         # for each column group
         for (cg in names(M$column_groups)) {
-
             # get subset of columns
-            group_df = select(D$data,
-                              all_of(c(common_cols,M$column_groups[[cg]])))
+            group_df <- select(
+                D$data,
+                all_of(c(common_cols, M$column_groups[[cg]]))
+            )
             # add group labels
             for (k in names(M$group_labels)) {
-                labels = M$group_labels[[k]]
-                w = which(names(labels) == cg)
-                group_df[[k]] = labels[w]
+                labels <- M$group_labels[[k]]
+                w <- which(names(labels) == cg)
+                group_df[[k]] <- labels[w]
             }
-            L[[cg]] = group_df
+            L[[cg]] <- group_df
         }
-        L = do.call(rbind,L)
-        D$data = L
-        M$updated = D
+        L <- do.call(rbind, L)
+        D$data <- L
+        M$updated <- D
         return(M)
     }
 )

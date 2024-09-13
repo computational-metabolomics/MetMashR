@@ -20,74 +20,98 @@ openbabel_structure(
 )
 }
 \arguments{
-\item{smiles_column}{(character) The name of the \code{annotation_source} column with compound identifiers of the type specified in the \code{search_by} param. The default is \code{"smiles"}.}
+\item{smiles_column}{(character) The name of the \code{annotation_source}
+column with compound identifiers of the type specified in the
+\code{search_by} param. The default is \code{"smiles"}.}
 
-\item{row_index}{(integer, numeric) The row index of the \code{annotation_source} to request an image of the molecular structure of. The default is \code{1}.\cr}
+\item{row_index}{(integer, numeric) The row index of the
+\code{annotation_source} to request an image of the molecular structure
+of. The default is \code{1}.\cr}
 
-\item{image_size}{(numeric, integer) The size of the image to return in pixels. Images will be square. The default is \code{300}.\cr}
+\item{image_size}{(numeric, integer) The size of the image to return
+in pixels. Images will be square. The default is \code{300}.\cr}
 
-\item{hydrogens}{(character) Hydrogen atoms. Allowed values are limited to the following: \itemize{ \item{\code{"implicit"}: Hydrogen atoms are not displayed.}\item{\code{"explicit"}: All hydrogen atoms are displayed.}} The default is \code{"implicit"}.}
+\item{hydrogens}{(character) Hydrogen atoms. Allowed values are
+limited to the following: \itemize{ \item{\code{"implicit"}: Hydrogen
+atoms are not displayed.}\item{\code{"explicit"}: All hydrogen atoms
+are displayed.}} The default is \code{"implicit"}.}
 
-\item{carbons}{(character) Carbon atoms. Allowed values are limited to the following: \itemize{ \item{\code{"none"}: Carbon atoms are not labelled.}\item{\code{"terminal"}: Terminal carbons and hydrogens are labelled.}\item{\code{"all"}: All carbon atoms will be labelled.}} The default is \code{"terminal"}.}
+\item{carbons}{(character) Carbon atoms. Allowed values are limited
+to the following: \itemize{ \item{\code{"none"}: Carbon atoms are not
+labelled.}\item{\code{"terminal"}: Terminal carbons and hydrogens are
+labelled.}\item{\code{"all"}: All carbon atoms will be labelled.}}
+The default is \code{"terminal"}.}
 
-\item{double_bonds}{(character) The display style of double carbon bonds. The default is \code{"asymmetric"}.}
+\item{double_bonds}{(character) The display style of double carbon
+bonds. The default is \code{"asymmetric"}.}
 
-\item{colour_atoms}{(logical) Display some atoms in colour. The default is \code{TRUE}.\cr}
+\item{colour_atoms}{(logical) Display some atoms in colour. The
+default is \code{TRUE}.\cr}
 
-\item{scale_to_fit}{(logical) Normalise coordinates. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: Molecules will be scaled to fit inside the bounding box of the image.}\item{\code{"FALSE"}: Molecules will not be scaled to fit inside the bounding box of the image.}} The default is \code{TRUE}.\cr}
+\item{scale_to_fit}{(logical) Normalise coordinates. Allowed values
+are limited to the following: \itemize{ \item{\code{"TRUE"}:
+Molecules will be scaled to fit inside the bounding box of the
+image.}\item{\code{"FALSE"}: Molecules will not be scaled to fit
+inside the bounding box of the image.}} The default is
+\code{TRUE}.\cr}
 
-\item{view_port}{(numeric, integer) Scales the image insde the viewport. Can be used to ensure a set of images have the same bond lengths and font sizes. Has no effect if \code{scale_to_fit = TRUE}. The molecule might be clipped if the viewport is too small. The default is \code{300}.\cr}
+\item{view_port}{(numeric, integer) Scales the image insde the
+viewport. Can be used to ensure a set of images have the same bond
+lengths and font sizes. Has no effect if \code{scale_to_fit = TRUE}. The
+molecule might be clipped if the viewport is too small. The default
+is \code{300}.\cr}
 
-\item{title_column}{(NULL, character) The column containing text to use as the title for the image. If NULL then no title is included. The default is \code{NULL}.}
+\item{title_column}{(NULL, character) The column containing text to
+use as the title for the image. If NULL then no title is included.
+The default is \code{NULL}.}
 
-\item{subtitle_column}{(NULL, character) The column containing text to use as the subtitle for the image. If NULL then no subtitle is included. The default is \code{NULL}.}
+\item{subtitle_column}{(NULL, character) The column containing text
+to use as the subtitle for the image. If NULL then no subtitle is
+included. The default is \code{NULL}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 openbabel_structure
 } object. This object has no \code{output} slots.
-See \code{\link[struct]{chart_plot}} in the \code{struct} package to plot this chart object.
+See \code{\link[struct]{chart_plot}} in the \code{struct} package to
+plot this chart object.
 }
 \description{
-Display an image of the molecular structure computed using OpenBabel.
+Display an image of the molecular structure computed
+using OpenBabel.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{ChemmineOB}} \item{\code{cowplot}} \item{\code{rsvg}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{ChemmineOB}} \item{\code{cowplot}}
+\item{\code{rsvg}}}
 }
 \section{Inheritance}{
 
-A \code{openbabel_structure} object inherits the following \code{struct} classes: \cr\cr
-\verb{[openbabel_structure]} >> \verb{[chart]} >> \verb{[struct_class]}
+A \code{openbabel_structure} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[openbabel_structure]} -> \verb{[chart]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = openbabel_structure(
-      smiles_column = "V1",
-      image_size = 300,
-      hydrogens = "implicit",
-      carbons = "terminal",
-      double_bonds = "symmetric",
-      colour_atoms = FALSE,
-      scale_to_fit = FALSE,
-      row_index = 1,
-      view_port = 300,
-      title_column = NULL,
-      subtitle_column = NULL)
+M = openbabel_structure( smiles_column = "V1", image_size = 300,
+hydrogens = "implicit", carbons = "terminal", double_bonds =
+"symmetric", colour_atoms = FALSE, scale_to_fit = FALSE, row_index =
+1, view_port = 300, title_column = NULL, subtitle_column = NULL)
 
 }
 \references{
-Horan K, Girke T (2023). \emph{ChemmineOB: R interface to a subset of
-OpenBabel functionalities}. doi:10.18129/B9.bioc.ChemmineOB
+Horan K, Girke T (2023). \emph{ChemmineOB: R interface to a
+subset of OpenBabel functionalities}. doi:10.18129/B9.bioc.ChemmineOB
 \url{https://doi.org/10.18129/B9.bioc.ChemmineOB}, R package version
 1.40.0, \url{https://bioconductor.org/packages/ChemmineOB}.
 
-Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot Annotations
-for 'ggplot2'}. R package version 1.1.3,
+Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot
+Annotations for 'ggplot2'}. R package version 1.1.3,
 \url{https://CRAN.R-project.org/package=cowplot}.
 
-Ooms J (2023). \emph{rsvg: Render SVG Images into PDF, PNG, (Encapsulated)
-PostScript, or Bitmap Arrays}. R package version 2.6.0,
-\url{https://CRAN.R-project.org/package=rsvg}.
+Ooms J (2023). \emph{rsvg: Render SVG Images into PDF, PNG,
+(Encapsulated) PostScript, or Bitmap Arrays}. R package version
+2.6.0, \url{https://CRAN.R-project.org/package=rsvg}.
 }

@@ -7,42 +7,53 @@
 split_records(column_name, separator, clean = TRUE, ...)
 }
 \arguments{
-\item{column_name}{(character) The column name of the \code{annotation_source} to split intomultiple records.}
+\item{column_name}{(character) The column name of the
+\code{annotation_source} to split intomultiple records.}
 
-\item{separator}{(character) The substring used to split the values in column_name into multiple records.}
+\item{separator}{(character) The substring used to split the values
+in column_name into multiple records.}
 
-\item{clean}{(logical) Remove the original column. If FALSE the original column will be retained in the final output with .original appended to the column name. The default is \code{TRUE}.\cr}
+\item{clean}{(logical) Remove the original column. If FALSE the
+original column will be retained in the final output with .original
+appended to the column name. The default is \code{TRUE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{split_records} object with the following \code{output} slots:
+A \code{split_records} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-Expand single records into multiple records by splitting strings in a named column at the chosen separator. For example, if a for a record the column \code{synonyms = c("glucose,dextrose")} then by splitting at the comma results in two records, one for glucose and one for dextrose with identical values (apart from the column being split). The original record is removed.
+Expand single records into multiple records by splitting
+strings in a named column at the chosen separator. For example, if a
+for a record the column \code{synonyms = c("glucose,dextrose")} then by
+splitting at the comma results in two records, one for glucose and
+one for dextrose with identical values (apart from the column being
+split). The original record is removed.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{tidytext}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{tidytext}}}
 }
 \section{Inheritance}{
 
-A \code{split_records} object inherits the following \code{struct} classes: \cr\cr
-\verb{[split_records]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{split_records} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[split_records]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = split_records(
-      column_name = character(0),
-      separator = ",",
-      clean = FALSE)
+M = split_records( column_name = character(0), separator = ",", clean
+= FALSE)
 
 }
 \references{
-Silge J, Robinson D (2016). "tidytext: Text Mining and Analysis Using
-Tidy Data Principles in R." \emph{JOSS}, \emph{1}(3). doi:10.21105/joss.00037
-\url{https://doi.org/10.21105/joss.00037},
+Silge J, Robinson D (2016). "tidytext: Text Mining and
+Analysis Using Tidy Data Principles in R." \emph{JOSS}, \emph{1}(3).
+doi:10.21105/joss.00037 \url{https://doi.org/10.21105/joss.00037},
 \url{http://dx.doi.org/10.21105/joss.00037}.
 }

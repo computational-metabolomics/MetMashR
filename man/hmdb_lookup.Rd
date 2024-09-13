@@ -7,46 +7,48 @@
 hmdb_lookup(query_column, suffix = "_hmdb", output = "inchikey", ...)
 }
 \arguments{
-\item{query_column}{(character) The name of a column in the annotation table containing values to search in the api call.}
+\item{query_column}{(character) The name of a column in the
+annotation table containing values to search in the api call.}
 
-\item{suffix}{(character) A suffix appended to all column names in the returned result. The default is \code{"_hmdb"}.}
+\item{suffix}{(character) A suffix appended to all column names in
+the returned result. The default is \code{"_hmdb"}.}
 
-\item{output}{(character) The value returned from the HMDB xml. The default is \code{"inchikey"}.}
+\item{output}{(character) The value returned from the HMDB xml. The
+default is \code{"inchikey"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{hmdb_lookup} object with the following \code{output} slots:
+A \code{hmdb_lookup} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after adding data returned by the API. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+adding data returned by the API. \cr
 }
 }
 \description{
 Requests HMBD records based on HMDB identifiers.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{XML}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{XML}}}
 }
 \section{Inheritance}{
 
-A \code{hmdb_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[hmdb_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{hmdb_lookup} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[hmdb_lookup]} -> \verb{[rest_api]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = hmdb_lookup(
-      output = "inchikey",
-      base_url = "http://www.hmdb.ca/metabolites",
-      url_template = "<base_url>/<query_column>.xml",
-      query_column = character(0),
-      cache = NULL,
-      status_codes = list(),
-      delay = 0.5,
-      suffix = "_rest_api")
+M = hmdb_lookup( output = "inchikey", base_url =
+"http://www.hmdb.ca/metabolites", url_template =
+"<base_url>/<query_column>.xml", query_column = character(0), cache =
+NULL, status_codes = list(), delay = 0.5, suffix = "_rest_api")
 
 }
 \references{
-Temple Lang D (2024). \emph{XML: Tools for Parsing and Generating XML Within
-R and S-Plus}. R package version 3.99-0.16.1,
+Temple Lang D (2024). \emph{XML: Tools for Parsing and
+Generating XML Within R and S-Plus}. R package version 3.99-0.16.1,
 \url{https://CRAN.R-project.org/package=XML}.
 }

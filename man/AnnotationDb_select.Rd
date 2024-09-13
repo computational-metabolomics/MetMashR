@@ -14,53 +14,65 @@ AnnotationDb_select(
 )
 }
 \arguments{
-\item{database}{(character) The name of the AnnotationDbi package/object to import.}
+\item{database}{(character) The name of the AnnotationDbi
+package/object to import.}
 
-\item{key_column}{(character) The name of a column in the annotation table containing key values used to extract records from the AnnotationDbi database.}
+\item{key_column}{(character) The name of a column in the annotation
+table containing key values used to extract records from the
+AnnotationDbi database.}
 
-\item{key_type}{(character) The name of a column in the AnnoationDb database searched for matches to the key values.}
+\item{key_type}{(character) The name of a column in the AnnoationDb
+database searched for matches to the key values.}
 
-\item{database_columns}{(character) The name of columns to import from the AnnoationDb database. Special case \code{.all} can be used to get all columns.}
+\item{database_columns}{(character) The name of columns to import
+from the AnnoationDb database. Special case \code{.all} can be used to get
+all columns.}
 
-\item{drop_na}{(logical) Drop NA. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: Remove rows where all columns of the returned database are NA.}\item{\code{"FALSE"}: Keep rows where all columns of the returned database are NA.}} The default is \code{TRUE}.\cr}
+\item{drop_na}{(logical) Drop NA. Allowed values are limited to the
+following: \itemize{ \item{\code{"TRUE"}: Remove rows where all
+columns of the returned database are NA.}\item{\code{"FALSE"}: Keep
+rows where all columns of the returned database are NA.}} The default
+is \code{TRUE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{AnnotationDb_select} object with the following \code{output} slots:
+A \code{AnnotationDb_select} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-A wrapper around \verb{[annotationDbi::select()]} that can be used to import columns from the database where the keys are provided by a column in the annotation table.
+A wrapper around \verb{[annotationDbi::select()]} that can be
+used to import columns from the database where the keys are provided
+by a column in the annotation table.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}} \item{\code{AnnotationDbi}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}} \item{\code{AnnotationDbi}}}
 }
 \section{Inheritance}{
 
-A \code{AnnotationDb_select} object inherits the following \code{struct} classes: \cr\cr
-\verb{[AnnotationDb_select]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{AnnotationDb_select} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[AnnotationDb_select]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = AnnotationDb_select(
-      database = "",
-      key_column = "",
-      key_type = "",
-      database_columns = ".all",
-      drop_na = FALSE)
+M = AnnotationDb_select( database = "", key_column = "", key_type =
+"", database_columns = ".all", drop_na = FALSE)
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 
-Pagès H, Carlson M, Falcon S, Li N (2023). \emph{AnnotationDbi: Manipulation
-of SQLite-based annotations in Bioconductor}.
-doi:10.18129/B9.bioc.AnnotationDbi
+Pagès H, Carlson M, Falcon S, Li N (2023).
+\emph{AnnotationDbi: Manipulation of SQLite-based annotations in
+Bioconductor}. doi:10.18129/B9.bioc.AnnotationDbi
 \url{https://doi.org/10.18129/B9.bioc.AnnotationDbi}, R package version
 1.64.1, \url{https://bioconductor.org/packages/AnnotationDbi}.
 }

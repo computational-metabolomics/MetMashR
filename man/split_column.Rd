@@ -14,39 +14,49 @@ split_column(
 )
 }
 \arguments{
-\item{column_name}{(character) The column name in the annotation_source split.}
+\item{column_name}{(character) The column name in the
+annotation_source split.}
 
-\item{separator}{(character) A substring to split the column by. The default is \code{"_"}.}
+\item{separator}{(character) A substring to split the column by. The
+default is \code{"_"}.}
 
-\item{padding}{(character, logical) A character string used to represent missing and zero length strings after splitting. The default is \code{NA}.\cr}
+\item{padding}{(character, logical) A character string used to
+represent missing and zero length strings after splitting. The
+default is \code{NA}.\cr}
 
-\item{keep_indices}{(numeric, integer) The indices of columns to keep after splitting. If NULL then all columns are retained. The default is \code{NULL}.}
+\item{keep_indices}{(numeric, integer) The indices of columns to keep
+after splitting. If NULL then all columns are retained. The default
+is \code{NULL}.}
 
-\item{clean}{(logical) Clean old columns. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: The named columns are removed after being split.}\item{\code{"FALSE"}: The named columns are retained after being split.}} The default is \code{TRUE}.\cr}
+\item{clean}{(logical) Clean old columns. Allowed values are limited
+to the following: \itemize{ \item{\code{"TRUE"}: The named columns
+are removed after being split.}\item{\code{"FALSE"}: The named
+columns are retained after being split.}} The default is
+\code{TRUE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{split_column} object with the following \code{output} slots:
+A \code{split_column} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after splitting the column. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+splitting the column. \cr
 }
 }
 \description{
-A wrapper for \code{\link{strsplit}}. Divides a column into multiple columns by dividing the contents
+A wrapper for \code{\link{strsplit}}. Divides a column into
+multiple columns by dividing the contents
 }
 \section{Inheritance}{
 
-A \code{split_column} object inherits the following \code{struct} classes: \cr\cr
-\verb{[split_column]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{split_column} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[split_column]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = split_column(
-      column_name = "V1",
-      separator = "_",
-      clean = FALSE,
-      padding = FALSE,
-      keep_indices = numeric(0))
+M = split_column( column_name = "V1", separator = "_", clean = FALSE,
+padding = FALSE, keep_indices = numeric(0))
 
 }

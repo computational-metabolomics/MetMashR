@@ -1,32 +1,32 @@
 #' Filter helper function to select records
-#' 
-#' Returns a list of quosures for use with 
+#'
+#' Returns a list of quosures for use with
 #' `filter_records` to allow the use of dplyr-style expressions. See examples.
-#' 
-#' @param ... Expressions that return a logical value and are defined in terms 
-#' of the columns in the annotation_source. If multiple conditions are 
-#' included then they are combined with the `&` operator. Only records 
+#'
+#' @param ... Expressions that return a logical value and are defined in terms
+#' of the columns in the annotation_source. If multiple conditions are
+#' included then they are combined with the `&` operator. Only records
 #' for which all conditions evaluate to `TRUE` are kept.
-#' 
+#'
 #' @examples
 #' # some annotation data
-#' AN = annotation_source(data = iris)
-#' 
+#' AN <- annotation_source(data = iris)
+#'
 #' # filter to setosa where Sepal length is less than 5
-#' M = filter_records(
-#'         wherever(
-#'             Species == 'setosa', 
-#'             Sepal.Length<5
-#'         )
+#' M <- filter_records(
+#'     wherever(
+#'         Species == "setosa",
+#'         Sepal.Length < 5
 #'     )
-#' M = model_apply(M,AN)
+#' )
+#' M <- model_apply(M, AN)
 #' predicted(M) # 20 rows
-#' 
+#'
 #' @returns a list of quosures for use with `filter_records`
 #' @seealso [filter_records()]
 #' @export
-wherever = function(...){
-    Q = quos(..., .ignore_empty = "all")
+wherever <- function(...) {
+    Q <- quos(..., .ignore_empty = "all")
     return(Q)
 }
 
@@ -36,8 +36,7 @@ wherever = function(...){
 #' @seealso [dplyr::filter()]
 #' @seealso [wherever()]
 #' @import rlang
-filter_records <- function(where = wherever(A>0), ...) {
-    
+filter_records <- function(where = wherever(A > 0), ...) {
     out <- struct::new_struct(
         "filter_records",
         where = where,
@@ -75,13 +74,13 @@ filter_records <- function(where = wherever(A>0), ...) {
         where = entity(
             name = "Select rows expression",
             description = paste0(
-                'A list of [`rlang::quosure`] for evaluation e.g. A>10 will',
-                'select all rows where the values in column A are greater than',
-                '10. A helper function [`wherever`] is provided to generate',
-                'a suitable list of quosures.'
+                "A list of [`rlang::quosure`] for evaluation e.g. A>10 will",
+                "select all rows where the values in column A are greater than",
+                "10. A helper function [`wherever`] is provided to generate",
+                "a suitable list of quosures."
             ),
-            value = quos(A>10),
-            type = 'quosures'
+            value = quos(A > 10),
+            type = "quosures"
         )
     )
 )
@@ -92,13 +91,12 @@ setMethod(
     f = "model_apply",
     signature = c("filter_records", "annotation_source"),
     definition = function(M, D) {
-        
-        q = M$where
-        
-        D$data = filter(.data = D$data,!!!q)
-        
-        M$updated = D
-        
+        q <- M$where
+
+        D$data <- filter(.data = D$data, !!!q)
+
+        M$updated <- D
+
         return(M)
     }
 )

@@ -524,7 +524,8 @@ WF <-
         cache = cache3
     ) +
     prioritise_columns(
-        column_names = c("InChIKey_pubchem", "inchi_key_abbrev", "inchi_key_abbrevchains"),
+        column_names = c("InChIKey_pubchem", "inchi_key_abbrev", 
+                         "inchi_key_abbrevchains"),
         output_name = "inchikey",
         source_name = "inchikey_src",
         source_tags = c("pubchem", "lm_abbrev", "lm_chains"),
@@ -595,7 +596,8 @@ C <- annotation_histogram(
     vline = 20
 )
 chart_plot(C, predicted(WF[12])) +
-    ggtitle("MS1 peak QC-RSD", "Features with QC-RSD<20 were removed by the workflow.")
+    ggtitle("MS1 peak QC-RSD", 
+            "Features with QC-RSD<20 were removed by the workflow.")
 ```
 
 In this plot we present a bar chart of the different molecular classes present in

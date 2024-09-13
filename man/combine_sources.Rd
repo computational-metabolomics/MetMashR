@@ -17,45 +17,59 @@ combine_sources(
 )
 }
 \arguments{
-\item{source_list}{(list) A list of annotation sources to be combined.}
+\item{source_list}{(list) A list of annotation sources to be
+combined.}
 
-\item{matching_columns}{(character, NULL) A named vector of columns names to be created by merging columns from individual sources. e.g. \code{c('hello'='world')} will rename the 'hello' column to 'world' if found in any of the tables. The default is \code{NULL}.}
+\item{matching_columns}{(character, NULL) A named vector of columns
+names to be created by merging columns from individual sources. e.g.
+\code{c('hello'='world')} will rename the 'hello' column to 'world' if
+found in any of the tables. The default is \code{NULL}.}
 
-\item{keep_cols}{(character, NULL) A list of column names to keep in the combined table (padded with NA) if detected in one of the input tables. Special case ".all" will keep all columns from all tables. The default is \code{NULL}.}
+\item{keep_cols}{(character, NULL) A list of column names to keep in
+the combined table (padded with NA) if detected in one of the input
+tables. Special case ".all" will keep all columns from all tables.
+The default is \code{NULL}.}
 
-\item{source_col}{(character) The column name that will be created to contain a tag to indicate which source the annotation originated from. The default is \code{"annotation_source"}.}
+\item{source_col}{(character) The column name that will be created to
+contain a tag to indicate which source the annotation originated
+from. The default is \code{"annotation_source"}.}
 
-\item{exclude_cols}{(NULL, character) Column names to be excluded from the merged annotation table. Note this is applied after \code{keep_cols}. The default is \code{NULL}.}
+\item{exclude_cols}{(NULL, character) Column names to be excluded
+from the merged annotation table. Note this is applied after
+\code{keep_cols}. The default is \code{NULL}.}
 
-\item{tag}{(character) The tag given to the newly combined table. The default is \code{"combined"}.}
+\item{tag}{(character) The tag given to the newly combined table. The
+default is \code{"combined"}.}
 
-\item{as}{(annotation_source) An annotation_source object to use as the base class for the combined sources. The default is \code{annotation_source(name = "combined", description = paste0("A source created by combining two or ", "more sources"))}.}
+\item{as}{(annotation_source) An annotation_source object to use as
+the base class for the combined sources. The default is
+\code{annotation_source(name = "combined", description = paste0("A
+source created by combining two or ", "more sources"))}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{combine_sources} object with the following \code{output} slots:
+A \code{combine_sources} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{combined_table} \tab          (annotation_source) The annotation tabel after combining the input tables. \cr
+\code{combined_table} \tab (annotation_source) The annotation tabel
+after combining the input tables. \cr
 }
 }
 \description{
-Annotation tables are joined and matching columns merged.
+Annotation tables are joined and matching columns
+merged.
 }
 \section{Inheritance}{
 
-A \code{combine_sources} object inherits the following \code{struct} classes: \cr\cr
-\verb{[combine_sources]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{combine_sources} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[combine_sources]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = combine_sources(
-      source_list = list(),
-      matching_columns = NULL,
-      keep_cols = NULL,
-      source_col = "annotation_source",
-      exclude_cols = NULL,
-      tag = "combined",
-      as = annotation_source())
+M = combine_sources( source_list = list(), matching_columns = NULL,
+keep_cols = NULL, source_col = "annotation_source", exclude_cols =
+NULL, tag = "combined", as = annotation_source())
 
 }

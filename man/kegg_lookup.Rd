@@ -13,52 +13,70 @@ kegg_lookup(
 )
 }
 \arguments{
-\item{get}{(character) Get identifier. Allowed values are limited to the following: \itemize{ \item{\code{"compound"}: KEGG small molecule database.}\item{\code{"glycan"}: KEGG glycan database.}\item{\code{"drug"}: KEGG drug database.}\item{\code{"chebi"}: Chemical Entities of Biological Interest (ChEBI) database.}\item{\code{"pubchem"}: PubChem Substance Identifier.}} The default is \code{"pubchem"}.}
+\item{get}{(character) Get identifier. Allowed values are limited to
+the following: \itemize{ \item{\code{"compound"}: KEGG small molecule
+database.}\item{\code{"glycan"}: KEGG glycan
+database.}\item{\code{"drug"}: KEGG drug
+database.}\item{\code{"chebi"}: Chemical Entities of Biological
+Interest (ChEBI) database.}\item{\code{"pubchem"}: PubChem Substance
+Identifier.}} The default is \code{"pubchem"}.}
 
-\item{from}{(character) From identifier. Allowed values are limited to the following: \itemize{ \item{\code{"compound"}: KEGG small molecule database.}\item{\code{"glycan"}: KEGG glycan database.}\item{\code{"drug"}: KEGG drug database.}\item{\code{"chebi"}: Chemical Entities of Biological Interest (ChEBI) database.}\item{\code{"pubchem"}: PubChem Substance Identifier.}} The default is \code{"compound"}.}
+\item{from}{(character) From identifier. Allowed values are limited
+to the following: \itemize{ \item{\code{"compound"}: KEGG small
+molecule database.}\item{\code{"glycan"}: KEGG glycan
+database.}\item{\code{"drug"}: KEGG drug
+database.}\item{\code{"chebi"}: Chemical Entities of Biological
+Interest (ChEBI) database.}\item{\code{"pubchem"}: PubChem Substance
+Identifier.}} The default is \code{"compound"}.}
 
-\item{query_column}{(character) The name of the column containing identifiers to search the database for. They should be identifiers of the type selected for the "from" slot.}
+\item{query_column}{(character) The name of the column containing
+identifiers to search the database for. They should be identifiers of
+the type selected for the "from" slot.}
 
-\item{suffix}{(character) A suffix appended to all column names in the returned result. The default is \code{"_kegg"}.}
+\item{suffix}{(character) A suffix appended to all column names in
+the returned result. The default is \code{"_kegg"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{kegg_lookup} object with the following \code{output} slots:
+A \code{kegg_lookup} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) An annotation_source object with a new column of compound identifiers. \cr
+\code{updated} \tab (annotation_source) An annotation_source object
+with a new column of compound identifiers. \cr
 }
 }
 \description{
-Searches the Kegg database to obtain external identifiers. KEGG compound, drug and glycan databases can be queried for pubchem and chebi identifiers, and vice-versa.
+Searches the Kegg database to obtain external
+identifiers. KEGG compound, drug and glycan databases can be queried
+for pubchem and chebi identifiers, and vice-versa.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{KEGGREST}} \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{KEGGREST}} \item{\code{dplyr}}}
 }
 \section{Inheritance}{
 
-A \code{kegg_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[kegg_lookup]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{kegg_lookup} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[kegg_lookup]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = kegg_lookup(
-      get = "compound",
-      from = "compound",
-      query_column = "V1",
-      suffix = "_kegg")
+M = kegg_lookup( get = "compound", from = "compound", query_column =
+"V1", suffix = "_kegg")
 
 }
 \references{
-Tenenbaum D, Maintainer B (2023). \emph{KEGGREST: Client-side REST access to
-the Kyoto Encyclopedia of Genes and Genomes (KEGG)}.
+Tenenbaum D, Maintainer B (2023). \emph{KEGGREST: Client-side
+REST access to the Kyoto Encyclopedia of Genes and Genomes (KEGG)}.
 doi:10.18129/B9.bioc.KEGGREST
-\url{https://doi.org/10.18129/B9.bioc.KEGGREST}, R package version 1.42.0,
-\url{https://bioconductor.org/packages/KEGGREST}.
+\url{https://doi.org/10.18129/B9.bioc.KEGGREST}, R package version
+1.42.0, \url{https://bioconductor.org/packages/KEGGREST}.
 
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{
 Other {REST API's}: 

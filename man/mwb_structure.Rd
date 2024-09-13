@@ -7,23 +7,30 @@
 mwb_structure(query_column, row_index, ...)
 }
 \arguments{
-\item{query_column}{(character) The name of the \code{annotation_source} column with regno compound identifiers.}
+\item{query_column}{(character) The name of the \code{annotation_source}
+column with regno compound identifiers.}
 
-\item{row_index}{(integer, numeric) The row index of the \code{annotation_source} to request an image of the molecular structure of.}
+\item{row_index}{(integer, numeric) The row index of the
+\code{annotation_source} to request an image of the molecular structure
+of.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 mwb_structure
 } object. This object has no \code{output} slots.
-See \code{\link[struct]{chart_plot}} in the \code{struct} package to plot this chart object.
+See \code{\link[struct]{chart_plot}} in the \code{struct} package to
+plot this chart object.
 }
 \description{
-Query the Metabolomic Workbench API and retrieve a display an image of the matching molecular structure.
+Query the Metabolomic Workbench API and retrieve a
+display an image of the matching molecular structure.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{cowplot}} \item{\code{metabolomicsWorkbenchR}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{cowplot}}
+\item{\code{metabolomicsWorkbenchR}}}
 
 This object queries the Metabolomics Workbench API for matches to
 your query without caching the results. It is therefore intended for limited
@@ -32,21 +39,20 @@ seek an alternative solution.
 }
 \section{Inheritance}{
 
-A \code{mwb_structure} object inherits the following \code{struct} classes: \cr\cr
-\verb{[mwb_structure]} >> \verb{[chart]} >> \verb{[struct_class]}
+A \code{mwb_structure} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[mwb_structure]} -> \verb{[chart]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = mwb_structure(
-      row_index = 1,
-      query_column = "V1")
+M = mwb_structure( row_index = 1, query_column = "V1")
 
 }
 \references{
-Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot Annotations
-for 'ggplot2'}. R package version 1.1.3,
+Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot
+Annotations for 'ggplot2'}. R package version 1.1.3,
 \url{https://CRAN.R-project.org/package=cowplot}.
 
-Lloyd GR, Weber RJM (????). \emph{metabolomicsWorkbenchR: Metabolomics
-Workbench in R}. R package version 1.14.1.
+Lloyd GR, Weber RJM (????). \emph{metabolomicsWorkbenchR:
+Metabolomics Workbench in R}. R package version 1.14.1.
 }

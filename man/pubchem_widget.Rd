@@ -9,62 +9,73 @@ pubchem_widget(
   row_index,
   record_type = "2D-Structure",
   hide_title = FALSE,
-  width = "100\%",
+  width = "600px",
   height = "650px",
   display = TRUE,
   ...
 )
 }
 \arguments{
-\item{query_column}{(character) The name of the \code{annotation_source} column with compound identifiers of the type specified in the \code{search_by} param.}
+\item{query_column}{(character) The name of the \code{annotation_source}
+column with compound identifiers of the type specified in the
+\code{search_by} param.}
 
-\item{row_index}{(integer, numeric) The row index of the \code{annotation_source} to request an image of the molecular structure of.}
+\item{row_index}{(integer, numeric) The row index of the
+\code{annotation_source} to request an image of the molecular structure
+of.}
 
-\item{record_type}{(character) The record type for the widget. The default is \code{"2D-Structure"}.}
+\item{record_type}{(character) The record type for the widget. The
+default is \code{"2D-Structure"}.}
 
-\item{hide_title}{(logical) Hide widget title. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: The title is displayed.}\item{\code{"FALSE"}: The title is not displayed.}} The default is \code{FALSE}.\cr}
+\item{hide_title}{(logical) Hide widget title. Allowed values are
+limited to the following: \itemize{ \item{\code{"TRUE"}: The title is
+displayed.}\item{\code{"FALSE"}: The title is not displayed.}} The
+default is \code{FALSE}.\cr}
 
-\item{width}{(integer, numeric, character) The width of the widget in a CSS style compatible format e.g.
-"100\%". Numerical values will be converted to character. The default is \code{"100\%"}.}
+\item{width}{(integer, numeric, character) The width of the widget in
+a CSS style compatible format. Numerical values will be converted to
+character. The default is \code{"600px"}.}
 
-\item{height}{(integer, numeric, character) The height of the widget in a CSS style compatible format e.g.
-"100\%". Numerical values will be converted to character. The default is \code{"650px"}.}
+\item{height}{(integer, numeric, character) The height of the widget
+in a CSS style compatible format.Numerical values will be converted
+to character. The default is \code{"650px"}.}
 
-\item{display}{(logical) Display widget. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: Display the widget.}\item{\code{"FALSE"}: Do not display the widget and only return the HTML.}} The default is \code{TRUE}.\cr}
+\item{display}{(logical) Display widget. Allowed values are limited
+to the following: \itemize{ \item{\code{"TRUE"}: Display the
+widget.}\item{\code{"FALSE"}: Do not display the widget and only
+return the HTML.}} The default is \code{TRUE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 pubchem_widget
 } object. This object has no \code{output} slots.
-See \code{\link[struct]{chart_plot}} in the \code{struct} package to plot this chart object.
+See \code{\link[struct]{chart_plot}} in the \code{struct} package to
+plot this chart object.
 }
 \description{
 Display a PubChem HTML widget for a compound.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{htmltools}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{htmltools}}}
 }
 \section{Inheritance}{
 
-A \code{pubchem_widget} object inherits the following \code{struct} classes: \cr\cr
-\verb{[pubchem_widget]} >> \verb{[chart]} >> \verb{[struct_class]}
+A \code{pubchem_widget} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[pubchem_widget]} -> \verb{[chart]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = pubchem_widget(
-      query_column = "V1",
-      row_index = 1,
-      record_type = "2D-Structure",
-      hide_title = FALSE,
-      width = "100\%",
-      height = 400,
-      display = FALSE)
+M = pubchem_widget( query_column = "V1", row_index = 1, record_type =
+"2D-Structure", hide_title = FALSE, width = 600, height = 400,
+display = FALSE)
 
 }
 \references{
-Cheng J, Sievert C, Schloerke B, Chang W, Xie Y, Allen J (2024).
-\emph{htmltools: Tools for HTML}. R package version 0.5.8.1,
+Cheng J, Sievert C, Schloerke B, Chang W, Xie Y, Allen J
+(2024). \emph{htmltools: Tools for HTML}. R package version 0.5.8.1,
 \url{https://CRAN.R-project.org/package=htmltools}.
 }

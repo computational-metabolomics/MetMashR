@@ -143,7 +143,7 @@ setMethod(
         OUT <- apply(X, 1, function(x) {
             # search for database rows that match the annotation column
             w <- which(M$database[[M$database_column]] ==
-                    x[[M$query_column]])
+                x[[M$query_column]])
 
             if (length(w) == 0) {
                 # if no hits in db then return no_match

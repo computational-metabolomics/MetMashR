@@ -311,9 +311,9 @@ For the `MetMashR` workflow we would like to:
 2. Filter the annotations to only include grades A and B
 3. Resolve duplicates
 
-When we import the annotations, we add a column indicating which assay and source 
-the annotations are associated with. We also include a `tag` for the table. 
-This will be useful later when processing the combined tables.
+When we import the annotations, we add a column indicating which assay and 
+source the annotations are associated with. We also include a `tag` for the 
+table. This will be useful later when processing the combined tables.
 
 For LS we resolve duplicates by selecting the annotation with the smallest 
 ppm error. We use the `combine_records` object with the `.select_min` helper
@@ -443,13 +443,13 @@ ls <- lapply(LS, predicted)
 g2 <- chart_plot(C, ls) + ggtitle("Compounds in LS per assay")
 
 # prepare upset object
-C2 = annotation_upset_chart(
-    factor_name = 'compound',
+C2 <- annotation_upset_chart(
+    factor_name = "compound",
     n_intersections = 10
 )
-g3 = chart_plot(C2, cd)
+g3 <- chart_plot(C2, cd)
 C2$factor_name <- "LipidName"
-g4 = chart_plot(C2, ls)
+g4 <- chart_plot(C2, ls)
 
 # layout
 cowplot::plot_grid(g1, g2, g3, g4, nrow = 2)
@@ -464,8 +464,9 @@ informative. However, we are clearly detecting a larger number of annotations in
 the LIPIDS assays, which is to be expected as the LS 
 software is designed to annotate lipids molecules.
 
-Here the `annotation_venn_chart` and `annotation_upset_chart` objects were used to compare the same column across several `annotation_tables`. The same objects can also compare groups
-from within the same table, which we will explore later. 
+Here the `annotation_venn_chart` and `annotation_upset_chart` objects were used 
+to compare the same column across several `annotation_tables`. The same objects 
+can also compare groups from within the same table, which we will explore later. 
 
 First, we need to combine the CD and LS tables.
 
@@ -479,7 +480,8 @@ tables have the same columns.
 
 When combining different sources the `combine_tables` object provides input
 parameters that allow you to combine and select columns from different sources
-into new columns with the same information. For example the `adduct` column in CD
+into new columns with the same information. For example the `adduct` column in 
+CD
 is called "Ion" and in LS it is called "LipidIon"; we can combine these columns
 into a new column called "adduct".
 
@@ -661,7 +663,8 @@ N <- normalise_strings(
             ),
             list(
                 pattern = "(+/-)19(20)-DiHDPA",
-                replace = "19,20-dihydroxy-4Z,7Z,10Z,13Z,16Z-docosapentaenoic acid",
+                replace = 
+                    "19,20-dihydroxy-4Z,7Z,10Z,13Z,16Z-docosapentaenoic acid",
                 fixed = TRUE
             )
         ),
@@ -698,7 +701,8 @@ N <- model_apply(N, predicted(id_workflow))
 We can explore the impact of these workflow steps using Venn and Pie charts to 
 compare the results before/after the workflow.
 
-In this Venn diagram we show the overlap between the InChIKey identifiers obtained from 
+In this Venn diagram we show the overlap between the InChIKey identifiers 
+obtained from 
 the three queries. It can be seen that normalising the names resulted in 37
 identifiers that we were unable to obtain without normalisation.
 
@@ -722,16 +726,18 @@ chart_plot(C, predicted(N[3])) +
     theme(plot.margin = unit(c(1, 1.5, 1, 1.5), "cm"))
 ```
 
-Due to complexity, Venn charts are limited to 7 sets. UpSet plots are an alternative chart than can accomodate many more sets. Each veritcal bar in the UpSet plot corresponds to a region in the venn diagram.
+Due to complexity, Venn charts are limited to 7 sets. UpSet plots are an 
+alternative chart than can accomodate many more sets. Each veritcal bar in the 
+UpSet plot corresponds to a region in the venn diagram.
 
 ```{r}
 # upset inchikey columns
 C <- annotation_upset_chart(
     factor_name = c("InChIKey", "InChIKey_norm", "stdinchikey_opsin"),
-    min_size=0,
+    min_size = 0,
     n_intersections = 10
 )
-chart_plot(C, predicted(N[3])) 
+chart_plot(C, predicted(N[3]))
 ```
 
 In the next chart we visualise the proportion of annotations from each query,
@@ -739,7 +745,8 @@ after prioritisation and merging has taken place.
 
 Note that in this case some of
 the identifiers might be the same if e.g. the same molecule is present in 
-multiple rows. You can see that in the end only a small proportion (12.1%) of the 
+multiple rows. You can see that in the end only a small proportion (12.1%) of 
+the 
 identifiers are from the least reliable query based on the non-normalised name.
 
 ```{r}

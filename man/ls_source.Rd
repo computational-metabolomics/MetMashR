@@ -16,38 +16,43 @@ ls_source(
 \arguments{
 \item{source}{(ANY) The source of annotation data.}
 
-\item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{"LS"}.}
+\item{tag}{(character) A (short) character string that is used to
+represent this source e.g. in column names or source columns when
+used in a workflow. The default is \code{"LS"}.}
 
-\item{mz_column}{(character) The column name of the annotation data.frame containing m/z values. The default is \code{"mz"}.}
+\item{mz_column}{(character) The column name of the annotation
+data.frame containing m/z values. The default is \code{"mz"}.}
 
-\item{rt_column}{(character) The column name of the annotation data.frame containing retention time values. The default is \code{"rt"}.}
+\item{rt_column}{(character) The column name of the annotation
+data.frame containing retention time values. The default is
+\code{"rt"}.}
 
-\item{id_column}{(character) The column name of the annotation data.frame containing row identifers. If NULL This will be generated automatically. The default is \code{"id"}.}
+\item{id_column}{(character) The column name of the annotation
+data.frame containing row identifers. If NULL This will be generated
+automatically. The default is \code{"id"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 ls_source
 } object. This object has no \code{output} slots.
 }
 \description{
-An LCMS table extends \code{\link[=annotation_table]{annotation_table()}} to represent annotation data for an LCMS experiment. Columns representing m/z and retention time are required for an \code{lcms_table}.
+An LCMS table extends \code{\link[=annotation_table]{annotation_table()}} to
+represent annotation data for an LCMS experiment. Columns
+representing m/z and retention time are required for an \code{lcms_table}.
 }
 \section{Inheritance}{
 
 A \code{ls_source} object inherits the following \code{struct} classes: \cr\cr
-\verb{[ls_source]} >> \verb{[lcms_table]} >> \verb{[annotation_table]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+\verb{[ls_source]} -> \verb{[lcms_table]} -> \verb{[annotation_table]} ->
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = ls_source(
-      mz_column = "mz",
-      rt_column = "rt",
-      id_column = "id",
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = ls_source( mz_column = "mz", rt_column = "rt", id_column = "id",
+tag = character(0), data = data.frame(id=NA), source = "ANY")
 
 }
 \seealso{

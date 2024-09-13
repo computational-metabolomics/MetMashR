@@ -13,20 +13,31 @@ calc_rt_diff(
 )
 }
 \arguments{
-\item{obs_rt_column}{(character) Column name in annotation table containing the observed (measured) RT values.}
+\item{obs_rt_column}{(character) Column name in annotation table
+containing the observed (measured) RT values.}
 
-\item{ref_rt_column}{(character) Column name in annotation table containing the reference (theoretical) RT values.}
+\item{ref_rt_column}{(character) Column name in annotation table
+containing the reference (theoretical) RT values.}
 
-\item{out_column}{(character) Column name in annotation table to store the computed RT differences.}
+\item{out_column}{(character) Column name in annotation table to
+store the computed RT differences.}
 
-\item{check_names}{(character) Check names. Allowed values are limited to the following: \itemize{ \item{\code{"stop"}: If the output column already exists an error will be thrown.}\item{\code{"unique"}: If the output column already exists a unique column name will be generated.}\item{\code{"replace"}: If the output column already exists it will be replaced.}} The default is \code{"unique"}.}
+\item{check_names}{(character) Check names. Allowed values are
+limited to the following: \itemize{ \item{\code{"stop"}: If the
+output column already exists an error will be
+thrown.}\item{\code{"unique"}: If the output column already exists a
+unique column name will be generated.}\item{\code{"replace"}: If the
+output column already exists it will be replaced.}} The default is
+\code{"unique"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{calc_rt_diff} object with the following \code{output} slots:
+A \code{calc_rt_diff} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_table) The input annotation source with the newly generated column. \cr
+\code{updated} \tab (annotation_table) The input annotation source
+with the newly generated column. \cr
 }
 }
 \description{
@@ -34,15 +45,13 @@ Calculate RT difference between two RT values
 }
 \section{Inheritance}{
 
-A \code{calc_rt_diff} object inherits the following \code{struct} classes: \cr\cr
-\verb{[calc_rt_diff]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{calc_rt_diff} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[calc_rt_diff]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = calc_rt_diff(
-      obs_rt_column = character(0),
-      ref_rt_column = character(0),
-      out_column = character(0),
-      check_names = "unique")
+M = calc_rt_diff( obs_rt_column = character(0), ref_rt_column =
+character(0), out_column = character(0), check_names = "unique")
 
 }

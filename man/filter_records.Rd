@@ -7,40 +7,48 @@
 filter_records(where = wherever(A > 0), ...)
 }
 \arguments{
-\item{where}{(quosures) A list of \code{\link[rlang:quosure-tools]{rlang::quosure}} for evaluation e.g. A>10 willselect all rows where the values in column A are greater than10. A helper function \code{\link{wherever}} is provided to generatea suitable list of quosures. The default is \code{wherever(A > 0)}.}
+\item{where}{(quosures) A list of \code{\link[rlang:quosure-tools]{rlang::quosure}} for evaluation
+e.g. A>10 willselect all rows where the values in column A are
+greater than10. A helper function \code{\link{wherever}} is provided to
+generatea suitable list of quosures. The default is \code{wherever(A
+> 0)}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{filter_records} object with the following \code{output} slots:
+A \code{filter_records} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-A wrapper around \code{\link[dplyr:filter]{dplyr::filter}}. Select rows from an annotation table using tidy grammar.
+A wrapper around \code{\link[dplyr:filter]{dplyr::filter}}. Select rows from an
+annotation table using tidy grammar.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}} \item{\code{rlang}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}} \item{\code{rlang}}}
 }
 \section{Inheritance}{
 
-A \code{filter_records} object inherits the following \code{struct} classes: \cr\cr
-\verb{[filter_records]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{filter_records} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[filter_records]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = filter_records(
-      where = wherever(A>10))
+M = filter_records( where = wherever(A>10))
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 
-Henry L, Wickham H (2024). \emph{rlang: Functions for Base Types and Core R
-and 'Tidyverse' Features}. R package version 1.1.3,
+Henry L, Wickham H (2024). \emph{rlang: Functions for Base
+Types and Core R and 'Tidyverse' Features}. R package version 1.1.3,
 \url{https://CRAN.R-project.org/package=rlang}.
 }
 \seealso{

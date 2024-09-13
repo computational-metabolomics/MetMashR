@@ -4,7 +4,7 @@ pubchem_widget <- function(query_column,
                            row_index,
                            record_type = "2D-Structure",
                            hide_title = FALSE,
-                           width = "100%",
+                           width = "600px",
                            height = "650px",
                            display = TRUE,
                            ...) {
@@ -61,8 +61,7 @@ pubchem_widget <- function(query_column,
             name = "Row index",
             description = paste0(
                 "The row index of the `annotation_source` to request an image ",
-                "of the molecular structure of."
-            ),
+                "of the molecular structure of."),
             type = c("integer", "numeric"),
             value = 1
         ),
@@ -88,18 +87,18 @@ pubchem_widget <- function(query_column,
         width = entity(
             name = "Widget width",
             description = paste0(
-                'The width of the widget in a CSS style compatible format e.g.
-                "100%". Numerical values will be converted to character.'
+                'The width of the widget in a CSS style compatible format. ',
+                'Numerical values will be converted to character.'
             ),
             type = c("integer", "numeric", "character"),
-            value = "100%",
+            value = 600,
             max_length = 1
         ),
         height = entity(
             name = "Widget height",
             description = paste0(
-                'The height of the widget in a CSS style compatible format e.g.
-                "100%". Numerical values will be converted to character.'
+                'The height of the widget in a CSS style compatible format.',
+                'Numerical values will be converted to character.'
             ),
             type = c("integer", "numeric", "character"),
             value = 400,

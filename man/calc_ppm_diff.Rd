@@ -13,36 +13,48 @@ calc_ppm_diff(
 )
 }
 \arguments{
-\item{obs_mz_column}{(character) Column name in annotation_table containing the observed m/z values.}
+\item{obs_mz_column}{(character) Column name in annotation_table
+containing the observed m/z values.}
 
-\item{ref_mz_column}{(character) Column name in annotation table containing the .}
+\item{ref_mz_column}{(character) Column name in annotation table
+containing the .}
 
-\item{out_column}{(character) Column name in annotation table to store the computed ppm differences.}
+\item{out_column}{(character) Column name in annotation table to
+store the computed ppm differences.}
 
-\item{check_names}{(character) Check names. Allowed values are limited to the following: \itemize{ \item{\code{"stop"}: If the output column already exists an error will be thrown.}\item{\code{"unique"}: If the output column already exists a unique column name will be generated.}\item{\code{"replace"}: If the output column already exists it will be replaced.}} The default is \code{"unique"}.}
+\item{check_names}{(character) Check names. Allowed values are
+limited to the following: \itemize{ \item{\code{"stop"}: If the
+output column already exists an error will be
+thrown.}\item{\code{"unique"}: If the output column already exists a
+unique column name will be generated.}\item{\code{"replace"}: If the
+output column already exists it will be replaced.}} The default is
+\code{"unique"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{calc_ppm_diff} object with the following \code{output} slots:
+A \code{calc_ppm_diff} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_table) The input annotation source with the computed ppm diffences in a new column. \cr
+\code{updated} \tab (annotation_table) The input annotation source
+with the computed ppm diffences in a new column. \cr
 }
 }
 \description{
-Calculate ppm difference between two columns in an \code{\link{annotation_table}}. e.g. for comparing observed m/z to theortical ones.
+Calculate ppm difference between two columns in an
+\code{\link{annotation_table}}. e.g. for comparing observed m/z to theortical
+ones.
 }
 \section{Inheritance}{
 
-A \code{calc_ppm_diff} object inherits the following \code{struct} classes: \cr\cr
-\verb{[calc_ppm_diff]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{calc_ppm_diff} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[calc_ppm_diff]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = calc_ppm_diff(
-      obs_mz_column = character(0),
-      ref_mz_column = "reference (theoretical) m/z values.",
-      out_column = character(0),
-      check_names = "unique")
+M = calc_ppm_diff( obs_mz_column = character(0), ref_mz_column =
+"reference (theoretical) m/z values.", out_column = character(0),
+check_names = "unique")
 
 }

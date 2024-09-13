@@ -31,16 +31,26 @@ test_that("combine sources works", {
 
     out <- predicted(M)$data
 
-    expect_true("annotation_table" %in% colnames(out)) # check source column present
-    expect_setequal(out$annotation_table, out$source) # check source column has expected values
-    expect_false("aa" %in% colnames(out)) # "aa" column should not be present
-    expect_setequal(out$a, c(df2$a, df1$aa)) # "aa" column merged into "a" column
-    expect_true("c" %in% colnames(out)) # "c" column is present
-    expect_setequal(out$c, c(rep(NA, 10), df1$c)) # "c" has NA where not in source
-    expect_true(all(is.na(out$c[out$annotation_table == "B"]))) # "c" is NA for source B
-    expect_true("d" %in% colnames(out)) # "d" column is present
-    expect_setequal(out$d, c(df2$d, rep(NA, 10))) # "d" has NA where not in source
-    expect_true(all(is.na(out$d[out$annotation_table == "A"]))) # "d" is NA for source B
+    # check source column present
+    expect_true("annotation_table" %in% colnames(out)) 
+    # check source column has expected values
+    expect_setequal(out$annotation_table, out$source) 
+    # "aa" column should not be present
+    expect_false("aa" %in% colnames(out)) 
+    # "aa" column merged into "a" column
+    expect_setequal(out$a, c(df2$a, df1$aa)) 
+    # "c" column is present
+    expect_true("c" %in% colnames(out)) 
+    # "c" has NA where not in source
+    expect_setequal(out$c, c(rep(NA, 10), df1$c)) 
+    # "c" is NA for source B
+    expect_true(all(is.na(out$c[out$annotation_table == "B"]))) 
+    # "d" column is present
+    expect_true("d" %in% colnames(out)) 
+    # "d" has NA where not in source
+    expect_setequal(out$d, c(df2$d, rep(NA, 10))) 
+    # "d" is NA for source B
+    expect_true(all(is.na(out$d[out$annotation_table == "A"]))) 
 })
 
 
@@ -77,16 +87,26 @@ test_that("combine sources works for list input", {
 
     out <- predicted(M)$data
 
-    expect_true("annotation_table" %in% colnames(out)) # check source column present
-    expect_setequal(out$annotation_table, out$source) # check source column has expected values
-    expect_false("aa" %in% colnames(out)) # "aa" column should not be present
-    expect_setequal(out$a, c(df2$a, df1$aa)) # "aa" column merged into "a" column
-    expect_true("c" %in% colnames(out)) # "c" column is present
-    expect_setequal(out$c, c(rep(NA, 10), df1$c)) # "c" has NA where not in source
-    expect_true(all(is.na(out$c[out$annotation_table == "B"]))) # "c" is NA for source B
-    expect_true("d" %in% colnames(out)) # "d" column is present
-    expect_setequal(out$d, c(df2$d, rep(NA, 10))) # "d" has NA where not in source
-    expect_true(all(is.na(out$d[out$annotation_table == "A"]))) # "d" is NA for source B
+    # check source column present
+    expect_true("annotation_table" %in% colnames(out)) 
+    # check source column has expected values
+    expect_setequal(out$annotation_table, out$source) 
+    # "aa" column should not be present
+    expect_false("aa" %in% colnames(out)) 
+    # "aa" column merged into "a" column
+    expect_setequal(out$a, c(df2$a, df1$aa)) 
+    # "c" column is present
+    expect_true("c" %in% colnames(out)) 
+    # "c" has NA where not in source
+    expect_setequal(out$c, c(rep(NA, 10), df1$c)) 
+    # "c" is NA for source B
+    expect_true(all(is.na(out$c[out$annotation_table == "B"]))) 
+    # "d" column is present
+    expect_true("d" %in% colnames(out)) 
+    # "d" has NA where not in source
+    expect_setequal(out$d, c(df2$d, rep(NA, 10)))
+    # "d" is NA for source B
+    expect_true(all(is.na(out$d[out$annotation_table == "A"])))
 })
 
 
@@ -156,7 +176,8 @@ test_that("combine sources works for lcms_tables", {
         mz = seq_len(10)
     )
 
-    AN1 <- lcms_table(df1, tag = "A", id_column = "id", rt_column = "rt", mz_column = "mz")
+    AN1 <- lcms_table(df1, tag = "A", id_column = "id", rt_column = "rt", 
+                      mz_column = "mz")
 
 
     df2 <- data.frame(
@@ -169,7 +190,8 @@ test_that("combine sources works for lcms_tables", {
         mz = seq_len(10)
     )
 
-    AN2 <- lcms_table(df2, tag = "B", id_column = "id", rt_column = "rt", mz_column = "mz")
+    AN2 <- lcms_table(df2, tag = "B", id_column = "id", rt_column = "rt", 
+                      mz_column = "mz")
 
     M <- combine_sources(
         source_list = AN2,
@@ -183,18 +205,30 @@ test_that("combine sources works for lcms_tables", {
 
     out <- predicted(M)$data
 
-    expect_true("annotation_table" %in% colnames(out)) # check source column present
-    expect_setequal(out$annotation_table, out$source) # check source column has expected values
-    expect_false("aa" %in% colnames(out)) # "aa" column should not be present
-    expect_setequal(out$a, c(df2$a, df1$aa)) # "aa" column merged into "a" column
-    expect_true("c" %in% colnames(out)) # "c" column is present
-    expect_setequal(out$c, c(rep(NA, 10), df1$c)) # "c" has NA where not in source
-    expect_true(all(is.na(out$c[out$annotation_table == "B"]))) # "c" is NA for source B
-    expect_true("d" %in% colnames(out)) # "d" column is present
-    expect_setequal(out$d, c(df2$d, rep(NA, 10))) # "d" has NA where not in source
-    expect_true(all(is.na(out$d[out$annotation_table == "A"]))) # "d" is NA for source B
-    expect_true(all(c("mz", "rt") %in% colnames(out))) # mz and rt columns should be present for lcms
-    expect_true(is(predicted(M), "lcms_table")) # expect lcms_table for merged output
+    # check source column present
+    expect_true("annotation_table" %in% colnames(out)) 
+    # check source column has expected values
+    expect_setequal(out$annotation_table, out$source) 
+    # "aa" column should not be present
+    expect_false("aa" %in% colnames(out)) 
+    # "aa" column merged into "a" column
+    expect_setequal(out$a, c(df2$a, df1$aa)) 
+    # "c" column is present
+    expect_true("c" %in% colnames(out)) 
+    # "c" has NA where not in source
+    expect_setequal(out$c, c(rep(NA, 10), df1$c)) 
+    # "c" is NA for source B
+    expect_true(all(is.na(out$c[out$annotation_table == "B"])))
+    # "d" column is present
+    expect_true("d" %in% colnames(out)) 
+    # "d" has NA where not in source
+    expect_setequal(out$d, c(df2$d, rep(NA, 10))) 
+    # "d" is NA for source B
+    expect_true(all(is.na(out$d[out$annotation_table == "A"]))) 
+    # mz and rt columns should be present for lcms
+    expect_true(all(c("mz", "rt") %in% colnames(out))) 
+    # expect lcms_table for merged output
+    expect_true(is(predicted(M), "lcms_table")) 
 })
 
 test_that("combine sources works with .all and exclude_cols", {
@@ -208,7 +242,8 @@ test_that("combine sources works with .all and exclude_cols", {
         mz = seq_len(10)
     )
 
-    AN1 <- lcms_table(df1, tag = "A", id_column = "id", rt_column = "rt", mz_column = "mz")
+    AN1 <- lcms_table(df1, tag = "A", id_column = "id", rt_column = "rt", 
+                      mz_column = "mz")
 
 
     df2 <- data.frame(
@@ -221,7 +256,8 @@ test_that("combine sources works with .all and exclude_cols", {
         mz = seq_len(10)
     )
 
-    AN2 <- lcms_table(df2, tag = "B", id_column = "id", rt_column = "rt", mz_column = "mz")
+    AN2 <- lcms_table(df2, tag = "B", id_column = "id", rt_column = "rt", 
+                      mz_column = "mz")
 
     M <- combine_sources(
         source_list = AN2,
@@ -236,15 +272,26 @@ test_that("combine sources works with .all and exclude_cols", {
 
     out <- predicted(M)$data
 
-    expect_true("annotation_table" %in% colnames(out)) # check source column present
-    expect_setequal(out$annotation_table, out$source) # check source column has expected values
-    expect_false("aa" %in% colnames(out)) # "aa" column should not be present
-    expect_setequal(out$a, c(df2$a, df1$aa)) # "aa" column merged into "a" column
-    expect_false("c" %in% colnames(out)) # "c" column is NOT present
-    expect_true(all(is.na(out$c[out$annotation_table == "B"]))) # "c" is NA for source B
-    expect_true("d" %in% colnames(out)) # "d" column is present
-    expect_setequal(out$d, c(df2$d, rep(NA, 10))) # "d" has NA where not in source
-    expect_true(all(is.na(out$d[out$annotation_table == "A"]))) # "d" is NA for source B
-    expect_true(all(c("mz", "rt") %in% colnames(out))) # mz and rt columns should be present for lcms
-    expect_true(is(predicted(M), "lcms_table")) # expect lcms_table for merged output
+    # check source column present
+    expect_true("annotation_table" %in% colnames(out)) 
+    # check source column has expected values
+    expect_setequal(out$annotation_table, out$source) 
+    # "aa" column should not be present
+    expect_false("aa" %in% colnames(out))
+    # "aa" column merged into "a" column
+    expect_setequal(out$a, c(df2$a, df1$aa)) 
+    # "c" column is NOT present
+    expect_false("c" %in% colnames(out)) 
+    # "c" is NA for source B
+    expect_true(all(is.na(out$c[out$annotation_table == "B"]))) 
+    # "d" column is present
+    expect_true("d" %in% colnames(out)) 
+    # "d" has NA where not in source
+    expect_setequal(out$d, c(df2$d, rep(NA, 10))) 
+    # "d" is NA for source B
+    expect_true(all(is.na(out$d[out$annotation_table == "A"]))) 
+    # mz and rt columns should be present for lcms
+    expect_true(all(c("mz", "rt") %in% colnames(out))) 
+    # expect lcms_table for merged output
+    expect_true(is(predicted(M), "lcms_table")) 
 })

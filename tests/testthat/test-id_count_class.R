@@ -1,5 +1,6 @@
 test_that("id count works", {
-    df <- data.frame(a = seq_len(10), b = seq_len(10), id = c(1, 1, 1, 1, 1, 2, 2, 2, 3, 3))
+    df <- data.frame(a = seq_len(10), b = seq_len(10), 
+                     id = c(1, 1, 1, 1, 1, 2, 2, 2, 3, 3))
 
 
     AN <- annotation_table(
@@ -43,7 +44,8 @@ test_that("id count works with empty table", {
 })
 
 test_that("id count works with NA", {
-    df <- data.frame(a = seq_len(10), b = seq_len(10), id = c(NA, 1, 1, 1, 1, 2, 2, 2, 3, 3))
+    df <- data.frame(a = seq_len(10), b = seq_len(10), 
+                     id = c(NA, 1, 1, 1, 1, 2, 2, 2, 3, 3))
 
 
     AN <- annotation_table(
@@ -53,7 +55,8 @@ test_that("id count works with NA", {
     )
 
     # count_na = TRUE
-    M <- id_counts(id_column = "id", count_column = "id_counts", count_na = TRUE)
+    M <- id_counts(id_column = "id", count_column = "id_counts", 
+                   count_na = TRUE)
     M <- model_apply(M, AN)
 
     out <- predicted(M)$data
@@ -67,7 +70,8 @@ test_that("id count works with NA", {
     expect_true(all(out$id_counts[is.na(out$id)] == 1, na.rm = TRUE))
 
     # count_na = FALSE
-    M <- id_counts(id_column = "id", count_column = "id_counts", count_na = FALSE)
+    M <- id_counts(id_column = "id", count_column = "id_counts", 
+                   count_na = FALSE)
     M <- model_apply(M, AN)
 
     out <- predicted(M)$data

@@ -15,42 +15,51 @@ combine_columns(
 )
 }
 \arguments{
-\item{column_names}{(character) The column name(s) in the annotation_source to combine.}
+\item{column_names}{(character) The column name(s) in the
+annotation_source to combine.}
 
-\item{separator}{(character) A string placed in between the two being joined. The default is \code{"_"}.}
+\item{separator}{(character) A string placed in between the two being
+joined. The default is \code{"_"}.}
 
-\item{prefix}{(character, NULL) A string placed at the start of the combined strings. The default is \code{NULL}.}
+\item{prefix}{(character, NULL) A string placed at the start of the
+combined strings. The default is \code{NULL}.}
 
-\item{suffix}{(character, NULL) A string placed at the end of the combined strings. The default is \code{NULL}.}
+\item{suffix}{(character, NULL) A string placed at the end of the
+combined strings. The default is \code{NULL}.}
 
-\item{output_column}{(character) The name of a column to store the combined values in. The default is \code{"combined"}.}
+\item{output_column}{(character) The name of a column to store the
+combined values in. The default is \code{"combined"}.}
 
-\item{clean}{(logical) Clean old columns. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: The named columns are removed after being combined.}\item{\code{"FALSE"}: The named columns are retained after being combined.}} The default is \code{TRUE}.\cr}
+\item{clean}{(logical) Clean old columns. Allowed values are limited
+to the following: \itemize{ \item{\code{"TRUE"}: The named columns
+are removed after being combined.}\item{\code{"FALSE"}: The named
+columns are retained after being combined.}} The default is
+\code{TRUE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{combine_columns} object with the following \code{output} slots:
+A \code{combine_columns} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after combining the columns. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+combining the columns. \cr
 }
 }
 \description{
-A wrapper for \code{\link[=paste]{paste()}} and \code{\link[=interaction]{interaction()}}. Combines the values in multiple columns row-wise.
+A wrapper for \code{\link[=paste]{paste()}} and \code{\link[=interaction]{interaction()}}.
+Combines the values in multiple columns row-wise.
 }
 \section{Inheritance}{
 
-A \code{combine_columns} object inherits the following \code{struct} classes: \cr\cr
-\verb{[combine_columns]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{combine_columns} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[combine_columns]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = combine_columns(
-      column_names = "V1",
-      separator = "_",
-      output_column = "combined",
-      clean = FALSE,
-      prefix = NULL,
-      suffix = NULL)
+M = combine_columns( column_names = "V1", separator = "_",
+output_column = "combined", clean = FALSE, prefix = NULL, suffix =
+NULL)
 
 }

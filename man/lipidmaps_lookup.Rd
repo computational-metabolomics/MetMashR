@@ -14,22 +14,31 @@ lipidmaps_lookup(
 )
 }
 \arguments{
-\item{query_column}{(character) The name of a column in the annotation table containing values to search in the api call.}
+\item{query_column}{(character) The name of a column in the
+annotation table containing values to search in the api call.}
 
-\item{context}{(character) The search API context. Must be one of "compound", "gene", or "protein".}
+\item{context}{(character) The search API context. Must be one of
+"compound", "gene", or "protein".}
 
-\item{context_item}{(character) The context item being searched. See https://lipidmaps.org/resources/rest for details.}
+\item{context_item}{(character) The context item being searched. See
+https://lipidmaps.org/resources/rest for details.}
 
-\item{output_item}{(character) The names of the columns to return from the results of the search. See https://lipidmaps.org/resources/rest for details. The default is \code{"all"}.}
+\item{output_item}{(character) The names of the columns to return
+from the results of the search. See
+https://lipidmaps.org/resources/rest for details. The default is
+\code{"all"}.}
 
-\item{suffix}{(character) A suffix appended to all column names in the returned result. The default is \code{"_lipidmaps"}.}
+\item{suffix}{(character) A suffix appended to all column names in
+the returned result. The default is \code{"_lipidmaps"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{lipidmaps_lookup} object with the following \code{output} slots:
+A \code{lipidmaps_lookup} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after adding data returned by the API. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+adding data returned by the API. \cr
 }
 }
 \description{
@@ -37,22 +46,18 @@ Search the LipidMaps database using the API
 }
 \section{Inheritance}{
 
-A \code{lipidmaps_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[lipidmaps_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{lipidmaps_lookup} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[lipidmaps_lookup]} -> \verb{[rest_api]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = lipidmaps_lookup(
-      query_column = character(0),
-      output_item = "input",
-      context = "compound",
-      context_item = character(0),
-      base_url = "https://www.lipidmaps.org/rest",
-      url_template = "<base_url>/<context>/<context_item>/<query_column>/<output_item>/json",
-      cache = NULL,
-      status_codes = list(),
-      delay = 0.5,
-      suffix = "_rest_api")
+M = lipidmaps_lookup( query_column = character(0), output_item =
+"input", context = "compound", context_item = character(0), base_url
+= "https://www.lipidmaps.org/rest", url_template =
+"<base_url>/<context>/<context_item>/<query_column>/<output_item>/json",
+cache = NULL, status_codes = list(), delay = 0.5, suffix =
+"_rest_api")
 
 }
 \seealso{

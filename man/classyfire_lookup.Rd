@@ -13,54 +13,68 @@ classyfire_lookup(
 )
 }
 \arguments{
-\item{query_column}{(character) The name of a column in the annotation table containing values to search in the api call.}
+\item{query_column}{(character) The name of a column in the
+annotation table containing values to search in the api call.}
 
-\item{output_items}{(character) The names of the items to return from the results of the search. Can include any number of "kingdom", "superclass", "class", "subclass", "direct_parent", "intermediate_nodes", "substituents", "smiles", "molecular_framework", "description", "ancestors", "predicted_chebi_terms". Keyword ".all" may be used to return all items. The default is \code{"kingdom"}.}
+\item{output_items}{(character) The names of the items to return from
+the results of the search. Can include any number of "kingdom",
+"superclass", "class", "subclass", "direct_parent",
+"intermediate_nodes", "substituents", "smiles",
+"molecular_framework", "description", "ancestors",
+"predicted_chebi_terms". Keyword ".all" may be used to return all
+items. The default is \code{"kingdom"}.}
 
-\item{output_fields}{(character) The names of fields to return for each output_item. Can include any of "name", "description", "chemont_id" and "url". Keyword ".all" may be used to return all fields. Some items do not have fields, so output_category is ignored. The default is \code{"name"}.}
+\item{output_fields}{(character) The names of fields to return for
+each output_item. Can include any of "name", "description",
+"chemont_id" and "url". Keyword ".all" may be used to return all
+fields. Some items do not have fields, so output_category is ignored.
+The default is \code{"name"}.}
 
-\item{suffix}{(character) A suffix appended to all column names in the returned result. The default is \code{"_cf"}.}
+\item{suffix}{(character) A suffix appended to all column names in
+the returned result. The default is \code{"_cf"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{classyfire_lookup} object with the following \code{output} slots:
+A \code{classyfire_lookup} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after adding data returned by the API. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+adding data returned by the API. \cr
 }
 }
 \description{
-Queries the ClassyFire database by inchikey to obtain chemical ontology information.
+Queries the ClassyFire database by inchikey to obtain
+chemical ontology information.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}} \item{\code{httr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}} \item{\code{httr}}}
 }
 \section{Inheritance}{
 
-A \code{classyfire_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[classyfire_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{classyfire_lookup} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[classyfire_lookup]} -> \verb{[rest_api]} -> \verb{[model]} ->
+\verb{[struct_class]}
 }
 
 \examples{
-M = classyfire_lookup(
-      output_items = "kingdom",
-      output_fields = "name",
-      base_url = "http://classyfire.wishartlab.com/entities",
-      url_template = "<base_url>/<query_column>.json",
-      query_column = character(0),
-      cache = NULL,
-      status_codes = list(),
-      delay = 0.5,
-      suffix = "_rest_api")
+M = classyfire_lookup( output_items = "kingdom", output_fields =
+"name", base_url = "http://classyfire.wishartlab.com/entities",
+url_template = "<base_url>/<query_column>.json", query_column =
+character(0), cache = NULL, status_codes = list(), delay = 0.5,
+suffix = "_rest_api")
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 
-Wickham H (2023). \emph{httr: Tools for Working with URLs and HTTP}. R
-package version 1.4.7, \url{https://CRAN.R-project.org/package=httr}.
+Wickham H (2023). \emph{httr: Tools for Working with URLs and
+HTTP}. R package version 1.4.7,
+\url{https://CRAN.R-project.org/package=httr}.
 }
 \seealso{
 Other {REST API's}: 

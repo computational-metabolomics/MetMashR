@@ -21,16 +21,16 @@ Returns a list of quosures for use with
 }
 \examples{
 # some annotation data
-AN = annotation_source(data = iris)
+AN <- annotation_source(data = iris)
 
 # filter to setosa where Sepal length is less than 5
-M = filter_records(
-        wherever(
-            Species == 'setosa', 
-            Sepal.Length<5
-        )
+M <- filter_records(
+    wherever(
+        Species == "setosa",
+        Sepal.Length < 5
     )
-M = model_apply(M,AN)
+)
+M <- model_apply(M, AN)
 predicted(M) # 20 rows
 
 }

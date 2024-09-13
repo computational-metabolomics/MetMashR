@@ -7,35 +7,41 @@
 annotation_table(data = data.frame(), tag = "", id_column = NULL, ...)
 }
 \arguments{
-\item{data}{(data.frame, NULL) A data.frame of annotation data. The default is \code{data.frame()}.}
+\item{data}{(data.frame, NULL) A data.frame of annotation data. The
+default is \code{data.frame()}.}
 
-\item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{""}.}
+\item{tag}{(character) A (short) character string that is used to
+represent this source e.g. in column names or source columns when
+used in a workflow. The default is \code{""}.}
 
-\item{id_column}{(character) The column name of the annotation data.frame containing row identifers. If NULL This will be generated automatically. The default is \code{NULL}.}
+\item{id_column}{(character) The column name of the annotation
+data.frame containing row identifers. If NULL This will be generated
+automatically. The default is \code{NULL}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 annotation_table
 } object. This object has no \code{output} slots.
 }
 \description{
-An \code{annotation_table} is an \code{\link[=annotation_source]{annotation_source()}} where the imported data.frame contains measured experimental data. An
-\code{id_column} of values is required to uniquely indentify each record (row) in the table (NB these are NOT molecule identifiers, which may be be present in multiple records).
+An \code{annotation_table} is an \code{\link[=annotation_source]{annotation_source()}}
+where the imported data.frame contains measured experimental data. An
+\code{id_column} of values is required to uniquely indentify each record
+(row) in the table (NB these are NOT molecule identifiers, which may
+be be present in multiple records).
 }
 \section{Inheritance}{
 
-A \code{annotation_table} object inherits the following \code{struct} classes: \cr\cr
-\verb{[annotation_table]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{annotation_table} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[annotation_table]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = annotation_table(
-      id_column = "id",
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = annotation_table( id_column = "id", tag = character(0), data =
+data.frame(id=NA), source = "ANY")
 
 }
 \seealso{

@@ -21,8 +21,8 @@ Description: A package to merge, filter sort, organise and otherwise mash
     imported from multiple sources (software) and combined using workflow 
     steps based on S4
     class templates derived from the `struct` package. Other modular workflow
-    such as filtering, merging, splitting, normalisation and rest-api queries
-    are also included.
+    steps such as filtering, merging, splitting, normalisation and rest-api 
+    queries are included.
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
@@ -38,10 +38,10 @@ Imports:
     httr,
     scales,
     ggthemes,
-    cowplot,
     ggplot2,
     utils,
-    rlang
+    rlang,
+    cowplot
 Collate: 
     'generics.R'
     'zzz.R'
@@ -114,6 +114,7 @@ Collate:
     'rdata_database_class.R'
     'rds_database_class.R'
     'rds_cache_class.R'
+    'remove_columns_class.R'
     'rename_columns_class.R'
     'rt_match_class.R'
     'select_columns_class.R'

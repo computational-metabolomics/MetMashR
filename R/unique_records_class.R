@@ -2,12 +2,11 @@
 #' @export
 #' @include annotation_source_class.R
 unique_records <- function(...) {
-
     out <- struct::new_struct(
         "unique_records",
         ...
     )
-    
+
     return(out)
 }
 
@@ -15,11 +14,12 @@ unique_records <- function(...) {
 .unique_records <- setClass(
     "unique_records",
     contains = c("model"),
-    slots = c(updated='entity'),
+    slots = c(updated = "entity"),
     prototype = list(
         name = "Keep unique_records",
         description = paste0(
-            "reduces an annotation source to unique records only; all duplicates are removed."
+            "reduces an annotation source to unique records only; ",
+            "all duplicates are removed."
         ),
         type = "unique",
         predicted = "updated",
@@ -40,10 +40,9 @@ setMethod(
     f = "model_apply",
     signature = c("unique_records", "annotation_source"),
     definition = function(M, D) {
-        
-        D$data = unique(D$data)
-        M$updated = D
-        
+        D$data <- unique(D$data)
+        M$updated <- D
+
         return(M)
     }
 )

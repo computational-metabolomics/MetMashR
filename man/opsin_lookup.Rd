@@ -7,44 +7,48 @@
 opsin_lookup(query_column, suffix = "_opsin", output = "cids", ...)
 }
 \arguments{
-\item{query_column}{(character) The column name to use as the reference for searching the database e.g. "compound_name". OPSIN expect molecule names as input.}
+\item{query_column}{(character) The column name to use as the
+reference for searching the database e.g. "compound_name". OPSIN
+expect molecule names as input.}
 
-\item{suffix}{(character) A suffix appended to all column names in the returned result. The default is \code{"_opsin"}.}
+\item{suffix}{(character) A suffix appended to all column names in
+the returned result. The default is \code{"_opsin"}.}
 
-\item{output}{(character) The value returned from the pubchem database. The default is \code{"cids"}.}
+\item{output}{(character) The value returned from the pubchem
+database. The default is \code{"cids"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{opsin_lookup} object with the following \code{output} slots:
+A \code{opsin_lookup} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after adding data returned by the API. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+adding data returned by the API. \cr
 }
 }
 \description{
-Uses the OPSIN API \link{https://opsin.ch.cam.ac.uk/} to search for identifers based on the input annotation column.
+Uses the OPSIN API \link{https://opsin.ch.cam.ac.uk/} to
+search for identifers based on the input annotation column.
 }
 \section{Inheritance}{
 
-A \code{opsin_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[opsin_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{opsin_lookup} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[opsin_lookup]} -> \verb{[rest_api]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = opsin_lookup(
-      output = "stdinchikey",
-      base_url = "https://opsin.ch.cam.ac.uk/opsin",
-      url_template = "<base_url>/<query_column>.<output>",
-      query_column = character(0),
-      cache = NULL,
-      status_codes = list(),
-      delay = 0.5,
-      suffix = "_rest_api")
+M = opsin_lookup( output = "stdinchikey", base_url =
+"https://opsin.ch.cam.ac.uk/opsin", url_template =
+"<base_url>/<query_column>.<output>", query_column = character(0),
+cache = NULL, status_codes = list(), delay = 0.5, suffix =
+"_rest_api")
 
 }
 \references{
-Lowe, M. D, Corbett, T. P, Murray-Rust, Peter, Glen, C. R (2011).
-"Chemical Name to Structure: OPSIN, an Open ", "Source Solution."
-\emph{Journal of Chemical Information and Modeling}, \emph{51}(3), 793-753.
-doi:10.1021/ci100384d \url{https://doi.org/10.1021/ci100384d}.
+Lowe, M. D, Corbett, T. P, Murray-Rust, Peter, Glen, C. R
+(2011). "Chemical Name to Structure: OPSIN, an Open ", "Source
+Solution." \emph{Journal of Chemical Information and Modeling}, \emph{51}(3),
+793-753. doi:10.1021/ci100384d \url{https://doi.org/10.1021/ci100384d}.
 }

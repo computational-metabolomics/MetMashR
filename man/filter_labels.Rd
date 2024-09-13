@@ -17,42 +17,52 @@ filter_labels(
 \arguments{
 \item{column_name}{(character) The column name to filter.}
 
-\item{labels}{(character) The labels to filter by. Uses \verb{[grepl()]} so regex is accepted e.g. for partial matching or labels.}
+\item{labels}{(character) The labels to filter by. Uses \verb{[grepl()]}
+so regex is accepted e.g. for partial matching or labels.}
 
-\item{mode}{(character) Filter mode. Allowed values are limited to the following: \itemize{ \item{\code{"exclude"}: The specified labels are removed from the annotation table.}\item{\code{"include"}: Only the specified labels are retained in the annotation table.}} The default is \code{"exclude"}.}
+\item{mode}{(character) Filter mode. Allowed values are limited to
+the following: \itemize{ \item{\code{"exclude"}: The specified labels
+are removed from the annotation table.}\item{\code{"include"}: Only
+the specified labels are retained in the annotation table.}} The
+default is \code{"exclude"}.}
 
-\item{perl}{(logical) Use a Perl-compatible regex. The default is \code{FALSE}.\cr}
+\item{perl}{(logical) Use a Perl-compatible regex. The default is
+\code{FALSE}.\cr}
 
-\item{fixed}{(logical) Use exact matching. The default is \code{FALSE}.\cr}
+\item{fixed}{(logical) Use exact matching. The default is
+\code{FALSE}.\cr}
 
-\item{match_na}{(logical) Match NA. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: NA values will be treated as if they matched to one of the labels.}\item{\code{"FALSE"}: NA values will be treated as though they did not match to any of the labels.}} The default is \code{FALSE}.\cr}
+\item{match_na}{(logical) Match NA. Allowed values are limited to the
+following: \itemize{ \item{\code{"TRUE"}: NA values will be treated
+as if they matched to one of the labels.}\item{\code{"FALSE"}: NA
+values will be treated as though they did not match to any of the
+labels.}} The default is \code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{filter_labels} object with the following \code{output} slots:
+A \code{filter_labels} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{filtered} \tab          (annotation_source) The annotation_source after filtering. \cr
-\code{flags} \tab          (data.frame) A list of flags indicating which annotations had a matching label. \cr
+\code{filtered} \tab (annotation_source) The annotation_source after
+filtering. \cr
+\code{flags} \tab (data.frame) A list of flags indicating which
+annotations had a matching label. \cr
 }
 }
 \description{
-Removes (or includes) annotations such that the named column
-excludes (or includes) the specified labels.
+Removes (or includes) annotations such that the named
+column excludes (or includes) the specified labels.
 }
 \section{Inheritance}{
 
-A \code{filter_labels} object inherits the following \code{struct} classes: \cr\cr
-\verb{[filter_labels]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{filter_labels} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[filter_labels]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = filter_labels(
-      column_name = "V1",
-      labels = "",
-      mode = "exclude",
-      perl = FALSE,
-      fixed = FALSE,
-      match_na = FALSE)
+M = filter_labels( column_name = "V1", labels = "", mode = "exclude",
+perl = FALSE, fixed = FALSE, match_na = FALSE)
 
 }

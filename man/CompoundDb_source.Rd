@@ -9,39 +9,42 @@ CompoundDb_source(source, tag = "cdb", ...)
 \arguments{
 \item{source}{(ANY) The source of annotation data.}
 
-\item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{"cdb"}.}
+\item{tag}{(character) A (short) character string that is used to
+represent this source e.g. in column names or source columns when
+used in a workflow. The default is \code{"cdb"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 CompoundDb_source
 } object. This object has no \code{output} slots.
 }
 \description{
-Imports the compounds table of a CompDB source as an \code{annotation_source}.
+Imports the compounds table of a CompDB source as an
+\code{annotation_source}.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{CompoundDb}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{CompoundDb}}}
 }
 \section{Inheritance}{
 
-A \code{CompoundDb_source} object inherits the following \code{struct} classes: \cr\cr
-\verb{[CompoundDb_source]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{CompoundDb_source} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[CompoundDb_source]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = CompoundDb_source(
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = CompoundDb_source( tag = character(0), data = data.frame(id=NA),
+source = "ANY")
 
 }
 \references{
-Rainer J, Vicini A, Salzer L, Stanstrup J, Badia J, Neumann S, Stravs
-M, Verri Hernandes V, Gatto L, Gibb S, Witting M (2022). "A Modular and
-Expandable Ecosystem for Metabolomics Data Annotation in R."
-\emph{Metabolites}, \emph{12}, 173. doi:10.3390/metabo12020173
-\url{https://doi.org/10.3390/metabo12020173},
+Rainer J, Vicini A, Salzer L, Stanstrup J, Badia J,
+Neumann S, Stravs M, Verri Hernandes V, Gatto L, Gibb S, Witting M
+(2022). "A Modular and Expandable Ecosystem for Metabolomics Data
+Annotation in R." \emph{Metabolites}, \emph{12}, 173.
+doi:10.3390/metabo12020173 \url{https://doi.org/10.3390/metabo12020173},
 \url{https://www.mdpi.com/2218-1989/12/2/173}.
 }

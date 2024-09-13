@@ -159,15 +159,15 @@ setMethod(
         field = "rtype", query = "web"
     )$rid) {
         # TRUE if newly added or stale
-        update = BiocFileCache::bfcneedsupdate(bfc, rid)
+        update <- BiocFileCache::bfcneedsupdate(bfc, rid)
         if (is.na(update)) { # FALSE if NA
-            update=FALSE
+            update <- FALSE
         }
     } else {
-        update = FALSE # cant update if not web resource
+        update <- FALSE # cant update if not web resource
     }
-    
-    
+
+
     # download & unzip
     if (update & !obj$offline) {
         BiocFileCache::bfcdownload(

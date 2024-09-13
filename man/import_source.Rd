@@ -10,18 +10,22 @@ import_source(...)
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{import_source} object with the following \code{output} slots:
+A \code{import_source} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{imported} \tab          (annotation_source) The \code{annotation_source} after importing the data. \cr
+\code{imported} \tab (annotation_source) The \code{annotation_source}
+after importing the data. \cr
 }
 }
 \description{
-A wrapper for \code{\link[=read_source]{read_source()}} that can be used in an annotation workflow to import an annotation source.
+A wrapper for \code{\link[=read_source]{read_source()}} that can be used in an
+annotation workflow to import an annotation source.
 }
 \section{Inheritance}{
 
-A \code{import_source} object inherits the following \code{struct} classes: \cr\cr
-\verb{[import_source]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{import_source} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[import_source]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{

@@ -7,40 +7,47 @@
 add_columns(new_columns, by, ...)
 }
 \arguments{
-\item{new_columns}{(data.frame, annotation_database) A data.frame to be left-joined to the annotation table. Can also be an annotation_database.}
+\item{new_columns}{(data.frame, annotation_database) A data.frame to
+be left-joined to the annotation table. Can also be an
+annotation_database.}
 
-\item{by}{(character) A (named) character vector of column names to join by e.g. \code{c("A" = "B")} (see \code{\link[dplyr:mutate-joins]{dplyr::left_join}} for details).}
+\item{by}{(character) A (named) character vector of column names to
+join by e.g. \code{c("A" = "B")} (see \code{\link[dplyr:mutate-joins]{dplyr::left_join}} for details).}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{add_columns} object with the following \code{output} slots:
+A \code{add_columns} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-A wrapper around \code{\link[dplyr:mutate-joins]{dplyr::left_join}}. Adds columns to an annotation table by performing a left-join with an input data.frame (annotations on the left of the join).
+A wrapper around \code{\link[dplyr:mutate-joins]{dplyr::left_join}}. Adds columns to
+an annotation table by performing a left-join with an input
+data.frame (annotations on the left of the join).
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}}}
 }
 \section{Inheritance}{
 
-A \code{add_columns} object inherits the following \code{struct} classes: \cr\cr
-\verb{[add_columns]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{add_columns} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[add_columns]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = add_columns(
-      new_columns = data.frame(id=NA),
-      by = "id")
+M = add_columns( new_columns = data.frame(id=NA), by = "id")
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{
 \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}

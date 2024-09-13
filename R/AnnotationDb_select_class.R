@@ -123,24 +123,24 @@ setMethod(
     definition = function(M, D) {
         # get db
         db <- do.call(`::`, list(M$database, M$database))
-        
+
         # prepare from:to for left join
         by <- M$key_type
         names(by) <- M$key_column
-        
+
         # columns
         if (any(M$database_columns == ".all")) {
             M$database_columns <- AnnotationDbi::columns(db)
         }
-        
+
         # select
-        db = AnnotationDbi::select(
+        db <- AnnotationDbi::select(
             x = db,
             keys = as.character(D$data[[M$key_column]]),
             columns = M$database_columns,
             keytype = M$key_type
         )
-        
+
         # remove NA
         if (M$drop_na) {
             na <- apply(db, 1, function(x) {
@@ -148,20 +148,20 @@ setMethod(
             })
             db <- db[!na, ]
         }
-        
+
         # unique rows
         db <- unique(db)
-        
+
         # add the columns
         M2 <- add_columns(
             new_columns = db,
             by = by
         )
         M2 <- model_apply(M2, D)
-        
+
         # assign to object
         M$updated <- predicted(M2)
-        
+
         return(M)
     }
 )

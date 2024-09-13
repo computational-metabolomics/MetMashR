@@ -14,47 +14,66 @@ normalise_lipids(
 )
 }
 \arguments{
-\item{column_name}{(character) The name of the column containing Lipids names to normalise.}
+\item{column_name}{(character) The name of the column containing
+Lipids names to normalise.}
 
-\item{grammar}{(character) The grammar to use for normalising lipid names. Allowed values are: Shorthand2020, Goslin, FattyAcids, LipidMaps, SwissLipids, HMDB or .all. The default is \code{".all"}.}
+\item{grammar}{(character) The grammar to use for normalising lipid
+names. Allowed values are: Shorthand2020, Goslin, FattyAcids,
+LipidMaps, SwissLipids, HMDB or .all. The default is \code{".all"}.}
 
-\item{columns}{(character) Column names to include from the goslin output. Can be any of "Normalized.Name", "Original.Name", "Grammar", "Adduct", "Adduct.Charge", "Lipid.Maps.Category", "Lipid.Maps.Main.Class", "Species.Name", "Extended.Species.Name", "Molecular.Species.Name", "Sn.Position.Name", "Structure.Defined.Name", "Full.Structure.Name", "Functional.Class.Abbr", "Functional.Class.Synonyms", "Level", "Total.C", "Total.OH", "Total.O", "Total.DB", "Mass", "Sum.Formula".".all" will return all columns. ". The default is \code{".all"}.}
+\item{columns}{(character) Column names to include from the goslin
+output. Can be any of "Normalized.Name", "Original.Name", "Grammar",
+"Adduct", "Adduct.Charge", "Lipid.Maps.Category",
+"Lipid.Maps.Main.Class", "Species.Name", "Extended.Species.Name",
+"Molecular.Species.Name", "Sn.Position.Name",
+"Structure.Defined.Name", "Full.Structure.Name",
+"Functional.Class.Abbr", "Functional.Class.Synonyms", "Level",
+"Total.C", "Total.OH", "Total.O", "Total.DB", "Mass",
+"Sum.Formula".".all" will return all columns. ". The default is
+\code{".all"}.}
 
-\item{suffix}{(character) A suffic added to the column names of the goslin output. The default is \code{"_goslin"}.}
+\item{suffix}{(character) A suffic added to the column names of the
+goslin output. The default is \code{"_goslin"}.}
 
-\item{batch_size}{(numeric, integer) The maximum number of annotations to be parsed by rgoslin at a time. If the batch size is less than the total number of records then the records will be split into multiple batches to help prevent crashes. The default is \code{10000}.\cr}
+\item{batch_size}{(numeric, integer) The maximum number of
+annotations to be parsed by rgoslin at a time. If the batch size is
+less than the total number of records then the records will be split
+into multiple batches to help prevent crashes. The default is
+\code{10000}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{normalise_lipids} object with the following \code{output} slots:
+A \code{normalise_lipids} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) Annotation_source after normalising lipid names. \cr
+\code{updated} \tab (annotation_source) Annotation_source after
+normalising lipid names. \cr
 }
 }
 \description{
-Normalises differently formated lipid names to a consistent format.
+Normalises differently formated lipid names to a
+consistent format.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{rgoslin}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{rgoslin}}}
 }
 \section{Inheritance}{
 
-A \code{normalise_lipids} object inherits the following \code{struct} classes: \cr\cr
-\verb{[normalise_lipids]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{normalise_lipids} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[normalise_lipids]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = normalise_lipids(
-      column_name = "V1",
-      grammar = ".all",
-      columns = ".all",
-      suffix = "_goslin",
-      batch_size = 10000)
+M = normalise_lipids( column_name = "V1", grammar = ".all", columns =
+".all", suffix = "_goslin", batch_size = 10000)
 
 }
 \references{
-Kopczynski D, Hoffmann N, Peng B, Ahrends R (2020). "Goslin: A Grammar
-of Succinct Lipid Nomenclature." \emph{Analytical Chemistry}, \emph{92}(16),
-10957-10960. \url{https://pubs.acs.org/doi/10.1021/acs.analchem.0c01690}.
+Kopczynski D, Hoffmann N, Peng B, Ahrends R (2020).
+"Goslin: A Grammar of Succinct Lipid Nomenclature." \emph{Analytical
+Chemistry}, \emph{92}(16), 10957-10960.
+\url{https://pubs.acs.org/doi/10.1021/acs.analchem.0c01690}.
 }

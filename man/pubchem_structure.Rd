@@ -14,29 +14,41 @@ pubchem_structure(
 )
 }
 \arguments{
-\item{query_column}{(character) The name of the \code{annotation_source} column with compound identifiers of the type specified in the \code{search_by} param.}
+\item{query_column}{(character) The name of the \code{annotation_source}
+column with compound identifiers of the type specified in the
+\code{search_by} param.}
 
-\item{search_by}{(character) The PubChem domain to search for matches to the annotation_column.}
+\item{search_by}{(character) The PubChem domain to search for matches
+to the annotation_column.}
 
-\item{row_index}{(integer, numeric) The row index of the \code{annotation_source} to request an image of the molecular structure of.}
+\item{row_index}{(integer, numeric) The row index of the
+\code{annotation_source} to request an image of the molecular structure
+of.}
 
-\item{record_type}{(character) The record type to return from the PubChem query. Can be one of "2d" or "3d". The default is \code{"2d"}.}
+\item{record_type}{(character) The record type to return from the
+PubChem query. Can be one of "2d" or "3d". The default is
+\code{"2d"}.}
 
-\item{image_size}{(character) The size of the image to return from the PubChem query. Can be one of "large" or "small". For \code{record_type = "2d"} an arbitrary image size can be specified e.g. \verb{123x123}. The default is \code{"large"}.}
+\item{image_size}{(character) The size of the image to return from
+the PubChem query. Can be one of "large" or "small". For \code{record_type = "2d"} an arbitrary image size can be specified e.g. \verb{123x123}. The
+default is \code{"large"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 pubchem_structure
 } object. This object has no \code{output} slots.
-See \code{\link[struct]{chart_plot}} in the \code{struct} package to plot this chart object.
+See \code{\link[struct]{chart_plot}} in the \code{struct} package to
+plot this chart object.
 }
 \description{
-Query the PubChem api and retrieve a display an image of the matching molecular structure.
+Query the PubChem api and retrieve a display an image of
+the matching molecular structure.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{cowplot}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{cowplot}}}
 
 This object queries the PubChem API for matches to your query
 without caching the results. It is therefore intended for limited use. If
@@ -45,21 +57,18 @@ an alternative solution.
 }
 \section{Inheritance}{
 
-A \code{pubchem_structure} object inherits the following \code{struct} classes: \cr\cr
-\verb{[pubchem_structure]} >> \verb{[chart]} >> \verb{[struct_class]}
+A \code{pubchem_structure} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[pubchem_structure]} -> \verb{[chart]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = pubchem_structure(
-      query_column = "V1",
-      search_by = "cid",
-      row_index = 1,
-      record_type = "2d",
-      image_size = "large")
+M = pubchem_structure( query_column = "V1", search_by = "cid",
+row_index = 1, record_type = "2d", image_size = "large")
 
 }
 \references{
-Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot Annotations
-for 'ggplot2'}. R package version 1.1.3,
+Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot
+Annotations for 'ggplot2'}. R package version 1.1.3,
 \url{https://CRAN.R-project.org/package=cowplot}.
 }

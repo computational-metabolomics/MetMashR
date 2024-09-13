@@ -7,12 +7,13 @@
 rds_database(source = character(0), ...)
 }
 \arguments{
-\item{source}{(ANY) The source of annotation data. The default is \code{character(0)}.}
+\item{source}{(ANY) The source of annotation data. The default is
+\code{character(0)}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 rds_database
 } object. This object has no \code{output} slots.
 }
@@ -21,15 +22,15 @@ A data.frame stored as an RDS file.
 }
 \section{Inheritance}{
 
-A \code{rds_database} object inherits the following \code{struct} classes: \cr\cr
-\verb{[rds_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{rds_database} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[rds_database]} -> \verb{[annotation_database]} -> \verb{[annotation_source]}
+-> \verb{[struct_class]}
 }
 
 \examples{
-M = rds_database(
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = rds_database( tag = character(0), data = data.frame(id=NA),
+source = "ANY")
 
 }
 \seealso{

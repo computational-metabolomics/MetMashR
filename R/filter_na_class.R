@@ -1,10 +1,10 @@
 #' @eval get_description('filter_na')
 #' @export
 #' @include annotation_source_class.R
-filter_na = function(column_name,
-                      mode = 'exclude',
+filter_na <- function(column_name,
+                      mode = "exclude",
                       ...) {
-    out = struct::new_struct("filter_na",
+    out <- struct::new_struct("filter_na",
         column_name = column_name,
         mode = mode,
         ...
@@ -12,14 +12,14 @@ filter_na = function(column_name,
     return(out)
 }
 
-.filter_na = setClass(
+.filter_na <- setClass(
     "filter_na",
     contains = c("model"),
     slots = c(
         column_name = "entity",
         filtered = "entity",
         flags = "entity",
-        mode = 'entity'
+        mode = "entity"
     ),
     prototype = list(
         name = "Filter by missing values",
@@ -28,7 +28,7 @@ filter_na = function(column_name,
         ),
         type = "univariate",
         predicted = "filtered",
-        .params = c("column_name",'mode'),
+        .params = c("column_name", "mode"),
         .outputs = c("filtered", "flags"),
         column_name = entity(
             name = "Column name",
@@ -38,12 +38,13 @@ filter_na = function(column_name,
             max_length = 1
         ),
         mode = enum(
-            name = 'Filter mode',
+            name = "Filter mode",
             description = c(
-                'include' = 'Rows with NA are kept and all others removed.',
-                'exclude' = 'Rows with NA are excluded and all other kept.'),
-            value = 'exclude',
-            allowed = c('include','exclude')
+                "include" = "Rows with NA are kept and all others removed.",
+                "exclude" = "Rows with NA are excluded and all other kept."
+            ),
+            value = "exclude",
+            allowed = c("include", "exclude")
         ),
         filtered = entity(
             name = "Filtered annotations",
@@ -69,34 +70,34 @@ setMethod(
     f = "model_apply",
     signature = c("filter_na", "annotation_source"),
     definition = function(M, D) {
-        X = D$data
+        X <- D$data
 
         if (nrow(X) == 0) {
             # nothing to filter, so return
-            M$filtered = D
+            M$filtered <- D
             return(M)
         }
 
-        
-        flags = data.frame(
+
+        flags <- data.frame(
             na_flag = is.na(X[[M$column_name]]),
             value = X[[M$column_name]]
         )
-        colnames(flags)[2] = M$column_name
+        colnames(flags)[2] <- M$column_name
 
-        rownames(flags) = rownames(X)
-        
-        M$flags = flags
+        rownames(flags) <- rownames(X)
 
-        if (M$mode=='exclude') {
-            X = X[!M$flags[, 1], ]
+        M$flags <- flags
+
+        if (M$mode == "exclude") {
+            X <- X[!M$flags[, 1], ]
         } else {
-            X = X[M$flags[, 1], ]
+            X <- X[M$flags[, 1], ]
         }
 
-        D$data = X
+        D$data <- X
 
-        M$filtered = D
+        M$filtered <- D
 
         return(M)
     }

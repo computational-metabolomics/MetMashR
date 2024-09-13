@@ -1,16 +1,14 @@
 #' @eval get_description('compute_record')
 #' @export
 #' @include annotation_source_class.R
-compute_record <- function(
-        fcn,
-        ...) {
-    
+compute_record <- function(fcn,
+                           ...) {
     out <- struct::new_struct(
         "compute_record",
         fcn = fcn,
         ...
     )
-    
+
     return(out)
 }
 
@@ -20,7 +18,7 @@ compute_record <- function(
     contains = c("model"),
     slots = c(
         updated = "entity",
-        fcn = 'entity'
+        fcn = "entity"
     ),
     prototype = list(
         name = "Compute a value for a record",
@@ -29,7 +27,7 @@ compute_record <- function(
         ),
         type = "compute",
         predicted = "updated",
-        .params = c('fcn'),
+        .params = c("fcn"),
         .outputs = c("updated"),
         libraries = "dplyr",
         updated = entity(
@@ -39,7 +37,6 @@ compute_record <- function(
             ),
             type = "annotation_source"
         ),
-        
         fcn = entity(
             name = "Function",
             description = paste0(
@@ -56,12 +53,11 @@ setMethod(
     f = "model_apply",
     signature = c("compute_record", "annotation_source"),
     definition = function(M, D) {
-        
         for (k in seq_len(nrow(D$data))) {
-            D$data[k,] = M$fcn(D$data[k,,drop=FALSE])   
+            D$data[k, ] <- M$fcn(D$data[k, , drop = FALSE])
         }
-        
-        M$updated = D
+
+        M$updated <- D
         return(M)
     }
 )

@@ -10,18 +10,22 @@ unique_records(...)
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{unique_records} object with the following \code{output} slots:
+A \code{unique_records} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-reduces an annotation source to unique records only; all duplicates are removed.
+reduces an annotation source to unique records only; all
+duplicates are removed.
 }
 \section{Inheritance}{
 
-A \code{unique_records} object inherits the following \code{struct} classes: \cr\cr
-\verb{[unique_records]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{unique_records} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[unique_records]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{

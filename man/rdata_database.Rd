@@ -7,14 +7,18 @@
 rdata_database(source = character(0), variable_name, ...)
 }
 \arguments{
-\item{source}{(ANY) The source of annotation data. The default is \code{character(0)}.}
+\item{source}{(ANY) The source of annotation data. The default is
+\code{character(0)}.}
 
-\item{variable_name}{(character, function) The name of the data.frame in the imported workspace to use as the data.frame for this source. A function can be provided to e.g. extract a data.frame from a list in the imported environment.}
+\item{variable_name}{(character, function) The name of the data.frame
+in the imported workspace to use as the data.frame for this source. A
+function can be provided to e.g. extract a data.frame from a list in
+the imported environment.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 rdata_database
 } object. This object has no \code{output} slots.
 }
@@ -23,15 +27,15 @@ A data.frame stored as an RData file.
 }
 \section{Inheritance}{
 
-A \code{rdata_database} object inherits the following \code{struct} classes: \cr\cr
-\verb{[rdata_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{rdata_database} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[rdata_database]} -> \verb{[annotation_database]} ->
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = rdata_database(
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = rdata_database( tag = character(0), data = data.frame(id=NA),
+source = "ANY")
 
 }
 \seealso{

@@ -15,53 +15,62 @@ annotation_histogram2d(
 )
 }
 \arguments{
-\item{factor_name}{(character) The names of the two columns in the \code{annotation_source} to generate histograms from.}
+\item{factor_name}{(character) The names of the two columns in the
+\code{annotation_source} to generate histograms from.}
 
-\item{bins}{(numeric, integer) The number of bins to use when computing the histograms. The default is \code{30}.\cr}
+\item{bins}{(numeric, integer) The number of bins to use when
+computing the histograms. The default is \code{30}.\cr}
 
-\item{bin_edge}{(character) The colour to use when plotting the edges of bins. The default is \code{"grey"}.}
+\item{bin_edge}{(character) The colour to use when plotting the edges
+of bins. The default is \code{"grey"}.}
 
-\item{bin_fill}{(character) The colour to use when plotting the bins. The default is \code{"lightgrey"}.}
+\item{bin_fill}{(character) The colour to use when plotting the bins.
+The default is \code{"lightgrey"}.}
 
-\item{vline}{(numeric, NULL, list) The x-axis location of lines used to indicate e.g. upper and lower limits. Use NULL if not required. A 2 element list can be provided to set vlines for each \code{factor_name}. The default is \code{NULL}.}
+\item{vline}{(numeric, NULL, list) The x-axis location of lines used
+to indicate e.g. upper and lower limits. Use NULL if not required. A
+2 element list can be provided to set vlines for each \code{factor_name}.
+The default is \code{NULL}.}
 
-\item{vline_colour}{(character) The colour to use when plotting vertical lines. The default is \code{"red"}.}
+\item{vline_colour}{(character) The colour to use when plotting
+vertical lines. The default is \code{"red"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 annotation_histogram2d
 } object. This object has no \code{output} slots.
-See \code{\link[struct]{chart_plot}} in the \code{struct} package to plot this chart object.
+See \code{\link[struct]{chart_plot}} in the \code{struct} package to
+plot this chart object.
 }
 \description{
-Display a histogram of value in the specified columns of an annotation_source.
+Display a histogram of value in the specified columns of
+an annotation_source.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{ggplot2}} \item{\code{patchwork}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{ggplot2}} \item{\code{patchwork}}}
 }
 \section{Inheritance}{
 
-A \code{annotation_histogram2d} object inherits the following \code{struct} classes: \cr\cr
-\verb{[annotation_histogram2d]} >> \verb{[annotation_histogram]} >> \verb{[chart]} >> \verb{[struct_class]}
+A \code{annotation_histogram2d} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[annotation_histogram2d]} -> \verb{[annotation_histogram]} -> \verb{[chart]}
+-> \verb{[struct_class]}
 }
 
 \examples{
-M = annotation_histogram2d(
-      factor_name = "V1",
-      bins = 30,
-      bin_edge = "grey",
-      bin_fill = "lightgrey",
-      vline = NULL,
-      vline_colour = "red")
+M = annotation_histogram2d( factor_name = "V1", bins = 30, bin_edge =
+"grey", bin_fill = "lightgrey", vline = NULL, vline_colour = "red")
 
 }
 \references{
-Wickham H (2016). \emph{ggplot2: Elegant Graphics for Data Analysis}.
-Springer-Verlag New York. ISBN 978-3-319-24277-4,
+Wickham H (2016). \emph{ggplot2: Elegant Graphics for Data
+Analysis}. Springer-Verlag New York. ISBN 978-3-319-24277-4,
 \url{https://ggplot2.tidyverse.org}.
 
-Pedersen T (2024). \emph{patchwork: The Composer of Plots}. R package
-version 1.2.0, \url{https://CRAN.R-project.org/package=patchwork}.
+Pedersen T (2024). \emph{patchwork: The Composer of Plots}. R
+package version 1.2.0,
+\url{https://CRAN.R-project.org/package=patchwork}.
 }

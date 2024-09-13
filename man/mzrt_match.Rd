@@ -15,45 +15,54 @@ mzrt_match(
 )
 }
 \arguments{
-\item{variable_meta}{(data.frame) A data.frame of variable IDs and their corresponding mz values.}
+\item{variable_meta}{(data.frame) A data.frame of variable IDs and
+their corresponding mz values.}
 
-\item{mz_column}{(character) Column name of the mz values in variable_meta.}
+\item{mz_column}{(character) Column name of the mz values in
+variable_meta.}
 
-\item{rt_column}{(character) Column name of the rt values in variable_meta.}
+\item{rt_column}{(character) Column name of the rt values in
+variable_meta.}
 
-\item{ppm_window}{(numeric, integer) Ppm window to use for matching. If a single value is provided then the same ppm is used for both variable meta and the annotations. A named vector can also be provided e.g. c("variable_meta"=5,"annotations"=2) to use different ",
-"windows for each data table.}
+\item{ppm_window}{(numeric, integer) Ppm window to use for matching.
+If a single value is provided then the same ppm is used for both
+variable meta and the annotations. A named vector can also be
+provided e.g. c("variable_meta"=5,"annotations"=2) to use different
+", "windows for each data table.}
 
-\item{rt_window}{(numeric, integer) Rt window to use for matching. If a single value is provided then the same rt is used for both variable meta and the annotations. A named vector can also be provided e.g. c("variable_meta"=5,"annotations"=2) to use different ",
-"windows for each data table.}
+\item{rt_window}{(numeric, integer) Rt window to use for matching. If
+a single value is provided then the same rt is used for both variable
+meta and the annotations. A named vector can also be provided e.g.
+c("variable_meta"=5,"annotations"=2) to use different ", "windows for
+each data table.}
 
-\item{id_column}{(character) Column name of the variable ids in variable_meta. ",
-"id_column="rownames" will use the rownames as ids.}
+\item{id_column}{(character) Column name of the variable ids in
+variable_meta. ", "id_column="rownames" will use the rownames as ids.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{mzrt_match} object with the following \code{output} slots:
+A \code{mzrt_match} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The input annotation source with the newly generated column. \cr
+\code{updated} \tab (annotation_source) The input annotation source
+with the newly generated column. \cr
 }
 }
 \description{
-Annotations will be matched to the measured data variable meta data.frame by determining which annotations ppm AND rt windows overlap with the ppm AND rt windows of the measured mz.
+Annotations will be matched to the measured data
+variable meta data.frame by determining which annotations ppm AND rt
+windows overlap with the ppm AND rt windows of the measured mz.
 }
 \section{Inheritance}{
 
 A \code{mzrt_match} object inherits the following \code{struct} classes: \cr\cr
-\verb{[mzrt_match]} >> \verb{[model]} >> \verb{[struct_class]}
+\verb{[mzrt_match]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = mzrt_match(
-      variable_meta = data.frame(id=NA),
-      mz_column = character(0),
-      ppm_window = numeric(0),
-      id_column = character(0),
-      rt_column = character(0),
-      rt_window = numeric(0))
+M = mzrt_match( variable_meta = data.frame(id=NA), mz_column =
+character(0), ppm_window = numeric(0), id_column = character(0),
+rt_column = character(0), rt_window = numeric(0))
 
 }

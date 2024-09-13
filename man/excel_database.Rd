@@ -14,20 +14,26 @@ excel_database(
 )
 }
 \arguments{
-\item{source}{(ANY) The source of annotation data. The default is \code{character(0)}.}
+\item{source}{(ANY) The source of annotation data. The default is
+\code{character(0)}.}
 
-\item{sheet}{(character) The name of the sheet to import. The default is \code{1}.\cr}
+\item{sheet}{(character) The name of the sheet to import. The default
+is \code{1}.\cr}
 
-\item{rowNames}{(logical) If TRUE, first column of data will be used as row names. The default is \code{FALSE}.\cr}
+\item{rowNames}{(logical) If TRUE, first column of data will be used
+as row names. The default is \code{FALSE}.\cr}
 
-\item{colNames}{(logical) If TRUE, first row of data will be used as column names. The default is \code{TRUE}.\cr}
+\item{colNames}{(logical) If TRUE, first row of data will be used as
+column names. The default is \code{TRUE}.\cr}
 
-\item{startRow}{(numeric, integer) First row to begin looking for data. Empty rows at the top of a file are always skipped, regardless of the value of startRow. The default is \code{1}.\cr}
+\item{startRow}{(numeric, integer) First row to begin looking for
+data. Empty rows at the top of a file are always skipped, regardless
+of the value of startRow. The default is \code{1}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 excel_database
 } object. This object has no \code{output} slots.
 }
@@ -35,28 +41,26 @@ excel_database
 A data.frame imported from the sheet of an excel file
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{openxlsx}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{openxlsx}}}
 }
 \section{Inheritance}{
 
-A \code{excel_database} object inherits the following \code{struct} classes: \cr\cr
-\verb{[excel_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{excel_database} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[excel_database]} -> \verb{[annotation_database]} ->
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = excel_database(
-      sheet = character(0),
-      rowNames = FALSE,
-      colNames = FALSE,
-      startRow = 1,
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = excel_database( sheet = character(0), rowNames = FALSE, colNames
+= FALSE, startRow = 1, tag = character(0), data = data.frame(id=NA),
+source = "ANY")
 
 }
 \references{
-Schauberger P, Walker A (2023). \emph{openxlsx: Read, Write and Edit xlsx
-Files}. R package version 4.2.5.2,
+Schauberger P, Walker A (2023). \emph{openxlsx: Read, Write
+and Edit xlsx Files}. R package version 4.2.5.2,
 \url{https://CRAN.R-project.org/package=openxlsx}.
 }
 \seealso{

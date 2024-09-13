@@ -15,50 +15,60 @@ database_lookup(
 )
 }
 \arguments{
-\item{query_column}{(character) The annotation table column name to use as the reference for searching the database e.g. "HMBD_ID".}
+\item{query_column}{(character) The annotation table column name to
+use as the reference for searching the database e.g. "HMBD_ID".}
 
-\item{database_column}{(character) The database column to search for matches to the values in annoation_column.}
+\item{database_column}{(character) The database column to search for
+matches to the values in annoation_column.}
 
-\item{database}{(data.frame, annotation_database) A database to be searched. Can be a \code{data.frame} or a \code{annotation_database} object.}
+\item{database}{(data.frame, annotation_database) A database to be
+searched. Can be a \code{data.frame} or a \code{annotation_database} object.}
 
-\item{include}{(character, NULL) The name of the database columns to be added to the annotations. If NULL, all columns are retained. The default is \code{NULL}.}
+\item{include}{(character, NULL) The name of the database columns to
+be added to the annotations. If NULL, all columns are retained. The
+default is \code{NULL}.}
 
-\item{suffix}{(character, NULL) A string appended to the column names from the database. Used to distinguish columns from different databases with identical column names.If suffix = NULL then the column names are not changed. The default is \code{NULL}.}
+\item{suffix}{(character, NULL) A string appended to the column names
+from the database. Used to distinguish columns from different
+databases with identical column names.If suffix = NULL then the
+column names are not changed. The default is \code{NULL}.}
 
-\item{not_found}{(character, numeric, logical, NULL) The returned value when there are no matches. The default is \code{NA}.\cr}
+\item{not_found}{(character, numeric, logical, NULL) The returned
+value when there are no matches. The default is \code{NA}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{database_lookup} object with the following \code{output} slots:
+A \code{database_lookup} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The input annotation_source is updated with matching columns from the database. \cr
+\code{updated} \tab (annotation_source) The input annotation_source
+is updated with matching columns from the database. \cr
 }
 }
 \description{
-Search a database (data.frame) for annotation matches based on values in a specified column.
+Search a database (data.frame) for annotation matches
+based on values in a specified column.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}}}
 }
 \section{Inheritance}{
 
-A \code{database_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[database_lookup]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{database_lookup} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[database_lookup]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = database_lookup(
-      query_column = "V1",
-      database_column = "",
-      database = data.frame(id=NA),
-      include = NULL,
-      suffix = NULL,
-      not_found = NULL)
+M = database_lookup( query_column = "V1", database_column = "",
+database = data.frame(id=NA), include = NULL, suffix = NULL,
+not_found = NULL)
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }

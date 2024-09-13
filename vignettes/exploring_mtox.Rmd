@@ -17,35 +17,35 @@ vignette: >
 
   
 ```{r, include = FALSE}
-  knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE,
-  warning = FALSE,
-  fig.align = "center"
-  )
-  
-  .DT <- function(x) {
-  dt_options <- list(
-  scrollX = TRUE,
-  pageLength = 6,
-  dom = "t",
-  initComplete = DT::JS(
-  "function(settings, json) {",
-  "$(this.api().table().header()).css({'font-size':'10pt'});",
-  "}"
-  )
-  )
-  
-  x %>%
-  DT::datatable(options = dt_options, rownames = FALSE) %>%
-  DT::formatStyle(
-  columns = colnames(x),
-  fontSize = "10pt"
-  )
-  }
-  
-  library(BiocStyle)
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    message = FALSE,
+    warning = FALSE,
+    fig.align = "center"
+)
+
+.DT <- function(x) {
+    dt_options <- list(
+        scrollX = TRUE,
+        pageLength = 6,
+        dom = "t",
+        initComplete = DT::JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'font-size':'10pt'});",
+            "}"
+        )
+    )
+
+    x %>%
+        DT::datatable(options = dt_options, rownames = FALSE) %>%
+        DT::formatStyle(
+            columns = colnames(x),
+            fontSize = "10pt"
+        )
+}
+
+library(BiocStyle)
 ```
   
   <br>
@@ -56,25 +56,25 @@ vignette: >
   current R version can be installed using BiocManager.
   
 ```{r,eval = FALSE, include = TRUE}
-  # install BiocManager if not present
-  if (!requireNamespace("BiocManager", quietly = TRUE)) {
-  install.packages("BiocManager")
-  }
-  
-  # install MetMashR and dependencies
-  BiocManager::install("MetMashR")
+# install BiocManager if not present
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+
+# install MetMashR and dependencies
+BiocManager::install("MetMashR")
 ```
   
   Once installed you can activate the packages in the usual way:
   
 ```{r, eval=TRUE, include=FALSE}
-  suppressWarnings(suppressPackageStartupMessages({
-# load the packages
-library(MetMashR)
-library(ggplot2)
-library(structToolbox)
-library(dplyr)
-library(DT)
+suppressWarnings(suppressPackageStartupMessages({
+    # load the packages
+    library(MetMashR)
+    library(ggplot2)
+    library(structToolbox)
+    library(dplyr)
+    library(DT)
 }))
 ```
 
@@ -120,7 +120,7 @@ df <- read_database(MT)
 
 ```{r}
 # prepare workflow that uses MTox700+ as a source
-M <- 
+M <-
     import_source() +
     trim_whitespace(
         column_name = ".all",
@@ -141,8 +141,9 @@ The chemical (or "metabolite") space covered by the
 MTox700+ database can be explored in several ways using the data included in 
 the database.
 
-For example, we can generate images of the molecules using the SMILES included in 
-the database. Here we generate images of the first 6 metabolites in the database.
+For example, we can generate images of the molecules using the SMILES included 
+in the database. Here we generate images of the first 6 metabolites in the 
+database.
 
 ```{r}
 # prepare chart
@@ -193,7 +194,8 @@ g <- chart_plot(C, predicted(M)) + ylim(c(0, 600)) +
 
 # layout
 leg <- cowplot::get_legend(g)
-cowplot::plot_grid(g + theme(legend.position = "none"), leg, nrow = 2, rel_heights = c(75, 25))
+cowplot::plot_grid(g + theme(legend.position = "none"), leg, nrow = 2, 
+                   rel_heights = c(75, 25))
 ```
 
 <br>
@@ -204,8 +206,8 @@ To explore the biological space covered by the metabolites in MTox700+ we need
 mash the database with additional information about the biological pathways that
 the metabolites are part of.
 
-We use the [PathBank](https://pathbank.org/) for this purpose. A `struct_database`
-object for PathBank is already included in `MetMashR`.
+We use the [PathBank](https://pathbank.org/) for this purpose. A 
+`struct_database` object for PathBank is already included in `MetMashR`.
 
 <br>
 
@@ -262,17 +264,17 @@ C <- annotation_venn_chart(
 )
 
 # plot
-g1=chart_plot(C, predicted(M), P) 
+g1 <- chart_plot(C, predicted(M), P)
 
-C = annotation_upset_chart(
-    factor_name = c("inchikey","InChI.Key")
+C <- annotation_upset_chart(
+    factor_name = c("inchikey", "InChI.Key")
 )
-g2=chart_plot(C,predicted(M),P) 
-cowplot::plot_grid(g1,g2,nrow=1,labels = c('Venn diagram','UpSet plot'))
+g2 <- chart_plot(C, predicted(M), P)
+cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
 ```
 
-The charts show that less than half of the metabolites in MTox700+ are also present 
-in the PathBank database for primary pathways.
+The charts show that less than half of the metabolites in MTox700+ are also 
+present in the PathBank database for primary pathways.
 
 <br>
 

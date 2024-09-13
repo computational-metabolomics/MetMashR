@@ -12,54 +12,67 @@ MTox700plus_database(
 )
 }
 \arguments{
-\item{version}{(character) The version number of the MTox700+ database to import. Available versions are listed here: \link{https://github.com/michabohealthscience/MTox700plus/releases}. \code{version} should match the tag of the release e.g. \code{"v1.0"}. For convenience \code{version = "latest"} will always retrieve the most recent release. To prevent unecessary downloads \code{BiocFileCache} is used to store a local copy. The default is \code{"latest"}.}
+\item{version}{(character) The version number of the MTox700+
+database to import. Available versions are listed here:
+\link{https://github.com/michabohealthscience/MTox700plus/releases}.
+\code{version} should match the tag of the release e.g. \code{"v1.0"}. For
+convenience \code{version = "latest"} will always retrieve the most recent
+release. To prevent unecessary downloads \code{BiocFileCache} is used to
+store a local copy. The default is \code{"latest"}.}
 
-\item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache the database locally and prevent unnecessary downloads. If a path is provided then \code{BiocFileCache} will use this location. If NULL it will use the default location (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The default is \code{NULL}.}
+\item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache
+the database locally and prevent unnecessary downloads. If a path is
+provided then \code{BiocFileCache} will use this location. If NULL it will
+use the default location (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for
+details). The default is \code{NULL}.}
 
-\item{resource_name}{(character) The name given to this resource in the cache. (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The default is \code{"MetMashR_MTox700plus"}.}
+\item{resource_name}{(character) The name given to this resource in
+the cache. (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The
+default is \code{"MetMashR_MTox700plus"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 MTox700plus_database
 } object. This object has no \code{output} slots.
 }
 \description{
-Imports the MTox700+ database, which is made available under the ODC Attribution License. MTox700+ is a list of toxicologically relevant metabolites derived from publications, public databases and relevant toxicological assays.
+Imports the MTox700+ database, which is made available
+under the ODC Attribution License. MTox700+ is a list of
+toxicologically relevant metabolites derived from publications,
+public databases and relevant toxicological assays.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{BiocFileCache}} \item{\code{httr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{BiocFileCache}} \item{\code{httr}}}
 }
 \section{Inheritance}{
 
-A \code{MTox700plus_database} object inherits the following \code{struct} classes: \cr\cr
-\verb{[MTox700plus_database]} >> \verb{[BiocFileCache_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{MTox700plus_database} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[MTox700plus_database]} -> \verb{[BiocFileCache_database]} ->
+\verb{[annotation_database]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = MTox700plus_database(
-      version = "v1.0",
-      bfc_path = NULL,
-      resource_name = "bfc",
-      bfc_fun = function(){},
-      import_fun = function(){},
-      offline = FALSE,
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = MTox700plus_database( version = "v1.0", bfc_path = NULL,
+resource_name = "bfc", bfc_fun = function(){}, import_fun =
+function(){}, offline = FALSE, tag = character(0), data =
+data.frame(id=NA), source = "ANY")
 
 }
 \references{
-Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files Across
-Sessions}. R package version 2.10.2.
+Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files
+Across Sessions}. R package version 2.10.2.
 
-Wickham H (2023). \emph{httr: Tools for Working with URLs and HTTP}. R
-package version 1.4.7, \url{https://CRAN.R-project.org/package=httr}.
+Wickham H (2023). \emph{httr: Tools for Working with URLs and
+HTTP}. R package version 1.4.7,
+\url{https://CRAN.R-project.org/package=httr}.
 
-Sostare E, Lawson TN, Saunders LR, Colbourne JK, Weber RJM, Sobanski T,
-Viant MR (2022). "Knowledge-Driven Approaches to Create the MTox700+
-Metabolite Panel for Predicting Toxicity." \emph{Toxicological Sciences},
-\emph{186}, 208-220. doi:10.1093/toxsci/kfac007
+Sostare E, Lawson TN, Saunders LR, Colbourne JK, Weber
+RJM, Sobanski T, Viant MR (2022). "Knowledge-Driven Approaches to
+Create the MTox700+ Metabolite Panel for Predicting Toxicity."
+\emph{Toxicological Sciences}, \emph{186}, 208-220. doi:10.1093/toxsci/kfac007
 \url{https://doi.org/10.1093/toxsci/kfac007}.
 }

@@ -6,7 +6,7 @@
 \alias{MetMashR-package}
 \title{MetMashR: Metabolite Mashing with R}
 \description{
-A package to merge, filter sort, organise and otherwise mash together metabolite annotation tables. Metabolite annotations can be imported from multiple sources (software) and combined using workflow steps based on S4 class templates derived from the `struct` package. Other modular workflow such as filtering, merging, splitting, normalisation and rest-api queries are also included.
+A package to merge, filter sort, organise and otherwise mash together metabolite annotation tables. Metabolite annotations can be imported from multiple sources (software) and combined using workflow steps based on S4 class templates derived from the `struct` package. Other modular workflow steps such as filtering, merging, splitting, normalisation and rest-api queries are included.
 }
 \seealso{
 Useful links:

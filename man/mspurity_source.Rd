@@ -9,40 +9,42 @@ mspurity_source(source, tag = "msPurity", ...)
 \arguments{
 \item{source}{(ANY) The source of annotation data.}
 
-\item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{"msPurity"}.}
+\item{tag}{(character) A (short) character string that is used to
+represent this source e.g. in column names or source columns when
+used in a workflow. The default is \code{"msPurity"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 mspurity_source
 } object. This object has no \code{output} slots.
 }
 \description{
-An annotation source for importing an annotation table from the
-format created by the \code{msPurity} package.
+An annotation source for importing an annotation table
+from the format created by the \code{msPurity} package.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{msPurity}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{msPurity}}}
 }
 \section{Inheritance}{
 
-A \code{mspurity_source} object inherits the following \code{struct} classes: \cr\cr
-\verb{[mspurity_source]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{mspurity_source} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[mspurity_source]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = mspurity_source(
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = mspurity_source( tag = character(0), data = data.frame(id=NA),
+source = "ANY")
 
 }
 \references{
-Lawson, Nigel T, Weber, M. RJ, Jones, R. M, Chetwynd, J. A, Blanco R,
-Alejandro G, Guida D, Riccardo, Viant, R. M, Dunn, B W (2017).
-"msPurity: Automated Evaluation of Precursor Ion Purity for Mass
-Spectrometry-Based Fragmentation in Metabolomics." \emph{Analytical
+Lawson, Nigel T, Weber, M. RJ, Jones, R. M, Chetwynd, J.
+A, Blanco R, Alejandro G, Guida D, Riccardo, Viant, R. M, Dunn, B W
+(2017). "msPurity: Automated Evaluation of Precursor Ion Purity for
+Mass Spectrometry-Based Fragmentation in Metabolomics." \emph{Analytical
 Chemistry}, \emph{89}, 2432-2439. doi:10.1021/acs.analchem.6b04358
 \url{https://doi.org/10.1021/acs.analchem.6b04358}.
 }

@@ -1,7 +1,8 @@
 #' @eval get_description('id_counts')
 #' @export
 #' @include annotation_source_class.R
-id_counts <- function(id_column,
+id_counts <- function(
+    id_column,
     count_column = "id_counts",
     count_na = TRUE,
     ...) {

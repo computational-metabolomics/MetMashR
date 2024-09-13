@@ -8,41 +8,44 @@ rename_columns(expression, ...)
 }
 \arguments{
 \item{expression}{(call) A valid rlang::expr for tidy evaluation e.g.
-\code{expression = all_of(c("foo"="bar"))} will rename the column
-named "bar" and "foo".
-.}
+\code{expression = all_of(c("foo"="bar"))} will rename the column named
+"bar" and "foo".  .}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{rename_columns} object with the following \code{output} slots:
+A \code{rename_columns} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-A wrapper around \code{\link[dplyr:rename]{dplyr::rename}}. Rename columns from an annotation table using tidy grammar.
+A wrapper around \code{\link[dplyr:rename]{dplyr::rename}}. Rename columns from
+an annotation table using tidy grammar.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{tidyselect}} \item{\code{rlang}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{tidyselect}} \item{\code{rlang}}}
 }
 \section{Inheritance}{
 
-A \code{rename_columns} object inherits the following \code{struct} classes: \cr\cr
-\verb{[rename_columns]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{rename_columns} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[rename_columns]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = rename_columns(
-      expression = call("example"))
+M = rename_columns( expression = call("example"))
 
 }
 \references{
-Henry L, Wickham H (2024). \emph{tidyselect: Select from a Set of Strings}.
-R package version 1.2.1,
+Henry L, Wickham H (2024). \emph{tidyselect: Select from a Set
+of Strings}. R package version 1.2.1,
 \url{https://CRAN.R-project.org/package=tidyselect}.
 
-Henry L, Wickham H (2024). \emph{rlang: Functions for Base Types and Core R
-and 'Tidyverse' Features}. R package version 1.1.3,
+Henry L, Wickham H (2024). \emph{rlang: Functions for Base
+Types and Core R and 'Tidyverse' Features}. R package version 1.1.3,
 \url{https://CRAN.R-project.org/package=rlang}.
 }

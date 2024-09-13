@@ -14,45 +14,53 @@ pubchem_compound_lookup(
 )
 }
 \arguments{
-\item{query_column}{(character) The column name to use as the reference for searching the database e.g. "HMBD_ID".}
+\item{query_column}{(character) The column name to use as the
+reference for searching the database e.g. "HMBD_ID".}
 
-\item{search_by}{(character) The PubChem domain to search for matches to the annotation_column.}
+\item{search_by}{(character) The PubChem domain to search for matches
+to the annotation_column.}
 
-\item{suffix}{(character) A suffix appended to all column names in the returned result. The default is \code{"_pubchem"}.}
+\item{suffix}{(character) A suffix appended to all column names in
+the returned result. The default is \code{"_pubchem"}.}
 
-\item{output}{(character) The value returned from the pubchem database. The default is \code{"cids"}.}
+\item{output}{(character) The value returned from the pubchem
+database. The default is \code{"cids"}.}
 
-\item{records}{(character) Returned record(s). Allowed values are limited to the following: \itemize{ \item{\code{""}: Sometimes there are multiple matches to the PubChem, database especially when searhcing by name.}\item{\code{"best"}: Return only the best matching record.}\item{\code{"all"}: Return all matching records.}} The default is \code{"best"}.}
+\item{records}{(character) Returned record(s). Allowed values are
+limited to the following: \itemize{ \item{\code{""}: Sometimes there
+are multiple matches to the PubChem, database especially when
+searhcing by name.}\item{\code{"best"}: Return only the best matching
+record.}\item{\code{"all"}: Return all matching records.}} The
+default is \code{"best"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{pubchem_compound_lookup} object with the following \code{output} slots:
+A \code{pubchem_compound_lookup} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after adding data returned by the API. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+adding data returned by the API. \cr
 }
 }
 \description{
-Uses the PubChem API to search for CID based on
-the input annotation column.
+Uses the PubChem API to search for CID based on the
+input annotation column.
 }
 \section{Inheritance}{
 
-A \code{pubchem_compound_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[pubchem_compound_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{pubchem_compound_lookup} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[pubchem_compound_lookup]} -> \verb{[rest_api]} -> \verb{[model]} ->
+\verb{[struct_class]}
 }
 
 \examples{
-M = pubchem_compound_lookup(
-      search_by = "cid",
-      output = "cids",
-      records = "best",
-      base_url = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound",
-      url_template = "<base_url>/<search_by>/<query_column>/<output>/JSON",
-      query_column = character(0),
-      cache = NULL,
-      status_codes = list(),
-      delay = 0.5,
-      suffix = "_rest_api")
+M = pubchem_compound_lookup( search_by = "cid", output = "cids",
+records = "best", base_url =
+"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound", url_template =
+"<base_url>/<search_by>/<query_column>/<output>/JSON", query_column =
+character(0), cache = NULL, status_codes = list(), delay = 0.5,
+suffix = "_rest_api")
 
 }

@@ -7,38 +7,44 @@
 pivot_columns(column_groups, group_labels, ...)
 }
 \arguments{
-\item{column_groups}{(list) A named list of columns to group together into a single group of columns. There should be the same number of columns in each group.}
+\item{column_groups}{(list) A named list of columns to group together
+into a single group of columns. There should be the same number of
+columns in each group.}
 
-\item{group_labels}{(list) A named list of columns and the label to use for all records in that column.}
+\item{group_labels}{(list) A named list of columns and the label to
+use for all records in that column.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{pivot_columns} object with the following \code{output} slots:
+A \code{pivot_columns} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-Combine multiple groups of columns into a single group of columns with group labels.
+Combine multiple groups of columns into a single group
+of columns with group labels.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}}}
 }
 \section{Inheritance}{
 
-A \code{pivot_columns} object inherits the following \code{struct} classes: \cr\cr
-\verb{[pivot_columns]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{pivot_columns} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[pivot_columns]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = pivot_columns(
-      group_labels = list(),
-      column_groups = list())
+M = pivot_columns( group_labels = list(), column_groups = list())
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }

@@ -7,41 +7,47 @@
 compute_column(input_columns, output_column, fcn, ...)
 }
 \arguments{
-\item{input_columns}{(character) The name of a column in the input table used to compute a new column.}
+\item{input_columns}{(character) The name of a column in the input
+table used to compute a new column.}
 
-\item{output_column}{(character) The name of the newply computed column.}
+\item{output_column}{(character) The name of the newply computed
+column.}
 
-\item{fcn}{(function) The function used to compute the values for the new column.}
+\item{fcn}{(function) The function used to compute the values for the
+new column.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{compute_column} object with the following \code{output} slots:
+A \code{compute_column} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-Compute values for a new column based on an input column.
+Compute values for a new column based on an input
+column.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}}}
 }
 \section{Inheritance}{
 
-A \code{compute_column} object inherits the following \code{struct} classes: \cr\cr
-\verb{[compute_column]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{compute_column} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[compute_column]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = compute_column(
-      input_columns = character(0),
-      output_column = character(0),
-      fcn = function(){})
+M = compute_column( input_columns = character(0), output_column =
+character(0), fcn = function(){})
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }

@@ -100,8 +100,8 @@ pubchem_property_lookup <- function(query_column,
     ),
     prototype = list(
         name = "Compound property lookup via pubchem",
-        description = paste0("Uses the PubChem API to search for CID based on
-            the input annotation column and returns property information."),
+        description = paste0("Uses the PubChem API to search for CID based on",
+            "the input annotation column and returns property information."),
         type = "rest_api",
         predicted = "updated",
         .params = c("search_by", "property"),

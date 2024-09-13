@@ -14,54 +14,62 @@ github_file(
 )
 }
 \arguments{
-\item{username}{(character) The GitHub username to retireve the file from.}
+\item{username}{(character) The GitHub username to retireve the file
+from.}
 
-\item{repository_name}{(character) The name of a repository for the specified GitHub usernamethat contains the file to download.}
+\item{repository_name}{(character) The name of a repository for the
+specified GitHub usernamethat contains the file to download.}
 
-\item{file_path}{(character) The path to the file to download within the specified GitHub repository.}
+\item{file_path}{(character) The path to the file to download within
+the specified GitHub repository.}
 
-\item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache the database locally and prevent unnecessary downloads. If a path is provided then \code{BiocFileCache} will use this location. If NULL it will use the default location (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The default is \code{NULL}.}
+\item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache
+the database locally and prevent unnecessary downloads. If a path is
+provided then \code{BiocFileCache} will use this location. If NULL it will
+use the default location (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for
+details). The default is \code{NULL}.}
 
-\item{resource_name}{(character) The name given to this resource in the cache. (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The default is \code{paste(username, repository_name, file_path, sep = "_")}.}
+\item{resource_name}{(character) The name given to this resource in
+the cache. (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The
+default is \code{paste(username, repository_name, file_path, sep =
+"_")}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 github_file
 } object. This object has no \code{output} slots.
 }
 \description{
-Uses the GitHub REST API to retrieve a file from a specifiedGitHub repository.
+Uses the GitHub REST API to retrieve a file from a
+specifiedGitHub repository.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{BiocFileCache}} \item{\code{httr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{BiocFileCache}} \item{\code{httr}}}
 }
 \section{Inheritance}{
 
-A \code{github_file} object inherits the following \code{struct} classes: \cr\cr
-\verb{[github_file]} >> \verb{[BiocFileCache_database]} >> \verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{github_file} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[github_file]} -> \verb{[BiocFileCache_database]} ->
+\verb{[annotation_database]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = github_file(
-      username = character(0),
-      repository_name = character(0),
-      file_path = character(0),
-      bfc_path = NULL,
-      resource_name = "bfc",
-      bfc_fun = function(){},
-      import_fun = function(){},
-      offline = FALSE,
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = github_file( username = character(0), repository_name =
+character(0), file_path = character(0), bfc_path = NULL,
+resource_name = "bfc", bfc_fun = function(){}, import_fun =
+function(){}, offline = FALSE, tag = character(0), data =
+data.frame(id=NA), source = "ANY")
 
 }
 \references{
-Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files Across
-Sessions}. R package version 2.10.2.
+Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files
+Across Sessions}. R package version 2.10.2.
 
-Wickham H (2023). \emph{httr: Tools for Working with URLs and HTTP}. R
-package version 1.4.7, \url{https://CRAN.R-project.org/package=httr}.
+Wickham H (2023). \emph{httr: Tools for Working with URLs and
+HTTP}. R package version 1.4.7,
+\url{https://CRAN.R-project.org/package=httr}.
 }

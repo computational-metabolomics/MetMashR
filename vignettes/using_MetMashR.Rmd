@@ -45,14 +45,16 @@ library(BiocStyle)
 <br>
 
 # Introduction
-`r Biocpkg("MetMashR")` is an R package designed to facilitate the cleaning, filtering and 
-combining of annotations from different sources. `r Biocpkg("MetMashR")` defines an
-"annotation source" as a piece of software, proprietary or otherwise, that
+`r Biocpkg("MetMashR")` is an R package designed to facilitate the cleaning, 
+filtering and combining of annotations from different sources. 
+`r Biocpkg("MetMashR")` defines an"annotation source" as a piece of software, 
+proprietary or otherwise, that
 takes the raw input of an analytical instrument and attempts to
 assign molecule names to the peaks in the data, usually by comparison to a 
-library. `r Biocpkg("MetMashR")` was primarily designed for use with metabolomics data 
-measured
-by LCMS (hence "metabolite" in the package name) but could be extended to include
+library. `r Biocpkg("MetMashR")` was primarily designed for use with 
+metabolomics data measured
+by LCMS (hence "metabolite" in the package name) but could be extended to 
+include
 other platforms (e.g. NMR, DIMS etc.), or other analytical approaches.
 
 In this vignette we describe commonly used annotation workflow steps and show
@@ -61,12 +63,16 @@ how to use them in detail.
 <br>
 
 # Statistics in R using Class Templates (struct)
-All of the objects defined in `r Biocpkg("MetMashR")` use or extend the class templates 
-defined by the `r Biocpkg("struct")` package. Although originally intended for statistics
-applications, the templates in the `r Biocpkg("struct")` package have proven to be adaptable
+All of the objects defined in `r Biocpkg("MetMashR")` use or extend the class 
+templates 
+defined by the `r Biocpkg("struct")` package. Although originally intended for 
+statistics
+applications, the templates in the `r Biocpkg("struct")` package have proven to 
+be adaptable
 to many different scenarios and types of analysis/workflow step.
 
-The use of `r Biocpkg("struct")` templates allows workflow steps to be applied in sequence 
+The use of `r Biocpkg("struct")` templates allows workflow steps to be applied 
+in sequence 
 and intermediate outputs to be retained for further analysis if required. The
 templates include ontology definitions for both the object and its input/output
 parameters. This makes the workflows more "FAIR" which is critical alongside
@@ -78,7 +84,8 @@ the [package vignette](https://www.bioconductor.org/packages/release/bioc/vignet
 <br>
 
 # Getting Started
-The latest versions of `r Biocpkg("struct")` and `r Biocpkg("MetMashR")` that are compatible 
+The latest versions of `r Biocpkg("struct")` and `r Biocpkg("MetMashR")` that 
+are compatible 
 with your 
 current R version can be installed using BiocManager.
 
@@ -117,8 +124,10 @@ library(ggplot2)
 
 # Annotation Sources
 
-`annotation_source` objects are the dataset used by all `r Biocpkg("MetMashR")` workflow 
-steps. If you have used our `r Biocpkg("structToolbox")` package before, then annotation 
+`annotation_source` objects are the dataset used by all `r Biocpkg("MetMashR")` 
+workflow 
+steps. If you have used our `r Biocpkg("structToolbox")` package before, then 
+annotation 
 sources used equivalently to `DatasetExperiment` objects, except that they hold 
 a single `data.frame` of metabolite annotation data.
 
@@ -135,7 +144,8 @@ use of `annotation_table` and `annotation_database` is different.
 
 ## Annotation Tables
 
-A `annotation_table` is defined by us as a `data.frame` of metabolite annotations
+A `annotation_table` is defined by us as a `data.frame` of metabolite 
+annotations
 for experimentally collected data. For example, we have provided `lcms_table`
 objects which ensure that both m/z and retention time data is included in the 
 data.frame for LCMS data. Usually this table of annotations is acquired after 
@@ -145,7 +155,8 @@ software to generate annotations for an experimental data set.
 
 :::{#Note style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
 **Note:**  
-It is not the aim of `r Biocpkg("MetMashR")` to generate these annotations. Instead we aim to
+It is not the aim of `r Biocpkg("MetMashR")` to generate these annotations. 
+Instead we aim to
 provide tools to process, filter, clean and otherwise "mash" this table of annotations
 generated elsewhere.
 :::
@@ -518,7 +529,8 @@ WF <-
         output_column = "normalised_name",
         dictionary = custom_dict
     ) +
-    # step 4 query lipidmaps api for inchikey using the names provided by LipidSearch
+    # step 4 query lipidmaps api for inchikey using the names provided by 
+    # LipidSearch
     lipidmaps_lookup(
         query_column = "LipidName",
         context = "compound",
@@ -527,7 +539,8 @@ WF <-
         suffix = "_LipidName",
         cache = TF
     ) +
-    # step 5 query lipidmaps api for inchikey using the names provided by LipidSearch
+    # step 5 query lipidmaps api for inchikey using the names provided by 
+    # LipidSearch
     lipidmaps_lookup(
         query_column = "normalised_name",
         context = "compound",
@@ -540,7 +553,8 @@ WF <-
 WF <- model_apply(WF, AT)
 
 #  show result table for relevant columns
-.DT(predicted(WF)$data[, c("LipidName", "normalised_name", "inchi_key_LipidName", "inchi_key_normalised")])
+.DT(predicted(WF)$data[, c("LipidName", "normalised_name", 
+                           "inchi_key_LipidName", "inchi_key_normalised")])
 ```
 
 You can see that we obtained inchikey for more of the Lipids after normalising
@@ -582,7 +596,8 @@ CR <- combine_records(
 CR <- model_apply(CR, predicted(WF))
 
 # show output for relevant columns
-.DT(predicted(CR)$data[, c("LipidName", "normalised_name", "inchi_key_normalised", "count")])
+.DT(predicted(CR)$data[, c("LipidName", "normalised_name", 
+                           "inchi_key_normalised", "count")])
 ```
 
 You can see that there is now a single record (row) for each LipidName, and that 

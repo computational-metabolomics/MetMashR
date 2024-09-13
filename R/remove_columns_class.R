@@ -1,15 +1,15 @@
-#' @eval get_description('select_columns')
+#' @eval get_description('remove_columns')
 #' @export
 #' @include annotation_source_class.R
 #' @seealso [dplyr::select()]
 #' @seealso [tidyselect::eval_select()]
 #' @import rlang
-select_columns <- function(expression = everything(), ...) {
+remove_columns <- function(expression = everything(), ...) {
     # capture
     ex <- rlang::enexpr(expression)
 
     out <- struct::new_struct(
-        "select_columns",
+        "remove_columns",
         expression = ex,
         ...
     )
@@ -17,8 +17,8 @@ select_columns <- function(expression = everything(), ...) {
 }
 
 
-.select_columns <- setClass(
-    "select_columns",
+.remove_columns <- setClass(
+    "remove_columns",
     contains = c("model"),
     slots = c(
         updated = "entity",
@@ -27,11 +27,10 @@ select_columns <- function(expression = everything(), ...) {
     prototype = list(
         name = "Select columns",
         description = paste0(
-            "A wrapper around [`tidyselect::eval_select`]. Select columns ",
-            "from an annotation table using tidy grammar. This imitates ",
-            "[`dplyr::select()`]."
+            "A wrapper around [`tidyselect::eval_select`]. Remove columns ",
+            "from an annotation table using tidy grammar."
         ),
-        type = "select",
+        type = "remove",
         predicted = "updated",
         .params = c("expression"),
         .outputs = c("updated"),
@@ -51,7 +50,7 @@ select_columns <- function(expression = everything(), ...) {
                 named "foo" and "bar" from the annotation data.frame.
                 '
             ),
-            value = expr(everything()),
+            value = expr(tidyselect::everything()),
             type = "call"
         )
     )
@@ -61,13 +60,13 @@ select_columns <- function(expression = everything(), ...) {
 #' @export
 setMethod(
     f = "model_apply",
-    signature = c("select_columns", "annotation_source"),
+    signature = c("remove_columns", "annotation_source"),
     definition = function(M, D) {
         # column indexes matching expression
         loc <- tidyselect::eval_select(M$expression, data = D$data)
 
         # update names
-        D$data <- rlang::set_names(D$data[loc], names(loc))
+        D$data <- D$data[, -loc]
 
         # update object
         M$updated <- D

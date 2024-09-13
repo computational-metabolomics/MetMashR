@@ -12,25 +12,35 @@ normalise_strings(
 )
 }
 \arguments{
-\item{search_column}{(character) The column name of the input \code{annotation_source} that will be searched for matching (sub)strings.}
+\item{search_column}{(character) The column name of the input
+\code{annotation_source} that will be searched for matching (sub)strings.}
 
-\item{output_column}{(character, NULL) The name of a new column that the modified strings will be stored in. If NULL the \code{search_column} will be replaced. The default is \code{NULL}.}
+\item{output_column}{(character, NULL) The name of a new column that
+the modified strings will be stored in. If NULL the \code{search_column}
+will be replaced. The default is \code{NULL}.}
 
-\item{dictionary}{(list, annotation_database) A list of patterns and functions that take the input pattern and return a replacement string. A \code{annotation_database} object containing a suitable list can also be used here. The default is \code{list()}.}
+\item{dictionary}{(list, annotation_database) A list of patterns and
+functions that take the input pattern and return a replacement
+string. A \code{annotation_database} object containing a suitable list can
+also be used here. The default is \code{list()}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{normalise_strings} object with the following \code{output} slots:
+A \code{normalise_strings} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-Replace matching (sub)strings based on a provided dictionary of search terms and their replacements.
+Replace matching (sub)strings based on a provided
+dictionary of search terms and their replacements.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}}}
 
 Each item of the \code{dictionary} list should #' have at least two
 fields: "pattern" and "replace". "pattern" is used as
@@ -44,21 +54,20 @@ If a character string is provided then \verb{[gsub()]} will be used by default.
 }
 \section{Inheritance}{
 
-A \code{normalise_strings} object inherits the following \code{struct} classes: \cr\cr
-\verb{[normalise_strings]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{normalise_strings} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[normalise_strings]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = normalise_strings(
-      search_column = character(0),
-      output_column = NULL,
-      dictionary = list())
+M = normalise_strings( search_column = character(0), output_column =
+NULL, dictionary = list())
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{
 \code{\link[=grepl]{grepl()}}, \code{\link[=gsub]{gsub()}}

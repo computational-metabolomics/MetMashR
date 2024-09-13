@@ -1,13 +1,12 @@
 #' @eval get_description('annotation_pie_chart')
 #' @include annotation_source_class.R
 #' @export
-annotation_bar_chart <- function(
-        factor_name,
-        label_rotation = FALSE,
-        label_location = "inside",
-        label_type = "percent",
-        legend = FALSE,
-        ...) {
+annotation_bar_chart <- function(factor_name,
+                                 label_rotation = FALSE,
+                                 label_location = "inside",
+                                 label_type = "percent",
+                                 legend = FALSE,
+                                 ...) {
     out <- struct::new_struct(
         "annotation_bar_chart",
         factor_name = factor_name,
@@ -17,7 +16,7 @@ annotation_bar_chart <- function(
         legend = legend,
         ...
     )
-    
+
     return(out)
 }
 
@@ -111,8 +110,8 @@ setMethod(
         df <- dobj$data %>%
             group_by(.data[[obj$factor_name]]) %>%
             summarise(count = n()) %>%
-            tidyr::complete(.data[[obj$factor_name]],fill=list(count=0))
-        
+            tidyr::complete(.data[[obj$factor_name]], fill = list(count = 0))
+
         # labels
         df$label <- ""
         if (obj$label_type == "percent") {
@@ -122,7 +121,7 @@ setMethod(
         } else if (obj$label_type == "count") {
             df$label <- as.character(df$count)
         }
-        
+
         if (obj$label_rotation) {
             df$label <- paste0(" ", df$label, " ")
         } else {
@@ -132,7 +131,7 @@ setMethod(
                 df$label <- paste0(df$label)
             }
         }
-        
+
         # add newlines of spaces to offset depending on rotation
         if (!obj$legend) {
             if (obj$label_type != "none") {
@@ -144,13 +143,13 @@ setMethod(
                 df$label <- df[[obj$factor_name]]
             }
         }
-        
+
         if (!obj$label_rotation) {
             df$rotate <- 0
         } else {
             df$rotate <- -90
         }
-        
+
         df$hjust <- 0.5
         if (obj$label_rotation) {
             if (obj$label_location == "inside") {
@@ -159,7 +158,7 @@ setMethod(
                 df$hjust <- 1
             }
         }
-        
+
         # plot
         g <- ggplot(
             data = df,
@@ -183,15 +182,15 @@ setMethod(
             structToolbox:::theme_Publication(12) +
             scale_fill_Publication() +
             theme_Publication()
-        
+
         # legend
         if (!obj$legend) {
             g <- g + theme(legend.position = "none")
         } else {
             g <- g + theme(axis.text.x = element_blank())
         }
-        
-        
+
+
         return(g)
     }
 )

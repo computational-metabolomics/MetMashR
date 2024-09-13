@@ -7,31 +7,36 @@
 annotation_database(data = data.frame(), tag = "", ...)
 }
 \arguments{
-\item{data}{(data.frame, NULL) A data.frame of annotation data. The default is \code{data.frame()}.}
+\item{data}{(data.frame, NULL) A data.frame of annotation data. The
+default is \code{data.frame()}.}
 
-\item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{""}.}
+\item{tag}{(character) A (short) character string that is used to
+represent this source e.g. in column names or source columns when
+used in a workflow. The default is \code{""}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 annotation_database
 } object. This object has no \code{output} slots.
 }
 \description{
-An \code{annotation_database} is an \code{\link[=annotation_source]{annotation_source()}} where the imported data.frame contains meta data for annotations. For example it might be a table of molecular identifiers, associated pathways etc.
+An \code{annotation_database} is an \code{\link[=annotation_source]{annotation_source()}}
+where the imported data.frame contains meta data for annotations. For
+example it might be a table of molecular identifiers, associated
+pathways etc.
 }
 \section{Inheritance}{
 
-A \code{annotation_database} object inherits the following \code{struct} classes: \cr\cr
-\verb{[annotation_database]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+A \code{annotation_database} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[annotation_database]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = annotation_database(
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = "ANY")
+M = annotation_database( tag = character(0), data =
+data.frame(id=NA), source = "ANY")
 
 }
 \seealso{

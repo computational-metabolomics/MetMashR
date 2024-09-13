@@ -1,21 +1,20 @@
 #' @eval get_description('annotation_pie_chart')
 #' @export
-annotation_pie_chart <- function(
-        factor_name,
-        label_rotation = FALSE,
-        label_location = "inside",
-        label_type = "percent",
-        legend = FALSE,
-        pie_rotation = 0,
-        centre_radius = 0,
-        centre_label = NULL,
-        count_na = FALSE,
-        ...) {
+annotation_pie_chart <- function(factor_name,
+                                 label_rotation = FALSE,
+                                 label_location = "inside",
+                                 label_type = "percent",
+                                 legend = FALSE,
+                                 pie_rotation = 0,
+                                 centre_radius = 0,
+                                 centre_label = NULL,
+                                 count_na = FALSE,
+                                 ...) {
     check <- centre_radius >= 0 & centre_radius <= 1
     if (!check) {
         stop("Pie chart centre_radius must be between 0 and 1.")
     }
-    
+
     out <- struct::new_struct(
         "annotation_pie_chart",
         factor_name = factor_name,
@@ -29,7 +28,7 @@ annotation_pie_chart <- function(
         count_na = count_na,
         ...
     )
-    
+
     return(out)
 }
 
@@ -47,7 +46,7 @@ annotation_pie_chart <- function(
         centre_radius = "entity",
         centre_label = "entity",
         count_na = "entity",
-        .pie_data = 'data.frame'
+        .pie_data = "data.frame"
     ),
     prototype = list(
         name = "Annotation pie chart",
@@ -165,13 +164,13 @@ setMethod(
     definition = function(obj, dobj) {
         r1 <- obj$centre_radius
         radians <- obj$pie_rotation * pi / 180
-        
+
         if (obj$label_location == "inside") {
             offset <- 1
         } else {
             offset <- 1.6
         }
-        
+
         if (obj$count_na) {
             dobj$data[[obj$factor_name]] <-
                 factor(dobj$data[[obj$factor_name]])
@@ -180,8 +179,8 @@ setMethod(
         df <- dobj$data %>%
             group_by(.data[[obj$factor_name]]) %>%
             summarise(count = n()) %>%
-            tidyr::complete(.data[[obj$factor_name]],fill=list(count=0))
-        
+            tidyr::complete(.data[[obj$factor_name]], fill = list(count = 0))
+
         # labels
         df$label <- ""
         if (obj$label_type == "percent") {
@@ -191,7 +190,7 @@ setMethod(
         } else if (obj$label_type == "count") {
             df$label <- as.character(df$count)
         }
-        
+
         if (!obj$legend) {
             if (obj$label_type != "none") {
                 df$label <- paste0(
@@ -202,7 +201,7 @@ setMethod(
                 df$label <- df[[obj$factor_name]]
             }
         }
-        
+
         # position of label in degrees
         df$angle <- ((cumsum(df$count) - (df$count / 2)) / sum(df$count)) *
             360 - obj$pie_rotation
@@ -211,13 +210,13 @@ setMethod(
         # centre if at top or bottom
         df$hjust[df$angle > 175 & df$angle < 185] <- 0.5
         df$hjust[df$angle > 355 | df$angle < 5] <- 0.5
-        
+
         if (!obj$label_rotation) {
             df$rotate <- 0
         } else {
             df$rotate <- df$angle - 270 - (180 * df$hjust)
         }
-        
+
         # plot
         g <- ggplot(
             data = df,
@@ -233,18 +232,18 @@ setMethod(
             coord_polar("y", start = radians, clip = "off") +
             theme_void() +
             geom_text(aes(x = offset, label = .data[["label"]], angle = rotate),
-                      position = position_stack(vjust = 0.5),
-                      hjust = df$hjust,
+                position = position_stack(vjust = 0.5),
+                hjust = df$hjust,
             ) +
             theme(plot.margin = unit(c(1, 1, 1, 1), "lines")) +
             xlim(c(0.5, 1.6)) +
             scale_fill_Publication()
-        
+
         # legend
         if (!obj$legend) {
             g <- g + theme(legend.position = "none")
         }
-        
+
         # add centre label
         if (!is.null(obj$centre_label)) {
             if (obj$centre_label == ".total") {
@@ -255,8 +254,8 @@ setMethod(
             g <- g +
                 geom_text(aes(x = 0.5, y = 0), label = obj$centre_label)
         }
-        
-        obj@.pie_data = df
+
+        obj@.pie_data <- df
         return(g)
     }
 )

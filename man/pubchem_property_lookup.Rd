@@ -13,44 +13,49 @@ pubchem_property_lookup(
 )
 }
 \arguments{
-\item{query_column}{(character) The column name to use as the reference for searching the database e.g. "HMBD_ID".}
+\item{query_column}{(character) The column name to use as the
+reference for searching the database e.g. "HMBD_ID".}
 
-\item{search_by}{(character) The PubChem domain to search for matches to the annotation_column.}
+\item{search_by}{(character) The PubChem domain to search for matches
+to the annotation_column.}
 
-\item{suffix}{(character) A suffix appended to all column names in the returned result. The default is \code{"_pubchem"}.}
+\item{suffix}{(character) A suffix appended to all column names in
+the returned result. The default is \code{"_pubchem"}.}
 
-\item{property}{(character) A comma separated list of properties to return from the pubchem database. (see https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest#section=Compound-Property-Tables for details). Keyword ".all" will return all properties. The default is \code{"InChIKey"}.}
+\item{property}{(character) A comma separated list of properties to
+return from the pubchem database. (see
+https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest#section=Compound-Property-Tables
+for details). Keyword ".all" will return all properties. The default
+is \code{"InChIKey"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{pubchem_property_lookup} object with the following \code{output} slots:
+A \code{pubchem_property_lookup} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after adding data returned by the API. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+adding data returned by the API. \cr
 }
 }
 \description{
-Uses the PubChem API to search for CID based on
-the input annotation column and returns property information.
+Uses the PubChem API to search for CID based onthe input
+annotation column and returns property information.
 }
 \section{Inheritance}{
 
-A \code{pubchem_property_lookup} object inherits the following \code{struct} classes: \cr\cr
-\verb{[pubchem_property_lookup]} >> \verb{[pubchem_compound_lookup]} >> \verb{[rest_api]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{pubchem_property_lookup} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[pubchem_property_lookup]} -> \verb{[pubchem_compound_lookup]} ->
+\verb{[rest_api]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = pubchem_property_lookup(
-      search_by = "cid",
-      property = "InChIKey",
-      output = "cids",
-      records = "best",
-      base_url = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound",
-      url_template = "<base_url>/<search_by>/<query_column>/property/<property>/JSON",
-      query_column = character(0),
-      cache = NULL,
-      status_codes = list(),
-      delay = 0.5,
-      suffix = "_rest_api")
+M = pubchem_property_lookup( search_by = "cid", property =
+"InChIKey", output = "cids", records = "best", base_url =
+"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound", url_template =
+"<base_url>/<search_by>/<query_column>/property/<property>/JSON",
+query_column = character(0), cache = NULL, status_codes = list(),
+delay = 0.5, suffix = "_rest_api")
 
 }

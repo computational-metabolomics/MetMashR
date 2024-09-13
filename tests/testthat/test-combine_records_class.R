@@ -178,7 +178,8 @@ test_that("combine select_match ok", {
     ##############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_match(match_col = "levels", search_col = "levels2", separator = " || "),
+        default_fcn = .select_match(match_col = "levels", 
+                                    search_col = "levels2", separator = " || "),
         fcns = list()
     )
 
@@ -187,7 +188,7 @@ test_that("combine select_match ok", {
     out <- predicted(M)$data
 
     expect_equal(nrow(out), 1) # all combined into 1 row
-    expect_equal(out$dbid[1], "A || B") # only A and B have level and level2 equal 1
+    expect_equal(out$dbid[1], "A || B") 
     expect_equal(out$levels, "1")
 
     ###############
@@ -463,7 +464,8 @@ test_that("combine records prioritise ok", {
     expect_equal(out$dbid[1], "B")
     expect_equal(out$levels[1], "2")
     # NA if no matches to priority list
-    expect_setequal(unlist(out[2, ]), c(2, "C", 200, 500.01, 3, 3)) # when NULL full
+    expect_setequal(
+        unlist(out[2, ]), c(2, "C", 200, 500.01, 3, 3)) # when NULL full
     # record is returned
 })
 
@@ -510,7 +512,8 @@ test_that("combine records errors ok", {
         {
             M <- combine_records(
                 group_by = "combine_by",
-                fcns = list(.collapse(separator = " || ", na_string = NA), "cake")
+                fcns = list(
+                    .collapse(separator = " || ", na_string = NA), "cake")
             )
         },
         "all fcns list items must be functions or calls."

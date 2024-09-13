@@ -14,39 +14,48 @@ prioritise_columns(
 )
 }
 \arguments{
-\item{column_names}{(character) The name(s) of column(s) to be combined.}
+\item{column_names}{(character) The name(s) of column(s) to be
+combined.}
 
 \item{output_name}{(character) The name of the new column.}
 
-\item{source_name}{(character) The column name used to indicate the where the merged values originated.}
+\item{source_name}{(character) The column name used to indicate the
+where the merged values originated.}
 
-\item{source_tags}{(character) The tags used to identify the source of each item in the new column. A tag should be provided for each column_name. By default the column name is used.}
+\item{source_tags}{(character) The tags used to identify the source
+of each item in the new column. A tag should be provided for each
+column_name. By default the column name is used.}
 
-\item{clean}{(logical) Clean old columns. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: The named columns are removed after being combined.}\item{\code{"FALSE"}: The named columns are retained after being combined.}} The default is \code{TRUE}.\cr}
+\item{clean}{(logical) Clean old columns. Allowed values are limited
+to the following: \itemize{ \item{\code{"TRUE"}: The named columns
+are removed after being combined.}\item{\code{"FALSE"}: The named
+columns are retained after being combined.}} The default is
+\code{TRUE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{prioritise_columns} object with the following \code{output} slots:
+A \code{prioritise_columns} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The input annotation source with the newly generated column. \cr
+\code{updated} \tab (annotation_source) The input annotation source
+with the newly generated column. \cr
 }
 }
 \description{
-Several columns are merged into a single column. If multiple columns contain overlapping values then priority can be given columns earlier in the list.
+Several columns are merged into a single column. If
+multiple columns contain overlapping values then priority can be
+given columns earlier in the list.
 }
 \section{Inheritance}{
 
-A \code{prioritise_columns} object inherits the following \code{struct} classes: \cr\cr
-\verb{[prioritise_columns]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{prioritise_columns} object inherits the following \code{struct}
+classes: \cr\cr
+\verb{[prioritise_columns]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = prioritise_columns(
-      column_names = "V1",
-      output_name = "",
-      clean = FALSE,
-      source_name = "source_name",
-      source_tags = "x")
+M = prioritise_columns( column_names = "V1", output_name = "", clean
+= FALSE, source_name = "source_name", source_tags = "x")
 
 }

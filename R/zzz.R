@@ -79,7 +79,9 @@ get_description <- function(id) {
         fixed = TRUE
     )
     str <- gsub("[a quosures]", "wherever(A>10)", str,
-                fixed = TRUE
+        fixed = TRUE
     )
+    str <- gsub('>>','->' ,str)
+    str <- strwrap(str,70)
     return(str)
 }

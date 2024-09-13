@@ -7,35 +7,40 @@
 compute_record(fcn, ...)
 }
 \arguments{
-\item{fcn}{(function) The function used to compute the values for the record.}
+\item{fcn}{(function) The function used to compute the values for the
+record.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{compute_record} object with the following \code{output} slots:
+A \code{compute_record} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-Compute values for a record based on other values in a record
+Compute values for a record based on other values in a
+record
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}}}
 }
 \section{Inheritance}{
 
-A \code{compute_record} object inherits the following \code{struct} classes: \cr\cr
-\verb{[compute_record]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{compute_record} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[compute_record]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = compute_record(
-      fcn = function(){})
+M = compute_record( fcn = function(){})
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }

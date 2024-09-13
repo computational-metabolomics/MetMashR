@@ -15,43 +15,52 @@ cd_source(
 )
 }
 \arguments{
-\item{source}{(character) The path to the Compound Discoverer Excel files to import. Both the compounds and isomers file should be included, in that order.}
+\item{source}{(character) The path to the Compound Discoverer Excel
+files to import. Both the compounds and isomers file should be
+included, in that order.}
 
-\item{sheets}{(character, numeric, integer) The name or index of the sheets to read from the source file(s). A sheet should be provided for each input file. The default is \code{c(1, 1)}.}
+\item{sheets}{(character, numeric, integer) The name or index of the
+sheets to read from the source file(s). A sheet should be provided
+for each input file. The default is \code{c(1, 1)}.}
 
-\item{tag}{(character) A (short) character string that is used to represent this source e.g. in column names or source columns when used in a workflow. The default is \code{"CD"}.}
+\item{tag}{(character) A (short) character string that is used to
+represent this source e.g. in column names or source columns when
+used in a workflow. The default is \code{"CD"}.}
 
-\item{mz_column}{(character) The column name of the annotation data.frame containing m/z values. The default is \code{"mz"}.}
+\item{mz_column}{(character) The column name of the annotation
+data.frame containing m/z values. The default is \code{"mz"}.}
 
-\item{rt_column}{(character) The column name of the annotation data.frame containing retention time values. The default is \code{"rt"}.}
+\item{rt_column}{(character) The column name of the annotation
+data.frame containing retention time values. The default is
+\code{"rt"}.}
 
-\item{id_column}{(character) The column name of the annotation data.frame containing row identifers. If NULL This will be generated automatically. The default is \code{"id"}.}
+\item{id_column}{(character) The column name of the annotation
+data.frame containing row identifers. If NULL This will be generated
+automatically. The default is \code{"id"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{
+A \code{
 cd_source
 } object. This object has no \code{output} slots.
 }
 \description{
-An LCMS table extends \code{\link[=annotation_table]{annotation_table()}} to represent annotation data for an LCMS experiment. Columns representing m/z and retention time are required for an \code{lcms_table}.
+An LCMS table extends \code{\link[=annotation_table]{annotation_table()}} to
+represent annotation data for an LCMS experiment. Columns
+representing m/z and retention time are required for an \code{lcms_table}.
 }
 \section{Inheritance}{
 
 A \code{cd_source} object inherits the following \code{struct} classes: \cr\cr
-\verb{[cd_source]} >> \verb{[lcms_table]} >> \verb{[annotation_table]} >> \verb{[annotation_source]} >> \verb{[struct_class]}
+\verb{[cd_source]} -> \verb{[lcms_table]} -> \verb{[annotation_table]} ->
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = cd_source(
-      sheets = c(2, 2),
-      mz_column = "mz",
-      rt_column = "rt",
-      id_column = "id",
-      tag = character(0),
-      data = data.frame(id=NA),
-      source = character(0))
+M = cd_source( sheets = c(2, 2), mz_column = "mz", rt_column = "rt",
+id_column = "id", tag = character(0), data = data.frame(id=NA),
+source = character(0))
 
 }
 \seealso{

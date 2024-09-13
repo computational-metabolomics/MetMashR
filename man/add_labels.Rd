@@ -7,38 +7,46 @@
 add_labels(labels, replace = FALSE, ...)
 }
 \arguments{
-\item{labels}{(list) A named list of columns and the label to use for all records in that column.}
+\item{labels}{(list) A named list of columns and the label to use for
+all records in that column.}
 
-\item{replace}{(logical) Replace columns. Allowed values are limited to the following: \itemize{ \item{\code{"TRUE"}: If present, the new columns will replace existing columns in the source data.frame.}\item{\code{"FALSE"}: An error will be thrown if the new columns are already in the source data.frame.}} The default is \code{FALSE}.\cr}
+\item{replace}{(logical) Replace columns. Allowed values are limited
+to the following: \itemize{ \item{\code{"TRUE"}: If present, the new
+columns will replace existing columns in the source
+data.frame.}\item{\code{"FALSE"}: An error will be thrown if the new
+columns are already in the source data.frame.}} The default is
+\code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{add_labels} object with the following \code{output} slots:
+A \code{add_labels} object with the following \code{output}
+slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The updated annotations as an \code{annotation_source} object. \cr
+\code{updated} \tab (annotation_source) The updated annotations as an
+\code{annotation_source} object. \cr
 }
 }
 \description{
-Adds new columns with the specified labels for each record.
+Adds new columns with the specified labels for each
+record.
 }
 \details{
-This object makes use of functionality from the following packages:\itemize{  \item{\code{dplyr}}}
+This object makes use of functionality from the following
+packages:\itemize{ \item{\code{dplyr}}}
 }
 \section{Inheritance}{
 
 A \code{add_labels} object inherits the following \code{struct} classes: \cr\cr
-\verb{[add_labels]} >> \verb{[model]} >> \verb{[struct_class]}
+\verb{[add_labels]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = add_labels(
-      labels = list(),
-      replace = FALSE)
+M = add_labels( labels = list(), replace = FALSE)
 
 }
 \references{
-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \emph{dplyr: A
-Grammar of Data Manipulation}. R package version 1.1.4,
-\url{https://CRAN.R-project.org/package=dplyr}.
+Wickham H, François R, Henry L, Müller K, Vaughan D
+(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }

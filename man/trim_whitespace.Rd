@@ -7,36 +7,45 @@
 trim_whitespace(column_names, which = "both", whitespace = "[ \\t\\r\\n]", ...)
 }
 \arguments{
-\item{column_names}{(character) The column name(s) in the annotation_source to trim white space from. Special case ".all" will apply to all columns.}
+\item{column_names}{(character) The column name(s) in the
+annotation_source to trim white space from. Special case ".all" will
+apply to all columns.}
 
-\item{which}{(character) Trailing and/or leading whitespace. Allowed values are limited to the following: \itemize{ \item{\code{""}: A character string specifying the location of whitespace to remove.}\item{\code{"left"}: Remove leading whitespace.}\item{\code{"right"}: Remove trailing whitespace.}\item{\code{"both"}: Remove both leading and trailing whitespace.}} The default is \code{"both"}.}
+\item{which}{(character) Trailing and/or leading whitespace. Allowed
+values are limited to the following: \itemize{ \item{\code{""}: A
+character string specifying the location of whitespace to
+remove.}\item{\code{"left"}: Remove leading
+whitespace.}\item{\code{"right"}: Remove trailing
+whitespace.}\item{\code{"both"}: Remove both leading and trailing
+whitespace.}} The default is \code{"both"}.}
 
-\item{whitespace}{(character) A string specifying a regular expression to match
-(one character of) "white space". See \code{\link[=trimws]{trimws()}} for details. The default is \code{"[     
-]"}.}
+\item{whitespace}{(character) A string specifying a regular
+expression to match (one character of) "white space". See
+\code{\link[=trimws]{trimws()}} for details. The default is \code{"[ ]"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
 \value{
-A  \code{trim_whitespace} object with the following \code{output} slots:
+A \code{trim_whitespace} object with the following
+\code{output} slots:
 \tabular{ll}{
-\code{updated} \tab          (annotation_source) The annotation_source after trimming whitespace. \cr
+\code{updated} \tab (annotation_source) The annotation_source after
+trimming whitespace. \cr
 }
 }
 \description{
-A wrapper for \code{\link[=trimws]{trimws()}}. Removes leading and/or trailing whitespace from character strings.
+A wrapper for \code{\link[=trimws]{trimws()}}. Removes leading and/or
+trailing whitespace from character strings.
 }
 \section{Inheritance}{
 
-A \code{trim_whitespace} object inherits the following \code{struct} classes: \cr\cr
-\verb{[trim_whitespace]} >> \verb{[model]} >> \verb{[struct_class]}
+A \code{trim_whitespace} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[trim_whitespace]} -> \verb{[model]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = trim_whitespace(
-      column_names = "V1",
-      which = "both",
-      whitespace = "[ 	
-]")
+M = trim_whitespace( column_names = "V1", which = "both", whitespace
+= "[ ]")
 
 }

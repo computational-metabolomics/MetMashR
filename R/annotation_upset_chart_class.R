@@ -1,19 +1,15 @@
-
 #' @export
-annotation_upset_chart <- function(
-        factor_name,
-        group_column = NULL,
-        width_ratio = 0.2,
-        xlabel = 'group',
-        sort_intersections = 'descending',
-        intersections = 'observed',
-        n_intersections = NULL,
-        min_size = 0,
-        queries = list(),
-        keep_empty_groups = FALSE,
-        ...) {
-    
-    
+annotation_upset_chart <- function(factor_name,
+                                   group_column = NULL,
+                                   width_ratio = 0.2,
+                                   xlabel = "group",
+                                   sort_intersections = "descending",
+                                   intersections = "observed",
+                                   n_intersections = NULL,
+                                   min_size = 0,
+                                   queries = list(),
+                                   keep_empty_groups = FALSE,
+                                   ...) {
     out <- struct::new_struct(
         "annotation_upset_chart",
         factor_name = factor_name,
@@ -28,7 +24,7 @@ annotation_upset_chart <- function(
         keep_empty_groups = keep_empty_groups,
         ...
     )
-    
+
     return(out)
 }
 
@@ -37,16 +33,16 @@ annotation_upset_chart <- function(
     "annotation_upset_chart",
     contains = "chart",
     slots = c(
-        factor_name = 'entity',
-        group_column = 'entity',
-        width_ratio = 'entity',
-        xlabel = 'entity',
-        sort_intersections = 'entity',
-        intersections = 'entity',
-        n_intersections = 'entity',
-        min_size = 'entity',
-        queries = 'entity',
-        keep_empty_groups = 'entity'
+        factor_name = "entity",
+        group_column = "entity",
+        width_ratio = "entity",
+        xlabel = "entity",
+        sort_intersections = "entity",
+        intersections = "entity",
+        n_intersections = "entity",
+        min_size = "entity",
+        queries = "entity",
+        keep_empty_groups = "entity"
     ),
     prototype = list(
         name = "Annotation UpSet chart",
@@ -57,8 +53,9 @@ annotation_upset_chart <- function(
         type = "image",
         .params = c(
             "factor_name", "group_column", "width_ratio", "xlabel",
-            "sort_intersections", "intersections", "n_intersections", "min_size",
-            "queries","keep_empty_groups"
+            "sort_intersections", "intersections", "n_intersections", 
+            "min_size",
+            "queries", "keep_empty_groups"
         ),
         libraries = "ComplexUpset",
         factor_name = entity(
@@ -88,7 +85,7 @@ annotation_upset_chart <- function(
         width_ratio = entity(
             name = "Width ratio",
             description = paste0(
-                'Proportion of plot given to set size bar chart.'
+                "Proportion of plot given to set size bar chart."
             ),
             type = "numeric",
             value = 0.2,
@@ -97,7 +94,7 @@ annotation_upset_chart <- function(
         xlabel = entity(
             name = "X-axis label",
             description = paste0(
-                'The label used for the x-axis.'
+                "The label used for the x-axis."
             ),
             type = "character",
             value = "group",
@@ -111,32 +108,33 @@ annotation_upset_chart <- function(
                 "none" = "Groups are not sorted"
             ),
             type = "character",
-            value = 'descending',
+            value = "descending",
             max_length = 1,
-            allowed=c('ascending','descending','none')
+            allowed = c("ascending", "descending", "none")
         ),
         intersections = entity(
             name = "Intersections",
             description = paste0(
                 "The intersections to include in the plot."
             ),
-            type = c("character",'list'),
-            value = 'observed',
+            type = c("character", "list"),
+            value = "observed",
             max_length = Inf
         ),
         n_intersections = entity(
             name = "Number of intersections",
             description = paste0(
-                'The number of intersections to include in the plot.'
+                "The number of intersections to include in the plot."
             ),
             value = NULL,
-            type = c("numeric", "integer","NULL"),
+            type = c("numeric", "integer", "NULL"),
             max_length = 1
         ),
         min_size = entity(
             name = "Minimum size",
             description = paste0(
-                'The minimum size of an intersection for it to be included in the plot.'
+                "The minimum size of an intersection for it to be included ",
+                "in the plot."
             ),
             value = 0,
             type = c("numeric", "integer"),
@@ -145,7 +143,7 @@ annotation_upset_chart <- function(
         queries = entity(
             name = "Queries",
             description = paste0(
-                'A list of upset queries.'
+                "A list of upset queries."
             ),
             value = list(),
             type = c("list"),
@@ -154,8 +152,8 @@ annotation_upset_chart <- function(
         keep_empty_groups = entity(
             name = "Keep empty sets",
             description = paste0(
-                'whether empty sets should be kept (including sets which are ',
-                'only empty after filtering by size)'
+                "whether empty sets should be kept (including sets which are ",
+                "only empty after filtering by size)"
             ),
             value = FALSE,
             type = c("logical"),
@@ -169,18 +167,17 @@ setMethod(
     f = "chart_plot",
     signature = c("annotation_upset_chart", "annotation_source"),
     definition = function(obj, dobj, ...) {
-        
-        L = list(...)
+        L <- list(...)
 
-        if (length(L)>0){
+        if (length(L) > 0) {
             # more than one dobj
-            L = c(dobj,L)
-            
+            L <- c(dobj, L)
+
             # if only one column name, assume same column in all sources
             if (length(obj$factor_name) == 1) {
-                obj$factor_name = rep(obj$factor_name, length(L))
+                obj$factor_name <- rep(obj$factor_name, length(L))
             }
-            
+
             # check we have a column for all sources
             if (length(obj$factor_name) != length(L)) {
                 stop(
@@ -189,59 +186,58 @@ setMethod(
                     "for each source.\n"
                 )
             }
-            
+
             # get tags
-            tags = lapply(L, param_value, name = "tag")
-            names(L) = tags
-            L = lapply(L, param_value, name = "data")
-            
+            tags <- lapply(L, param_value, name = "tag")
+            names(L) <- tags
+            L <- lapply(L, param_value, name = "data")
+
             # get columns
-            L = mapply("[[", L, obj$factor_name)
-            
+            L <- mapply("[[", L, obj$factor_name)
+
             ## create upset table
             # unique across all sets
-            u = unique(unlist(L))
-            G=lapply(L,function(x){
+            u <- unique(unlist(L))
+            G <- lapply(L, function(x) {
                 return(u %in% x)
             })
-            G = do.call(rbind,G)
-            colnames(G)=u
-            G=as.data.frame(t(G))
+            G <- do.call(rbind, G)
+            colnames(G) <- u
+            G <- as.data.frame(t(G))
         } else if (length(obj$factor_name) > 1) {
             # comparing multiple columns
-            L = as.list(dobj$data[obj$factor_name])
+            L <- as.list(dobj$data[obj$factor_name])
             # unique across all sets
-            u = unique(unlist(L))
-            G=lapply(L,function(x){
+            u <- unique(unlist(L))
+            G <- lapply(L, function(x) {
                 return(u %in% x)
             })
-            G = do.call(rbind,G)
-            colnames(G)=u
-            G=as.data.frame(t(G))
-            
-        } else {        
-            # only dobj provided        
-            L = levels(factor(dobj$data[[obj$group_column]]))
-            U = unique(dobj$data[[obj$factor_name]])
-            G = lapply(U,function(x){
-                w = which(dobj$data[[obj$factor_name]]==x)
-                g = dobj$data[[obj$group_column]][w]
-                out = L %in% g
+            G <- do.call(rbind, G)
+            colnames(G) <- u
+            G <- as.data.frame(t(G))
+        } else {
+            # only dobj provided
+            L <- levels(factor(dobj$data[[obj$group_column]]))
+            U <- unique(dobj$data[[obj$factor_name]])
+            G <- lapply(U, function(x) {
+                w <- which(dobj$data[[obj$factor_name]] == x)
+                g <- dobj$data[[obj$group_column]][w]
+                out <- L %in% g
             })
-            G = as.data.frame(do.call(rbind,G))
-            colnames(G) = L
-            rownames(G) = U
-        }
-        
-        srt = obj$sort_intersections
-        if (srt=='none') {
-            srt = FALSE
+            G <- as.data.frame(do.call(rbind, G))
+            colnames(G) <- L
+            rownames(G) <- U
         }
 
-        g = ComplexUpset::upset(
-            G, 
-            colnames(G), 
-            name = obj$xlabel, 
+        srt <- obj$sort_intersections
+        if (srt == "none") {
+            srt <- FALSE
+        }
+
+        g <- ComplexUpset::upset(
+            G,
+            colnames(G),
+            name = obj$xlabel,
             width_ratio = obj$width_ratio,
             sort_intersections = srt,
             intersections = obj$intersections,
@@ -249,8 +245,8 @@ setMethod(
             min_size = obj$min_size,
             queries = obj$queries,
             keep_empty_groups = obj$keep_empty_groups
-            )
-        
+        )
+
         return(g)
     }
 )
@@ -261,9 +257,9 @@ setMethod(
     signature = c("annotation_upset_chart", "list"),
     definition = function(obj, dobj) {
         L <- c(obj, dobj)
-        names(L)[1] = "obj"
-        names(L)[2] = 'dobj'
-        
+        names(L)[1] <- "obj"
+        names(L)[2] <- "dobj"
+
         g <- do.call(chart_plot, L)
         return(g)
     }
