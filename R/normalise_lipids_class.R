@@ -123,6 +123,7 @@ normalise_lipids <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("normalise_lipids", "annotation_source"),

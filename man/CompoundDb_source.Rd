@@ -36,7 +36,7 @@ A \code{CompoundDb_source} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = CompoundDb_source( tag = character(0), data = data.frame(id=NA),
+M = CompoundDb_source( tag = character(0), data = data.frame(),
 source = "ANY")
 
 }

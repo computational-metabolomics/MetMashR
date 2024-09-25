@@ -8,6 +8,11 @@ rds_cache <- function(
             .search = character(0)
         ),
         ...) {
+    
+    if (nrow(data)==0 & ncol(data)==0) {
+        data = data.frame(.search=NA)
+    }
+    
     # new object
     out <- struct::new_struct(
         "rds_cache",

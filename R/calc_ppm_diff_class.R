@@ -100,6 +100,7 @@ calc_ppm_diff <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("calc_ppm_diff", "annotation_table"),

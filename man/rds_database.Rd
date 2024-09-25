@@ -29,8 +29,8 @@ A \code{rds_database} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = rds_database( tag = character(0), data = data.frame(id=NA),
-source = "ANY")
+M = rds_database( tag = character(0), data = data.frame(), source =
+"ANY")
 
 }
 \seealso{

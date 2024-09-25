@@ -38,6 +38,7 @@ annotation_database <- function(
 
 
 #' @export
+#' @rdname is_writable
 setMethod(
     f = "is_writable",
     signature = c("annotation_database"),
@@ -47,6 +48,7 @@ setMethod(
 )
 
 #' @export
+#' @rdname read_source
 setMethod(
     f = "read_source",
     signature = c("annotation_database"),
@@ -58,6 +60,8 @@ setMethod(
 
 
 #' @export
+#' @rdname write_database
+#' @param df (data.frame) the data.frame to store in the database.
 setMethod(
     f = "write_database",
     signature = c("annotation_database"), definition = function(obj, df) {
@@ -76,6 +80,8 @@ setMethod(
     }
 )
 
+#' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("annotation_database"),

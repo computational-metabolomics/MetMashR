@@ -26,6 +26,7 @@ rds_database <- function(
 )
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("rds_database"), definition = function(obj) {
@@ -44,6 +45,7 @@ setMethod(
 )
 
 #' @export
+#' @rdname write_database
 setMethod(
     f = "write_database",
     signature = c("rds_database"), definition = function(obj, df) {

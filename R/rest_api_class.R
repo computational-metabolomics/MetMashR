@@ -146,6 +146,7 @@ rest_api <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("rest_api", "annotation_source"),

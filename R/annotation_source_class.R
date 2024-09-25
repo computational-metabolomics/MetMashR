@@ -1,4 +1,4 @@
-#' @eval get_description("annotation_database")
+#' @eval get_description("annotation_source")
 #' @include zzz.R generics.R
 #' @family {annotation databases}
 #' @export
@@ -67,6 +67,7 @@ annotation_source <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("model", "annotation_source"),
@@ -79,7 +80,7 @@ setMethod(
     }
 )
 
-#' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("model", "list"),
@@ -92,7 +93,7 @@ setMethod(
     }
 )
 
-#' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("model_seq", "list"),
@@ -105,7 +106,7 @@ setMethod(
     }
 )
 
-#' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("model_seq", "annotation_source"),
@@ -142,7 +143,6 @@ setMethod(
     }
 )
 
-#' @export
 setMethod(
     f = "show",
     signature = c("annotation_source"),
@@ -160,6 +160,7 @@ setMethod(
 )
 
 #' @export
+#' @rdname read_source
 setMethod(
     f = "read_source",
     signature = c("annotation_source"),
@@ -173,6 +174,7 @@ setMethod(
 )
 
 #' @export
+#' @rdname check_for_columns
 setMethod(
     f = "check_for_columns",
     signature = c("annotation_source"),
@@ -213,6 +215,18 @@ setMethod(
 
 
 #' @export
+#' @param matching_columns (list) a named list of column names that all contain 
+#' the same information. All columns named in the same list element will be 
+#' merged into a single column with the same name as the list element.
+#' @param keep_cols (character) a list of column names to keep in the final 
+#' joined table. All other columns will be dropped. 
+#' @param source_col (character) the name of a new column that will contain the 
+#' tags of the original source object for each row in the joined table.
+#' @param exclude_cols (character) the names of columns to exclude from the 
+#' joined table.
+#' @param as (character) the type of object the joined table should be returned 
+#' as e.g. "lcms_table".
+#' @rdname vertical_join
 setMethod(
     f = "vertical_join",
     signature = c("annotation_source", "annotation_source"),
@@ -278,6 +292,7 @@ setMethod(
 )
 
 #' @export
+#' @rdname vertical_join
 setMethod(
     f = "vertical_join",
     signature = c("list", "missing"),
@@ -345,7 +360,9 @@ setValidity(
     }
 )
 
+
 #' @export
+#' @rdname required_cols
 setMethod(
     f = "required_cols",
     signature = c("annotation_source"),

@@ -119,6 +119,7 @@ pubchem_widget <- function(
 )
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("pubchem_widget", "annotation_source"),

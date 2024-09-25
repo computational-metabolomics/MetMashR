@@ -10,6 +10,7 @@ ls_source(
   mz_column = "mz",
   rt_column = "rt",
   id_column = "id",
+  data = NULL,
   ...
 )
 }
@@ -30,6 +31,9 @@ data.frame containing retention time values. The default is
 \item{id_column}{(character) The column name of the annotation
 data.frame containing row identifers. If NULL This will be generated
 automatically. The default is \code{"id"}.}
+
+\item{data}{(data.frame, NULL) A data.frame of annotation data. The
+default is \code{NULL}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -52,7 +56,7 @@ A \code{ls_source} object inherits the following \code{struct} classes: \cr\cr
 
 \examples{
 M = ls_source( mz_column = "mz", rt_column = "rt", id_column = "id",
-tag = character(0), data = data.frame(id=NA), source = "ANY")
+tag = character(0), data = data.frame(), source = "ANY")
 
 }
 \seealso{

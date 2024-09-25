@@ -118,6 +118,7 @@ database_lookup <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("database_lookup", "annotation_source"),

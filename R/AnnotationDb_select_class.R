@@ -116,8 +116,8 @@ AnnotationDb_select <- function(
 )
 
 
-
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("AnnotationDb_select", "annotation_source"),

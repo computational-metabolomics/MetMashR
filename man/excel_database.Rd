@@ -54,7 +54,7 @@ A \code{excel_database} object inherits the following \code{struct} classes:
 
 \examples{
 M = excel_database( sheet = character(0), rowNames = FALSE, colNames
-= FALSE, startRow = 1, tag = character(0), data = data.frame(id=NA),
+= FALSE, startRow = 1, tag = character(0), data = data.frame(),
 source = "ANY")
 
 }

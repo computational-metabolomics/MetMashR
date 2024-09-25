@@ -23,7 +23,7 @@
 #' @return TRUE if successful
 #' @examples
 #' M <- BiocFileCache_database(
-#'     path = tempfile(),
+#'     source = tempfile(),
 #'     resource_name = "example",
 #'     bfc_fun = .unzip
 #' )
@@ -49,7 +49,7 @@
 #' @return TRUE if successful
 #' @examples
 #' M <- BiocFileCache_database(
-#'     path = tempfile(),
+#'     source = tempfile(),
 #'     resource_name = "example",
 #'     bfc_fun = .cache_as_is
 #' )

@@ -22,7 +22,7 @@ e.g. INK becomes Ile-Asn-Lys
 M <- normalise_strings(
     search_column = "example",
     output_column = "result",
-    dictionary = .amino_acid_dictionary
+    dictionary = .tripeptide_dictionary
 )
 
 }

@@ -72,6 +72,8 @@ locating values in the matching column.}
 \item{digits}{(numeric) the number of digits to use when converting numerical
 values to characters when determining if values are unique.}
 
+\item{drop_na}{(logical) exclude NA from the list of unique entires}
+
 \item{sort}{(logical) sort the values before collapsing.}
 
 \item{priority}{(character) a list of labels in priority order}
@@ -150,7 +152,7 @@ and the worst grade is "Z" or "z". Any non-exact matches to a character in
 # Select matching records
 M <- combine_records(
     group_by = "example",
-    default_fcn = .select_match(
+    default_fcn = .select_exact(
         match_col = "match_column",
         match = "find_me",
         separator = ", ",

@@ -42,7 +42,7 @@ A \code{GO_database} object inherits the following \code{struct} classes:
 
 \examples{
 M = GO_database( table = "GOBPCHILDREN", tag = character(0), data =
-data.frame(id=NA), source = character(0))
+data.frame(), source = character(0))
 
 }
 \references{

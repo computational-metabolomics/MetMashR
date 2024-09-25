@@ -82,7 +82,7 @@ kegg_lookup <- function(
             type = "character",
             max_length = 1,
             allowed = c("compound", "glycan", "drug", "chebi", "pubchem"),
-            value = "compound"
+            value = "pubchem"
         ),
         from = enum(
             name = "From identifier",
@@ -124,6 +124,7 @@ kegg_lookup <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("kegg_lookup", "annotation_source"),

@@ -7,7 +7,7 @@
 #'
 #' @param obj an [`annotation_source()`] object
 #' @param ... not currently used
-#' @return an [`annotation_table()`], [`annotation_library()`] or
+#' @return an [`annotation_table()`] or
 #' [`annotation_database()`] object
 #' @examples
 #' # prepare source
@@ -39,7 +39,7 @@ setGeneric(
 #' requested.
 #' @examples
 #' # test if column present
-#' AT <- annotation_source(data.frame(id = character(0)))
+#' AT <- annotation_source(data=data.frame(id = character(0)))
 #' check_for_columns(AT, "id") # TRUE
 #' check_for_columns(AT, "cake") # FALSE
 #'
@@ -55,6 +55,7 @@ setGeneric(
 #'
 #' Reads an annotation_database and returns the data.frame.
 #' @param obj An `annotation_database` object
+#' @param ... additional  database specific inputs
 #' @return A data.frame
 #' @examples
 #' M <- rds_database(tempfile())
@@ -68,6 +69,7 @@ setGeneric(
 #'
 #' Writes a data.frame to a `annotation_database`.
 #' @param obj A `annotation_database` object
+#' @param ... additional  database specific inputs
 #' @return Silently returns TRUE if successful, FALSE otherwise
 #' @examples
 #' M <- rds_database(tempfile())
@@ -83,13 +85,14 @@ setGeneric(
 #' in read and write mode.
 #'
 #' @param obj A `annotation_database` object
+#' @param ... additional  database specific inputs
 #' @return TRUE if the database is writable; FALSE otherwise. This method
 #' does not check file properties, only the intended usage of the object.
 #'
 #' @examples
 #'
 #' M <- annotation_database()
-#' is.writable(M)
+#' is_writable(M)
 #'
 setGeneric(
     "is_writable",
@@ -104,13 +107,14 @@ setGeneric(
 #'
 #' @param x an `annotation_source` object
 #' @param y an second `annotation_source` object to join with the first
+#' @param ... additional inputs (not currently used)
 #' @return an `annotation_source` object
 #'
 #' @examples
 #'
-#' M <- annotation_source()
-#' N <- annotation_source()
-#' O <- vertical_join(M, N)
+#' M <- annotation_source(data=data.frame(id=1,value='A'))
+#' N <- annotation_source(data=data.frame(id=2,value='B'))
+#' O <- vertical_join(M, N, keep_cols='.all')
 #'
 setGeneric(
     "vertical_join",
@@ -127,7 +131,8 @@ setGeneric(
 #' collect and return the names of slots containing required column names for
 #' the object and all of its parent objects.
 #'
-#' @param x an `annotation_source` object
+#' @param obj an `annotation_source` object
+#' @param ... additional source specific inputs
 #' @return a character vector of slot names
 #'
 #' @examples
@@ -135,7 +140,7 @@ setGeneric(
 #' M <- lcms_table(id_column = "id", mz_column = "mz", rt_column = "rt")
 #'
 #' #' # get values for required slots
-#' r <- required(M)
+#' r <- required_cols(M)
 #'
 #' # get slot names for required columns
 #' names(r)

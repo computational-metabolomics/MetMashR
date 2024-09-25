@@ -54,6 +54,7 @@ AnnotationDb_database <- function(
 )
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("AnnotationDb_database"), definition = function(obj) {

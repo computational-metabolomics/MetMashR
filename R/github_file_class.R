@@ -76,6 +76,7 @@ github_file <- function(
 
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("github_file"), definition = function(obj) {

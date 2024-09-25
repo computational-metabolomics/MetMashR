@@ -57,6 +57,7 @@ rename_columns <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("rename_columns", "annotation_source"),

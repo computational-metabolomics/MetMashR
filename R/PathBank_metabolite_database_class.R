@@ -40,7 +40,7 @@ PathBank_metabolite_database <- function(
                     " Hasan and Pon, Allison and Budinski, Zachary and ",
                     "Patron, ",
                     "Jonas and Lipton, Debra and Cao, Xuan and Oler, Eponine ",
-                    "and Li, Krissa and Paccoud, Maïlys and Hong, Chelsea and ",
+                    "and Li, Krissa and Paccoud, Ma\u00EFlys and Hong, Chelsea and ",
                     "Guo, An C and Chan, Christopher and Wei, William and ",
                     "Ramirez-Gaona, Miguel"
                 )),
@@ -91,6 +91,7 @@ PathBank_metabolite_database <- function(
 
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("PathBank_metabolite_database"), definition = function(obj) {

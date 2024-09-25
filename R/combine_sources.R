@@ -150,6 +150,7 @@ combine_sources <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("combine_sources", "annotation_source"),
@@ -169,8 +170,8 @@ setMethod(
     }
 )
 
-
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("combine_sources", "list"),

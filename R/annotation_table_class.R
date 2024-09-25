@@ -8,9 +8,28 @@ annotation_table <- function(
         tag = "",
         id_column = NULL,
         ...) {
+
+    # create id column if NULL    
     if (is.null(id_column)) {
-        data$.MetMashR_id <- seq_len(nrow(data))
-        id_column <- ".MetMashR_id"
+        id_column = '.MetMashR_id'
+        if (nrow(data)>0) {
+            data[[id_column]]=seq_len(nrow(data))
+        }
+    }
+    
+    # create data if null
+    if (is.null(data)) {
+        data = data.frame()
+    }
+    
+    # create id column if no rows or columns
+    if (nrow(data)==0 & ncol(data)==0) {
+        data <- data.frame(
+            id = character(0)
+        )
+        colnames(data) <- c(
+            id_column
+        )
     }
     
     # new object

@@ -59,6 +59,7 @@ select_columns <- function(expression = everything(), ...) {
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("select_columns", "annotation_source"),

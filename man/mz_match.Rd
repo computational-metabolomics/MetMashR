@@ -44,7 +44,7 @@ A \code{mz_match} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = mz_match( variable_meta = data.frame(id=NA), mz_column =
-character(0), ppm_window = numeric(0), id_column = character(0))
+M = mz_match( variable_meta = data.frame(), mz_column = character(0),
+ppm_window = 5, id_column = character(0))
 
 }

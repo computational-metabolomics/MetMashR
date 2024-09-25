@@ -38,7 +38,7 @@ A \code{rds_cache} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = rds_cache( tag = character(0), data = data.frame(id=NA), source =
+M = rds_cache( tag = character(0), data = data.frame(), source =
 "ANY")
 
 }

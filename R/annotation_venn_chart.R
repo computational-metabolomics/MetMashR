@@ -121,6 +121,7 @@ annotation_venn_chart <- function(
 )
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("annotation_venn_chart", "annotation_source"),
@@ -187,6 +188,7 @@ setMethod(
 )
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("annotation_venn_chart", "list"),

@@ -87,7 +87,8 @@ rt_match <- function(
                 "for each data table."
             ),
             type = c("numeric", "integer"),
-            max_length = 2
+            max_length = 2,
+            value = 20
         ),
         id_column = entity(
             name = "id column name",
@@ -102,6 +103,7 @@ rt_match <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("rt_match", "annotation_table"),

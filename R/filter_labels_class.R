@@ -132,6 +132,7 @@ filter_labels <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("filter_labels", "annotation_source"),

@@ -72,6 +72,7 @@ compute_column <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("compute_column", "annotation_source"),

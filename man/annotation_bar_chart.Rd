@@ -2,7 +2,7 @@
 % Please edit documentation in R/annotation_bar_chart.R
 \name{annotation_bar_chart}
 \alias{annotation_bar_chart}
-\title{Annotation pie chart}
+\title{Annotation bar chart}
 \usage{
 annotation_bar_chart(
   factor_name,
@@ -15,7 +15,7 @@ annotation_bar_chart(
 }
 \arguments{
 \item{factor_name}{(character) The name of the column in the
-\code{annotation_source} to generate a pie chart from.}
+\code{annotation_source} to generate a chart from.}
 
 \item{label_rotation}{(logical) Rotate labels. Allowed values are
 limited to the following: \itemize{ \item{\code{"TRUE"}: Rotate
@@ -24,8 +24,8 @@ labels.}} The default is \code{FALSE}.\cr}
 
 \item{label_location}{(character) Label location. Allowed values are
 limited to the following: \itemize{ \item{\code{"inside"}: Labels are
-displayed inside the segments.}\item{\code{"outside"}: Labels are
-displayed outside the segments.}} The default is \code{"inside"}.}
+displayed inside the bars.}\item{\code{"outside"}: Labels are
+displayed outside the bars.}} The default is \code{"inside"}.}
 
 \item{label_type}{(character) Label type. Allowed values are limited
 to the following: \itemize{ \item{\code{"percent"}: Labels will
@@ -40,32 +40,16 @@ using a legend.}\item{\code{"FALSE"}: Groups are indicated in the
 labels.}} The default is \code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
-
-\item{pie_rotation}{(numeric) The number of degrees to rotate the pie
-chart by, clockwise. The default is \code{0}.\cr}
-
-\item{centre_radius}{(numeric, integer) The radius of the centre
-circle. Used to make a "donut" plot. Should be a value between 0 and
-\enumerate{
-\item The default is \code{0}.\cr
-}}
-
-\item{centre_label}{(NULL, character) The text to display in the
-centre of the pie chart. Mostly used with donut plots where
-\code{centre_radius} is greater than 0. The default is \code{NULL}.}
-
-\item{count_na}{(logical) Include the number of missing values in the
-pie chart. The default is \code{FALSE}.\cr}
 }
 \value{
 A \code{
-annotation_pie_chart
+annotation_bar_chart
 } object. This object has no \code{output} slots.
 See \code{\link[struct]{chart_plot}} in the \code{struct} package to
 plot this chart object.
 }
 \description{
-Display a pie chart of labels in the specified column of
+Display a bar chart of labels in the specified column of
 an annotation_source.
 }
 \details{
@@ -74,16 +58,15 @@ packages:\itemize{ \item{\code{ggplot2}}}
 }
 \section{Inheritance}{
 
-A \code{annotation_pie_chart} object inherits the following \code{struct}
+A \code{annotation_bar_chart} object inherits the following \code{struct}
 classes: \cr\cr
-\verb{[annotation_pie_chart]} -> \verb{[chart]} -> \verb{[struct_class]}
+\verb{[annotation_bar_chart]} -> \verb{[chart]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = annotation_pie_chart( factor_name = "V1", label_location =
-"inside", label_rotation = FALSE, legend = FALSE, pie_rotation = 0,
-label_type = "percent", centre_radius = 0, centre_label = NULL,
-count_na = FALSE)
+M = annotation_bar_chart( factor_name = "V1", label_location =
+"inside", label_rotation = FALSE, legend = FALSE, label_type =
+"percent")
 
 }
 \references{

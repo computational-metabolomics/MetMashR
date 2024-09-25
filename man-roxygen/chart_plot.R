@@ -1,0 +1,1 @@
+#' @rdname chart_plot

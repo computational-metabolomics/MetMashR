@@ -114,7 +114,8 @@ mzrt_match <- function(
                 "for each data table."
             ),
             type = c("numeric", "integer"),
-            max_length = 2
+            max_length = 2,
+            value = 5
         ),
         rt_column = entity(
             name = "rt column name",
@@ -133,7 +134,8 @@ mzrt_match <- function(
                 "for each data table."
             ),
             type = c("numeric", "integer"),
-            max_length = 2
+            max_length = 2,
+            value=20
         ),
         id_column = entity(
             name = "id column name",
@@ -148,6 +150,7 @@ mzrt_match <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("mzrt_match", "lcms_table"),

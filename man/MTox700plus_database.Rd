@@ -13,8 +13,8 @@ MTox700plus_database(
 }
 \arguments{
 \item{version}{(character) The version number of the MTox700+
-database to import. Available versions are listed here:
-\link{https://github.com/michabohealthscience/MTox700plus/releases}.
+database to import. Available versions are listed
+\href{https://github.com/michabohealthscience/MTox700plus/releases}{here}.
 \code{version} should match the tag of the release e.g. \code{"v1.0"}. For
 convenience \code{version = "latest"} will always retrieve the most recent
 release. To prevent unecessary downloads \code{BiocFileCache} is used to
@@ -59,7 +59,7 @@ classes: \cr\cr
 M = MTox700plus_database( version = "v1.0", bfc_path = NULL,
 resource_name = "bfc", bfc_fun = function(){}, import_fun =
 function(){}, offline = FALSE, tag = character(0), data =
-data.frame(id=NA), source = "ANY")
+data.frame(), source = "ANY")
 
 }
 \references{

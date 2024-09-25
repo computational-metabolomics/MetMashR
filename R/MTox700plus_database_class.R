@@ -57,9 +57,9 @@ MTox700plus_database <- function(
             name = "MTox700+ version number",
             description = paste0(
                 "The version number of the MTox700+ database to import. ",
-                "Available versions are listed here: ",
-                '[https://github.com/michabohealthscience/MTox700plus/',
-                'releases].',
+                "Available versions are listed ",
+                '\\href{https://github.com/michabohealthscience/MTox700plus/',
+                'releases}{here}.',
                 ' `version` should match the tag of the release e.g. `"v1.0"`.',
                 ' For convenience `version = "latest"` will always retrieve ',
                 "the most recent release. To prevent unecessary downloads ",
@@ -84,6 +84,7 @@ MTox700plus_database <- function(
 
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("MTox700plus_database"), definition = function(obj) {

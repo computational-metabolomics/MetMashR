@@ -69,6 +69,7 @@ add_labels <- function(labels, replace = FALSE, ...) {
 )
 
 setValidity("add_labels", method = function(object) {
+    check = FALSE
     if (length(object$labels) > 0) {
         check <- is.null(names(object$labels))
     }
@@ -81,6 +82,7 @@ setValidity("add_labels", method = function(object) {
 })
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("add_labels", "annotation_source"),

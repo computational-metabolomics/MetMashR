@@ -146,6 +146,7 @@ filter_venn <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("filter_venn", "annotation_source"),

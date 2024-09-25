@@ -2,11 +2,14 @@
 % Please edit documentation in R/annotation_source_class.R
 \name{annotation_source}
 \alias{annotation_source}
-\title{An annotation database}
+\title{An annotation source}
 \usage{
 annotation_source(source = character(0), data = data.frame(), tag = "", ...)
 }
 \arguments{
+\item{source}{(ANY) The source of annotation data. The default is
+\code{character(0)}.}
+
 \item{data}{(data.frame, NULL) A data.frame of annotation data. The
 default is \code{data.frame()}.}
 
@@ -18,25 +21,23 @@ used in a workflow. The default is \code{""}.}
 }
 \value{
 A \code{
-annotation_database
+annotation_source
 } object. This object has no \code{output} slots.
 }
 \description{
-An \code{annotation_database} is an \code{\link[=annotation_source]{annotation_source()}}
-where the imported data.frame contains meta data for annotations. For
-example it might be a table of molecular identifiers, associated
-pathways etc.
+A base class defining an annotation source. This object
+is extended by MetmashR to define other objects.
 }
 \section{Inheritance}{
 
-A \code{annotation_database} object inherits the following \code{struct}
-classes: \cr\cr
-\verb{[annotation_database]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
+A \code{annotation_source} object inherits the following \code{struct} classes:
+\cr\cr
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
-M = annotation_database( tag = character(0), data =
-data.frame(id=NA), source = "ANY")
+M = annotation_source( tag = character(0), data = data.frame(),
+source = "ANY")
 
 }
 \seealso{

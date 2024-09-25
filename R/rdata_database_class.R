@@ -8,7 +8,7 @@ rdata_database <- function(
         ...) {
     # new object
     out <- struct::new_struct(
-        "rds_database",
+        "rdata_database",
         source = source,
         variable_name = variable_name,
         ...
@@ -27,6 +27,7 @@ rdata_database <- function(
         description = "A data.frame stored as an RData file.",
         type = "rdata_database",
         .writable = TRUE,
+        .params=c('variable_name'),
         variable_name = entity(
             name = "Variable name",
             description = paste0(
@@ -35,12 +36,14 @@ rdata_database <- function(
                 "provided to e.g. extract a data.frame from a list in the ",
                 "imported environment."
             ),
-            type = c("character", "function")
+            type = c("character", "function"),
+            value = 'a data frame'
         )
     )
 )
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("rdata_database"), definition = function(obj) {
@@ -63,6 +66,7 @@ setMethod(
 
 
 #' @export
+#' @rdname is_writable
 setMethod(
     f = "is_writable",
     signature = c("rdata_database"),

@@ -37,7 +37,7 @@ mwb_refmet_database <- function(
                 "locally and prevent unnecessary downloads. If a path is ",
                 "provided then `BiocFileCache` will use this location. ",
                 "If NULL it will use the default location ",
-                "(see [BiocFileCache()] for details)."
+                "(see [BiocFileCache::BiocFileCache] for details)."
             ),
             type = c("character"),
             value = NULL
@@ -47,6 +47,7 @@ mwb_refmet_database <- function(
 
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("mwb_refmet_database"), definition = function(obj) {

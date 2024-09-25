@@ -57,6 +57,7 @@ mwb_structure <- function(
 )
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("mwb_structure", "annotation_source"),

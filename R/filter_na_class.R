@@ -68,6 +68,7 @@ filter_na <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("filter_na", "annotation_source"),

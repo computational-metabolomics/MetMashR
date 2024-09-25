@@ -8,7 +8,7 @@
 #' M <- normalise_strings(
 #'     search_column = "example",
 #'     output_column = "result",
-#'     dictionary = .amino_acid_dictionary
+#'     dictionary = .tripeptide_dictionary
 #' )
 #'
 #' @return A dictionary for use with [`normalise_strings()`]
@@ -81,7 +81,7 @@
     list(pattern = "-(+)-", replace = "-", fixed = TRUE),
     list(pattern = "^L(+)-", replace = "L-", fixed = TRUE),
     list(pattern = "^D(-)-", replace = "D-", fixed = TRUE),
-    list(pattern = "(±)", replace = "", fixed = TRUE)
+    list(pattern = "(\\x{00b1})", replace = "", fixed = TRUE)
 )
 
 

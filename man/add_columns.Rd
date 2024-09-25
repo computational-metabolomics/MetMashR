@@ -41,7 +41,7 @@ A \code{add_columns} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = add_columns( new_columns = data.frame(id=NA), by = "id")
+M = add_columns( new_columns = data.frame(), by = "id")
 
 }
 \references{

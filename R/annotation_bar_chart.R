@@ -1,4 +1,4 @@
-#' @eval get_description('annotation_pie_chart')
+#' @eval get_description('annotation_bar_chart')
 #' @include annotation_source_class.R
 #' @export
 annotation_bar_chart <- function(
@@ -103,6 +103,7 @@ annotation_bar_chart <- function(
 )
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("annotation_bar_chart", "annotation_source"),

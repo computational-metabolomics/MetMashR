@@ -3,12 +3,18 @@
 #' @include annotation_source_class.R
 #' @seealso [dplyr::left_join()]
 add_columns <- function(new_columns, by, ...) {
+    
+    if (nrow(new_columns)==0 & ncol(new_columns)==0) {
+        new_columns = data.frame(id=NA)
+        colnames(new_columns)[1]=by[1]
+    }
+    
     check <- all(by %in% colnames(new_columns))
     if (!check) {
         stop('parameter "by" must be a column name of the "new_columns",
             " data.frame')
     }
-
+    
     out <- struct::new_struct(
         "add_columns",
         new_columns = new_columns,
@@ -53,7 +59,7 @@ add_columns <- function(new_columns, by, ...) {
                 "annotation table. Can also be an annotation_database."
             ),
             type = c("data.frame", "annotation_database"),
-            value = data.frame(id = NA)
+            value = data.frame(value = NA)
         ),
         by = entity(
             name = "By",
@@ -71,6 +77,7 @@ add_columns <- function(new_columns, by, ...) {
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("add_columns", "annotation_source"),

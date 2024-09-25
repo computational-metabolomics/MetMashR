@@ -9,7 +9,12 @@ lcms_table <- function(
         mz_column = "mz",
         rt_column = "rt",
         ...) {
+    
     if (is.null(data)) {
+        data = data.frame()
+    }
+    
+    if (nrow(data)==0 & ncol(data)==0) {
         data <- data.frame(
             id = character(0),
             mz = numeric(0),
@@ -21,6 +26,8 @@ lcms_table <- function(
             rt_column
         )
     }
+    
+    
     
     # new object
     out <- new_struct(

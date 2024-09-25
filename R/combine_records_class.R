@@ -103,6 +103,7 @@ combine_records <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("combine_records", "annotation_source"),
@@ -374,7 +375,7 @@ NULL
 #' # Select matching records
 #' M <- combine_records(
 #'     group_by = "example",
-#'     default_fcn = .select_match(
+#'     default_fcn = .select_exact(
 #'         match_col = "match_column",
 #'         match = "find_me",
 #'         separator = ", ",
@@ -405,6 +406,7 @@ NULL
 #' @param digits (numeric) the number of digits to use when converting numerical
 #' values to characters when determining if values are unique.
 #' @param sort (logical) sort the values before collapsing.
+#' @param drop_na (logical) exclude NA from the list of unique entires
 #' @examples
 #'
 #' # Collapse unique values

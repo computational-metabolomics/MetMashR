@@ -11,17 +11,36 @@ cd_source <- function(
         mz_column = "mz",
         rt_column = "rt",
         id_column = "id",
+        data = NULL,
         ...) {
+    
+    if (is.null(data)) {
+        data = data.frame()
+    }
+    
+    if (nrow(data)==0 & ncol(data)==0) {
+        data <- data.frame(
+            id = character(0),
+            mz = numeric(0),
+            rt = numeric(0)
+        )
+        colnames(data) <- c(
+            id_column,
+            mz_column,
+            rt_column
+        )
+    }
+    
     # new object
     out <- new_struct(
         "cd_source",
         source = source,
         tag = tag,
-        sheets = sheets,
         mz_column = mz_column,
         rt_column = rt_column,
         id_column = id_column,
-        .required = c(mz_column, rt_column, id_column),
+        .required = c(mz_column, id_column, rt_column),
+        data = data,
         ...
     )
     return(out)
@@ -83,7 +102,9 @@ cd_source <- function(
 )
 
 
+
 #' @export
+#' @rdname read_source
 setMethod(
     f = "read_source",
     signature = c("cd_source"),

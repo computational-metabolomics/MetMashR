@@ -103,6 +103,7 @@ split_column <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("split_column", "annotation_source"),

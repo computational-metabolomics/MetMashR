@@ -36,12 +36,12 @@ A \code{sqlite_database} object inherits the following \code{struct} classes:
 
 \examples{
 M = sqlite_database( table = character(0), tag = character(0), data =
-data.frame(id=NA), source = "ANY")
+data.frame(), source = "ANY")
 
 }
 \references{
 Müller K, Wickham H, James DA, Falcon S (2024). \emph{RSQLite:
-SQLite Interface for R}. R package version 2.3.6,
+SQLite Interface for R}. R package version 2.3.7,
 \url{https://CRAN.R-project.org/package=RSQLite}.
 }
 \seealso{

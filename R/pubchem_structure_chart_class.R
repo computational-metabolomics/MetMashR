@@ -100,6 +100,7 @@ pubchem_structure <- function(
 )
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("pubchem_structure", "annotation_source"),

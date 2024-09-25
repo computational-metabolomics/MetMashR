@@ -187,6 +187,7 @@ openbabel_structure <- function(
 )
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("openbabel_structure", "character"),
@@ -209,6 +210,7 @@ setMethod(
 
 
 #' @export
+#' @template chart_plot
 setMethod(
     f = "chart_plot",
     signature = c("openbabel_structure", "annotation_source"),

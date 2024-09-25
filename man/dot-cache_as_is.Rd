@@ -20,7 +20,7 @@ copy the file directly to the cache without making any changes.
 }
 \examples{
 M <- BiocFileCache_database(
-    path = tempfile(),
+    source = tempfile(),
     resource_name = "example",
     bfc_fun = .cache_as_is
 )

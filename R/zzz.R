@@ -76,13 +76,21 @@ theme_Publication <- function(base_size = 14) { # , base_family="helvetica") {
 
 get_description <- function(id) {
     str <- struct::get_description(id)
-    str <- gsub("[a annotation_source]", "annotation_source()", str,
-                fixed = TRUE
-    )
-    str <- gsub("[a quosures]", "wherever(A>10)", str,
-                fixed = TRUE
-    )
+    str <- gsub("[a annotation_source]", "annotation_source()",str,fixed = TRUE)
+    str <- gsub("[a quosures]", "wherever(A>10)", str,fixed = TRUE)
+    str <- gsub("data.frame(id=NA)","data.frame()",str,fixed = TRUE)
+    
     str <- gsub('>>','->' ,str)
     str <- strwrap(str,70)
     return(str)
 }
+
+utils::globalVariables(c(
+    'Checked','orange_id','setNames',    # read_cd_compounds_file
+    'A',                                 # filter_records
+    'X','Y',                             # venn_this
+    'rotate','wrap_plots','plot_spacer', # annotation_histogram2d
+    'compoundVariables',
+    'orig_db','blue_id','Ion','Name','Formula','mzCloud.Best.Match',
+    'Charge','Area'
+))

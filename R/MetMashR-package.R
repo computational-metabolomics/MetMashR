@@ -1,5 +1,6 @@
 #' @import struct
 #' @importFrom utils URLencode modifyList read.csv stack unzip
+#' @importFrom stats setNames
 #' @keywords internal
 "_PACKAGE"
 

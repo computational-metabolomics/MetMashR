@@ -53,7 +53,7 @@ A \code{lcms_table} object inherits the following \code{struct} classes: \cr\cr
 
 \examples{
 M = lcms_table( mz_column = "mz", rt_column = "rt", id_column = "id",
-tag = character(0), data = data.frame(id=NA), source = "ANY")
+tag = character(0), data = data.frame(), source = "ANY")
 
 }
 \concept{{annotation_tables}}

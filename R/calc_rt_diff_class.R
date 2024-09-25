@@ -96,6 +96,7 @@ calc_rt_diff <- function(
 
 
 #' @export
+#' @template model_apply
 setMethod(
     f = "model_apply",
     signature = c("calc_rt_diff", "annotation_table"),

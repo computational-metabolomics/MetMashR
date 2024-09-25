@@ -37,6 +37,7 @@ sqlite_database <- function(
 
 
 #' @export
+#' @rdname read_database
 setMethod(
     f = "read_database",
     signature = c("sqlite_database"), definition = function(obj) {
@@ -57,14 +58,15 @@ setMethod(
 )
 
 #' @export
+#' @rdname write_database
 setMethod(
     f = "write_database",
-    signature = c("sqlite_database"), definition = function(obj, cache) {
+    signature = c("sqlite_database"), definition = function(obj, df) {
         # connect to database; create if doesnt exist
         conn <- RSQLite::dbConnect(RSQLite::SQLite(), obj$source)
         
         # write df to database
-        RSQLite::dbWriteTable(conn, obj$table, cache, overwrite = TRUE)
+        RSQLite::dbWriteTable(conn, obj$table, df, overwrite = TRUE)
         
         # disconnect
         RSQLite::dbDisconnect(conn)

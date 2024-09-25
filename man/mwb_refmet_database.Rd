@@ -10,8 +10,8 @@ mwb_refmet_database(bfc = NULL, ...)
 \item{bfc}{(character) \code{BiocFileCache} is used to cache database
 locally and prevent unnecessary downloads. If a path is provided then
 \code{BiocFileCache} will use this location. If NULL it will use the
-default location (see \code{\link[=BiocFileCache]{BiocFileCache()}} for details). The default is
-\code{NULL}.}
+default location (see \link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache} for details).
+The default is \code{NULL}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -38,7 +38,7 @@ classes: \cr\cr
 
 \examples{
 M = mwb_refmet_database( bfc = character(0), tag = character(0), data
-= data.frame(id=NA), source = "ANY")
+= data.frame(), source = "ANY")
 
 }
 \references{

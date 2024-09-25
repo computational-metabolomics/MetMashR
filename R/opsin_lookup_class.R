@@ -28,7 +28,7 @@ opsin_lookup <- function(
     prototype = list(
         name = "Compound ID lookup via OPSIN",
         description = paste0(
-            "Uses the OPSIN API [https://opsin.ch.cam.ac.uk/] to search for ",
+            "Uses the [OPSIN API](https://opsin.ch.cam.ac.uk/) to search for ",
             "identifers based on the input annotation column."
         ),
         type = "rest_api",

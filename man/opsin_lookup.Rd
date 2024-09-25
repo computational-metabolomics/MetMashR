@@ -28,7 +28,7 @@ adding data returned by the API. \cr
 }
 }
 \description{
-Uses the OPSIN API \link{https://opsin.ch.cam.ac.uk/} to
+Uses the \href{https://opsin.ch.cam.ac.uk/}{OPSIN API} to
 search for identifers based on the input annotation column.
 }
 \section{Inheritance}{

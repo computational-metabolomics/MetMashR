@@ -35,8 +35,8 @@ classes: \cr\cr
 }
 
 \examples{
-M = annotation_database( tag = character(0), data =
-data.frame(id=NA), source = "ANY")
+M = annotation_database( tag = character(0), data = data.frame(),
+source = "ANY")
 
 }
 \seealso{
