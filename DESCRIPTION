@@ -1,7 +1,7 @@
 Package: MetMashR
 Type: Package
 Title: Metabolite Mashing with R
-Version: 0.99.0
+Version: 0.99.1
 Authors@R: c(
     person(
         c("Gavin","Rhys"),
