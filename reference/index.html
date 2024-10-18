@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@
           <code><a href="annotation_source.html">annotation_source()</a></code>
 
         </dt>
-        <dd>An annotation database</dd>
+        <dd>An annotation source</dd>
       </dl><dl><dt>
 
           <code><a href="cd_source.html">cd_source()</a></code>
@@ -515,7 +515,7 @@
 
       <dl><dt>
 
-          <code><a href="combine_records_helper_functions.html">.mode()</a></code> <code><a href="combine_records_helper_functions.html">.mean()</a></code> <code><a href="combine_records_helper_functions.html">.median()</a></code> <code><a href="combine_records_helper_functions.html">.collapse()</a></code> <code><a href="combine_records_helper_functions.html">.select_max()</a></code> <code><a href="combine_records_helper_functions.html">.select_min()</a></code> <code><a href="combine_records_helper_functions.html">.select_match()</a></code> <code><a href="combine_records_helper_functions.html">.select_exact()</a></code> <code><a href="combine_records_helper_functions.html">.unique()</a></code> <code><a href="combine_records_helper_functions.html">.prioritise()</a></code> <code><a href="combine_records_helper_functions.html">.nothing()</a></code> <code><a href="combine_records_helper_functions.html">.count()</a></code> <code><a href="combine_records_helper_functions.html">.select_grade()</a></code>
+          <code><a href="combine_records_helper_functions.html">compute_mode()</a></code> <code><a href="combine_records_helper_functions.html">compute_mean()</a></code> <code><a href="combine_records_helper_functions.html">compute_median()</a></code> <code><a href="combine_records_helper_functions.html">fuse()</a></code> <code><a href="combine_records_helper_functions.html">select_max()</a></code> <code><a href="combine_records_helper_functions.html">select_min()</a></code> <code><a href="combine_records_helper_functions.html">select_match()</a></code> <code><a href="combine_records_helper_functions.html">select_exact()</a></code> <code><a href="combine_records_helper_functions.html">fuse_unique()</a></code> <code><a href="combine_records_helper_functions.html">prioritise()</a></code> <code><a href="combine_records_helper_functions.html">nothing()</a></code> <code><a href="combine_records_helper_functions.html">count_records()</a></code> <code><a href="combine_records_helper_functions.html">select_grade()</a></code>
 
         </dt>
         <dd>Combine records helper functions</dd>
@@ -553,13 +553,19 @@
           <code><a href="annotation_bar_chart.html">annotation_bar_chart()</a></code>
 
         </dt>
-        <dd>Annotation pie chart</dd>
+        <dd>Annotation bar chart</dd>
       </dl><dl><dt>
 
           <code><a href="annotation_pie_chart.html">annotation_pie_chart()</a></code>
 
         </dt>
         <dd>Annotation pie chart</dd>
+      </dl><dl><dt>
+
+          <code><a href="annotation_upset_chart.html">annotation_upset_chart()</a></code>
+
+        </dt>
+        <dd>Annotation UpSet chart</dd>
       </dl><dl><dt>
 
           <code><a href="annotation_venn_chart.html">annotation_venn_chart()</a></code>
@@ -597,13 +603,13 @@
 
       <dl><dt>
 
-          <code><a href="dot-cache_as_is.html">.cache_as_is()</a></code>
+          <code><a href="cache_as_is.html">cache_as_is()</a></code>
 
         </dt>
         <dd>Cache file with no changes using BiocFileCache</dd>
       </dl><dl><dt>
 
-          <code><a href="dot-unzip.html">.unzip()</a></code>
+          <code><a href="unzip_before_cache.html">unzip_before_cache()</a></code>
 
         </dt>
         <dd>Unzip file before caching with BiocFileCache_database</dd>
@@ -620,19 +626,19 @@
 
       <dl><dt>
 
-          <code><a href="dot-greek_dictionary.html">.greek_dictionary</a></code>
+          <code><a href="greek_dictionary.html">greek_dictionary</a></code>
 
         </dt>
         <dd>Greek dictionary</dd>
       </dl><dl><dt>
 
-          <code><a href="dot-racemic_dictionary.html">.racemic_dictionary</a></code>
+          <code><a href="racemic_dictionary.html">racemic_dictionary</a></code>
 
         </dt>
         <dd>Racemic dictionary</dd>
       </dl><dl><dt>
 
-          <code><a href="dot-tripeptide_dictionary.html">.tripeptide_dictionary</a></code>
+          <code><a href="tripeptide_dictionary.html">tripeptide_dictionary</a></code>
 
         </dt>
         <dd>Tripeptide dictionary</dd>
@@ -665,6 +671,18 @@
 
         </dt>
         <dd>Filter helper function to select records</dd>
+      </dl><dl><dt>
+
+          <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_bar_chart&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_histogram&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_histogram2d&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_pie_chart&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_upset_chart&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_upset_chart&gt;</i>,<i>&lt;list&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_venn_chart&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;annotation_venn_chart&gt;</i>,<i>&lt;list&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;mwb_structure&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;openbabel_structure&gt;</i>,<i>&lt;character&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;openbabel_structure&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;pubchem_structure&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="chart_plot.html">chart_plot(<i>&lt;pubchem_widget&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code>
+
+        </dt>
+        <dd>chart_plot method</dd>
+      </dl><dl><dt>
+
+          <code><a href="model_apply.html">model_apply(<i>&lt;model&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;model&gt;</i>,<i>&lt;list&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;model_seq&gt;</i>,<i>&lt;list&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;model_seq&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;AnnotationDb_select&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;CompoundDb_source&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;add_columns&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;add_labels&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;calc_ppm_diff&gt;</i>,<i>&lt;annotation_table&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;calc_rt_diff&gt;</i>,<i>&lt;annotation_table&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;rest_api&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;combine_columns&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;combine_records&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;combine_sources&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;combine_sources&gt;</i>,<i>&lt;list&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;compute_column&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;compute_record&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;database_lookup&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;split_records&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;filter_labels&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;filter_na&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;filter_range&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;filter_records&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;filter_venn&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;id_counts&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;import_source&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;kegg_lookup&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;mspurity_source&gt;</i>,<i>&lt;lcms_table&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;mz_match&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;mzrt_match&gt;</i>,<i>&lt;lcms_table&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;normalise_lipids&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;normalise_strings&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;pivot_columns&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;prioritise_columns&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;remove_columns&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;rename_columns&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;rt_match&gt;</i>,<i>&lt;annotation_table&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;select_columns&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;split_column&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;trim_whitespace&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code> <code><a href="model_apply.html">model_apply(<i>&lt;unique_records&gt;</i>,<i>&lt;annotation_source&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Apply method</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -675,7 +693,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

@@ -11,7 +11,7 @@ functions are provided for common approaches to merging records."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@ functions are provided for common approaches to merging records."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Combine annotation records (rows)</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/combine_records_class.R" class="external-link"><code>R/combine_records_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/combine_records_class.R" class="external-link"><code>R/combine_records_class.R</code></a></small>
       <div class="d-none name"><code>combine_records.Rd</code></div>
     </div>
 
@@ -61,7 +61,7 @@ functions are provided for common approaches to merging records.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">combine_records</span><span class="op">(</span></span>
 <span>  <span class="va">group_by</span>,</span>
-<span>  default_fcn <span class="op">=</span> <span class="fu"><a href="combine_records_helper_functions.html">.collapse</a></span><span class="op">(</span>separator <span class="op">=</span> <span class="st">" || "</span><span class="op">)</span>,</span>
+<span>  default_fcn <span class="op">=</span> <span class="fu"><a href="combine_records_helper_functions.html">fuse</a></span><span class="op">(</span>separator <span class="op">=</span> <span class="st">" || "</span><span class="op">)</span>,</span>
 <span>  fcns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -79,8 +79,8 @@ records.</p></dd>
 <dt id="arg-default-fcn">default_fcn<a class="anchor" aria-label="anchor" href="#arg-default-fcn"></a></dt>
 <dd><p>(function) The default function to use for
 summarising columns when combining records and a specific function
-has not been provided in fcns. The default is
-<code>.collapse(separator = " || ")</code>.</p></dd>
+has not been provided in fcns. The default is <code>fuse(separator =
+" || ")</code>.</p></dd>
 
 
 <dt id="arg-fcns">fcns<a class="anchor" aria-label="anchor" href="#arg-fcns"></a></dt>
@@ -122,8 +122,10 @@ analysis and beyond." <em>Bioinformatics</em>, <em>36</em>(22-23), 5551-5552.</p
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">combine_records</span><span class="op">(</span> fcns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>default_fcn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="op">}</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">combine_records</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        fcns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        default_fcn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -136,7 +138,7 @@ analysis and beyond." <em>Bioinformatics</em>, <em>36</em>(22-23), 5551-5552.</p
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

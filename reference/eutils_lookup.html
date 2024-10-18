@@ -9,7 +9,7 @@ https://www.ncbi.nlm.nih.gov/books/NBK25501/ for details."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@ https://www.ncbi.nlm.nih.gov/books/NBK25501/ for details."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>NCBI E-utils query</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/eutils_lookup_class.R" class="external-link"><code>R/eutils_lookup_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/eutils_lookup_class.R" class="external-link"><code>R/eutils_lookup_class.R</code></a></small>
       <div class="d-none name"><code>eutils_lookup.Rd</code></div>
     </div>
 
@@ -106,12 +106,17 @@ adding data returned by the API.</td></tr></table></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">eutils_lookup</span><span class="op">(</span> database <span class="op">=</span> <span class="st">"gene"</span>, term <span class="op">=</span> <span class="st">"[pdat]"</span>, result_fields</span></span>
-<span class="r-in"><span><span class="op">=</span> <span class="st">"idlist"</span>, base_url <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"https://eutils.ncbi.nlm.nih.gov/entrez/eutils"</span>, url_template <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"&lt;base_url&gt;/esearch.fcgi?db=&lt;database&gt;&amp;term=&lt;query_column&gt;&lt;term&gt;&amp;retmode=json"</span>,</span></span>
-<span class="r-in"><span>query_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, cache <span class="op">=</span> <span class="cn">NULL</span>, status_codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>delay <span class="op">=</span> <span class="fl">0.5</span>, suffix <span class="op">=</span> <span class="st">"_rest_api"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">eutils_lookup</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        database <span class="op">=</span> <span class="st">"gene"</span>,</span></span>
+<span class="r-in"><span>        term <span class="op">=</span> <span class="st">"[pdat]"</span>,</span></span>
+<span class="r-in"><span>        result_fields <span class="op">=</span> <span class="st">"idlist"</span>,</span></span>
+<span class="r-in"><span>        base_url <span class="op">=</span> <span class="st">"https://eutils.ncbi.nlm.nih.gov/entrez/eutils"</span>,</span></span>
+<span class="r-in"><span>        url_template <span class="op">=</span> <span class="st">"&lt;base_url&gt;/esearch.fcgi?db=&lt;database&gt;&amp;term=&lt;query_column&gt;&lt;term&gt;&amp;retmode=json"</span>,</span></span>
+<span class="r-in"><span>        query_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        cache <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>        status_codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        delay <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
+<span class="r-in"><span>        suffix <span class="op">=</span> <span class="st">"_rest_api"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -124,7 +129,7 @@ adding data returned by the API.</td></tr></table></div>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

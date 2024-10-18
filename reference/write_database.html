@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Write to a database</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/generics.R" class="external-link"><code>R/generics.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/generics.R" class="external-link"><code>R/generics.R</code></a>, <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/annotation_database_class.R" class="external-link"><code>R/annotation_database_class.R</code></a>, <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/rds_database_class.R" class="external-link"><code>R/rds_database_class.R</code></a>, and 1 more</small>
       <div class="d-none name"><code>write_database.Rd</code></div>
     </div>
 
@@ -53,7 +53,16 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_database</span><span class="op">(</span><span class="va">obj</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_database</span><span class="op">(</span><span class="va">obj</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'annotation_database'</span></span>
+<span><span class="fu">write_database</span><span class="op">(</span><span class="va">obj</span>, <span class="va">df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'rds_database'</span></span>
+<span><span class="fu">write_database</span><span class="op">(</span><span class="va">obj</span>, <span class="va">df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'sqlite_database'</span></span>
+<span><span class="fu">write_database</span><span class="op">(</span><span class="va">obj</span>, <span class="va">df</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -62,6 +71,14 @@
 
 <dl><dt id="arg-obj">obj<a class="anchor" aria-label="anchor" href="#arg-obj"></a></dt>
 <dd><p>A <code>annotation_database</code> object</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>additional  database specific inputs</p></dd>
+
+
+<dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
+<dd><p>(data.frame) the data.frame to store in the database.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -84,7 +101,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

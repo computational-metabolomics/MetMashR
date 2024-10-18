@@ -13,7 +13,7 @@ public databases and relevant toxicological assays."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,7 @@ public databases and relevant toxicological assays."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>MTox700plus_database</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/MTox700plus_database_class.R" class="external-link"><code>R/MTox700plus_database_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/MTox700plus_database_class.R" class="external-link"><code>R/MTox700plus_database_class.R</code></a></small>
       <div class="d-none name"><code>MTox700plus_database.Rd</code></div>
     </div>
 
@@ -76,8 +76,8 @@ public databases and relevant toxicological assays.</p>
 
 <dl><dt id="arg-version">version<a class="anchor" aria-label="anchor" href="#arg-version"></a></dt>
 <dd><p>(character) The version number of the MTox700+
-database to import. Available versions are listed here:
-https://github.com/michabohealthscience/MTox700plus/releases.
+database to import. Available versions are listed
+<a href="https://github.com/michabohealthscience/MTox700plus/releases" class="external-link">here</a>.
 <code>version</code> should match the tag of the release e.g. <code>"v1.0"</code>. For
 convenience <code>version = "latest"</code> will always retrieve the most recent
 release. To prevent unecessary downloads <code>BiocFileCache</code> is used to
@@ -138,10 +138,16 @@ Create the MTox700+ Metabolite Panel for Predicting Toxicity."
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">MTox700plus_database</span><span class="op">(</span> version <span class="op">=</span> <span class="st">"v1.0"</span>, bfc_path <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
-<span class="r-in"><span>resource_name <span class="op">=</span> <span class="st">"bfc"</span>, bfc_fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="op">}</span>, import_fun <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="op">}</span>, offline <span class="op">=</span> <span class="cn">FALSE</span>, tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, data <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id<span class="op">=</span><span class="cn">NA</span><span class="op">)</span>, source <span class="op">=</span> <span class="st">"ANY"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">MTox700plus_database</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        version <span class="op">=</span> <span class="st">"v1.0"</span>,</span></span>
+<span class="r-in"><span>        bfc_path <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>        resource_name <span class="op">=</span> <span class="st">"bfc"</span>,</span></span>
+<span class="r-in"><span>        bfc_fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="op">}</span>,</span></span>
+<span class="r-in"><span>        import_fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="op">}</span>,</span></span>
+<span class="r-in"><span>        offline <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>        tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        source <span class="op">=</span> <span class="st">"ANY"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -154,7 +160,7 @@ Create the MTox700+ Metabolite Panel for Predicting Toxicity."
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

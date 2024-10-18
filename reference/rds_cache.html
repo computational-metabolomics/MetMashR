@@ -13,7 +13,7 @@ data.frame for an rds_cache object must have a column named
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,7 @@ data.frame for an rds_cache object must have a column named
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>rds cache</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/rds_cache_class.R" class="external-link"><code>R/rds_cache_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/rds_cache_class.R" class="external-link"><code>R/rds_cache_class.R</code></a></small>
       <div class="d-none name"><code>rds_cache.Rd</code></div>
     </div>
 
@@ -114,9 +114,10 @@ rds_cache
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">rds_cache</span><span class="op">(</span> tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id<span class="op">=</span><span class="cn">NA</span><span class="op">)</span>, source <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"ANY"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in validObject(.Object):</span> invalid class “rds_cache” object: Column(s) named ".search" must be present in the data.frame for this source.</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">rds_cache</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        source <span class="op">=</span> <span class="st">"ANY"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -129,7 +130,7 @@ rds_cache
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

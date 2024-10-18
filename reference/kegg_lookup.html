@@ -11,7 +11,7 @@ for pubchem and chebi identifiers, and vice-versa."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@ for pubchem and chebi identifiers, and vice-versa."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Convert to or from kegg identifiers</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/kegg_lookup_class.R" class="external-link"><code>R/kegg_lookup_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/kegg_lookup_class.R" class="external-link"><code>R/kegg_lookup_class.R</code></a></small>
       <div class="d-none name"><code>kegg_lookup.Rd</code></div>
     </div>
 
@@ -157,9 +157,11 @@ doi:10.18129/B9.bioc.KEGGREST
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">kegg_lookup</span><span class="op">(</span> get <span class="op">=</span> <span class="st">"compound"</span>, from <span class="op">=</span> <span class="st">"compound"</span>, query_column <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"V1"</span>, suffix <span class="op">=</span> <span class="st">"_kegg"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in kegg_lookup(get = "compound", from = "compound", query_column = "V1",     suffix = "_kegg"):</span> compound, drug and glycan ids can only be converted to chebi or pubchem ids</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">kegg_lookup</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        get <span class="op">=</span> <span class="st">"pubchem"</span>,</span></span>
+<span class="r-in"><span>        from <span class="op">=</span> <span class="st">"compound"</span>,</span></span>
+<span class="r-in"><span>        query_column <span class="op">=</span> <span class="st">"V1"</span>,</span></span>
+<span class="r-in"><span>        suffix <span class="op">=</span> <span class="st">"_kegg"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -172,7 +174,7 @@ doi:10.18129/B9.bioc.KEGGREST
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

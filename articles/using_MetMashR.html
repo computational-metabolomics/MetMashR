@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
       <h1>Using MetMashR</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/vignettes/using_MetMashR.Rmd" class="external-link"><code>vignettes/using_MetMashR.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/vignettes/using_MetMashR.Rmd" class="external-link"><code>vignettes/using_MetMashR.Rmd</code></a></small>
       <div class="d-none name"><code>using_MetMashR.Rmd</code></div>
     </div>
 
@@ -303,7 +303,7 @@ first step in a workflow.</p>
 <span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_source.html">import_source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># apply workflow to annotation source</span></span>
-<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
+<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># show</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span></span>
@@ -358,7 +358,7 @@ Grading.</p>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># apply workflow to annotation source</span></span>
-<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
+<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># show</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span></span>
@@ -482,7 +482,7 @@ and updated as more results are collected over time.</p>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># apply workflow to annotation source</span></span>
-<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
+<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># show</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span></span>
@@ -508,7 +508,7 @@ object, and can be used in workflows like any other
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># apply</span></span>
-<span><span class="va">FI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">FI</span>, <span class="va">TF</span><span class="op">)</span></span>
+<span><span class="va">FI</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">FI</span>, <span class="va">TF</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># show</span></span>
 <span><span class="fu">.DT</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">FI</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
@@ -529,12 +529,12 @@ adducts into a standardised format across sources, and to tidy/clean
 strings before using them as search terms in rest api queries.
 <code>MetMashR</code> currently provides the following dictionaries:</p>
 <ul>
-<li>Greek character dictionary (<code>.greek_dictionary</code>) to
+<li>Greek character dictionary (<code>greek_dictionary</code>) to
 convert greek characters to their romanised name.</li>
-<li>Racemic notation dictionary (<code>.racemic_dictionary</code>) to
+<li>Racemic notation dictionary (<code>racemic_dictionary</code>) to
 remove certain types of racemic notation from molecule names
 (e.g. “(+/-)”).</li>
-<li>A tripeptide dictionary (<code>.tripeptide_dictionary</code>) to
+<li>A tripeptide dictionary (<code>tripeptide_dictionary</code>) to
 convert three-letter tripeptide abbreviations into a format more
 commonly used as a synonym on PubChem e.g. “ACD” becomes
 “Ala-Cys-Asp”.</li>
@@ -592,7 +592,7 @@ LipidMaps:</p>
 <span>        output_column <span class="op">=</span> <span class="st">"normalised_name"</span>,</span>
 <span>        dictionary <span class="op">=</span> <span class="va">custom_dict</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># step 4 query lipidmaps api for inchikey using the names provided by </span></span>
+<span>    <span class="co"># step 4 query lipidmaps api for inchikey using the names provided by</span></span>
 <span>    <span class="co"># LipidSearch</span></span>
 <span>    <span class="fu"><a href="../reference/lipidmaps_lookup.html">lipidmaps_lookup</a></span><span class="op">(</span></span>
 <span>        query_column <span class="op">=</span> <span class="st">"LipidName"</span>,</span>
@@ -602,7 +602,7 @@ LipidMaps:</p>
 <span>        suffix <span class="op">=</span> <span class="st">"_LipidName"</span>,</span>
 <span>        cache <span class="op">=</span> <span class="va">TF</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co"># step 5 query lipidmaps api for inchikey using the names provided by </span></span>
+<span>    <span class="co"># step 5 query lipidmaps api for inchikey using the names provided by</span></span>
 <span>    <span class="co"># LipidSearch</span></span>
 <span>    <span class="fu"><a href="../reference/lipidmaps_lookup.html">lipidmaps_lookup</a></span><span class="op">(</span></span>
 <span>        query_column <span class="op">=</span> <span class="st">"normalised_name"</span>,</span>
@@ -613,13 +613,15 @@ LipidMaps:</p>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># apply workflow to annotation source</span></span>
-<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
+<span><span class="va">WF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">WF</span>, <span class="va">AT</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#  show result table for relevant columns</span></span>
-<span><span class="fu">.DT</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LipidName"</span>, <span class="st">"normalised_name"</span>, </span>
-<span>                            <span class="st">"inchi_key_LipidName"</span>, <span class="st">"inchi_key_normalised"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">.DT</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"LipidName"</span>, <span class="st">"normalised_name"</span>,</span>
+<span>    <span class="st">"inchi_key_LipidName"</span>, <span class="st">"inchi_key_normalised"</span></span>
+<span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"filter":"none","vertical":false,"data":[["AcCa(14:0)","AcCa(14:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","Cer(d18:1_16:0)","Cer(m18:1_18:1)","DG(18:1_18:1)","DG(18:1_18:1)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","LPC(20:3)","LPC(20:3)","LPC(20:3)","PC(18:0_18:2)","WE(3:0_20:1)"],["CAR(14:0)","CAR(14:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","Cer(d18:1/16:0)","Cer(m18:1/18:1)","DG(18:1/18:1)","DG(18:1/18:1)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","LPC(20:3)","LPC(20:3)","LPC(20:3)","PC(18:0/18:2)","WE(3:0/20:1)"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N",null,"UATOAILWGVYRQS-HHHXNRCGSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N",null,null],["PSHXNVGSVNEJBD-LJQANCHMSA-N","PSHXNVGSVNEJBD-UHFFFAOYSA-N","XOMRRQXKHMYMOC-OAQYLSRUSA-N","XOMRRQXKHMYMOC-NRFANRHFSA-N","XOMRRQXKHMYMOC-UHFFFAOYSA-N","XOMRRQXKHMYMOC-OAQYLSRUSA-N","XOMRRQXKHMYMOC-NRFANRHFSA-N","XOMRRQXKHMYMOC-UHFFFAOYSA-N","MJLXQSQYKZWZCB-UTJQPWESSA-N","MJLXQSQYKZWZCB-DQFWFXSYSA-N","MJLXQSQYKZWZCB-OKLKQMLOSA-N","XQUYOQVTHDSPEP-JWLPSHCGSA-N","MJLXQSQYKZWZCB-UTJQPWESSA-N","MJLXQSQYKZWZCB-DQFWFXSYSA-N","MJLXQSQYKZWZCB-OKLKQMLOSA-N","XQUYOQVTHDSPEP-JWLPSHCGSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N",null,null,null,null,"NEGQHKSYEYVFTD-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N",null,"UATOAILWGVYRQS-HHHXNRCGSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N",null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>LipidName<\/th>\n      <th>normalised_name<\/th>\n      <th>inchi_key_LipidName<\/th>\n      <th>inchi_key_normalised<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"pageLength":6,"dom":"t","initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'font-size':'10pt'});\n}","columnDefs":[{"name":"LipidName","targets":0},{"name":"normalised_name","targets":1},{"name":"inchi_key_LipidName","targets":2},{"name":"inchi_key_normalised","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'10pt'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'10pt'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'10pt'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'10pt'});\n}"}},"evals":["options.initComplete","options.rowCallback"],"jsHooks":[]}</script><p>You can see that we obtained inchikey for more of the Lipids after
+<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"filter":"none","vertical":false,"data":[["AcCa(14:0)","AcCa(14:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(16:0)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(18:2)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","AcCa(20:4)","Cer(d18:1_16:0)","Cer(m18:1_18:1)","DG(18:1_18:1)","DG(18:1_18:1)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","LPC(20:3)","LPC(20:3)","LPC(20:3)","PC(18:0_18:2)","WE(3:0_20:1)"],["CAR(14:0)","CAR(14:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(16:0)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(18:2)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","CAR(20:4)","Cer(d18:1/16:0)","Cer(m18:1/18:1)","DG(18:1/18:1)","DG(18:1/18:1)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(16:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:0)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","LPC(20:3)","LPC(20:3)","LPC(20:3)","PC(18:0/18:2)","WE(3:0/20:1)"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N",null,"UATOAILWGVYRQS-HHHXNRCGSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N",null,null],["PSHXNVGSVNEJBD-LJQANCHMSA-N","PSHXNVGSVNEJBD-UHFFFAOYSA-N","XOMRRQXKHMYMOC-NRFANRHFSA-N","XOMRRQXKHMYMOC-UHFFFAOYSA-N","XOMRRQXKHMYMOC-OAQYLSRUSA-N","XOMRRQXKHMYMOC-NRFANRHFSA-N","XOMRRQXKHMYMOC-UHFFFAOYSA-N","XOMRRQXKHMYMOC-OAQYLSRUSA-N","MJLXQSQYKZWZCB-UTJQPWESSA-N","MJLXQSQYKZWZCB-DQFWFXSYSA-N","MJLXQSQYKZWZCB-OKLKQMLOSA-N","XQUYOQVTHDSPEP-JWLPSHCGSA-N","MJLXQSQYKZWZCB-UTJQPWESSA-N","MJLXQSQYKZWZCB-DQFWFXSYSA-N","MJLXQSQYKZWZCB-OKLKQMLOSA-N","XQUYOQVTHDSPEP-JWLPSHCGSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N",null,null,null,null,"ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","ASWBNKHCZGQVJV-HSZRJFAPSA-N","ASWBNKHCZGQVJV-UHFFFAOYSA-N","NEGQHKSYEYVFTD-HSZRJFAPSA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N","IQGPMZRCLCCXAG-RUZDIDTESA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N","SPJFYYJXNPEZDW-FTJOPAKQSA-N",null,"UATOAILWGVYRQS-HHHXNRCGSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N","YHGXYYIGHBPDMX-BUTFDPNWSA-N",null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>LipidName<\/th>\n      <th>normalised_name<\/th>\n      <th>inchi_key_LipidName<\/th>\n      <th>inchi_key_normalised<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"pageLength":6,"dom":"t","initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'font-size':'10pt'});\n}","columnDefs":[{"name":"LipidName","targets":0},{"name":"normalised_name","targets":1},{"name":"inchi_key_LipidName","targets":2},{"name":"inchi_key_normalised","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'10pt'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'10pt'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'10pt'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'10pt'});\n}"}},"evals":["options.initComplete","options.rowCallback"],"jsHooks":[]}</script><p>You can see that we obtained inchikey for more of the Lipids after
 normalising the lipid names.</p>
 <p><code>MetMashR</code> also provides an interface to the
 <code>rgoslin</code> package to assist with Lipid annotations.</p>
@@ -646,28 +648,30 @@ inchikeys into a single string separated by semi colons.</p>
 <code class="sourceCode R"><span><span class="co"># prepare workflow</span></span>
 <span><span class="va">CR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine_records.html">combine_records</a></span><span class="op">(</span></span>
 <span>    group_by <span class="op">=</span> <span class="st">"LipidName"</span>,</span>
-<span>    default_fcn <span class="op">=</span> <span class="fu"><a href="../reference/combine_records_helper_functions.html">.unique</a></span><span class="op">(</span>separator <span class="op">=</span> <span class="st">"; "</span><span class="op">)</span>,</span>
+<span>    default_fcn <span class="op">=</span> <span class="fu"><a href="../reference/combine_records_helper_functions.html">fuse_unique</a></span><span class="op">(</span>separator <span class="op">=</span> <span class="st">"; "</span><span class="op">)</span>,</span>
 <span>    fcns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        count <span class="op">=</span> <span class="fu"><a href="../reference/combine_records_helper_functions.html">.count</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>        count <span class="op">=</span> <span class="fu"><a href="../reference/combine_records_helper_functions.html">count_records</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># apply to previous output</span></span>
-<span><span class="va">CR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/model_apply.html" class="external-link">model_apply</a></span><span class="op">(</span><span class="va">CR</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">CR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">CR</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># show output for relevant columns</span></span>
-<span><span class="fu">.DT</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CR</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LipidName"</span>, <span class="st">"normalised_name"</span>, </span>
-<span>                            <span class="st">"inchi_key_normalised"</span>, <span class="st">"count"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">.DT</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CR</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"LipidName"</span>, <span class="st">"normalised_name"</span>,</span>
+<span>    <span class="st">"inchi_key_normalised"</span>, <span class="st">"count"</span></span>
+<span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-febe03efa1a2d8d52a86" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"filter":"none","vertical":false,"data":[["AcCa(14:0)","AcCa(16:0)","AcCa(18:2)","AcCa(20:4)","Cer(d18:1_16:0)","Cer(m18:1_18:1)","DG(18:1_18:1)","LPC(16:0)","LPC(18:0)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","PC(18:0_18:2)","WE(3:0_20:1)"],["CAR(14:0)","CAR(16:0)","CAR(18:2)","CAR(20:4)","Cer(d18:1/16:0)","Cer(m18:1/18:1)","DG(18:1/18:1)","LPC(16:0)","LPC(18:0)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","PC(18:0/18:2)","WE(3:0/20:1)"],["PSHXNVGSVNEJBD-LJQANCHMSA-N; PSHXNVGSVNEJBD-UHFFFAOYSA-N","XOMRRQXKHMYMOC-OAQYLSRUSA-N; XOMRRQXKHMYMOC-NRFANRHFSA-N; XOMRRQXKHMYMOC-UHFFFAOYSA-N","MJLXQSQYKZWZCB-UTJQPWESSA-N; MJLXQSQYKZWZCB-DQFWFXSYSA-N; MJLXQSQYKZWZCB-OKLKQMLOSA-N; XQUYOQVTHDSPEP-JWLPSHCGSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","NA","NA","NA","NEGQHKSYEYVFTD-HSZRJFAPSA-N; ASWBNKHCZGQVJV-HSZRJFAPSA-N; ASWBNKHCZGQVJV-UHFFFAOYSA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N; IQGPMZRCLCCXAG-RUZDIDTESA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N; SPJFYYJXNPEZDW-FTJOPAKQSA-N","NA","UATOAILWGVYRQS-HHHXNRCGSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N; YHGXYYIGHBPDMX-BUTFDPNWSA-N","NA","NA"],[2,6,8,7,1,1,2,9,24,4,1,1,4,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>LipidName<\/th>\n      <th>normalised_name<\/th>\n      <th>inchi_key_normalised<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"pageLength":6,"dom":"t","initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'font-size':'10pt'});\n}","columnDefs":[{"className":"dt-right","targets":3},{"name":"LipidName","targets":0},{"name":"normalised_name","targets":1},{"name":"inchi_key_normalised","targets":2},{"name":"count","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'10pt'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'10pt'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'10pt'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'10pt'});\n}"}},"evals":["options.initComplete","options.rowCallback"],"jsHooks":[]}</script><p>You can see that there is now a single record (row) for each
+<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"filter":"none","vertical":false,"data":[["AcCa(14:0)","AcCa(16:0)","AcCa(18:2)","AcCa(20:4)","Cer(d18:1_16:0)","Cer(m18:1_18:1)","DG(18:1_18:1)","LPC(16:0)","LPC(18:0)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","PC(18:0_18:2)","WE(3:0_20:1)"],["CAR(14:0)","CAR(16:0)","CAR(18:2)","CAR(20:4)","Cer(d18:1/16:0)","Cer(m18:1/18:1)","DG(18:1/18:1)","LPC(16:0)","LPC(18:0)","LPC(18:2)","LPC(18:2e)","LPC(20:0)","LPC(20:3)","PC(18:0/18:2)","WE(3:0/20:1)"],["PSHXNVGSVNEJBD-LJQANCHMSA-N; PSHXNVGSVNEJBD-UHFFFAOYSA-N","XOMRRQXKHMYMOC-NRFANRHFSA-N; XOMRRQXKHMYMOC-UHFFFAOYSA-N; XOMRRQXKHMYMOC-OAQYLSRUSA-N","MJLXQSQYKZWZCB-UTJQPWESSA-N; MJLXQSQYKZWZCB-DQFWFXSYSA-N; MJLXQSQYKZWZCB-OKLKQMLOSA-N; XQUYOQVTHDSPEP-JWLPSHCGSA-N","RBFQHRALHSUPIA-SNPVRQPZSA-N","NA","NA","NA","ASWBNKHCZGQVJV-HSZRJFAPSA-N; ASWBNKHCZGQVJV-UHFFFAOYSA-N; NEGQHKSYEYVFTD-HSZRJFAPSA-N","IHNKQIMGVNPMTC-RUZDIDTESA-N; IQGPMZRCLCCXAG-RUZDIDTESA-N","CLDXAAPENVNFAW-JRMAHNDFSA-N; SPJFYYJXNPEZDW-FTJOPAKQSA-N","NA","UATOAILWGVYRQS-HHHXNRCGSA-N","BBNHCUBQEQJHIG-FZZJNMCHSA-N; YHGXYYIGHBPDMX-BUTFDPNWSA-N","NA","NA"],[2,6,8,7,1,1,2,9,24,4,1,1,4,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>LipidName<\/th>\n      <th>normalised_name<\/th>\n      <th>inchi_key_normalised<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"pageLength":6,"dom":"t","initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'font-size':'10pt'});\n}","columnDefs":[{"className":"dt-right","targets":3},{"name":"LipidName","targets":0},{"name":"normalised_name","targets":1},{"name":"inchi_key_normalised","targets":2},{"name":"count","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'10pt'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'10pt'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'10pt'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'10pt'});\n}"}},"evals":["options.initComplete","options.rowCallback"],"jsHooks":[]}</script><p>You can see that there is now a single record (row) for each
 LipidName, and that the multiple inchikeys associated with that
 LipidName have been collapsed into a single entry separated by
 semicolons.</p>
-<p>The helper function <code>.unique</code> ensures that each inchikey
-only appears once in the collapsed string, and is applied as default to
-all columns.</p>
-<p>The <code>.count</code> helper function add a new column of counts
-for each LipidName. Note that AcCa(20:4) has 8 counts but only 4
+<p>The helper function <code>fuse_unique</code> ensures that each
+inchikey only appears once in the collapsed string, and is applied as
+default to all columns.</p>
+<p>The <code>add_count</code> helper function adds a new column of
+counts for each LipidName. Note that AcCa(20:4) has 8 counts but only 4
 inchikey. This means that AcCa(20:4) appeared twice in the original
 table, each time with the same 4 inchikey.</p>
 <p>There are a number of other helper functions to suit different
@@ -681,7 +685,7 @@ complete list.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.4 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.5 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -703,28 +707,28 @@ complete list.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt; [1] DT_0.33              dplyr_1.1.4          structToolbox_1.17.3</span></span>
-<span><span class="co">#&gt; [4] ggplot2_3.5.1        MetMashR_0.99.0      struct_1.17.0       </span></span>
+<span><span class="co">#&gt; [4] ggplot2_3.5.1        MetMashR_0.99.1      struct_1.17.0       </span></span>
 <span><span class="co">#&gt; [7] BiocStyle_2.33.1    </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] tidyselect_1.2.1            blob_1.2.4                 </span></span>
 <span><span class="co">#&gt;  [3] filelock_1.0.3              fastmap_1.2.0              </span></span>
-<span><span class="co">#&gt;  [5] BiocFileCache_2.13.0        digest_0.6.37              </span></span>
+<span><span class="co">#&gt;  [5] BiocFileCache_2.13.2        digest_0.6.37              </span></span>
 <span><span class="co">#&gt;  [7] lifecycle_1.0.4             RSQLite_2.3.7              </span></span>
 <span><span class="co">#&gt;  [9] magrittr_2.0.3              compiler_4.4.1             </span></span>
 <span><span class="co">#&gt; [11] rlang_1.1.4                 sass_0.4.9                 </span></span>
 <span><span class="co">#&gt; [13] tools_4.4.1                 utf8_1.2.4                 </span></span>
 <span><span class="co">#&gt; [15] yaml_2.3.10                 knitr_1.48                 </span></span>
-<span><span class="co">#&gt; [17] S4Arrays_1.5.7              htmlwidgets_1.6.4          </span></span>
-<span><span class="co">#&gt; [19] ontologyIndex_2.12          bit_4.0.5                  </span></span>
-<span><span class="co">#&gt; [21] sp_2.1-4                    curl_5.2.2                 </span></span>
-<span><span class="co">#&gt; [23] DelayedArray_0.31.11        plyr_1.8.9                 </span></span>
+<span><span class="co">#&gt; [17] S4Arrays_1.5.11             htmlwidgets_1.6.4          </span></span>
+<span><span class="co">#&gt; [19] ontologyIndex_2.12          bit_4.5.0                  </span></span>
+<span><span class="co">#&gt; [21] sp_2.1-4                    curl_5.2.3                 </span></span>
+<span><span class="co">#&gt; [23] DelayedArray_0.31.14        plyr_1.8.9                 </span></span>
 <span><span class="co">#&gt; [25] abind_1.4-8                 withr_3.0.1                </span></span>
-<span><span class="co">#&gt; [27] purrr_1.0.2                 BiocGenerics_0.51.1        </span></span>
+<span><span class="co">#&gt; [27] purrr_1.0.2                 BiocGenerics_0.51.3        </span></span>
 <span><span class="co">#&gt; [29] desc_1.4.3                  grid_4.4.1                 </span></span>
 <span><span class="co">#&gt; [31] stats4_4.4.1                fansi_1.0.6                </span></span>
 <span><span class="co">#&gt; [33] colorspace_2.1-1            scales_1.3.0               </span></span>
-<span><span class="co">#&gt; [35] SummarizedExperiment_1.35.1 cli_3.6.3                  </span></span>
+<span><span class="co">#&gt; [35] SummarizedExperiment_1.35.4 cli_3.6.3                  </span></span>
 <span><span class="co">#&gt; [37] rmarkdown_2.28              crayon_1.5.3               </span></span>
 <span><span class="co">#&gt; [39] ragg_1.3.3                  generics_0.1.3             </span></span>
 <span><span class="co">#&gt; [41] httr_1.4.7                  DBI_1.2.3                  </span></span>
@@ -732,23 +736,23 @@ complete list.</p>
 <span><span class="co">#&gt; [45] zlibbioc_1.51.1             ggthemes_5.1.0             </span></span>
 <span><span class="co">#&gt; [47] BiocManager_1.30.25         XVector_0.45.0             </span></span>
 <span><span class="co">#&gt; [49] matrixStats_1.4.1           vctrs_0.6.5                </span></span>
-<span><span class="co">#&gt; [51] Matrix_1.7-0                jsonlite_1.8.8             </span></span>
-<span><span class="co">#&gt; [53] bookdown_0.40               IRanges_2.39.2             </span></span>
-<span><span class="co">#&gt; [55] S4Vectors_0.43.2            bit64_4.0.5                </span></span>
+<span><span class="co">#&gt; [51] Matrix_1.7-0                jsonlite_1.8.9             </span></span>
+<span><span class="co">#&gt; [53] bookdown_0.41               IRanges_2.39.2             </span></span>
+<span><span class="co">#&gt; [55] S4Vectors_0.43.2            bit64_4.5.2                </span></span>
 <span><span class="co">#&gt; [57] crosstalk_1.2.1             systemfonts_1.1.0          </span></span>
-<span><span class="co">#&gt; [59] jquerylib_0.1.4             glue_1.7.0                 </span></span>
-<span><span class="co">#&gt; [61] pkgdown_2.1.0.9000          cowplot_1.1.3              </span></span>
+<span><span class="co">#&gt; [59] jquerylib_0.1.4             glue_1.8.0                 </span></span>
+<span><span class="co">#&gt; [61] pkgdown_2.1.1.9000          cowplot_1.1.3              </span></span>
 <span><span class="co">#&gt; [63] stringi_1.8.4               gtable_0.3.5               </span></span>
-<span><span class="co">#&gt; [65] GenomeInfoDb_1.41.1         GenomicRanges_1.57.1       </span></span>
+<span><span class="co">#&gt; [65] GenomeInfoDb_1.41.2         GenomicRanges_1.57.2       </span></span>
 <span><span class="co">#&gt; [67] UCSC.utils_1.1.0            munsell_0.5.1              </span></span>
 <span><span class="co">#&gt; [69] tibble_3.2.1                pillar_1.9.0               </span></span>
-<span><span class="co">#&gt; [71] htmltools_0.5.8.1           GenomeInfoDbData_1.2.12    </span></span>
+<span><span class="co">#&gt; [71] htmltools_0.5.8.1           GenomeInfoDbData_1.2.13    </span></span>
 <span><span class="co">#&gt; [73] dbplyr_2.5.0                R6_2.5.1                   </span></span>
-<span><span class="co">#&gt; [75] textshaping_0.4.0           evaluate_0.24.0            </span></span>
+<span><span class="co">#&gt; [75] textshaping_0.4.0           evaluate_1.0.1             </span></span>
 <span><span class="co">#&gt; [77] lattice_0.22-6              Biobase_2.65.1             </span></span>
 <span><span class="co">#&gt; [79] memoise_2.0.1               bslib_0.8.0                </span></span>
 <span><span class="co">#&gt; [81] Rcpp_1.0.13                 gridExtra_2.3              </span></span>
-<span><span class="co">#&gt; [83] SparseArray_1.5.34          xfun_0.47                  </span></span>
+<span><span class="co">#&gt; [83] SparseArray_1.5.44          xfun_0.48                  </span></span>
 <span><span class="co">#&gt; [85] fs_1.6.4                    MatrixGenerics_1.17.0      </span></span>
 <span><span class="co">#&gt; [87] pkgconfig_2.0.3</span></span></code></pre></div>
 </div>
@@ -763,7 +767,7 @@ complete list.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer>

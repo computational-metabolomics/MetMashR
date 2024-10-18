@@ -9,7 +9,7 @@ annotation column and returns property information."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@ annotation column and returns property information."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Compound property lookup via pubchem</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/pubchem_property_lookup_class.R" class="external-link"><code>R/pubchem_property_lookup_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/pubchem_property_lookup_class.R" class="external-link"><code>R/pubchem_property_lookup_class.R</code></a></small>
       <div class="d-none name"><code>pubchem_property_lookup.Rd</code></div>
     </div>
 
@@ -112,12 +112,18 @@ classes: <br><br><code>[pubchem_property_lookup]</code> -&gt; <code>[pubchem_com
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">pubchem_property_lookup</span><span class="op">(</span> search_by <span class="op">=</span> <span class="st">"cid"</span>, property <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"InChIKey"</span>, output <span class="op">=</span> <span class="st">"cids"</span>, records <span class="op">=</span> <span class="st">"best"</span>, base_url <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound"</span>, url_template <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"&lt;base_url&gt;/&lt;search_by&gt;/&lt;query_column&gt;/property/&lt;property&gt;/JSON"</span>,</span></span>
-<span class="r-in"><span>query_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, cache <span class="op">=</span> <span class="cn">NULL</span>, status_codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>delay <span class="op">=</span> <span class="fl">0.5</span>, suffix <span class="op">=</span> <span class="st">"_rest_api"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">pubchem_property_lookup</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        search_by <span class="op">=</span> <span class="st">"cid"</span>,</span></span>
+<span class="r-in"><span>        property <span class="op">=</span> <span class="st">"InChIKey"</span>,</span></span>
+<span class="r-in"><span>        output <span class="op">=</span> <span class="st">"cids"</span>,</span></span>
+<span class="r-in"><span>        records <span class="op">=</span> <span class="st">"best"</span>,</span></span>
+<span class="r-in"><span>        base_url <span class="op">=</span> <span class="st">"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound"</span>,</span></span>
+<span class="r-in"><span>        url_template <span class="op">=</span> <span class="st">"&lt;base_url&gt;/&lt;search_by&gt;/&lt;query_column&gt;/property/&lt;property&gt;/JSON"</span>,</span></span>
+<span class="r-in"><span>        query_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        cache <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>        status_codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        delay <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
+<span class="r-in"><span>        suffix <span class="op">=</span> <span class="st">"_rest_api"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -130,7 +136,7 @@ classes: <br><br><code>[pubchem_property_lookup]</code> -&gt; <code>[pubchem_com
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

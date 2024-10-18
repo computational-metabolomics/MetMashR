@@ -9,7 +9,7 @@ using OpenBabel."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@ using OpenBabel."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>OpenBabel molecular structure</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/openbabel_structure_chart.R" class="external-link"><code>R/openbabel_structure_chart.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/openbabel_structure_chart.R" class="external-link"><code>R/openbabel_structure_chart.R</code></a></small>
       <div class="d-none name"><code>openbabel_structure.Rd</code></div>
     </div>
 
@@ -195,10 +195,18 @@ Annotations for 'ggplot2'</em>. R package version 1.1.3,
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">openbabel_structure</span><span class="op">(</span> smiles_column <span class="op">=</span> <span class="st">"V1"</span>, image_size <span class="op">=</span> <span class="fl">300</span>,</span></span>
-<span class="r-in"><span>hydrogens <span class="op">=</span> <span class="st">"implicit"</span>, carbons <span class="op">=</span> <span class="st">"terminal"</span>, double_bonds <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"symmetric"</span>, colour_atoms <span class="op">=</span> <span class="cn">FALSE</span>, scale_to_fit <span class="op">=</span> <span class="cn">FALSE</span>, row_index <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="fl">1</span>, view_port <span class="op">=</span> <span class="fl">300</span>, title_column <span class="op">=</span> <span class="cn">NULL</span>, subtitle_column <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">openbabel_structure</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        smiles_column <span class="op">=</span> <span class="st">"V1"</span>,</span></span>
+<span class="r-in"><span>        image_size <span class="op">=</span> <span class="fl">300</span>,</span></span>
+<span class="r-in"><span>        hydrogens <span class="op">=</span> <span class="st">"implicit"</span>,</span></span>
+<span class="r-in"><span>        carbons <span class="op">=</span> <span class="st">"terminal"</span>,</span></span>
+<span class="r-in"><span>        double_bonds <span class="op">=</span> <span class="st">"symmetric"</span>,</span></span>
+<span class="r-in"><span>        colour_atoms <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>        scale_to_fit <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>        row_index <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>        view_port <span class="op">=</span> <span class="fl">300</span>,</span></span>
+<span class="r-in"><span>        title_column <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>        subtitle_column <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -211,7 +219,7 @@ Annotations for 'ggplot2'</em>. R package version 1.1.3,
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

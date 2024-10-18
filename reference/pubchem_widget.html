@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>PubChem widget</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/pubchem_widget.R" class="external-link"><code>R/pubchem_widget.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/pubchem_widget.R" class="external-link"><code>R/pubchem_widget.R</code></a></small>
       <div class="d-none name"><code>pubchem_widget.Rd</code></div>
     </div>
 
@@ -149,9 +149,14 @@ packages:</p><ul><li><p><code>htmltools</code></p></li>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">=</span> <span class="fu">pubchem_widget</span><span class="op">(</span> query_column <span class="op">=</span> <span class="st">"V1"</span>, row_index <span class="op">=</span> <span class="fl">1</span>, record_type <span class="op">=</span></span></span>
-<span class="r-in"><span><span class="st">"2D-Structure"</span>, hide_title <span class="op">=</span> <span class="cn">FALSE</span>, width <span class="op">=</span> <span class="fl">600</span>, height <span class="op">=</span> <span class="fl">400</span>,</span></span>
-<span class="r-in"><span>display <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu">pubchem_widget</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        query_column <span class="op">=</span> <span class="st">"V1"</span>,</span></span>
+<span class="r-in"><span>        row_index <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>        record_type <span class="op">=</span> <span class="st">"2D-Structure"</span>,</span></span>
+<span class="r-in"><span>        hide_title <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>        width <span class="op">=</span> <span class="fl">600</span>,</span></span>
+<span class="r-in"><span>        height <span class="op">=</span> <span class="fl">400</span>,</span></span>
+<span class="r-in"><span>        display <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -164,7 +169,7 @@ packages:</p><ul><li><p><code>htmltools</code></p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>

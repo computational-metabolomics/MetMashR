@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Combine records helper functions</h1>
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/main/R/combine_records_class.R" class="external-link"><code>R/combine_records_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/R/combine_records_class.R" class="external-link"><code>R/combine_records_class.R</code></a></small>
       <div class="d-none name"><code>combine_records_helper_functions.Rd</code></div>
     </div>
 
@@ -53,31 +53,37 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.mode</span><span class="op">(</span>ties <span class="op">=</span> <span class="cn">FALSE</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_mode</span><span class="op">(</span>ties <span class="op">=</span> <span class="cn">FALSE</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.mean</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">compute_mean</span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.median</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">compute_median</span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.collapse</span><span class="op">(</span><span class="va">separator</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
+<span><span class="fu">fuse</span><span class="op">(</span><span class="va">separator</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.select_max</span><span class="op">(</span><span class="va">max_col</span>, use_abs <span class="op">=</span> <span class="cn">FALSE</span>, keep_NA <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">select_max</span><span class="op">(</span><span class="va">max_col</span>, use_abs <span class="op">=</span> <span class="cn">FALSE</span>, keep_NA <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.select_min</span><span class="op">(</span><span class="va">min_col</span>, use_abs <span class="op">=</span> <span class="cn">FALSE</span>, keep_NA <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">select_min</span><span class="op">(</span><span class="va">min_col</span>, use_abs <span class="op">=</span> <span class="cn">FALSE</span>, keep_NA <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.select_match</span><span class="op">(</span><span class="va">match_col</span>, <span class="va">search_col</span>, <span class="va">separator</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
+<span><span class="fu">select_match</span><span class="op">(</span><span class="va">match_col</span>, <span class="va">search_col</span>, <span class="va">separator</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.select_exact</span><span class="op">(</span><span class="va">match_col</span>, <span class="va">match</span>, <span class="va">separator</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
+<span><span class="fu">select_exact</span><span class="op">(</span><span class="va">match_col</span>, <span class="va">match</span>, <span class="va">separator</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.unique</span><span class="op">(</span><span class="va">separator</span>, na_string <span class="op">=</span> <span class="st">"NA"</span>, digits <span class="op">=</span> <span class="fl">6</span>, drop_na <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">fuse_unique</span><span class="op">(</span></span>
+<span>  <span class="va">separator</span>,</span>
+<span>  na_string <span class="op">=</span> <span class="st">"NA"</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  drop_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sort <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.prioritise</span><span class="op">(</span><span class="va">match_col</span>, <span class="va">priority</span>, <span class="va">separator</span>, no_match <span class="op">=</span> <span class="cn">NA</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
+<span><span class="fu">prioritise</span><span class="op">(</span><span class="va">match_col</span>, <span class="va">priority</span>, <span class="va">separator</span>, no_match <span class="op">=</span> <span class="cn">NA</span>, na_string <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.nothing</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">nothing</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.count</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">count_records</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.select_grade</span><span class="op">(</span><span class="va">grade_col</span>, keep_NA <span class="op">=</span> <span class="cn">FALSE</span>, upper_case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">select_grade</span><span class="op">(</span><span class="va">grade_col</span>, keep_NA <span class="op">=</span> <span class="cn">FALSE</span>, upper_case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -136,6 +142,10 @@ locating values in the matching column.</p></dd>
 values to characters when determining if values are unique.</p></dd>
 
 
+<dt id="arg-drop-na">drop_na<a class="anchor" aria-label="anchor" href="#arg-drop-na"></a></dt>
+<dd><p>(logical) exclude NA from the list of unique entires</p></dd>
+
+
 <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
 <dd><p>(logical) sort the values before collapsing.</p></dd>
 
@@ -165,41 +175,41 @@ letters to determine their ordering, otherwise lower case.</p></dd>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
 
-<ul><li><p><code>.mode()</code>: returns the most common value,
+<ul><li><p><code>compute_mode()</code>: returns the most common value,
 excluding NA. If <code>ties == TRUE</code> then all tied
 values are returned, otherwise the first value in
 a sorted unique list is returned (equal to min if numeric).
 If <code>na.rm = FALSE</code> then NA are included when searching for the modal value
 and placed last if <code>ties = FALSE</code> (values are returned preferentially over
 NA).</p></li>
-<li><p><code>.mean()</code>: calculates the mean value,
+<li><p><code>compute_mean()</code>: calculates the mean value,
 excluding NA if <code>na.rm = TRUE</code></p></li>
-<li><p><code>.median()</code>: calculates the median value,
+<li><p><code>compute_median()</code>: calculates the median value,
 excluding NA if <code>na.rm = TRUE</code></p></li>
-<li><p><code>.collapse()</code>: collapses multiple matching
+<li><p><code>fuse()</code>: collapses multiple matching
 records into a single string using the provided separator.</p></li>
-<li><p><code>.select_max()</code>: selects a record based on
+<li><p><code>select_max()</code>: selects a record based on
 the index of the maximum value in a another column.</p></li>
-<li><p><code>.select_min()</code>: selects a record based on the
+<li><p><code>select_min()</code>: selects a record based on the
 index of the minimum in a second column.</p></li>
-<li><p><code>.select_match()</code>: returns all records based on
+<li><p><code>select_match()</code>: returns all records based on
 the indices of identical matches in a second column and collapses them
-useing the provided separator.</p></li>
-<li><p><code>.select_exact()</code>: returns records based on
+using the provided separator.</p></li>
+<li><p><code>select_exact()</code>: returns records based on
 the index of identical value matching the <code>match</code> parameter within the
 current column, and collapses them using the provided separator if necessary.</p></li>
-<li><p><code>.unique()</code>: collapses a set of records to a
+<li><p><code>fuse_unique()</code>: collapses a set of records to a
 set of unique values using the provided separator. <code>digits</code> can be provided
 for numeric columns to control the precision used when determining unique
 values.</p></li>
-<li><p><code>.prioritise()</code>: reduces a set of annotations by
+<li><p><code>prioritise()</code>: reduces a set of annotations by
 prioritising values according to the input. If there are multiple matches
 with the same priority then they are collapsed using a separator.</p></li>
-<li><p><code>.nothing()</code>: a pass-through function to
+<li><p><code>nothing()</code>: a pass-through function to
 allow some annotation table columns to remain unchanged.</p></li>
-<li><p><code>.count()</code>: adds a new column indicating
+<li><p><code>count_records()</code>: adds a new column indicating
 the number of annotations that match the given grouping variable.</p></li>
-<li><p><code>.select_grade()</code>: returns records based on the
+<li><p><code>select_grade()</code>: returns records based on the
 index of the best grade in a second list. The best grade is defined as "A"
 for <code>upper_case = TRUE</code> or "a" for <code>upper_case = FALSE</code>
 and the worst grade is "Z" or "z". Any non-exact matches to a character in
@@ -212,19 +222,18 @@ and the worst grade is "Z" or "z". Any non-exact matches to a character in
 <span class="r-in"><span><span class="co"># Select matching records</span></span></span>
 <span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="combine_records.html">combine_records</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"example"</span>,</span></span>
-<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">.select_match</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">select_exact</span><span class="op">(</span></span></span>
 <span class="r-in"><span>        match_col <span class="op">=</span> <span class="st">"match_column"</span>,</span></span>
 <span class="r-in"><span>        match <span class="op">=</span> <span class="st">"find_me"</span>,</span></span>
 <span class="r-in"><span>        separator <span class="op">=</span> <span class="st">", "</span>,</span></span>
 <span class="r-in"><span>        na_string <span class="op">=</span> <span class="st">"NA"</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .select_match(match_col = "match_column", match = "find_me",     separator = ", ", na_string = "NA"):</span> unused argument (match = "find_me")</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Collapse unique values</span></span></span>
 <span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="combine_records.html">combine_records</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"example"</span>,</span></span>
-<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">.unique</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">fuse_unique</span><span class="op">(</span></span></span>
 <span class="r-in"><span>        digits <span class="op">=</span> <span class="fl">6</span>,</span></span>
 <span class="r-in"><span>        separator <span class="op">=</span> <span class="st">", "</span>,</span></span>
 <span class="r-in"><span>        na_string <span class="op">=</span> <span class="st">"NA"</span>,</span></span>
@@ -235,7 +244,7 @@ and the worst grade is "Z" or "z". Any non-exact matches to a character in
 <span class="r-in"><span><span class="co"># Prioritise by source</span></span></span>
 <span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="combine_records.html">combine_records</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"InChiKey"</span>,</span></span>
-<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">.prioritise</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">prioritise</span><span class="op">(</span></span></span>
 <span class="r-in"><span>        match_col <span class="op">=</span> <span class="st">"source"</span>,</span></span>
 <span class="r-in"><span>        priority <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD"</span>, <span class="st">"LS"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        separator <span class="op">=</span> <span class="st">"  || "</span></span></span>
@@ -245,21 +254,21 @@ and the worst grade is "Z" or "z". Any non-exact matches to a character in
 <span class="r-in"><span><span class="co"># Do nothing to all columns</span></span></span>
 <span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="combine_records.html">combine_records</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"InChiKey"</span>,</span></span>
-<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">.nothing</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">nothing</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Add a column with the number of records with a matching inchikey</span></span></span>
 <span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="combine_records.html">combine_records</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"InChiKey"</span>,</span></span>
 <span class="r-in"><span>    fcns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>        count <span class="op">=</span> <span class="fu">.count</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>        count <span class="op">=</span> <span class="fu">count_records</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Select annotation with highest (best) grade</span></span></span>
 <span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="combine_records.html">combine_records</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"InChiKey"</span>,</span></span>
-<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">.select_grade</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    default_fcn <span class="op">=</span> <span class="fu">select_grade</span><span class="op">(</span></span></span>
 <span class="r-in"><span>        grade_col <span class="op">=</span> <span class="st">"grade"</span>,</span></span>
 <span class="r-in"><span>        keep_NA <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>        upper_case <span class="op">=</span> <span class="cn">TRUE</span></span></span>
@@ -276,7 +285,7 @@ and the worst grade is "Z" or "z". Any non-exact matches to a character in
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer></div>
