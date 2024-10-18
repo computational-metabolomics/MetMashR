@@ -53,8 +53,10 @@ A \code{calc_ppm_diff} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = calc_ppm_diff( obs_mz_column = character(0), ref_mz_column =
-"reference (theoretical) m/z values.", out_column = character(0),
-check_names = "unique")
+M <- calc_ppm_diff(
+        obs_mz_column = character(0),
+        ref_mz_column = "reference (theoretical) m/z values.",
+        out_column = character(0),
+        check_names = "unique")
 
 }

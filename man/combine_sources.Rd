@@ -68,8 +68,13 @@ A \code{combine_sources} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = combine_sources( source_list = list(), matching_columns = NULL,
-keep_cols = NULL, source_col = "annotation_source", exclude_cols =
-NULL, tag = "combined", as = annotation_source())
+M <- combine_sources(
+        source_list = list(),
+        matching_columns = NULL,
+        keep_cols = NULL,
+        source_col = "annotation_source",
+        exclude_cols = NULL,
+        tag = "combined",
+        as = annotation_source())
 
 }

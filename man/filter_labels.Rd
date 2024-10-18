@@ -62,7 +62,12 @@ A \code{filter_labels} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = filter_labels( column_name = "V1", labels = "", mode = "exclude",
-perl = FALSE, fixed = FALSE, match_na = FALSE)
+M <- filter_labels(
+        column_name = "V1",
+        labels = "",
+        mode = "exclude",
+        perl = FALSE,
+        fixed = FALSE,
+        match_na = FALSE)
 
 }

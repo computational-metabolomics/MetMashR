@@ -95,10 +95,18 @@ classes: \cr\cr
 }
 
 \examples{
-M = openbabel_structure( smiles_column = "V1", image_size = 300,
-hydrogens = "implicit", carbons = "terminal", double_bonds =
-"symmetric", colour_atoms = FALSE, scale_to_fit = FALSE, row_index =
-1, view_port = 300, title_column = NULL, subtitle_column = NULL)
+M <- openbabel_structure(
+        smiles_column = "V1",
+        image_size = 300,
+        hydrogens = "implicit",
+        carbons = "terminal",
+        double_bonds = "symmetric",
+        colour_atoms = FALSE,
+        scale_to_fit = FALSE,
+        row_index = 1,
+        view_port = 300,
+        title_column = NULL,
+        subtitle_column = NULL)
 
 }
 \references{

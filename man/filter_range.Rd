@@ -52,7 +52,10 @@ A \code{filter_range} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = filter_range( column_name = "V1", upper_limit = Inf, lower_limit
-= -Inf, equal_to = FALSE)
+M <- filter_range(
+        column_name = "V1",
+        upper_limit = Inf,
+        lower_limit = -Inf,
+        equal_to = FALSE)
 
 }

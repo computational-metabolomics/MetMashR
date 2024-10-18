@@ -60,11 +60,16 @@ A \code{classyfire_lookup} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = classyfire_lookup( output_items = "kingdom", output_fields =
-"name", base_url = "http://classyfire.wishartlab.com/entities",
-url_template = "<base_url>/<query_column>.json", query_column =
-character(0), cache = NULL, status_codes = list(), delay = 0.5,
-suffix = "_rest_api")
+M <- classyfire_lookup(
+        output_items = "kingdom",
+        output_fields = "name",
+        base_url = "http://classyfire.wishartlab.com/entities",
+        url_template = "<base_url>/<query_column>.json",
+        query_column = character(0),
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }
 \references{

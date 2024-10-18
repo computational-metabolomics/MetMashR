@@ -45,7 +45,10 @@ A \code{trim_whitespace} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = trim_whitespace( column_names = "V1", which = "both", whitespace
-= "[ ]")
+M <- trim_whitespace(
+        column_names = "V1",
+        which = "both",
+        whitespace = "[ 	
+]")
 
 }

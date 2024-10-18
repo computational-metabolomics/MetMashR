@@ -40,7 +40,9 @@ A \code{pivot_columns} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = pivot_columns( group_labels = list(), column_groups = list())
+M <- pivot_columns(
+        group_labels = list(),
+        column_groups = list())
 
 }
 \references{

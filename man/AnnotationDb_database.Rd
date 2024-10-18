@@ -37,8 +37,11 @@ classes: \cr\cr
 }
 
 \examples{
-M = AnnotationDb_database( table = character(0), tag = character(0),
-data = data.frame(), source = character(0))
+M <- AnnotationDb_database(
+        table = character(0),
+        tag = character(0),
+        data = data.frame(),
+        source = character(0))
 
 }
 \references{

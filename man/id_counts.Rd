@@ -39,7 +39,9 @@ A \code{id_counts} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = id_counts( id_column = character(0), count_column = character(0),
-count_na = FALSE)
+M <- id_counts(
+        id_column = character(0),
+        count_column = character(0),
+        count_na = FALSE)
 
 }

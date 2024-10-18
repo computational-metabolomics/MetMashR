@@ -61,8 +61,12 @@ A \code{mzrt_match} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = mzrt_match( variable_meta = data.frame(), mz_column =
-character(0), ppm_window = 5, id_column = character(0), rt_column =
-character(0), rt_window = 20)
+M <- mzrt_match(
+        variable_meta = data.frame(),
+        mz_column = character(0),
+        ppm_window = 5,
+        id_column = character(0),
+        rt_column = character(0),
+        rt_window = 20)
 
 }

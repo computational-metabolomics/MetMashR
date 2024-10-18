@@ -54,10 +54,16 @@ A \code{PathBank_metabolite_database} object inherits the following
 }
 
 \examples{
-M = PathBank_metabolite_database( version = "primary", bfc_path =
-NULL, resource_name = "bfc", bfc_fun = function(){}, import_fun =
-function(){}, offline = FALSE, tag = character(0), data =
-data.frame(), source = "ANY")
+M <- PathBank_metabolite_database(
+        version = "primary",
+        bfc_path = NULL,
+        resource_name = "bfc",
+        bfc_fun = function(){},
+        import_fun = function(){},
+        offline = FALSE,
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \references{

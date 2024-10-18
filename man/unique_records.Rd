@@ -29,6 +29,6 @@ A \code{unique_records} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = unique_records()
+M <- unique_records()
 
 }

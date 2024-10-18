@@ -41,10 +41,15 @@ A \code{hmdb_lookup} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = hmdb_lookup( output = "inchikey", base_url =
-"http://www.hmdb.ca/metabolites", url_template =
-"<base_url>/<query_column>.xml", query_column = character(0), cache =
-NULL, status_codes = list(), delay = 0.5, suffix = "_rest_api")
+M <- hmdb_lookup(
+        output = "inchikey",
+        base_url = "http://www.hmdb.ca/metabolites",
+        url_template = "<base_url>/<query_column>.xml",
+        query_column = character(0),
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }
 \references{

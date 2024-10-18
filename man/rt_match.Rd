@@ -44,7 +44,10 @@ A \code{rt_match} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = rt_match( variable_meta = data.frame(), rt_column = character(0),
-rt_window = 20, id_column = character(0))
+M <- rt_match(
+        variable_meta = data.frame(),
+        rt_column = character(0),
+        rt_window = 20,
+        id_column = character(0))
 
 }

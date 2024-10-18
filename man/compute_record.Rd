@@ -36,7 +36,8 @@ A \code{compute_record} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = compute_record( fcn = function(){})
+M <- compute_record(
+        fcn = function(){})
 
 }
 \references{

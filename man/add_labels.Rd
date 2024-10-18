@@ -42,7 +42,9 @@ A \code{add_labels} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = add_labels( labels = list(), replace = FALSE)
+M <- add_labels(
+        labels = list(),
+        replace = FALSE)
 
 }
 \references{

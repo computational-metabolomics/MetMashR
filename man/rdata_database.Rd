@@ -34,8 +34,11 @@ A \code{rdata_database} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = rdata_database( variable_name = "a data frame", tag =
-character(0), data = data.frame(), source = "ANY")
+M <- rdata_database(
+        variable_name = "a data frame",
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \seealso{

@@ -64,9 +64,12 @@ classes: \cr\cr
 }
 
 \examples{
-M = annotation_bar_chart( factor_name = "V1", label_location =
-"inside", label_rotation = FALSE, legend = FALSE, label_type =
-"percent")
+M <- annotation_bar_chart(
+        factor_name = "V1",
+        label_location = "inside",
+        label_rotation = FALSE,
+        legend = FALSE,
+        label_type = "percent")
 
 }
 \references{

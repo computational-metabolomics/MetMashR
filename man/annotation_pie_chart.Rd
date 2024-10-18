@@ -84,10 +84,16 @@ classes: \cr\cr
 }
 
 \examples{
-M = annotation_pie_chart( factor_name = "V1", label_location =
-"inside", label_rotation = FALSE, legend = FALSE, pie_rotation = 0,
-label_type = "percent", centre_radius = 0, centre_label = NULL,
-count_na = FALSE)
+M <- annotation_pie_chart(
+        factor_name = "V1",
+        label_location = "inside",
+        label_rotation = FALSE,
+        legend = FALSE,
+        pie_rotation = 0,
+        label_type = "percent",
+        centre_radius = 0,
+        centre_label = NULL,
+        count_na = FALSE)
 
 }
 \references{

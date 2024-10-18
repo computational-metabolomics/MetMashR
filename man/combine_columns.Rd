@@ -58,8 +58,12 @@ A \code{combine_columns} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = combine_columns( column_names = "V1", separator = "_",
-output_column = "combined", clean = FALSE, prefix = NULL, suffix =
-NULL)
+M <- combine_columns(
+        column_names = "V1",
+        separator = "_",
+        output_column = "combined",
+        clean = FALSE,
+        prefix = NULL,
+        suffix = NULL)
 
 }

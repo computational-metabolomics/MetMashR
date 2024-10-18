@@ -29,6 +29,6 @@ A \code{import_source} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = import_source()
+M <- import_source()
 
 }

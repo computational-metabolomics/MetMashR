@@ -51,7 +51,10 @@ A \code{calc_rt_diff} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = calc_rt_diff( obs_rt_column = character(0), ref_rt_column =
-character(0), out_column = character(0), check_names = "unique")
+M <- calc_rt_diff(
+        obs_rt_column = character(0),
+        ref_rt_column = character(0),
+        out_column = character(0),
+        check_names = "unique")
 
 }

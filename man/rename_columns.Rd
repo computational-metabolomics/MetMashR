@@ -37,7 +37,8 @@ A \code{rename_columns} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = rename_columns( expression = call("example"))
+M <- rename_columns(
+        expression = call("example"))
 
 }
 \references{

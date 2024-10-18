@@ -58,11 +58,18 @@ A \code{github_file} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = github_file( username = character(0), repository_name =
-character(0), file_path = character(0), bfc_path = NULL,
-resource_name = "bfc", bfc_fun = function(){}, import_fun =
-function(){}, offline = FALSE, tag = character(0), data =
-data.frame(), source = "ANY")
+M <- github_file(
+        username = character(0),
+        repository_name = character(0),
+        file_path = character(0),
+        bfc_path = NULL,
+        resource_name = "bfc",
+        bfc_fun = function(){},
+        import_fun = function(){},
+        offline = FALSE,
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \references{

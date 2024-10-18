@@ -39,11 +39,15 @@ A \code{opsin_lookup} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = opsin_lookup( output = "stdinchikey", base_url =
-"https://opsin.ch.cam.ac.uk/opsin", url_template =
-"<base_url>/<query_column>.<output>", query_column = character(0),
-cache = NULL, status_codes = list(), delay = 0.5, suffix =
-"_rest_api")
+M <- opsin_lookup(
+        output = "stdinchikey",
+        base_url = "https://opsin.ch.cam.ac.uk/opsin",
+        url_template = "<base_url>/<query_column>.<output>",
+        query_column = character(0),
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }
 \references{

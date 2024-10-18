@@ -61,8 +61,12 @@ classes: \cr\cr
 }
 
 \examples{
-M = AnnotationDb_select( database = "", key_column = "", key_type =
-"", database_columns = ".all", drop_na = FALSE)
+M <- AnnotationDb_select(
+        database = "",
+        key_column = "",
+        key_type = "",
+        database_columns = ".all",
+        drop_na = FALSE)
 
 }
 \references{

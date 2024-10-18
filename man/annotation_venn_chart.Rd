@@ -71,9 +71,13 @@ classes: \cr\cr
 }
 
 \examples{
-M = annotation_venn_chart( factor_name = "V1", line_colour =
-".group", fill_colour = ".group", labels = FALSE, legend = FALSE,
-group_column = NULL)
+M <- annotation_venn_chart(
+        factor_name = "V1",
+        line_colour = ".group",
+        fill_colour = ".group",
+        labels = FALSE,
+        legend = FALSE,
+        group_column = NULL)
 
 }
 \references{

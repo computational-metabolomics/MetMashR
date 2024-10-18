@@ -35,8 +35,11 @@ A \code{sqlite_database} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = sqlite_database( table = character(0), tag = character(0), data =
-data.frame(), source = "ANY")
+M <- sqlite_database(
+        table = character(0),
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \references{

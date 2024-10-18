@@ -69,9 +69,14 @@ A \code{pubchem_widget} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = pubchem_widget( query_column = "V1", row_index = 1, record_type =
-"2D-Structure", hide_title = FALSE, width = 600, height = 400,
-display = FALSE)
+M <- pubchem_widget(
+        query_column = "V1",
+        row_index = 1,
+        record_type = "2D-Structure",
+        hide_title = FALSE,
+        width = 600,
+        height = 400,
+        display = FALSE)
 
 }
 \references{

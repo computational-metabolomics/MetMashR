@@ -55,8 +55,13 @@ A \code{ls_source} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = ls_source( mz_column = "mz", rt_column = "rt", id_column = "id",
-tag = character(0), data = data.frame(), source = "ANY")
+M <- ls_source(
+        mz_column = "mz",
+        rt_column = "rt",
+        id_column = "id",
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \seealso{

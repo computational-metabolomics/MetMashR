@@ -81,7 +81,13 @@ get_description <- function(id) {
     str <- gsub("data.frame(id=NA)","data.frame()",str,fixed = TRUE)
     
     str <- gsub('>>','->' ,str)
-    str <- strwrap(str,70)
+    str <- gsub('M = ','M <- ',str)
+    str <- gsub('      ','        ',str)
+    w <- which(grepl('M <- ',str))
+    if (length(w)>0){
+        str <- c(strwrap(str[1:(w-1)],70),str[w:length(str)])
+    }
+    
     return(str)
 }
 

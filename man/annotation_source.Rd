@@ -36,8 +36,10 @@ A \code{annotation_source} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = annotation_source( tag = character(0), data = data.frame(),
-source = "ANY")
+M <- annotation_source(
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \seealso{

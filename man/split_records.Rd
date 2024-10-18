@@ -47,8 +47,10 @@ A \code{split_records} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = split_records( column_name = character(0), separator = ",", clean
-= FALSE)
+M <- split_records(
+        column_name = character(0),
+        separator = ",",
+        clean = FALSE)
 
 }
 \references{

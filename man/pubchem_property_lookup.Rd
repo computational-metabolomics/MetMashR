@@ -51,11 +51,17 @@ classes: \cr\cr
 }
 
 \examples{
-M = pubchem_property_lookup( search_by = "cid", property =
-"InChIKey", output = "cids", records = "best", base_url =
-"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound", url_template =
-"<base_url>/<search_by>/<query_column>/property/<property>/JSON",
-query_column = character(0), cache = NULL, status_codes = list(),
-delay = 0.5, suffix = "_rest_api")
+M <- pubchem_property_lookup(
+        search_by = "cid",
+        property = "InChIKey",
+        output = "cids",
+        records = "best",
+        base_url = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound",
+        url_template = "<base_url>/<search_by>/<query_column>/property/<property>/JSON",
+        query_column = character(0),
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }

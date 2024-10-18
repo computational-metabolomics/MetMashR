@@ -51,8 +51,10 @@ A \code{combine_records} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = combine_records( fcns = list(), group_by = character(0),
-default_fcn = function(){})
+M <- combine_records(
+        fcns = list(),
+        group_by = character(0),
+        default_fcn = function(){})
 
 }
 \references{

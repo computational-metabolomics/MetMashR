@@ -56,10 +56,16 @@ classes: \cr\cr
 }
 
 \examples{
-M = MTox700plus_database( version = "v1.0", bfc_path = NULL,
-resource_name = "bfc", bfc_fun = function(){}, import_fun =
-function(){}, offline = FALSE, tag = character(0), data =
-data.frame(), source = "ANY")
+M <- MTox700plus_database(
+        version = "v1.0",
+        bfc_path = NULL,
+        resource_name = "bfc",
+        bfc_fun = function(){},
+        import_fun = function(){},
+        offline = FALSE,
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \references{

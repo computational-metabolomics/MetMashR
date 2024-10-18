@@ -37,8 +37,11 @@ classes: \cr\cr
 }
 
 \examples{
-M = mwb_refmet_database( bfc = character(0), tag = character(0), data
-= data.frame(), source = "ANY")
+M <- mwb_refmet_database(
+        bfc = character(0),
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \references{

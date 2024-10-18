@@ -84,10 +84,17 @@ classes: \cr\cr
 }
 
 \examples{
-M = annotation_upset_chart( factor_name = "V1", group_column = NULL,
-width_ratio = 0.2, xlabel = "group", sort_intersections =
-"descending", intersections = "observed", n_intersections = NULL,
-min_size = 0, queries = list(), keep_empty_groups = FALSE)
+M <- annotation_upset_chart(
+        factor_name = "V1",
+        group_column = NULL,
+        width_ratio = 0.2,
+        xlabel = "group",
+        sort_intersections = "descending",
+        intersections = "observed",
+        n_intersections = NULL,
+        min_size = 0,
+        queries = list(),
+        keep_empty_groups = FALSE)
 
 }
 \references{

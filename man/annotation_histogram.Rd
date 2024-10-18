@@ -59,8 +59,13 @@ classes: \cr\cr
 }
 
 \examples{
-M = annotation_histogram( factor_name = "V1", bins = 30, bin_edge =
-"grey", bin_fill = "lightgrey", vline = NULL, vline_colour = "red")
+M <- annotation_histogram(
+        factor_name = "V1",
+        bins = 30,
+        bin_edge = "grey",
+        bin_fill = "lightgrey",
+        vline = NULL,
+        vline_colour = "red")
 
 }
 \references{

@@ -63,8 +63,12 @@ A \code{pubchem_structure} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = pubchem_structure( query_column = "V1", search_by = "cid",
-row_index = 1, record_type = "2d", image_size = "large")
+M <- pubchem_structure(
+        query_column = "V1",
+        search_by = "cid",
+        row_index = 1,
+        record_type = "2d",
+        image_size = "large")
 
 }
 \references{

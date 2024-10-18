@@ -67,8 +67,12 @@ A \code{normalise_lipids} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = normalise_lipids( column_name = "V1", grammar = ".all", columns =
-".all", suffix = "_goslin", batch_size = 10000)
+M <- normalise_lipids(
+        column_name = "V1",
+        grammar = ".all",
+        columns = ".all",
+        suffix = "_goslin",
+        batch_size = 10000)
 
 }
 \references{

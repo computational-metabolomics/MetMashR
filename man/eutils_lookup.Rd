@@ -45,11 +45,16 @@ A \code{eutils_lookup} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = eutils_lookup( database = "gene", term = "[pdat]", result_fields
-= "idlist", base_url =
-"https://eutils.ncbi.nlm.nih.gov/entrez/eutils", url_template =
-"<base_url>/esearch.fcgi?db=<database>&term=<query_column><term>&retmode=json",
-query_column = character(0), cache = NULL, status_codes = list(),
-delay = 0.5, suffix = "_rest_api")
+M <- eutils_lookup(
+        database = "gene",
+        term = "[pdat]",
+        result_fields = "idlist",
+        base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
+        url_template = "<base_url>/esearch.fcgi?db=<database>&term=<query_column><term>&retmode=json",
+        query_column = character(0),
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }

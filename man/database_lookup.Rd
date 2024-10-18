@@ -62,9 +62,13 @@ A \code{database_lookup} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = database_lookup( query_column = "V1", database_column = "",
-database = data.frame(), include = NULL, suffix = NULL, not_found =
-NULL)
+M <- database_lookup(
+        query_column = "V1",
+        database_column = "",
+        database = data.frame(),
+        include = NULL,
+        suffix = NULL,
+        not_found = NULL)
 
 }
 \references{

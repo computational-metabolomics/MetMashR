@@ -70,7 +70,13 @@ A \code{filter_venn} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = filter_venn( factor_name = "V1", group_column = NULL, tables =
-NULL, levels = "", mode = "exclude", perl = FALSE, fixed = FALSE)
+M <- filter_venn(
+        factor_name = "V1",
+        group_column = NULL,
+        tables = NULL,
+        levels = "",
+        mode = "exclude",
+        perl = FALSE,
+        fixed = FALSE)
 
 }

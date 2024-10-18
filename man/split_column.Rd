@@ -56,7 +56,11 @@ A \code{split_column} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = split_column( column_name = "V1", separator = "_", clean = FALSE,
-padding = FALSE, keep_indices = numeric(0))
+M <- split_column(
+        column_name = "V1",
+        separator = "_",
+        clean = FALSE,
+        padding = FALSE,
+        keep_indices = numeric(0))
 
 }

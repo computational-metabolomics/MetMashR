@@ -42,8 +42,10 @@ A \code{compute_column} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = compute_column( input_columns = character(0), output_column =
-character(0), fcn = function(){})
+M <- compute_column(
+        input_columns = character(0),
+        output_column = character(0),
+        fcn = function(){})
 
 }
 \references{

@@ -55,7 +55,11 @@ classes: \cr\cr
 }
 
 \examples{
-M = prioritise_columns( column_names = "V1", output_name = "", clean
-= FALSE, source_name = "source_name", source_tags = "x")
+M <- prioritise_columns(
+        column_names = "V1",
+        output_name = "",
+        clean = FALSE,
+        source_name = "source_name",
+        source_tags = "x")
 
 }

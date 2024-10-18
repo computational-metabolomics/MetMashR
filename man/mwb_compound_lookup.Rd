@@ -57,12 +57,16 @@ classes: \cr\cr
 }
 
 \examples{
-M = mwb_compound_lookup( input_item = "inchi_key", output_item =
-"inchi_key", base_url = "https://www.metabolomicsworkbench.org/rest",
-url_template =
-"<base_url>/compound/<input_item>/<query_column>/<output_item>",
-query_column = character(0), cache = NULL, status_codes = list(),
-delay = 0.5, suffix = "_rest_api")
+M <- mwb_compound_lookup(
+        input_item = "inchi_key",
+        output_item = "inchi_key",
+        base_url = "https://www.metabolomicsworkbench.org/rest",
+        url_template = "<base_url>/compound/<input_item>/<query_column>/<output_item>",
+        query_column = character(0),
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }
 \references{

@@ -36,6 +36,8 @@ A \code{filter_na} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = filter_na( column_name = "V1", mode = "exclude")
+M <- filter_na(
+        column_name = "V1",
+        mode = "exclude")
 
 }

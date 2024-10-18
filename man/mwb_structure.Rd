@@ -45,7 +45,9 @@ A \code{mwb_structure} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = mwb_structure( row_index = 1, query_column = "V1")
+M <- mwb_structure(
+        row_index = 1,
+        query_column = "V1")
 
 }
 \references{

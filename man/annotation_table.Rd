@@ -40,8 +40,11 @@ A \code{annotation_table} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = annotation_table( id_column = "id", tag = character(0), data =
-data.frame(), source = "ANY")
+M <- annotation_table(
+        id_column = "id",
+        tag = character(0),
+        data = data.frame(),
+        source = "ANY")
 
 }
 \seealso{

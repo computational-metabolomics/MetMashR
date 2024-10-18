@@ -39,7 +39,8 @@ A \code{filter_records} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = filter_records( where = wherever(A>10))
+M <- filter_records(
+        where = wherever(A>10))
 
 }
 \references{

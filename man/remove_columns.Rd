@@ -38,7 +38,8 @@ A \code{remove_columns} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = remove_columns( expression = call("example"))
+M <- remove_columns(
+        expression = call("example"))
 
 }
 \references{

@@ -63,8 +63,11 @@ A \code{kegg_lookup} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = kegg_lookup( get = "pubchem", from = "compound", query_column =
-"V1", suffix = "_kegg")
+M <- kegg_lookup(
+        get = "pubchem",
+        from = "compound",
+        query_column = "V1",
+        suffix = "_kegg")
 
 }
 \references{

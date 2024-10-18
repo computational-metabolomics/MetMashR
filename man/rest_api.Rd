@@ -62,9 +62,14 @@ A \code{rest_api} object inherits the following \code{struct} classes: \cr\cr
 }
 
 \examples{
-M = rest_api( base_url = "V1", url_template = character(0),
-query_column = character(0), cache = NULL, status_codes = list(),
-delay = 0.5, suffix = "_rest_api")
+M <- rest_api(
+        base_url = "V1",
+        url_template = character(0),
+        query_column = character(0),
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }
 \seealso{

@@ -60,8 +60,10 @@ A \code{normalise_strings} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = normalise_strings( search_column = character(0), output_column =
-NULL, dictionary = list())
+M <- normalise_strings(
+        search_column = character(0),
+        output_column = NULL,
+        dictionary = list())
 
 }
 \references{

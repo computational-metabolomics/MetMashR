@@ -52,12 +52,17 @@ A \code{lipidmaps_lookup} object inherits the following \code{struct} classes:
 }
 
 \examples{
-M = lipidmaps_lookup( query_column = character(0), output_item =
-"input", context = "compound", context_item = character(0), base_url
-= "https://www.lipidmaps.org/rest", url_template =
-"<base_url>/<context>/<context_item>/<query_column>/<output_item>/json",
-cache = NULL, status_codes = list(), delay = 0.5, suffix =
-"_rest_api")
+M <- lipidmaps_lookup(
+        query_column = character(0),
+        output_item = "input",
+        context = "compound",
+        context_item = character(0),
+        base_url = "https://www.lipidmaps.org/rest",
+        url_template = "<base_url>/<context>/<context_item>/<query_column>/<output_item>/json",
+        cache = NULL,
+        status_codes = list(),
+        delay = 0.5,
+        suffix = "_rest_api")
 
 }
 \seealso{
