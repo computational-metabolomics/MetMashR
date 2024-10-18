@@ -82,7 +82,7 @@ PathBank_metabolite_database <- function(version = "primary",
         bfc_fun = .set_entity_value(
             "BiocFileCache_database",
             "bfc_fun",
-            value = .unzip
+            value = unzip_before_cache
         )
     )
 )

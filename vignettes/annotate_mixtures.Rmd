@@ -145,7 +145,7 @@ combined tables.
 
 The resolution of duplicates is needed because CD might assign the same
 metabolite + adduct to multiple peaks. Here we choose the match with highest
-mzcloud score using the `.select_max` helper function with the combine_records` 
+mzcloud score using the `select_max` helper function with the combine_records` 
 object. This object is a wrapper for [dplyr::reframe()].
 
 ```{r}
@@ -175,7 +175,7 @@ M <- import_source() +
     ) +
     combine_records(
         group_by = c("compound", "ion"),
-        default_fcn = .select_max(
+        default_fcn = select_max(
             max_col = "mzcloud_score",
             keep_NA = FALSE,
             use_abs = TRUE
@@ -316,7 +316,7 @@ source the annotations are associated with. We also include a `tag` for the
 table. This will be useful later when processing the combined tables.
 
 For LS we resolve duplicates by selecting the annotation with the smallest 
-ppm error. We use the `combine_records` object with the `.select_min` helper
+ppm error. We use the `combine_records` object with the `select_min` helper
 function to do this.
 
 ```{r}
@@ -340,7 +340,7 @@ M <- import_source() +
     ) +
     combine_records(
         group_by = c("LipidIon"),
-        default_fcn = .select_min(
+        default_fcn = select_min(
             min_col = "library_ppm_diff",
             keep_NA = FALSE,
             use_abs = TRUE
@@ -669,9 +669,9 @@ N <- normalise_strings(
             )
         ),
         # replace greek characters
-        .greek_dictionary,
+        greek_dictionary,
         # remove racemic properties
-        .racemic_dictionary
+        racemic_dictionary
     )
 ) +
     pubchem_property_lookup(

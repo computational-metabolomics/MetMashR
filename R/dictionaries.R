@@ -8,12 +8,12 @@
 #' M <- normalise_strings(
 #'     search_column = "example",
 #'     output_column = "result",
-#'     dictionary = .tripeptide_dictionary
+#'     dictionary = tripeptide_dictionary
 #' )
 #'
 #' @return A dictionary for use with [`normalise_strings()`]
 #' @export
-.tripeptide_dictionary <- list(
+tripeptide_dictionary <- list(
     list(
         pattern = "^[ABCDEFGHIJKLMNOPQRSTVWXYZ]{3}$",
         replace = function(x) {
@@ -71,12 +71,12 @@
 #' M <- normalise_strings(
 #'     search_column = "example",
 #'     output_column = "result",
-#'     dictionary = .racemic_dictionary
+#'     dictionary = racemic_dictionary
 #' )
 #'
 #' @return A dictionary for use with [`normalise_strings()`]
 #' @export
-.racemic_dictionary <- list(
+racemic_dictionary <- list(
     list(pattern = "-(-)-", replace = "-", fixed = TRUE),
     list(pattern = "-(+)-", replace = "-", fixed = TRUE),
     list(pattern = "^L(+)-", replace = "L-", fixed = TRUE),
@@ -94,12 +94,12 @@
 #' M <- normalise_strings(
 #'     search_column = "example",
 #'     output_column = "result",
-#'     dictionary = .greek_dictionary
+#'     dictionary = greek_dictionary
 #' )
 #'
 #' @return A dictionary for use with [`normalise_strings()`]
 #' @export
-.greek_dictionary <- list(
+greek_dictionary <- list(
     list(pattern = "\\x{03b1}", replace = "alpha"),
     list(pattern = "\\x{03b2}", replace = "beta"),
     list(pattern = "\\x{03b3}", replace = "gamma"),

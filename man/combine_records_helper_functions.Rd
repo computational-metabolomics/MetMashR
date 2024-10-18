@@ -2,46 +2,52 @@
 % Please edit documentation in R/combine_records_class.R
 \name{combine_records_helper_functions}
 \alias{combine_records_helper_functions}
-\alias{.mode}
-\alias{.mean}
-\alias{.median}
-\alias{.collapse}
-\alias{.select_max}
-\alias{.select_min}
-\alias{.select_match}
-\alias{.select_exact}
-\alias{.unique}
-\alias{.prioritise}
-\alias{.nothing}
-\alias{.count}
-\alias{.select_grade}
+\alias{compute_mode}
+\alias{compute_mean}
+\alias{compute_median}
+\alias{fuse}
+\alias{select_max}
+\alias{select_min}
+\alias{select_match}
+\alias{select_exact}
+\alias{fuse_unique}
+\alias{prioritise}
+\alias{nothing}
+\alias{count_records}
+\alias{select_grade}
 \title{Combine records helper functions}
 \usage{
-.mode(ties = FALSE, na.rm = TRUE)
+compute_mode(ties = FALSE, na.rm = TRUE)
 
-.mean()
+compute_mean(na.rm = TRUE)
 
-.median()
+compute_median(na.rm = TRUE)
 
-.collapse(separator, na_string = "NA")
+fuse(separator, na_string = "NA")
 
-.select_max(max_col, use_abs = FALSE, keep_NA = FALSE)
+select_max(max_col, use_abs = FALSE, keep_NA = FALSE)
 
-.select_min(min_col, use_abs = FALSE, keep_NA = FALSE)
+select_min(min_col, use_abs = FALSE, keep_NA = FALSE)
 
-.select_match(match_col, search_col, separator, na_string = "NA")
+select_match(match_col, search_col, separator, na_string = "NA")
 
-.select_exact(match_col, match, separator, na_string = "NA")
+select_exact(match_col, match, separator, na_string = "NA")
 
-.unique(separator, na_string = "NA", digits = 6, drop_na = FALSE, sort = FALSE)
+fuse_unique(
+  separator,
+  na_string = "NA",
+  digits = 6,
+  drop_na = FALSE,
+  sort = FALSE
+)
 
-.prioritise(match_col, priority, separator, no_match = NA, na_string = "NA")
+prioritise(match_col, priority, separator, no_match = NA, na_string = "NA")
 
-.nothing()
+nothing()
 
-.count()
+count_records()
 
-.select_grade(grade_col, keep_NA = FALSE, upper_case = TRUE)
+select_grade(grade_col, keep_NA = FALSE, upper_case = TRUE)
 }
 \arguments{
 \item{ties}{(logical) If TRUE then all records matching the tied groups
@@ -94,7 +100,7 @@ This page documents helper functions for use with \code{\link[=combine_records]{
 }
 \section{Functions}{
 \itemize{
-\item \code{.mode()}: returns the most common value,
+\item \code{compute_mode()}: returns the most common value,
 excluding NA. If \code{ties == TRUE} then all tied
 values are returned, otherwise the first value in
 a sorted unique list is returned (equal to min if numeric).
@@ -102,45 +108,45 @@ If \code{na.rm = FALSE} then NA are included when searching for the modal value
 and placed last if \code{ties = FALSE} (values are returned preferentially over
 NA).
 
-\item \code{.mean()}: calculates the mean value,
+\item \code{compute_mean()}: calculates the mean value,
 excluding NA if \code{na.rm = TRUE}
 
-\item \code{.median()}: calculates the median value,
+\item \code{compute_median()}: calculates the median value,
 excluding NA if \code{na.rm = TRUE}
 
-\item \code{.collapse()}: collapses multiple matching
+\item \code{fuse()}: collapses multiple matching
 records into a single string using the provided separator.
 
-\item \code{.select_max()}: selects a record based on
+\item \code{select_max()}: selects a record based on
 the index of the maximum value in a another column.
 
-\item \code{.select_min()}: selects a record based on the
+\item \code{select_min()}: selects a record based on the
 index of the minimum in a second column.
 
-\item \code{.select_match()}: returns all records based on
+\item \code{select_match()}: returns all records based on
 the indices of identical matches in a second column and collapses them
-useing the provided separator.
+using the provided separator.
 
-\item \code{.select_exact()}: returns records based on
+\item \code{select_exact()}: returns records based on
 the index of identical value matching the \code{match} parameter within the
 current column, and collapses them using the provided separator if necessary.
 
-\item \code{.unique()}: collapses a set of records to a
+\item \code{fuse_unique()}: collapses a set of records to a
 set of unique values using the provided separator. \code{digits} can be provided
 for numeric columns to control the precision used when determining unique
 values.
 
-\item \code{.prioritise()}: reduces a set of annotations by
+\item \code{prioritise()}: reduces a set of annotations by
 prioritising values according to the input. If there are multiple matches
 with the same priority then they are collapsed using a separator.
 
-\item \code{.nothing()}: a pass-through function to
+\item \code{nothing()}: a pass-through function to
 allow some annotation table columns to remain unchanged.
 
-\item \code{.count()}: adds a new column indicating
+\item \code{count_records()}: adds a new column indicating
 the number of annotations that match the given grouping variable.
 
-\item \code{.select_grade()}: returns records based on the
+\item \code{select_grade()}: returns records based on the
 index of the best grade in a second list. The best grade is defined as "A"
 for \code{upper_case = TRUE} or "a" for \code{upper_case = FALSE}
 and the worst grade is "Z" or "z". Any non-exact matches to a character in
@@ -152,7 +158,7 @@ and the worst grade is "Z" or "z". Any non-exact matches to a character in
 # Select matching records
 M <- combine_records(
     group_by = "example",
-    default_fcn = .select_exact(
+    default_fcn = select_exact(
         match_col = "match_column",
         match = "find_me",
         separator = ", ",
@@ -163,7 +169,7 @@ M <- combine_records(
 # Collapse unique values
 M <- combine_records(
     group_by = "example",
-    default_fcn = .unique(
+    default_fcn = fuse_unique(
         digits = 6,
         separator = ", ",
         na_string = "NA",
@@ -174,7 +180,7 @@ M <- combine_records(
 # Prioritise by source
 M <- combine_records(
     group_by = "InChiKey",
-    default_fcn = .prioritise(
+    default_fcn = prioritise(
         match_col = "source",
         priority = c("CD", "LS"),
         separator = "  || "
@@ -184,21 +190,21 @@ M <- combine_records(
 # Do nothing to all columns
 M <- combine_records(
     group_by = "InChiKey",
-    default_fcn = .nothing()
+    default_fcn = nothing()
 )
 
 # Add a column with the number of records with a matching inchikey
 M <- combine_records(
     group_by = "InChiKey",
     fcns = list(
-        count = .count()
+        count = count_records()
     )
 )
 
 # Select annotation with highest (best) grade
 M <- combine_records(
     group_by = "InChiKey",
-    default_fcn = .select_grade(
+    default_fcn = select_grade(
         grade_col = "grade",
         keep_NA = FALSE,
         upper_case = TRUE

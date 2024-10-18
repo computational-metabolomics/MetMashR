@@ -369,7 +369,7 @@ X <- database_lookup(
 ) +
     combine_records(
         group_by = "inchikey",
-        default_fcn = .unique(" || ")
+        default_fcn = fuse_unique(" || ")
     )
 
 # apply

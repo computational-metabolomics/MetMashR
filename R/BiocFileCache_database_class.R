@@ -5,7 +5,7 @@
 BiocFileCache_database <- function(source,
     bfc_path = NULL,
     resource_name,
-    bfc_fun = .cache_as_is,
+    bfc_fun = cache_as_is,
     import_fun = read.csv,
     offline = FALSE,
     ...) {
@@ -78,7 +78,7 @@ BiocFileCache_database <- function(source,
                 "See [BiocFileCache::bfcdownload()] for details."
             ),
             type = c("function"),
-            value = .cache_as_is,
+            value = cache_as_is,
             max_length = 1
         ),
         import_fun = entity(

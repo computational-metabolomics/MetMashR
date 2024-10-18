@@ -468,11 +468,11 @@ workflows we use it to e.g. convert adducts into a standardised format across
 sources, and to tidy/clean strings before using them as search terms in
 rest api queries. `MetMashR` currently provides the following dictionaries:
 
-- Greek character dictionary (`.greek_dictionary`) to convert greek characters 
+- Greek character dictionary (`greek_dictionary`) to convert greek characters 
 to their romanised name.
-- Racemic notation dictionary (`.racemic_dictionary`) to remove certain types 
+- Racemic notation dictionary (`racemic_dictionary`) to remove certain types 
 of racemic notation from molecule names (e.g. "(+/-)").
-- A tripeptide dictionary (`.tripeptide_dictionary`) to convert three-letter
+- A tripeptide dictionary (`tripeptide_dictionary`) to convert three-letter
 tripeptide abbreviations into a format more commonly used as a synonym on PubChem
 e.g. "ACD" becomes "Ala-Cys-Asp".
 
@@ -588,9 +588,9 @@ separated by semi colons.
 # prepare workflow
 CR <- combine_records(
     group_by = "LipidName",
-    default_fcn = .unique(separator = "; "),
+    default_fcn = fuse_unique(separator = "; "),
     fcns = list(
-        count = .count()
+        count = count_records()
     )
 )
 
@@ -608,11 +608,11 @@ You can see that there is now a single record (row) for each LipidName, and that
 the multiple inchikeys associated with that LipidName have been collapsed into a single
 entry separated by semicolons.
 
-The helper function `.unique` ensures that each inchikey only appears once in 
+The helper function `fuse_unique` ensures that each inchikey only appears once in 
 the collapsed string, and is applied as default to all columns. 
 
-The `.count`
-helper function add a new column of counts for each LipidName. Note that 
+The `add_count`
+helper function adds a new column of counts for each LipidName. Note that 
 AcCa(20:4) has 8 counts but only 4 inchikey. This means that AcCa(20:4) 
 appeared twice in the original table, each time with the same 4 inchikey.
 

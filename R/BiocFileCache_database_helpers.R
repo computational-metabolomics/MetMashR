@@ -25,11 +25,11 @@
 #' M <- BiocFileCache_database(
 #'     source = tempfile(),
 #'     resource_name = "example",
-#'     bfc_fun = .unzip
+#'     bfc_fun = unzip_before_cache
 #' )
 #'
 #' @export
-.unzip <- function(from, to) {
+unzip_before_cache <- function(from, to) {
     # temp folder
     fldr <- tempdir()
     # unzip
@@ -51,11 +51,11 @@
 #' M <- BiocFileCache_database(
 #'     source = tempfile(),
 #'     resource_name = "example",
-#'     bfc_fun = .cache_as_is
+#'     bfc_fun = cache_as_is
 #' )
 #'
 #' @export
-.cache_as_is <- function(from, to) {
+cache_as_is <- function(from, to) {
     file.copy(from = from, to = to, overwrite = TRUE)
     return(TRUE)
 }

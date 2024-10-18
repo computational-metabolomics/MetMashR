@@ -6,7 +6,7 @@
 \usage{
 combine_records(
   group_by,
-  default_fcn = .collapse(separator = " || "),
+  default_fcn = fuse(separator = " || "),
   fcns = list(),
   ...
 )
@@ -17,8 +17,8 @@ records.}
 
 \item{default_fcn}{(function) The default function to use for
 summarising columns when combining records and a specific function
-has not been provided in fcns. The default is
-\code{.collapse(separator = " || ")}.}
+has not been provided in fcns. The default is \code{fuse(separator =
+" || ")}.}
 
 \item{fcns}{(list) A named list of functions to use for summarising
 named columns when combining records. Names should correspond to the

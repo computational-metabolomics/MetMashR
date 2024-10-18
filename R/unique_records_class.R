@@ -11,7 +11,7 @@ unique_records <- function(...) {
 }
 
 
-.unique_records <- setClass(
+fuse_unique_records <- setClass(
     "unique_records",
     contains = c("model"),
     slots = c(updated = "entity"),

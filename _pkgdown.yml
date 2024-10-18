@@ -113,19 +113,19 @@ reference:
     These functions can be used with the combine_records function to merge
     the information for multiple records in different ways.
   contents:
-  - .collapse
-  - .count
-  - .mean
-  - .median
-  - .mode
-  - .nothing
-  - .prioritise
-  - .select_exact
-  - .select_grade
-  - .select_match
-  - .select_max
-  - .select_min
-  - .unique
+  - fuse
+  - fuse_unique
+  - count_records
+  - compute_mean
+  - compute_median
+  - compute_mode
+  - select_exact
+  - select_grade
+  - select_match
+  - select_max
+  - select_min
+  - prioritise
+  - nothing
 - title: "Charts"
   desc: >
     Chart objects are wrappers around ggplot objects plots useful for exploring
@@ -142,8 +142,8 @@ reference:
     a dowloaded resource before caching, or to parse the downloaded resource
     when retrieved from the cache.
   contents:
-  - .cache_as_is
-  - .unzip
+  - cache_as_is
+  - unzip_before_cache
 - title: "Dictionaries for normalising strings"
   desc: >
     These lists define patterns and replacements to match when using the 
@@ -157,6 +157,8 @@ reference:
   - check_for_columns
   - required_cols
   - wherever
+  - chart_plot
+  - model_apply
 home:
   links:
   - text: View on Bioconductor

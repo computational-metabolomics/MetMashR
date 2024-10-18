@@ -69,7 +69,7 @@ github_file <- function(username,
         bfc_fun = .set_entity_value(
             obj = "BiocFileCache_database",
             param_id = "bfc_fun",
-            value = .cache_as_is
+            value = cache_as_is
         )
     )
 )

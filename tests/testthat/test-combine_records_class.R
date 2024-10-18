@@ -15,7 +15,7 @@ test_that("combine records collapses ok", {
 
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .collapse(separator = " || ", na_string = NA),
+        default_fcn = fuse(separator = " || ", na_string = NA),
         fcns = list()
     )
 
@@ -44,7 +44,7 @@ test_that("combine records does nothings ok", {
 
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .nothing(),
+        default_fcn = nothing(),
         fcns = list()
     )
 
@@ -75,7 +75,7 @@ test_that("combine unique ok", {
     ##########
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .unique(separator = " || "),
+        default_fcn = fuse_unique(separator = " || "),
         fcns = list()
     )
 
@@ -90,7 +90,7 @@ test_that("combine unique ok", {
     ##########
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .unique(separator = " || ", digits = 1),
+        default_fcn = fuse_unique(separator = " || ", digits = 1),
         fcns = list()
     )
 
@@ -122,7 +122,7 @@ test_that("combine select_exact ok", {
 
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_exact(
+        default_fcn = select_exact(
             match_col = "levels",
             match = 1,
             separator = " || "
@@ -140,7 +140,7 @@ test_that("combine select_exact ok", {
 
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_exact(
+        default_fcn = select_exact(
             match_col = "levels",
             match = 1,
             separator = NULL
@@ -178,7 +178,7 @@ test_that("combine select_match ok", {
     ##############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_match(
+        default_fcn = select_match(
             match_col = "levels",
             search_col = "levels2", separator = " || "
         ),
@@ -196,7 +196,7 @@ test_that("combine select_match ok", {
     ###############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_match(
+        default_fcn = select_match(
             match_col = "levels", search_col = "levels2",
             separator = NULL
         ),
@@ -238,7 +238,7 @@ test_that("combine select_min ok", {
     #################
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_min(min_col = "rt"),
+        default_fcn = select_min(min_col = "rt"),
         fcns = list()
     )
 
@@ -252,7 +252,7 @@ test_that("combine select_min ok", {
     ################
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_min(min_col = "rt3", use_abs = TRUE),
+        default_fcn = select_min(min_col = "rt3", use_abs = TRUE),
         fcns = list()
     )
 
@@ -266,7 +266,7 @@ test_that("combine select_min ok", {
     ###############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_min(min_col = "rt2", keep_NA = TRUE),
+        default_fcn = select_min(min_col = "rt2", keep_NA = TRUE),
         fcns = list()
     )
 
@@ -280,7 +280,7 @@ test_that("combine select_min ok", {
     ###############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_min(min_col = "rt4", keep_NA = FALSE),
+        default_fcn = select_min(min_col = "rt4", keep_NA = FALSE),
         fcns = list()
     )
 
@@ -315,7 +315,7 @@ test_that("combine select_max ok", {
     #################
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_max(max_col = "rt"),
+        default_fcn = select_max(max_col = "rt"),
         fcns = list()
     )
 
@@ -329,7 +329,7 @@ test_that("combine select_max ok", {
     #################
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_max(max_col = "rt3", use_abs = TRUE),
+        default_fcn = select_max(max_col = "rt3", use_abs = TRUE),
         fcns = list()
     )
 
@@ -343,7 +343,7 @@ test_that("combine select_max ok", {
     ################
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_max(max_col = "rt2"),
+        default_fcn = select_max(max_col = "rt2"),
         fcns = list()
     )
 
@@ -357,7 +357,7 @@ test_that("combine select_max ok", {
     ###############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .select_min(min_col = "rt4", keep_NA = FALSE),
+        default_fcn = select_min(min_col = "rt4", keep_NA = FALSE),
         fcns = list()
     )
 
@@ -388,12 +388,12 @@ test_that("combine mean median mode ok", {
 
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .collapse(separator = " || "),
+        default_fcn = fuse(separator = " || "),
         fcns = list(
-            "rt" = .median(),
-            "mz" = .mean(),
-            "levels" = .mode(),
-            "levels2" = .mode()
+            "rt" = compute_median(),
+            "mz" = compute_mean(),
+            "levels" = compute_mode(),
+            "levels2" = compute_mode()
         )
     )
 
@@ -427,7 +427,7 @@ test_that("combine records prioritise ok", {
     #############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .prioritise(
+        default_fcn = prioritise(
             separator = NULL,
             match_col = "levels",
             priority = c("2", "1"),
@@ -449,7 +449,7 @@ test_that("combine records prioritise ok", {
     ##############
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .prioritise(
+        default_fcn = prioritise(
             separator = NULL,
             match_col = "levels",
             priority = c("2", "1"),
@@ -492,7 +492,7 @@ test_that("combine prioritise collapse ok", {
     ##################
     M <- combine_records(
         group_by = "combine_by",
-        default_fcn = .prioritise(
+        default_fcn = prioritise(
             separator = " || ",
             match_col = "levels",
             priority = c("1", "2"),
@@ -516,7 +516,7 @@ test_that("combine records errors ok", {
             M <- combine_records(
                 group_by = "combine_by",
                 fcns = list(
-                    .collapse(separator = " || ", na_string = NA), "cake"
+                    fuse(separator = " || ", na_string = NA), "cake"
                 )
             )
         },
@@ -543,7 +543,7 @@ test_that("combine records with two groups ok", {
 
     M <- combine_records(
         group_by = c("combine_by", "combine_by2"),
-        default_fcn = .collapse(separator = " || ", na_string = NA),
+        default_fcn = fuse(separator = " || ", na_string = NA),
         fcns = list()
     )
 
@@ -575,7 +575,7 @@ test_that("combine records creates artificial groups for NA ok", {
 
     M <- combine_records(
         group_by = c("combine_by"),
-        default_fcn = .collapse(separator = " || ", na_string = NA),
+        default_fcn = fuse(separator = " || ", na_string = NA),
         fcns = list()
     )
 
@@ -607,8 +607,8 @@ test_that("combine records works for count ok", {
 
     M <- combine_records(
         group_by = c("combine_by"),
-        default_fcn = .collapse(separator = " || ", na_string = NA),
-        fcns = list(count = .count())
+        default_fcn = fuse(separator = " || ", na_string = NA),
+        fcns = list(count = count_records())
     )
 
     M <- model_apply(M, AN)

@@ -8,7 +8,7 @@ BiocFileCache_database(
   source,
   bfc_path = NULL,
   resource_name,
-  bfc_fun = .cache_as_is,
+  bfc_fun = cache_as_is,
   import_fun = read.csv,
   offline = FALSE,
   ...

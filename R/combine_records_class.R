@@ -2,7 +2,7 @@
 #' @export
 #' @include annotation_source_class.R
 combine_records <- function(group_by,
-    default_fcn = .collapse(separator = " || "),
+    default_fcn = fuse(separator = " || "),
     fcns = list(),
     ...) {
     # check fcns are all functions
@@ -206,7 +206,7 @@ NULL
 #' and placed last if `ties = FALSE` (values are returned preferentially over
 #' NA).
 #'
-.mode <- function(ties = FALSE, na.rm = TRUE) {
+compute_mode <- function(ties = FALSE, na.rm = TRUE) {
     fcn <- expr(function(x) {
         if (length(x) <= 2) {
             return(x[1])
@@ -232,9 +232,9 @@ NULL
 #' @export
 #' @describeIn combine_records_helper_functions calculates the mean value,
 #' excluding NA if `na.rm = TRUE`
-.mean <- function() {
+compute_mean <- function(na.rm = TRUE) {
     fcn <- expr(function(x) {
-        mean(x, na.rm = TRUE)
+        mean(x, na.rm = !!na.rm)
     })
     return(eval(fcn))
 }
@@ -243,9 +243,9 @@ NULL
 #' @describeIn combine_records_helper_functions calculates the median value,
 #' excluding NA if `na.rm = TRUE`
 #' @export
-.median <- function() {
+compute_median <- function(na.rm = TRUE) {
     fcn <- expr(function(x) {
-        stats::median(x, na.rm = TRUE)
+        stats::median(x, na.rm = !!na.rm)
     })
     return(eval(fcn))
 }
@@ -256,7 +256,7 @@ NULL
 #' @param separator (character) a string used to separate multiple matches.
 #' @param na_string (character) a string used to represent NA values.
 #' @export
-.collapse <- function(separator, na_string = "NA") {
+fuse <- function(separator, na_string = "NA") {
     fcn <- expr(function(x) {
         x[is.na(x)] <- !!na_string
         paste0(x, collapse = !!separator)
@@ -272,7 +272,7 @@ NULL
 #' @param keep_NA (logical) If TRUE then records with NA are returned as well as
 #' the record with the maximum value.
 #' @export
-.select_max <- function(max_col, use_abs = FALSE, keep_NA = FALSE) {
+select_max <- function(max_col, use_abs = FALSE, keep_NA = FALSE) {
     fcn <- expr(function(x) {
         # get values
         vals <- as.numeric(pick(!!max_col)[[1]])
@@ -311,7 +311,7 @@ NULL
 #' @param keep_NA (logical) If TRUE then records with NA are returned as well as
 #' the record with the minimum value.
 #' @export
-.select_min <- function(min_col, use_abs = FALSE, keep_NA = FALSE) {
+select_min <- function(min_col, use_abs = FALSE, keep_NA = FALSE) {
     fcn <- expr(function(x) {
         # get values
         vals <- as.numeric(pick(!!min_col)[[1]])
@@ -342,13 +342,13 @@ NULL
 #' Select matching annotations
 #' @describeIn combine_records_helper_functions returns all records based on
 #' the indices of identical matches in a second column and collapses them
-#' useing the provided separator.
+#' using the provided separator.
 #' @param match_col (character) the name of a column to search for matches to
 #' the search column.
 #' @param search_col (character) the name of a column to use as a reference for
 #' locating values in the matching column.
 #' @export
-.select_match <- function(match_col, search_col, separator, na_string = "NA") {
+select_match <- function(match_col, search_col, separator, na_string = "NA") {
     fcn <- expr(function(x) {
         x <- x[which(pick(!!search_col)[[1]] == pick(!!match_col)[[1]])]
         if (!is.null(!!separator)) {
@@ -374,7 +374,7 @@ NULL
 #' # Select matching records
 #' M <- combine_records(
 #'     group_by = "example",
-#'     default_fcn = .select_exact(
+#'     default_fcn = select_exact(
 #'         match_col = "match_column",
 #'         match = "find_me",
 #'         separator = ", ",
@@ -382,7 +382,7 @@ NULL
 #'     )
 #' )
 #' @export
-.select_exact <- function(match_col, match, separator, na_string = "NA") {
+select_exact <- function(match_col, match, separator, na_string = "NA") {
     fcn <- expr(function(x) {
         x <- x[which(pick(!!match_col) == !!match)]
 
@@ -411,7 +411,7 @@ NULL
 #' # Collapse unique values
 #' M <- combine_records(
 #'     group_by = "example",
-#'     default_fcn = .unique(
+#'     default_fcn = fuse_unique(
 #'         digits = 6,
 #'         separator = ", ",
 #'         na_string = "NA",
@@ -419,7 +419,7 @@ NULL
 #'     )
 #' )
 #' @export
-.unique <- function(separator,
+fuse_unique <- function(separator,
     na_string = "NA",
     digits = 6,
     drop_na = FALSE,
@@ -463,14 +463,14 @@ NULL
 #' # Prioritise by source
 #' M <- combine_records(
 #'     group_by = "InChiKey",
-#'     default_fcn = .prioritise(
+#'     default_fcn = prioritise(
 #'         match_col = "source",
 #'         priority = c("CD", "LS"),
 #'         separator = "  || "
 #'     )
 #' )
 #' @export
-.prioritise <- function(match_col,
+prioritise <- function(match_col,
     priority,
     separator,
     no_match = NA,
@@ -522,10 +522,10 @@ NULL
 #' # Do nothing to all columns
 #' M <- combine_records(
 #'     group_by = "InChiKey",
-#'     default_fcn = .nothing()
+#'     default_fcn = nothing()
 #' )
 #' @export
-.nothing <- function() {
+nothing <- function() {
     fcn <- expr(function(x) {
         return(x)
     })
@@ -542,11 +542,11 @@ NULL
 #' M <- combine_records(
 #'     group_by = "InChiKey",
 #'     fcns = list(
-#'         count = .count()
+#'         count = count_records()
 #'     )
 #' )
 #' @export
-.count <- function() {
+count_records <- function() {
     fcn <- expr(function(x) {
         y <- pick(everything())
         return(nrow(y))
@@ -569,14 +569,14 @@ NULL
 #' # Select annotation with highest (best) grade
 #' M <- combine_records(
 #'     group_by = "InChiKey",
-#'     default_fcn = .select_grade(
+#'     default_fcn = select_grade(
 #'         grade_col = "grade",
 #'         keep_NA = FALSE,
 #'         upper_case = TRUE
 #'     )
 #' )
 #' @export
-.select_grade <- function(grade_col, keep_NA = FALSE, upper_case = TRUE) {
+select_grade <- function(grade_col, keep_NA = FALSE, upper_case = TRUE) {
     fcn <- expr(function(x) {
         # get values
         vals <- pick(!!grade_col)
