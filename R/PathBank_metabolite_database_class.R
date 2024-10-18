@@ -1,11 +1,10 @@
 #' @eval get_description('PathBank_metabolite_database')
 #' @export
 #' @include annotation_database_class.R BiocFileCache_database_class.R
-PathBank_metabolite_database <- function(
-        version = "primary",
-        bfc_path = NULL,
-        resource_name = "MetMashR_PathBank",
-        ...) {
+PathBank_metabolite_database <- function(version = "primary",
+    bfc_path = NULL,
+    resource_name = "MetMashR_PathBank",
+    ...) {
     # new object
     out <- struct::new_struct(
         "PathBank_metabolite_database",
@@ -108,13 +107,13 @@ setMethod(
             )
         }
         obj$source <- db_url
-        
+
         # append version to rname
         obj$resource_name <- paste0(obj$resource_name, "_", obj$version)
-        
+
         # reuse BiocFileCache_database
         df <- callNextMethod(obj)
-        
+
         # return
         return(df)
     }

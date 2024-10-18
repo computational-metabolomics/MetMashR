@@ -1,17 +1,16 @@
 #' @eval get_description('pivot_columns')
 #' @export
 #' @include annotation_source_class.R
-pivot_columns <- function(
-        column_groups,
-        group_labels,
-        ...) {
+pivot_columns <- function(column_groups,
+    group_labels,
+    ...) {
     out <- struct::new_struct(
         "pivot_columns",
         column_groups = column_groups,
         group_labels = group_labels,
         ...
     )
-    
+
     return(out)
 }
 
@@ -71,9 +70,9 @@ setMethod(
     signature = c("pivot_columns", "annotation_source"),
     definition = function(M, D) {
         # get columns common to all groups i.e those not named in a group
-        common_cols <- 
+        common_cols <-
             colnames(D$data)[!(colnames(D$data) %in% unlist(M$column_groups))]
-        
+
         L <- list()
         # for each column group
         for (cg in names(M$column_groups)) {

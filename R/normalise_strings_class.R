@@ -11,11 +11,10 @@
 #' Alternatively `replace = NA` can be used to return NA for a matching pattern.
 #' If a character string is provided then `[gsub()]` will be used by default.
 #' @seealso [grepl()], [gsub()]
-normalise_strings <- function(
-        search_column,
-        output_column = NULL,
-        dictionary = list(),
-        ...) {
+normalise_strings <- function(search_column,
+    output_column = NULL,
+    dictionary = list(),
+    ...) {
     out <- struct::new_struct(
         "normalise_strings",
         search_column = search_column,
@@ -23,7 +22,7 @@ normalise_strings <- function(
         dictionary = dictionary,
         ...
     )
-    
+
     return(out)
 }
 
@@ -101,7 +100,7 @@ setMethod(
             # assume list
             dict <- M$dictionary
         }
-        
+
         # for each string in the search column
         fixed <- D$data[[M$search_column]] # store result here
         for (s in seq(from = 1, to = length(fixed))) {
@@ -109,12 +108,12 @@ setMethod(
             for (p in seq(from = 1, to = length(dict))) {
                 # replacement function
                 fun <- dict[[p]]$replace
-                
+
                 # prep grepl inputs
                 inputs <- dict[[p]]
                 inputs$replace <- NULL
                 inputs$x <- fixed[s]
-                
+
                 if (do.call(grepl, inputs)) {
                     if (is(fun, "function")) {
                         # use function to replace match
@@ -137,7 +136,7 @@ setMethod(
                 }
             }
         }
-        
+
         if (is.null(M$output_column)) {
             D$data[[M$search_column]] <- fixed
         } else {
@@ -150,9 +149,9 @@ setMethod(
             }
             D$data[[M$output_column]] <- fixed
         }
-        
+
         M$updated <- D
-        
+
         return(M)
     }
 )

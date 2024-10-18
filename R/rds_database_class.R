@@ -2,9 +2,8 @@
 #' @export
 #' @include annotation_database_class.R
 #' @family annotation databases
-rds_database <- function(
-        source = character(0),
-        ...) {
+rds_database <- function(source = character(0),
+    ...) {
     # new object
     out <- struct::new_struct(
         "rds_database",
@@ -35,10 +34,10 @@ setMethod(
         if (!check) {
             saveRDS(obj$data, file = obj$source)
         }
-        
+
         # read the file
         IN <- readRDS(obj$source)
-        
+
         # return
         return(IN)
     }
@@ -56,10 +55,10 @@ setMethod(
                 "permissions."
             )
         }
-        
+
         # write df to file
         saveRDS(object = df, file = obj$source)
-        
+
         # return
         return(invisible(TRUE))
     }

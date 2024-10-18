@@ -1,15 +1,14 @@
 #' @eval get_description('filter_venn')
 #' @export
 #' @include annotation_source_class.R
-filter_venn <- function(
-        factor_name,
-        group_column = NULL,
-        tables = NULL,
-        levels,
-        mode = "exclude",
-        perl = FALSE,
-        fixed = FALSE,
-        ...) {
+filter_venn <- function(factor_name,
+    group_column = NULL,
+    tables = NULL,
+    levels,
+    mode = "exclude",
+    perl = FALSE,
+    fixed = FALSE,
+    ...) {
     out <- struct::new_struct(
         "filter_venn",
         factor_name = factor_name,
@@ -153,17 +152,17 @@ setMethod(
     definition = function(M, D) {
         # tables
         L <- M$tables
-        
+
         # if we got more than one table...
         if (length(L) > 0) {
             # gather all annotation_sources
             L <- c(list(D), L)
-            
+
             # if only one column name, assume same column in all sources
             if (length(M$factor_name) == 1) {
                 M$factor_name <- rep(M$factor_name, length(L))
             }
-            
+
             # check we have a column for all sources
             if (length(M$factor_name) != length(L)) {
                 stop(
@@ -173,14 +172,14 @@ setMethod(
                 )
                 M$factor_name <- M$factor_name[1]
             }
-            
+
             # get tags
             tags <- lapply(L, param_value, name = "tag")
             names(L) <- tags
-            
+
             # get tables
             L <- lapply(L, param_value, name = "data")
-            
+
             # get columns
             L <- mapply("[[", L, M$factor_name)
         } else if (length(M$factor_name) > 1) {
@@ -189,7 +188,7 @@ setMethod(
         } else {
             # if we only got one table and one factor...
             u <- unique(D$data[[M$group_column]])
-            
+
             # construct list for Venn
             L <- list()
             for (k in u) {
@@ -197,7 +196,7 @@ setMethod(
                 L[[k]] <- this[D$data[[M$group_column]] == k]
             }
         }
-        
+
         # max 7(!) groups
         if (length(L) > 7) {
             stop(
@@ -206,13 +205,13 @@ setMethod(
                 "instead."
             )
         }
-        
+
         # process venn
         this <- ggVennDiagram::process_data(RVenn::Venn(L))
-        
+
         # get regions
         r <- ggVennDiagram::venn_region(this)
-        
+
         # add region flags
         D$data[[".filter_venn"]] <- NA
         for (k in seq_len(nrow(r))) {
@@ -221,7 +220,7 @@ setMethod(
             # add flags
             D$data[[".filter_venn"]][w] <- r$name[k]
         }
-        
+
         # filter
         M2 <- filter_labels(
             column_name = ".filter_venn",
@@ -231,15 +230,15 @@ setMethod(
             fixed = M$fixed
         )
         M2 <- model_apply(M2, D)
-        
+
         # remove extra column
         D2 <- predicted(M2)
         D2$data$.filter_venn <- NULL
-        
+
         # update object
         M$filtered <- D2
         M$flags <- M2$flags
-        
+
         return(M)
     }
 )

@@ -69,7 +69,7 @@ add_labels <- function(labels, replace = FALSE, ...) {
 )
 
 setValidity("add_labels", method = function(object) {
-    check = FALSE
+    check <- FALSE
     if (length(object$labels) > 0) {
         check <- is.null(names(object$labels))
     }

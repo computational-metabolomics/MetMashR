@@ -3,10 +3,9 @@
 #' @family annotation databases
 #' @family annotation sources
 #' @export
-annotation_database <- function(
-        data = data.frame(),
-        tag = "",
-        ...) {
+annotation_database <- function(data = data.frame(),
+    tag = "",
+    ...) {
     # new object
     out <- new_struct(
         "annotation_database",
@@ -14,7 +13,7 @@ annotation_database <- function(
         tag = tag,
         ...
     )
-    
+
     return(out)
 }
 
@@ -66,7 +65,7 @@ setMethod(
     f = "write_database",
     signature = c("annotation_database"), definition = function(obj, df) {
         msg <- NULL
-        
+
         check <- obj@.writable
         if (!check) {
             msg <- c(msg, paste0(
@@ -74,7 +73,7 @@ setMethod(
                       "write_database" method defined.'
             ))
         }
-        
+
         # return
         return(invisible(TRUE))
     }

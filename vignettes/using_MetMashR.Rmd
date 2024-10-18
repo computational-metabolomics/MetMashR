@@ -529,7 +529,7 @@ WF <-
         output_column = "normalised_name",
         dictionary = custom_dict
     ) +
-    # step 4 query lipidmaps api for inchikey using the names provided by 
+    # step 4 query lipidmaps api for inchikey using the names provided by
     # LipidSearch
     lipidmaps_lookup(
         query_column = "LipidName",
@@ -539,7 +539,7 @@ WF <-
         suffix = "_LipidName",
         cache = TF
     ) +
-    # step 5 query lipidmaps api for inchikey using the names provided by 
+    # step 5 query lipidmaps api for inchikey using the names provided by
     # LipidSearch
     lipidmaps_lookup(
         query_column = "normalised_name",
@@ -553,8 +553,10 @@ WF <-
 WF <- model_apply(WF, AT)
 
 #  show result table for relevant columns
-.DT(predicted(WF)$data[, c("LipidName", "normalised_name", 
-                            "inchi_key_LipidName", "inchi_key_normalised")])
+.DT(predicted(WF)$data[, c(
+    "LipidName", "normalised_name",
+    "inchi_key_LipidName", "inchi_key_normalised"
+)])
 ```
 
 You can see that we obtained inchikey for more of the Lipids after normalising
@@ -596,8 +598,10 @@ CR <- combine_records(
 CR <- model_apply(CR, predicted(WF))
 
 # show output for relevant columns
-.DT(predicted(CR)$data[, c("LipidName", "normalised_name", 
-                            "inchi_key_normalised", "count")])
+.DT(predicted(CR)$data[, c(
+    "LipidName", "normalised_name",
+    "inchi_key_normalised", "count"
+)])
 ```
 
 You can see that there is now a single record (row) for each LipidName, and that 

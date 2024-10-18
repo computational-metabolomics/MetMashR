@@ -4,13 +4,12 @@
 #' you wish to obtain images for a large number of moelucules you should seek
 #' an alternative solution.
 #' @export
-pubchem_structure <- function(
-        query_column,
-        search_by,
-        row_index,
-        record_type = "2d",
-        image_size = "large",
-        ...) {
+pubchem_structure <- function(query_column,
+    search_by,
+    row_index,
+    record_type = "2d",
+    image_size = "large",
+    ...) {
     out <- struct::new_struct(
         "pubchem_structure",
         query_column = query_column,
@@ -20,7 +19,7 @@ pubchem_structure <- function(
         image_size = image_size,
         ...
     )
-    
+
     return(out)
 }
 
@@ -107,7 +106,7 @@ setMethod(
     definition = function(obj, dobj) {
         # get row
         dobj$data <- dobj$data[obj$row_index, ]
-        
+
         # use api
         P <- pubchem_structure_lookup(
             query_column = obj$query_column,
@@ -116,7 +115,7 @@ setMethod(
             image_size = obj$image_size,
             suffix = "_.pubchem_img"
         )
-        
+
         P <- model_apply(P, dobj)
         img <- P$updated$data[["png_.pubchem_img"]][[1]]
         img <- img / img[1, 1, 1]

@@ -1,14 +1,15 @@
 #' @eval get_description('github_file')
 #' @export
 #' @include annotation_database_class.R BiocFileCache_database_class.R zzz.R
-github_file <- function(
-        username,
-        repository_name,
-        file_path,
-        bfc_path = NULL,
-        resource_name = paste(
-            username, repository_name, file_path, sep = "_"),
-        ...) {
+github_file <- function(username,
+    repository_name,
+    file_path,
+    bfc_path = NULL,
+    resource_name = paste(
+        username, repository_name, file_path,
+        sep = "_"
+    ),
+    ...) {
     # new object
     out <- struct::new_struct(
         "github_file",
@@ -85,17 +86,17 @@ setMethod(
             "https://api.github.com/repos/", obj$username, "/",
             obj$repository_name, "/contents/", obj$file_path
         ))
-        
+
         # stop if issue
         httr::stop_for_status(response)
         # otherwise parse content
         J <- httr::content(response, as = "parsed")
-        
+
         # Use BiocFileCache database witht he download url
         obj$source <- J$download_url
         obj$resource_name <- paste0(obj$resource_name, "_", J$tag_name)
         df <- callNextMethod(obj)
-        
+
         # return
         return(df)
     }

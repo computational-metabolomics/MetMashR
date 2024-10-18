@@ -153,6 +153,6 @@ Returns a modified method object
 Applies method to the input DatasetExperiment
 }
 \examples{
-M = example_model()
-M = model_apply(M,iris_DatasetExperiment())
+M <- example_model()
+M <- model_apply(M, iris_DatasetExperiment())
 }

@@ -6,7 +6,7 @@
 #' @param ... additiional inputs to chart_plot
 #' @return a plot object
 #' @examples
-#' C = example_chart()
-#' chart_plot(C,example_model())
+#' C <- example_chart()
+#' chart_plot(C, example_model())
 #' @name chart_plot
 NULL

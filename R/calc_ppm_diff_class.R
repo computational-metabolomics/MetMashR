@@ -1,12 +1,11 @@
 #' @eval get_description('calc_ppm_diff')
 #' @export
 #' @include annotation_table_class.R
-calc_ppm_diff <- function(
-        obs_mz_column,
-        ref_mz_column,
-        out_column,
-        check_names = "unique",
-        ...) {
+calc_ppm_diff <- function(obs_mz_column,
+    ref_mz_column,
+    out_column,
+    check_names = "unique",
+    ...) {
     out <- struct::new_struct(
         "calc_ppm_diff",
         obs_mz_column = obs_mz_column,
@@ -106,7 +105,7 @@ setMethod(
     signature = c("calc_ppm_diff", "annotation_table"),
     definition = function(M, D) {
         OUT <- D$data
-        
+
         check <- M$obs_mz_column %in% colnames(OUT)
         if (!check) {
             stop("Observed mz column is not present in annotation table")
@@ -115,16 +114,16 @@ setMethod(
         if (!check) {
             stop("Reference mz column is not present in annotation table")
         }
-        
+
         # calculate ppm difference
         diff <- as.numeric(OUT[[M$obs_mz_column]]) -
             as.numeric(OUT[[M$ref_mz_column]])
         ppm_diff <- 1e6 * diff / as.numeric(OUT[[M$ref_mz_column]])
-        
+
         # check column names
         colname_check <- M$out_column %in% colnames(OUT)
-        
-        
+
+
         # respond as user requested
         if (M$check_names == "stop" & colname_check) {
             stop(
@@ -140,10 +139,10 @@ setMethod(
         } else {
             OUT[[M$out_column]] <- ppm_diff
         }
-        
+
         D$data <- OUT
         M$updated <- D
-        
+
         return(M)
     }
 )

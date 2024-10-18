@@ -663,7 +663,7 @@ N <- normalise_strings(
             ),
             list(
                 pattern = "(+/-)19(20)-DiHDPA",
-                replace = 
+                replace =
                     "19,20-dihydroxy-4Z,7Z,10Z,13Z,16Z-docosapentaenoic acid",
                 fixed = TRUE
             )

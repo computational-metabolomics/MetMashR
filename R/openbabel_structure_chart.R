@@ -2,19 +2,18 @@
 #' @import ggplot2
 #' @rawNamespace import(cowplot, except = theme_map)
 #' @export
-openbabel_structure <- function(
-        smiles_column = "smiles",
-        row_index = 1,
-        image_size = 300,
-        hydrogens = "implicit",
-        carbons = "terminal",
-        double_bonds = "asymmetric",
-        colour_atoms = TRUE,
-        scale_to_fit = TRUE,
-        view_port = 300,
-        title_column = NULL,
-        subtitle_column = NULL,
-        ...) {
+openbabel_structure <- function(smiles_column = "smiles",
+    row_index = 1,
+    image_size = 300,
+    hydrogens = "implicit",
+    carbons = "terminal",
+    double_bonds = "asymmetric",
+    colour_atoms = TRUE,
+    scale_to_fit = TRUE,
+    view_port = 300,
+    title_column = NULL,
+    subtitle_column = NULL,
+    ...) {
     out <- struct::new_struct(
         "openbabel_structure",
         smiles_column = smiles_column,
@@ -30,7 +29,7 @@ openbabel_structure <- function(
         subtitle_column = subtitle_column,
         ...
     )
-    
+
     return(out)
 }
 
@@ -196,14 +195,14 @@ setMethod(
         A <- annotation_source(
             annotations = data.frame(id = 1, smiles = dobj)
         )
-        
+
         # ensure compatability with new table
         obj$row_index <- 1
         obj$smiles_column <- "smiles"
-        
+
         # plot
         g <- chart_plot(obj, A)
-        
+
         return(g)
     }
 )
@@ -217,21 +216,21 @@ setMethod(
     definition = function(obj, dobj) {
         # get smiles
         smiles <- dobj$data[obj$row_index, obj$smiles_column]
-        
+
         # get titles
         title <- element_blank()
         subtitle <- element_blank()
-        
+
         if (!is.null(obj$title_column)) {
             title <- dobj$data[obj$row_index, obj$title_column]
         }
         if (!is.null(obj$subtitle_column)) {
             subtitle <- dobj$data[obj$row_index, obj$subtitle_column]
         }
-        
+
         # create image options
         genOpts <- data.frame(name = "title", value = "")
-        
+
         if (obj$hydrogens == "implicit") {
             genOpts <- rbind(
                 genOpts,
@@ -244,11 +243,11 @@ setMethod(
                 data.frame(name = "h", value = "")
             )
         }
-        
+
         outOpts <- data.frame(
             name = c("P", "d"), value = c(obj$image_size, "d")
         )
-        
+
         if (obj$carbons == "none") {
             outOpts <- rbind(
                 outOpts,
@@ -261,40 +260,40 @@ setMethod(
                 data.frame(name = "a", value = "")
             )
         }
-        
+
         if (obj$double_bonds == "asymmetric") {
             outOpts <- rbind(
                 outOpts,
                 data.frame(name = "s", value = "")
             )
         }
-        
+
         if (!obj$colour_atoms) {
             outOpts <- rbind(
                 outOpts,
                 data.frame(name = "u", value = "")
             )
         }
-        
+
         # temporary file
         tf <- tempfile(fileext = ".svg")
-        
+
         # create image
         ChemmineOB::convertToImage(
             "smiles", "svg", smiles, tf,
             genOpts, outOpts
         )
-        
+
         # rescale
         if (!obj$scale_to_fit) {
             # read svg
             r <- readLines(tf)
-            
+
             # get image size
             vb <- regmatches(r[8], regexpr('\"([^\"]*)\"$', r[8]))
             vb <- gsub('\"', "", vb)
             lims <- as.numeric(strsplit(vb, " ")[[1]])
-            
+
             # new view port
             newvp <- c(0, 0, obj$view_port, obj$view_port)
             midx <- lims[3] / 2
@@ -302,26 +301,26 @@ setMethod(
             # move to center
             offx <- midx - (newvp[3] / 2)
             offy <- midy - (newvp[4] / 2)
-            
+
             # make replacement
             str <- paste0(
                 '\"', offx, " ", offy, " ",
                 newvp[3], " ", newvp[4], '\"'
             )
-            
+
             # replace
             r[8] <- sub('\"([^\"]*)\"$', str, r[8])
-            
+
             # write to file
             writeLines(r, tf)
         }
-        
+
         # read image
         img <- rsvg::rsvg(tf, width = obj$image_size, height = obj$image_size)
-        
+
         # delete temp file
         file.remove(tf)
-        
+
         # plot
         h <- ggplot() +
             ggtitle(title, subtitle) +
@@ -329,8 +328,8 @@ setMethod(
         g <- cowplot::ggdraw() +
             cowplot::draw_image(img, scale = 0.95) +
             cowplot::draw_plot(h)
-        
-        
+
+
         return(g)
     }
 )

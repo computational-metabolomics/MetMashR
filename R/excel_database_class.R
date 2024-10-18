@@ -2,13 +2,12 @@
 #' @export
 #' @include annotation_database_class.R
 #' @family annotation databases
-excel_database <- function(
-        source = character(0),
-        sheet = 1,
-        rowNames = FALSE,
-        colNames = TRUE,
-        startRow = 1,
-        ...) {
+excel_database <- function(source = character(0),
+    sheet = 1,
+    rowNames = FALSE,
+    colNames = TRUE,
+    startRow = 1,
+    ...) {
     # new object
     out <- struct::new_struct(
         "excel_database",
@@ -47,7 +46,8 @@ excel_database <- function(
         rowNames = entity(
             name = "Row names",
             description = paste0(
-                "If TRUE, first column of data will be used as row names."),
+                "If TRUE, first column of data will be used as row names."
+            ),
             type = "logical",
             value = FALSE,
             max_length = 1
@@ -55,7 +55,8 @@ excel_database <- function(
         colNames = entity(
             name = "Col names",
             description = paste0(
-                "If TRUE, first row of data will be used as column names."),
+                "If TRUE, first row of data will be used as column names."
+            ),
             type = "logical",
             value = FALSE,
             max_length = 1
@@ -63,9 +64,10 @@ excel_database <- function(
         startRow = entity(
             name = "Start row",
             description = paste0(
-                'First row to begin looking for data. Empty rows at the top ',
-                'of a file are always skipped, regardless of the value of ',
-                'startRow.'),
+                "First row to begin looking for data. Empty rows at the top ",
+                "of a file are always skipped, regardless of the value of ",
+                "startRow."
+            ),
             type = c("numeric", "integer"),
             value = 1,
             max_length = 1

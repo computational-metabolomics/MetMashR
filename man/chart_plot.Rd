@@ -62,6 +62,6 @@ a plot object
 Plots a chart object
 }
 \examples{
-C = example_chart()
-chart_plot(C,example_model())
+C <- example_chart()
+chart_plot(C, example_model())
 }

@@ -61,8 +61,8 @@ create a single new data.frame with data and records from multiple sources.
 }
 \examples{
 
-M <- annotation_source(data=data.frame(id=1,value='A'))
-N <- annotation_source(data=data.frame(id=2,value='B'))
-O <- vertical_join(M, N, keep_cols='.all')
+M <- annotation_source(data = data.frame(id = 1, value = "A"))
+N <- annotation_source(data = data.frame(id = 2, value = "B"))
+O <- vertical_join(M, N, keep_cols = ".all")
 
 }

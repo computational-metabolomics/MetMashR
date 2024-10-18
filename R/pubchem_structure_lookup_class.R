@@ -1,18 +1,17 @@
 #' @include annotation_source_class.R rest_api_class.R
-pubchem_structure_lookup <- function(
-        query_column,
-        search_by,
-        suffix = "_pubchem",
-        record_type = "2d",
-        image_size = "small",
-        ...) {
+pubchem_structure_lookup <- function(query_column,
+    search_by,
+    suffix = "_pubchem",
+    record_type = "2d",
+    image_size = "small",
+    ...) {
     if (record_type == "3d") {
         check <- image_size %in% c("small", "large")
         if (!check) {
             stop("Cannot (yet) generate arbitrarily-sized 3D images")
         }
     }
-    
+
     out <- struct::new_struct(
         "pubchem_structure_lookup",
         query_column = query_column,
@@ -22,7 +21,7 @@ pubchem_structure_lookup <- function(
         image_size = image_size,
         ...
     )
-    
+
     return(out)
 }
 

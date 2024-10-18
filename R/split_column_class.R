@@ -1,13 +1,12 @@
 #' @eval get_description('split_column')
 #' @export
 #' @include annotation_source_class.R
-split_column <- function(
-        column_name,
-        separator = "_",
-        padding = NA,
-        keep_indices = NULL,
-        clean = TRUE,
-        ...) {
+split_column <- function(column_name,
+    separator = "_",
+    padding = NA,
+    keep_indices = NULL,
+    clean = TRUE,
+    ...) {
     out <- struct::new_struct(
         "split_column",
         column_name = column_name,
@@ -39,8 +38,10 @@ split_column <- function(
         ),
         type = "processing",
         predicted = "updated",
-        .params = c("column_name", "separator", "clean", "padding", 
-                    "keep_indices"),
+        .params = c(
+            "column_name", "separator", "clean", "padding",
+            "keep_indices"
+        ),
         .outputs = c("updated"),
         column_name = entity(
             name = "Column names",
@@ -118,26 +119,26 @@ setMethod(
         })
         s <- plyr::rbind.fill(s)
         s[is.na(s)] <- M$padding
-        
+
         # keep selected columns by index
         s <- s[, M$keep_indices, drop = FALSE]
-        
+
         # new column names
         colnames(s) <- paste0(M$column_name, "_", seq_len(ncol(s)))
-        
+
         # bind with original data
         s <- cbind(D$data, s)
-        
+
         # clean
         if (M$clean) {
             w <- which(colnames(s) == M$column_name)
             s <- s[, -w]
         }
         D$data <- s
-        
+
         # update object
         M$updated <- D
-        
+
         return(M)
     }
 )

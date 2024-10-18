@@ -1,11 +1,10 @@
 #' @eval get_description('trim_whitespace')
 #' @export
 #' @include annotation_source_class.R
-trim_whitespace <- function(
-        column_names,
-        which = "both",
-        whitespace = "[ \t\r\n]",
-        ...) {
+trim_whitespace <- function(column_names,
+    which = "both",
+    whitespace = "[ \t\r\n]",
+    ...) {
     out <- struct::new_struct(
         "trim_whitespace",
         column_names = column_names,
@@ -98,18 +97,18 @@ setMethod(
         } else {
             cnames <- M$column_names
         }
-        
+
         # get trimws
         trimmed <- lapply(D$data[, cnames], trimws,
-                        which = M$which, whitespace = M$whitespace
+            which = M$which, whitespace = M$whitespace
         )
-        
+
         # update table
         D$data[, cnames] <- trimmed
-        
+
         # update object
         M$updated <- D
-        
+
         return(M)
     }
 )

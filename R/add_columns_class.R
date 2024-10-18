@@ -3,18 +3,17 @@
 #' @include annotation_source_class.R
 #' @seealso [dplyr::left_join()]
 add_columns <- function(new_columns, by, ...) {
-    
-    if (nrow(new_columns)==0 & ncol(new_columns)==0) {
-        new_columns = data.frame(id=NA)
-        colnames(new_columns)[1]=by[1]
+    if (nrow(new_columns) == 0 & ncol(new_columns) == 0) {
+        new_columns <- data.frame(id = NA)
+        colnames(new_columns)[1] <- by[1]
     }
-    
+
     check <- all(by %in% colnames(new_columns))
     if (!check) {
         stop('parameter "by" must be a column name of the "new_columns",
             " data.frame')
     }
-    
+
     out <- struct::new_struct(
         "add_columns",
         new_columns = new_columns,

@@ -1,14 +1,13 @@
 #' @eval get_description('database_lookup')
 #' @export
 #' @include annotation_source_class.R
-database_lookup <- function(
-        query_column,
-        database_column,
-        database,
-        include = NULL,
-        suffix = NULL,
-        not_found = NA,
-        ...) {
+database_lookup <- function(query_column,
+    database_column,
+    database,
+    include = NULL,
+    suffix = NULL,
+    not_found = NA,
+    ...) {
     out <- struct::new_struct(
         "database_lookup",
         query_column = query_column,
@@ -129,24 +128,24 @@ setMethod(
             origdb <- M$database
             M$database <- read_database(M$database)
         }
-        
+
         if (is.null(M$include)) {
             M$include <- colnames(M$database)
         }
         X <- D$data
-        
+
         # match class to db
         X[[M$query_column]] <- as(
             X[[M$query_column]],
             class(M$database[[M$database_column]])
         )
-        
+
         # for each annotation
         OUT <- apply(X, 1, function(x) {
             # search for database rows that match the annotation column
             w <- which(M$database[[M$database_column]] ==
-                            x[[M$query_column]])
-            
+                x[[M$query_column]])
+
             if (length(w) == 0) {
                 # if no hits in db then return no_match
                 found <- M$database[1, , drop = FALSE]
@@ -158,13 +157,13 @@ setMethod(
             return(found)
         })
         OUT <- do.call(rbind, OUT)
-        
+
         # include only requested
         OUT <- OUT[, unique(c(M$database_column, M$include)), drop = FALSE]
-        
+
         # remove duplicates
         OUT <- unique(OUT)
-        
+
         # add suffixs
         if (!is.null(M$suffix)) {
             colnames(OUT) <- paste0(colnames(OUT), M$suffix)
@@ -172,23 +171,23 @@ setMethod(
         } else {
             db_column <- M$database_column
         }
-        
+
         # match by provided columns
         by <- db_column
         names(by) <- M$query_column
-        
+
         # merge with original table
         merged <- dplyr::left_join(X, OUT, by = by)
-        
+
         D$data <- merged
-        
+
         M$updated <- D
-        
+
         # reset db so we dont store huge tables multiple times
         if (stdb) {
             M$database <- orig_db
         }
-        
+
         return(M)
     }
 )

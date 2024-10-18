@@ -2,17 +2,15 @@
 #' @export
 #' @include rds_database_class.R
 #' @family annotation databases
-rds_cache <- function(
-        source = character(0),
-        data = data.frame(
-            .search = character(0)
-        ),
-        ...) {
-    
-    if (nrow(data)==0 & ncol(data)==0) {
-        data = data.frame(.search=NA)
+rds_cache <- function(source = character(0),
+    data = data.frame(
+        .search = character(0)
+    ),
+    ...) {
+    if (nrow(data) == 0 & ncol(data) == 0) {
+        data <- data.frame(.search = NA)
     }
-    
+
     # new object
     out <- struct::new_struct(
         "rds_cache",

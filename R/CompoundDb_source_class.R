@@ -1,9 +1,8 @@
 #' @eval get_description('CompoundDb_source')
 #' @export
 #' @include annotation_source_class.R annotation_source_class.R
-CompoundDb_source <- function(
-        source,
-        tag = "cdb", ...) {
+CompoundDb_source <- function(source,
+    tag = "cdb", ...) {
     out <- struct::new_struct(
         "CompoundDb_source",
         source = source,
@@ -35,27 +34,27 @@ setMethod(
     definition = function(M, D) {
         # check db exists
         stopifnot(file.exists(M$source))
-        
+
         # connect
         db <- CompoundDb::CompDb(M$source)
-        
+
         # get compounds table
         df <- CompoundDb::compounds(
             df,
             return.type = "data.frame",
             columns = compoundVariables(df, includeId = TRUE)
         )
-        
+
         # add tag, id col
         D$tag <- M$tag
         D$id_column <- "compound_id"
-        
+
         # assign to annotation table
         D$data <- df
-        
+
         # add to object
         M$imported <- D
-        
+
         # done
         return(M)
     }

@@ -2,12 +2,11 @@
 #' @export
 #' @include annotation_source_class.R
 #' @family REST API's
-kegg_lookup <- function(
-        get = "pubchem",
-        from = "compound",
-        query_column,
-        suffix = "_kegg",
-        ...) {
+kegg_lookup <- function(get = "pubchem",
+    from = "compound",
+    query_column,
+    suffix = "_kegg",
+    ...) {
     # check for suitable combinations of get and from
     if (get %in% c("compound", "drug", "glycan") &
         from %in% c("compound", "drug", "glycan")) {
@@ -23,7 +22,7 @@ kegg_lookup <- function(
             "or glycan ids"
         )
     }
-    
+
     out <- struct::new_struct(
         "kegg_lookup",
         get = get,
@@ -137,51 +136,51 @@ setMethod(
             M$updated <- D
             return(M)
         }
-        
+
         # get source column
         src <- as.character(D$data[[M$query_column]])
-        
+
         # add from str
         src_str <- paste(M$from, src, sep = ":")
-        
+
         # query kegg
         result <- KEGGREST::keggConv(
             target = M$get,
             source = src_str,
             querySize = 100
         )
-        
+
         # convert to data.frame
         df <- data.frame(from = names(result), get = result)
-        
+
         # extract ids
         df <- lapply(df, function(x) {
             y <- strsplit(x, ":", fixed = TRUE)
             y <- unlist(lapply(y, "[", i = 2))
             return(y)
         })
-        
+
         df <- as.data.frame(df)
-        
+
         if (nrow(df) == 0) {
             df <- data.frame(from = character(0), to = character(0))
         }
-        
+
         colnames(df) <- c(M$query_column, M$get)
         colnames(df) <- paste0(colnames(df), M$suffix)
         by <- paste0(M$query_column, M$suffix)
         names(by) <- M$query_column
-        
+
         # left join with annotations (keggConv excludes ids with no hit)
         X <- D$data
         X[[M$query_column]] <- as.character(X[[M$query_column]])
-        
+
         X <- dplyr::left_join(X, df, by = by)
-        
+
         # update
         D$data <- X
         M$updated <- D
-        
+
         # return
         return(M)
     }

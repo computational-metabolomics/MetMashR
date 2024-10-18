@@ -2,10 +2,9 @@
 #' @export
 #' @include annotation_database_class.R
 #' @family annotation databases
-rdata_database <- function(
-        source = character(0),
-        variable_name,
-        ...) {
+rdata_database <- function(source = character(0),
+    variable_name,
+    ...) {
     # new object
     out <- struct::new_struct(
         "rdata_database",
@@ -27,7 +26,7 @@ rdata_database <- function(
         description = "A data.frame stored as an RData file.",
         type = "rdata_database",
         .writable = TRUE,
-        .params=c('variable_name'),
+        .params = c("variable_name"),
         variable_name = entity(
             name = "Variable name",
             description = paste0(
@@ -37,7 +36,7 @@ rdata_database <- function(
                 "imported environment."
             ),
             type = c("character", "function"),
-            value = 'a data frame'
+            value = "a data frame"
         )
     )
 )
@@ -49,16 +48,16 @@ setMethod(
     signature = c("rdata_database"), definition = function(obj) {
         # new environment
         IN <- new.env()
-        
+
         # import
         load(obj$source, envir = IN)
-        
+
         if (is.character(obj$variable_name)) {
             OUT <- IN[[obj$variable_name]]
         } else { # assume function
             OUT <- obj$variable_name(IN)
         }
-        
+
         # return
         return(OUT)
     }

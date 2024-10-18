@@ -1,13 +1,12 @@
 #' @eval get_description('normalise_lipids')
 #' @export
 #' @include annotation_source_class.R
-normalise_lipids <- function(
-        column_name,
-        grammar = ".all",
-        columns = ".all",
-        suffix = "_goslin",
-        batch_size = 10000,
-        ...) {
+normalise_lipids <- function(column_name,
+    grammar = ".all",
+    columns = ".all",
+    suffix = "_goslin",
+    batch_size = 10000,
+    ...) {
     out <- struct::new_struct(
         "normalise_lipids",
         column_name = column_name,
@@ -40,8 +39,10 @@ normalise_lipids <- function(
         type = "univariate",
         predicted = "updated",
         libraries = "rgoslin",
-        .params = c("column_name", "grammar", "columns", "suffix", 
-                    "batch_size"),
+        .params = c(
+            "column_name", "grammar", "columns", "suffix",
+            "batch_size"
+        ),
         .outputs = c("updated"),
         column_name = entity(
             name = "Lipid column name",
@@ -65,13 +66,13 @@ normalise_lipids <- function(
                 "Column names to include from the goslin output. Can ",
                 'be any of "Normalized.Name", "Original.Name", "Grammar", ',
                 '"Adduct", "Adduct.Charge", "Lipid.Maps.Category", ',
-                '"Lipid.Maps.Main.Class", "Species.Name", 
+                '"Lipid.Maps.Main.Class", "Species.Name",
                 "Extended.Species.Name", ',
                 '"Molecular.Species.Name", "Sn.Position.Name", ',
                 '"Structure.Defined.Name", "Full.Structure.Name", ',
-                '"Functional.Class.Abbr", "Functional.Class.Synonyms", 
+                '"Functional.Class.Abbr", "Functional.Class.Synonyms",
                 "Level", ',
-                '"Total.C", "Total.OH", "Total.O", "Total.DB", "Mass", 
+                '"Total.C", "Total.OH", "Total.O", "Total.DB", "Mass",
                 "Sum.Formula".',
                 '".all" will return all columns. "'
             ),
@@ -82,7 +83,8 @@ normalise_lipids <- function(
         suffix = entity(
             name = "Column name suffix",
             description = paste0(
-                "A suffic added to the column names of the goslin output."),
+                "A suffic added to the column names of the goslin output."
+            ),
             type = "character",
             max_length = 1,
             value = "_goslin"
@@ -129,27 +131,30 @@ setMethod(
     signature = c("normalise_lipids", "annotation_source"),
     definition = function(M, D) {
         X <- D$data
-        
+
         if (M$grammar == ".all") {
             grammar <- NULL
         } else {
             grammar <- M$grammar
         }
-        
+
         batch <- unique(
-            c(seq(
-                from = 1, 
-                to = nrow(D$data), 
-                by = M$batch_size), 
-                nrow(D$data) + 1)
+            c(
+                seq(
+                    from = 1,
+                    to = nrow(D$data),
+                    by = M$batch_size
+                ),
+                nrow(D$data) + 1
+            )
         )
-        
+
         G <- NULL
         for (k in seq_len(length(batch) - 1)) {
             print(k)
             start <- batch[k]
             end <- batch[k + 1] - 1
-            
+
             L <- suppressMessages(
                 lapply(
                     X[[M$column_name]][start:end],
@@ -157,11 +162,11 @@ setMethod(
                     grammar = grammar
                 )
             )
-            
+
             L <- plyr::rbind.fill(L)
             G <- plyr::rbind.fill(G, L)
         }
-        
+
         # update lipidmaps categories
         B <- BiocFileCache_database(
             source = "https://tinyurl.com/hnh3eevj",
@@ -169,35 +174,38 @@ setMethod(
             resource_name = "goslin-lipidmaps"
         )
         B <- read_database(B)
-        B <- B %>% select(all_of(c("Lipid.name", "Lipid.category", 
-                                "Lipid.description")))
-        
+        B <- B %>% select(all_of(c(
+            "Lipid.name", "Lipid.category",
+            "Lipid.description"
+        )))
+
         for (r in seq_len(nrow(G))) {
             # description
-            w <- which(B$Lipid.category == G[["Lipid.Maps.Category"]][r] & 
-                            B$Lipid.name == G[["Lipid.Maps.Main.Class"]][r])
+            w <- which(B$Lipid.category == G[["Lipid.Maps.Category"]][r] &
+                B$Lipid.name == G[["Lipid.Maps.Main.Class"]][r])
             if (length(w) > 0) {
                 G[["Lipid.Maps.Main.Class"]][r] <- B[["Lipid.description"]][w[1]]
             }
-            
+
             # category
             w <- which(
-                names(.lipid_maps_classes) == G[["Lipid.Maps.Category"]][r])
+                names(.lipid_maps_classes) == G[["Lipid.Maps.Category"]][r]
+            )
             if (length(w) > 0) {
                 G[["Lipid.Maps.Category"]][r] <- .lipid_maps_classes[w]
             }
         }
-        
+
         cols <- M$columns
         if (any(cols == ".all")) {
             cols <- colnames(G)
         }
-        
+
         X <- cbind(X, G[, cols, drop = FALSE])
-        
+
         D$data <- X
         M$updated <- D
-        
+
         return(M)
     }
 )

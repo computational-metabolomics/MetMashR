@@ -1,12 +1,11 @@
 #' @eval get_description('mz_match')
 #' @export
 #' @include annotation_source_class.R
-mz_match <- function(
-        variable_meta,
-        mz_column,
-        ppm_window,
-        id_column,
-        ...) {
+mz_match <- function(variable_meta,
+    mz_column,
+    ppm_window,
+    id_column,
+    ...) {
     # make rt_window length 2
     if (length(ppm_window) == 1) {
         ppm_window <- c(
@@ -14,7 +13,7 @@ mz_match <- function(
             "annotations" = ppm_window
         )
     }
-    
+
     # check ppm window is named if length == 2 in case user-provided
     if (!all(names(ppm_window) %in% c("variable_meta", "annotations")) |
         is.null(names(ppm_window))) {
@@ -23,7 +22,7 @@ mz_match <- function(
             'e.g. c("variable_meta" = 5, "annotations"= 2)'
         )
     }
-    
+
     out <- struct::new_struct(
         "mz_match",
         variable_meta = variable_meta,
@@ -115,34 +114,34 @@ setMethod(
     signature = c("mz_match", "annotation_source"),
     definition = function(M, D) {
         VM <- M$variable_meta
-        
+
         # ensure numeric
         VM[[M$mz_column]] <- as.numeric(VM[[M$mz_column]])
-        
+
         # use rownames for id if requested
         if (M$id_column == "rownames") {
             VM$.id <- rownames(VM)
         } else {
             VM$.id <- VM[[M$id_column]]
         }
-        
+
         AN <- D$data
-        
+
         # ensure numeric
         AN[[D$mz_column]] <- as.numeric(AN[[D$mz_column]])
-        
+
         # calculate ppm window for variable_meta
         VM$.mz_min <- M$variable_meta[[M$mz_column]] *
             (1 - M$ppm_window[["variable_meta"]] * 1e-6)
         VM$.mz_max <- M$variable_meta[[M$mz_column]] *
             (1 + M$ppm_window[["variable_meta"]] * 1e-6)
-        
+
         # calculate ppm window for annotations
         AN$.mz_min <- AN[[D$mz_column]] *
             (1 - M$ppm_window[["annotations"]] * 1e-6)
         AN$.mz_max <- AN[[D$mz_column]] *
             (1 + M$ppm_window[["annotations"]] * 1e-6)
-        
+
         M@.vm_lim <- data.frame(
             VM_mz_min = VM$.mz_min,
             VM_mz_max = VM$.mz_max
@@ -151,19 +150,19 @@ setMethod(
             AN_mz_min = AN$.mz_min,
             AN_mz_max = AN$.mz_max
         )
-        
+
         # for each annotation, get variable ids whose ppw window overlaps with
         # the annotation ppm window
         OUT <- list()
         for (k in seq_len(nrow(AN))) {
             x <- AN[k, , drop = FALSE]
-            
+
             # true if overlap
             w <- which(
                 VM$.mz_min <= x$.mz_max & x$.mz_min <= VM$.mz_max
             )
             found <- VM[w, ]
-            
+
             # if we found any
             if (length(w) > 0) {
                 # calculate mz diff
@@ -173,7 +172,7 @@ setMethod(
                     (found$mz_diff / x[[D$mz_column]])
                 found$ppm_diff2 <- 1e6 *
                     (-found$mz_diff / found[[M$mz_column]])
-                
+
                 # create duplicate annotations for each id
                 record_list <- rep(list(x), length(w))
                 record_list <- do.call(rbind, record_list)
@@ -194,15 +193,15 @@ setMethod(
             OUT[[k]] <- record_list
         }
         OUT <- plyr::rbind.fill(OUT)
-        
+
         # remove extra columns
         w <- which(colnames(OUT) %in% c(".id", ".mz_min", ".mz_max"))
         OUT <- OUT[, -w]
-        
+
         D$data <- OUT
-        
+
         M$updated <- D
-        
+
         return(M)
     }
 )

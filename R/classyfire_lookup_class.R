@@ -3,11 +3,11 @@
 #' @include annotation_source_class.R rest_api_class.R zzz.R
 #' @family REST API's
 classyfire_lookup <- function(
-    query_column,
-    output_items = "kingdom",
-    output_fields = "name",
-    suffix = "_cf",
-    ...) {
+        query_column,
+        output_items = "kingdom",
+        output_fields = "name",
+        suffix = "_cf",
+        ...) {
     out <- struct::new_struct("classyfire_lookup",
         query_column = query_column,
         output_items = output_items,

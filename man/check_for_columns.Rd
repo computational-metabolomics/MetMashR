@@ -30,7 +30,7 @@ used by MetMashR to ensure validity of certain objects.
 }
 \examples{
 # test if column present
-AT <- annotation_source(data=data.frame(id = character(0)))
+AT <- annotation_source(data = data.frame(id = character(0)))
 check_for_columns(AT, "id") # TRUE
 check_for_columns(AT, "cake") # FALSE
 

@@ -1,14 +1,13 @@
 #' @eval get_description('pubchem_widget')
 #' @export
-pubchem_widget <- function(
-        query_column,
-        row_index,
-        record_type = "2D-Structure",
-        hide_title = FALSE,
-        width = "600px",
-        height = "650px",
-        display = TRUE,
-        ...) {
+pubchem_widget <- function(query_column,
+    row_index,
+    record_type = "2D-Structure",
+    hide_title = FALSE,
+    width = "600px",
+    height = "650px",
+    display = TRUE,
+    ...) {
     out <- struct::new_struct(
         "pubchem_widget",
         query_column = query_column,
@@ -20,7 +19,7 @@ pubchem_widget <- function(
         display = display,
         ...
     )
-    
+
     return(out)
 }
 
@@ -62,7 +61,8 @@ pubchem_widget <- function(
             name = "Row index",
             description = paste0(
                 "The row index of the `annotation_source` to request an image ",
-                "of the molecular structure of."),
+                "of the molecular structure of."
+            ),
             type = c("integer", "numeric"),
             value = 1
         ),
@@ -88,8 +88,8 @@ pubchem_widget <- function(
         width = entity(
             name = "Widget width",
             description = paste0(
-                'The width of the widget in a CSS style compatible format. ',
-                'Numerical values will be converted to character.'
+                "The width of the widget in a CSS style compatible format. ",
+                "Numerical values will be converted to character."
             ),
             type = c("integer", "numeric", "character"),
             value = 600,
@@ -98,8 +98,8 @@ pubchem_widget <- function(
         height = entity(
             name = "Widget height",
             description = paste0(
-                'The height of the widget in a CSS style compatible format.',
-                'Numerical values will be converted to character.'
+                "The height of the widget in a CSS style compatible format.",
+                "Numerical values will be converted to character."
             ),
             type = c("integer", "numeric", "character"),
             value = 400,
@@ -126,7 +126,7 @@ setMethod(
     definition = function(obj, dobj) {
         # get row
         dobj$data <- dobj$data[obj$row_index, ]
-        
+
         # handle hide_title, as hide_title=false doesnt work
         ht <- ""
         if (obj$hide_title) {
@@ -135,7 +135,7 @@ setMethod(
                 tolower(as.character(obj$hide_title))
             )
         }
-        
+
         # construct html
         html <- paste0(
             '<iframe class="pubchem-widget" src=',
@@ -150,7 +150,7 @@ setMethod(
             'border: 0;">',
             "</iframe>"
         )
-        
+
         # plot
         H <- htmltools::HTML(html)
         if (obj$display) {

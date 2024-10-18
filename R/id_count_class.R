@@ -2,10 +2,10 @@
 #' @export
 #' @include annotation_source_class.R
 id_counts <- function(
-    id_column,
-    count_column = "id_counts",
-    count_na = TRUE,
-    ...) {
+        id_column,
+        count_column = "id_counts",
+        count_na = TRUE,
+        ...) {
     out <- struct::new_struct("id_counts",
         id_column = id_column,
         count_column = count_column,

@@ -1,6 +1,8 @@
 test_that("filter_range works with limits and equal to", {
-    df <- data.frame(a = seq_len(10), b = seq(from = 11, to = 20), 
-                        id = seq_len(10))
+    df <- data.frame(
+        a = seq_len(10), b = seq(from = 11, to = 20),
+        id = seq_len(10)
+    )
 
     AN <- annotation_table(data = df, id_column = "id")
 
@@ -17,8 +19,10 @@ test_that("filter_range works with limits and equal to", {
 })
 
 test_that("filter_range works with limits and not equal to", {
-    df <- data.frame(a = seq_len(10), b = seq(from = 11, to = 20), 
-                        id = seq_len(10))
+    df <- data.frame(
+        a = seq_len(10), b = seq(from = 11, to = 20),
+        id = seq_len(10)
+    )
 
     AN <- annotation_table(data = df, id_column = "id")
 
@@ -36,8 +40,10 @@ test_that("filter_range works with limits and not equal to", {
 
 
 test_that("filter_range works with Inf", {
-    df <- data.frame(a = seq_len(10), b = seq(from = 11, to = 20), 
-                        id = seq_len(10))
+    df <- data.frame(
+        a = seq_len(10), b = seq(from = 11, to = 20),
+        id = seq_len(10)
+    )
 
     AN <- annotation_table(data = df, id_column = "id")
 
@@ -65,8 +71,10 @@ test_that("filter_range works with Inf", {
 })
 
 test_that("filter_range works returns error if limits incorrect", {
-    df <- data.frame(a = seq_len(10), b = seq(from = 11, to = 20), 
-                        id = seq_len(10))
+    df <- data.frame(
+        a = seq_len(10), b = seq(from = 11, to = 20),
+        id = seq_len(10)
+    )
 
     AN <- annotation_table(data = df, id_column = "id")
 

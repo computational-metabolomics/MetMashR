@@ -3,20 +3,18 @@
 #' @family annotation sources
 #' @family annotation tables
 #' @export ls_source
-ls_source <- function(
-        source,
-        tag = "LS",
-        mz_column = "mz",
-        rt_column = "rt",
-        id_column = "id",
-        data = NULL,
-        ...) {
-    
+ls_source <- function(source,
+    tag = "LS",
+    mz_column = "mz",
+    rt_column = "rt",
+    id_column = "id",
+    data = NULL,
+    ...) {
     if (is.null(data)) {
-        data = data.frame()
+        data <- data.frame()
     }
-    
-    if (nrow(data)==0 & ncol(data)==0) {
+
+    if (nrow(data) == 0 & ncol(data) == 0) {
         data <- data.frame(
             id = character(0),
             mz = numeric(0),
@@ -28,7 +26,7 @@ ls_source <- function(
             rt_column
         )
     }
-    
+
     # new object
     out <- new_struct(
         "ls_source",
@@ -92,43 +90,43 @@ setMethod(
         if (length(line_num) < 1) {
             stop("Can't detect LipidSearch output in provided input_file!")
         }
-        
+
         lipid_search_data <- read.csv(
             M$source,
             sep = "\t",
             stringsAsFactors = FALSE, skip = line_num - 1
         )
-        
+
         if (nrow(lipid_search_data) > 0) {
             # get subtables
             theor_mz <- lipid_search_data$CalcMz
             measured_mz_columns <- grep("ObsMz", colnames(lipid_search_data))
             measured_rt_columns <- grep("Rt.", colnames(lipid_search_data))
             grade_columns <- grep("Grade", colnames(lipid_search_data))
-            
+
             out <- vector("list", nrow(lipid_search_data))
-            
+
             for (lipid in seq_len(nrow(lipid_search_data))) {
                 # get column containing grade
                 grade <- lipid_search_data[lipid, grade_columns]
                 grade_col <- which(!is.na(grade) & nchar(grade) > 0)
-                
+
                 # calc ppm and rt diff for library
-                
+
                 mz <- theor_mz[lipid]
                 mz_meas <- lipid_search_data[
                     lipid,
                     measured_mz_columns
                 ][grade_col]
-                
+
                 ppm_diff <- 1e6 * (mz_meas - mz) / mz
-                
+
                 rt <- lipid_search_data[lipid, measured_rt_columns] * 60
                 rt <- rt[grade_col]
-                
+
                 lo <- min(unlist(grade[grade_col]), na.rm = TRUE) # "best" grade
                 w <- which(grade[grade_col] == lo)[1]
-                
+
                 out[[lipid]] <-
                     data.frame(
                         Rej. = lipid_search_data$Rej.[lipid],
@@ -143,13 +141,13 @@ setMethod(
                         rt = rt[[w]]
                     )
             }
-            
+
             out <- do.call(rbind, out)
-            
+
             # names
             N <- strsplit(out$LipidIon, "[/+/-]", perl = TRUE)
             out$LipidName <- unlist(lapply(N, "[", 1))
-            
+
             # add ids
             out$id <- as.character(seq_len(nrow(out)))
         } else { # empty data.frame
@@ -164,10 +162,10 @@ setMethod(
             )
             out$id <- as.character(out$id)
         }
-        
+
         M$data <- out
         M$tag <- M$tag
-        
+
         return(M)
     }
 )

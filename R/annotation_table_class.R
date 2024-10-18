@@ -3,27 +3,25 @@
 #' @family annotation tables
 #' @family annotation sources
 #' @export
-annotation_table <- function(
-        data = data.frame(),
-        tag = "",
-        id_column = NULL,
-        ...) {
-
-    # create id column if NULL    
+annotation_table <- function(data = data.frame(),
+    tag = "",
+    id_column = NULL,
+    ...) {
+    # create id column if NULL
     if (is.null(id_column)) {
-        id_column = '.MetMashR_id'
-        if (nrow(data)>0) {
-            data[[id_column]]=seq_len(nrow(data))
+        id_column <- ".MetMashR_id"
+        if (nrow(data) > 0) {
+            data[[id_column]] <- seq_len(nrow(data))
         }
     }
-    
+
     # create data if null
     if (is.null(data)) {
-        data = data.frame()
+        data <- data.frame()
     }
-    
+
     # create id column if no rows or columns
-    if (nrow(data)==0 & ncol(data)==0) {
+    if (nrow(data) == 0 & ncol(data) == 0) {
         data <- data.frame(
             id = character(0)
         )
@@ -31,7 +29,7 @@ annotation_table <- function(
             id_column
         )
     }
-    
+
     # new object
     out <- new_struct(
         "annotation_table",
@@ -41,7 +39,7 @@ annotation_table <- function(
         .required = id_column,
         ...
     )
-    
+
     return(out)
 }
 

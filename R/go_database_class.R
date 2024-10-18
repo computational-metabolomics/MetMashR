@@ -3,10 +3,9 @@
 #' @include AnnotationDb_database.R
 #' @family annotation databases
 #' @seealso [GO.db::GO()]
-GO_database <- function(
-        source = "GO.db",
-        table = "GOBPOFFSPRING",
-        ...) {
+GO_database <- function(source = "GO.db",
+    table = "GOBPOFFSPRING",
+    ...) {
     # new object
     out <- struct::new_struct(
         "GO_database",

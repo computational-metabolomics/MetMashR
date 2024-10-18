@@ -2,11 +2,11 @@
 #' @export
 #' @include annotation_table_class.R
 rt_match <- function(
-    variable_meta,
-    rt_column,
-    rt_window,
-    id_column,
-    ...) {
+        variable_meta,
+        rt_column,
+        rt_window,
+        id_column,
+        ...) {
     # make rt_window length 2
     if (length(rt_window) == 1) {
         rt_window <- c("variable_meta" = rt_window, "annotations" = rt_window)

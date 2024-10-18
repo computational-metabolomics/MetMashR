@@ -1,15 +1,14 @@
 #' @eval get_description('compute_record')
 #' @export
 #' @include annotation_source_class.R
-compute_record <- function(
-        fcn,
-        ...) {
+compute_record <- function(fcn,
+    ...) {
     out <- struct::new_struct(
         "compute_record",
         fcn = fcn,
         ...
     )
-    
+
     return(out)
 }
 
@@ -58,7 +57,7 @@ setMethod(
         for (k in seq_len(nrow(D$data))) {
             D$data[k, ] <- M$fcn(D$data[k, , drop = FALSE])
         }
-        
+
         M$updated <- D
         return(M)
     }

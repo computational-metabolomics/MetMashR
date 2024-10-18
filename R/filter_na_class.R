@@ -1,10 +1,9 @@
 #' @eval get_description('filter_na')
 #' @export
 #' @include annotation_source_class.R
-filter_na <- function(
-        column_name,
-        mode = "exclude",
-        ...) {
+filter_na <- function(column_name,
+    mode = "exclude",
+    ...) {
     out <- struct::new_struct(
         "filter_na",
         column_name = column_name,
@@ -74,34 +73,34 @@ setMethod(
     signature = c("filter_na", "annotation_source"),
     definition = function(M, D) {
         X <- D$data
-        
+
         if (nrow(X) == 0) {
             # nothing to filter, so return
             M$filtered <- D
             return(M)
         }
-        
-        
+
+
         flags <- data.frame(
             na_flag = is.na(X[[M$column_name]]),
             value = X[[M$column_name]]
         )
         colnames(flags)[2] <- M$column_name
-        
+
         rownames(flags) <- rownames(X)
-        
+
         M$flags <- flags
-        
+
         if (M$mode == "exclude") {
             X <- X[!M$flags[, 1], ]
         } else {
             X <- X[M$flags[, 1], ]
         }
-        
+
         D$data <- X
-        
+
         M$filtered <- D
-        
+
         return(M)
     }
 )

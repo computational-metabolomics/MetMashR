@@ -1,11 +1,10 @@
 #' @eval get_description('split_records')
 #' @export
 #' @include annotation_source_class.R
-split_records <- function(
-        column_name,
-        separator,
-        clean = TRUE,
-        ...) {
+split_records <- function(column_name,
+    separator,
+    clean = TRUE,
+    ...) {
     out <- struct::new_struct(
         "split_records",
         column_name = column_name,

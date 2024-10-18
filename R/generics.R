@@ -39,7 +39,7 @@ setGeneric(
 #' requested.
 #' @examples
 #' # test if column present
-#' AT <- annotation_source(data=data.frame(id = character(0)))
+#' AT <- annotation_source(data = data.frame(id = character(0)))
 #' check_for_columns(AT, "id") # TRUE
 #' check_for_columns(AT, "cake") # FALSE
 #'
@@ -112,9 +112,9 @@ setGeneric(
 #'
 #' @examples
 #'
-#' M <- annotation_source(data=data.frame(id=1,value='A'))
-#' N <- annotation_source(data=data.frame(id=2,value='B'))
-#' O <- vertical_join(M, N, keep_cols='.all')
+#' M <- annotation_source(data = data.frame(id = 1, value = "A"))
+#' N <- annotation_source(data = data.frame(id = 2, value = "B"))
+#' O <- vertical_join(M, N, keep_cols = ".all")
 #'
 setGeneric(
     "vertical_join",

@@ -72,7 +72,8 @@ test_that("mzrt_match errors", {
         },
         regexp = paste0(
             "If providing two retention time windows then the vector must be ",
-            "named")
+            "named"
+        )
     )
 })
 
@@ -111,8 +112,8 @@ test_that("mzrt_match works with no rows", {
 
     expect_equal(nrow(out), 0) # expect zero results on both RT and MZ
     expect_setequal(colnames(out), c(
-        "dbid", "rt", "mz", "mz_match_diff", "ppm_match_diff_an", 
-        "ppm_match_diff_vm", "rt_match_diff", "mzrt_match_id", 
+        "dbid", "rt", "mz", "mz_match_diff", "ppm_match_diff_an",
+        "ppm_match_diff_vm", "rt_match_diff", "mzrt_match_id",
         "mzrt_match_score"
     ))
 })

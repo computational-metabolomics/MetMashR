@@ -194,8 +194,10 @@ g <- chart_plot(C, predicted(M)) + ylim(c(0, 600)) +
 
 # layout
 leg <- cowplot::get_legend(g)
-cowplot::plot_grid(g + theme(legend.position = "none"), leg, nrow = 2, 
-                    rel_heights = c(75, 25))
+cowplot::plot_grid(g + theme(legend.position = "none"), leg,
+    nrow = 2,
+    rel_heights = c(75, 25)
+)
 ```
 
 <br>

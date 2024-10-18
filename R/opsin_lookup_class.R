@@ -1,11 +1,10 @@
 #' @eval get_description('opsin_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R
-opsin_lookup <- function(
-        query_column,
-        suffix = "_opsin",
-        output = "cids",
-        ...) {
+opsin_lookup <- function(query_column,
+    suffix = "_opsin",
+    output = "cids",
+    ...) {
     out <- struct::new_struct(
         "opsin_lookup",
         query_column = query_column,
@@ -13,7 +12,7 @@ opsin_lookup <- function(
         output = output,
         ...
     )
-    
+
     return(out)
 }
 

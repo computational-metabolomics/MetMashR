@@ -41,7 +41,8 @@ Imports:
     ggplot2,
     utils,
     rlang,
-    cowplot
+    cowplot,
+    stats
 Collate: 
     'generics.R'
     'zzz.R'

@@ -2,11 +2,11 @@
 #' @export
 #' @include annotation_source_class.R
 filter_range <- function(
-    column_name,
-    upper_limit = Inf,
-    lower_limit = -Inf,
-    equal_to = TRUE,
-    ...) {
+        column_name,
+        upper_limit = Inf,
+        lower_limit = -Inf,
+        equal_to = TRUE,
+        ...) {
     if (!is(upper_limit, "function") & !is(lower_limit, "function")) {
         check <- upper_limit >= lower_limit
         if (!check) {
