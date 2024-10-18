@@ -1,7 +1,7 @@
 #' @eval get_description('GO_database')
 #' @export
 #' @include AnnotationDb_database.R
-#' @family {annotation databases}
+#' @family annotation databases
 #' @seealso [GO.db::GO()]
 GO_database <- function(
         source = "GO.db",

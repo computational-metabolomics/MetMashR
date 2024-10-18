@@ -74,10 +74,10 @@ Wickham H, François R, Henry L, Müller K, Vaughan D
 1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{
-Other {REST API's}: 
+Other REST API's: 
 \code{\link{classyfire_lookup}},
 \code{\link{kegg_lookup}},
 \code{\link{lipidmaps_lookup}},
 \code{\link{rest_api}}
 }
-\concept{{REST API's}}
+\concept{REST API's}

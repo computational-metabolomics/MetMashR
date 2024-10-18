@@ -56,4 +56,4 @@ M = lcms_table( mz_column = "mz", rt_column = "rt", id_column = "id",
 tag = character(0), data = data.frame(), source = "ANY")
 
 }
-\concept{{annotation_tables}}
+\concept{annotation_tables}

@@ -1,7 +1,7 @@
 #' @eval get_description('sqlite_database')
 #' @export
 #' @include annotation_database_class.R
-#' @family {database}
+#' @family database
 sqlite_database <- function(
         source,
         table = "annotation_database",

@@ -1,7 +1,7 @@
 #' @eval get_description('excel_database')
 #' @export
 #' @include annotation_database_class.R
-#' @family {annotation databases}
+#' @family annotation databases
 excel_database <- function(
         source = character(0),
         sheet = 1,

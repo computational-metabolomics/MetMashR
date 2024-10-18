@@ -68,10 +68,10 @@ delay = 0.5, suffix = "_rest_api")
 
 }
 \seealso{
-Other {REST API's}: 
+Other REST API's: 
 \code{\link{classyfire_lookup}},
 \code{\link{kegg_lookup}},
 \code{\link{lipidmaps_lookup}},
 \code{\link{mwb_compound_lookup}}
 }
-\concept{{REST API's}}
+\concept{REST API's}

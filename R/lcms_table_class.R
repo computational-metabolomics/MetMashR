@@ -1,7 +1,7 @@
 #' @eval get_description("lcms_table")
 #' @include annotation_table_class.R
 #' @export lcms_table
-#' @family {annotation_tables}
+#' @family annotation_tables
 lcms_table <- function(
         data = NULL,
         tag = "",

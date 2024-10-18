@@ -45,15 +45,15 @@ data.frame(), source = "ANY")
 
 }
 \seealso{
-Other {annotation tables}: 
+Other annotation tables: 
 \code{\link{cd_source}},
 \code{\link{ls_source}}
 
-Other {annotation sources}: 
+Other annotation sources: 
 \code{\link{annotation_database}},
 \code{\link{cd_source}},
 \code{\link{ls_source}},
 \code{\link{mspurity_source}}
 }
-\concept{{annotation sources}}
-\concept{{annotation tables}}
+\concept{annotation sources}
+\concept{annotation tables}

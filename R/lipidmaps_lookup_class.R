@@ -1,7 +1,7 @@
 #' @eval get_description('lipidmaps_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R
-#' @family {REST API's}
+#' @family REST API's
 lipidmaps_lookup <- function(
         query_column,
         context,

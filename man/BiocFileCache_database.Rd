@@ -75,7 +75,7 @@ Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files
 Across Sessions}. R package version 2.10.2.
 }
 \seealso{
-Other {database}: 
+Other database: 
 \code{\link{sqlite_database}}
 }
-\concept{{database}}
+\concept{database}

@@ -2,7 +2,7 @@
 #' @export
 #' @include zzz.R rest_api_parsers.R
 #' @import httr
-#' @family {REST API's}
+#' @family REST API's
 rest_api <- function(
         base_url,
         url_template,

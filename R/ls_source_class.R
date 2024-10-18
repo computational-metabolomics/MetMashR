@@ -1,7 +1,7 @@
 #' @eval get_description('ls_source')
 #' @include annotation_source_class.R
-#' @family {annotation sources}
-#' @family {annotation tables}
+#' @family annotation sources
+#' @family annotation tables
 #' @export ls_source
 ls_source <- function(
         source,

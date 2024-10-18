@@ -1,7 +1,7 @@
 #' @eval get_description('kegg_lookup')
 #' @export
 #' @include annotation_source_class.R
-#' @family {REST API's}
+#' @family REST API's
 kegg_lookup <- function(
         get = "pubchem",
         from = "compound",

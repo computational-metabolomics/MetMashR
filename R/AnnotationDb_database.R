@@ -1,7 +1,7 @@
 #' @eval get_description('AnnotationDb_database')
 #' @export
 #' @include annotation_database_class.R
-#' @family {annotation databases}
+#' @family annotation databases
 #' @seealso [AnnotationDbi::AnnotationDb]
 AnnotationDb_database <- function(
         source,

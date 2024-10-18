@@ -1,6 +1,6 @@
 #' @eval get_description("annotation_source")
 #' @include zzz.R generics.R
-#' @family {annotation databases}
+#' @family annotation databases
 #' @export
 #' @import methods
 annotation_source <- function(

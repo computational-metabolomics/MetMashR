@@ -1,7 +1,7 @@
 #' @eval get_description('rds_cache')
 #' @export
 #' @include rds_database_class.R
-#' @family {annotation databases}
+#' @family annotation databases
 rds_cache <- function(
         source = character(0),
         data = data.frame(

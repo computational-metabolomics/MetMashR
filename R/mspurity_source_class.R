@@ -1,6 +1,6 @@
 #' @eval get_description('mspurity_source')
 #' @include annotation_source_class.R
-#' @family {annotation sources}
+#' @family annotation sources
 #' @export mspurity_source
 mspurity_source <- function(
         source,

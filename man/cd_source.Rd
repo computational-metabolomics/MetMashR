@@ -68,15 +68,15 @@ character(0))
 
 }
 \seealso{
-Other {annotation sources}: 
+Other annotation sources: 
 \code{\link{annotation_database}},
 \code{\link{annotation_table}},
 \code{\link{ls_source}},
 \code{\link{mspurity_source}}
 
-Other {annotation tables}: 
+Other annotation tables: 
 \code{\link{annotation_table}},
 \code{\link{ls_source}}
 }
-\concept{{annotation sources}}
-\concept{{annotation tables}}
+\concept{annotation sources}
+\concept{annotation tables}

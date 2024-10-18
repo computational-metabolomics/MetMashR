@@ -58,7 +58,7 @@ Bioconductor}. doi:10.18129/B9.bioc.AnnotationDbi
 \seealso{
 \code{\link[GO.db:GOBASE]{GO.db::GO()}}
 
-Other {annotation databases}: 
+Other annotation databases: 
 \code{\link{AnnotationDb_database}},
 \code{\link{annotation_database}},
 \code{\link{annotation_source}},
@@ -67,4 +67,4 @@ Other {annotation databases}:
 \code{\link{rds_cache}},
 \code{\link{rds_database}}
 }
-\concept{{annotation databases}}
+\concept{annotation databases}

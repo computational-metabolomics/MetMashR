@@ -1,7 +1,7 @@
 #' @eval get_description('mwb_compound_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R zzz.R
-#' @family {REST API's}
+#' @family REST API's
 mwb_compound_lookup <- function(
         input_item = "inchi_key",
         query_column,

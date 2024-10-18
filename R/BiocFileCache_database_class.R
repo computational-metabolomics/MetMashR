@@ -1,7 +1,7 @@
 #' @eval get_description('BiocFileCache_database')
 #' @export
 #' @include annotation_database_class.R BiocFileCache_database_helpers.R
-#' @family {database}
+#' @family database
 BiocFileCache_database <- function(
         source,
         bfc_path = NULL,

@@ -1,7 +1,7 @@
 #' @eval get_description('classyfire_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R zzz.R
-#' @family {REST API's}
+#' @family REST API's
 classyfire_lookup <- function(
     query_column,
     output_items = "kingdom",

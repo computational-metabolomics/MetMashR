@@ -1,7 +1,7 @@
 #' @eval get_description('cd_source')
 #' @include annotation_source_class.R lcms_table_class.R
-#' @family {annotation sources}
-#' @family {annotation tables}
+#' @family annotation sources
+#' @family annotation tables
 #' @rawNamespace import(dplyr, except = as_data_frame)
 #' @export
 cd_source <- function(

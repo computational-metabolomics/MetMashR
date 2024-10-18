@@ -61,10 +61,10 @@ cache = NULL, status_codes = list(), delay = 0.5, suffix =
 
 }
 \seealso{
-Other {REST API's}: 
+Other REST API's: 
 \code{\link{classyfire_lookup}},
 \code{\link{kegg_lookup}},
 \code{\link{mwb_compound_lookup}},
 \code{\link{rest_api}}
 }
-\concept{{REST API's}}
+\concept{REST API's}

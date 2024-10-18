@@ -34,7 +34,7 @@ M = rds_database( tag = character(0), data = data.frame(), source =
 
 }
 \seealso{
-Other {annotation databases}: 
+Other annotation databases: 
 \code{\link{AnnotationDb_database}},
 \code{\link{GO_database}},
 \code{\link{annotation_database}},
@@ -43,4 +43,4 @@ Other {annotation databases}:
 \code{\link{rdata_database}},
 \code{\link{rds_cache}}
 }
-\concept{{annotation databases}}
+\concept{annotation databases}

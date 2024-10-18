@@ -77,10 +77,10 @@ HTTP}. R package version 1.4.7,
 \url{https://CRAN.R-project.org/package=httr}.
 }
 \seealso{
-Other {REST API's}: 
+Other REST API's: 
 \code{\link{kegg_lookup}},
 \code{\link{lipidmaps_lookup}},
 \code{\link{mwb_compound_lookup}},
 \code{\link{rest_api}}
 }
-\concept{{REST API's}}
+\concept{REST API's}

@@ -45,7 +45,7 @@ SQLite Interface for R}. R package version 2.3.7,
 \url{https://CRAN.R-project.org/package=RSQLite}.
 }
 \seealso{
-Other {database}: 
+Other database: 
 \code{\link{BiocFileCache_database}}
 }
-\concept{{database}}
+\concept{database}

@@ -49,10 +49,10 @@ Chemistry}, \emph{89}, 2432-2439. doi:10.1021/acs.analchem.6b04358
 \url{https://doi.org/10.1021/acs.analchem.6b04358}.
 }
 \seealso{
-Other {annotation sources}: 
+Other annotation sources: 
 \code{\link{annotation_database}},
 \code{\link{annotation_table}},
 \code{\link{cd_source}},
 \code{\link{ls_source}}
 }
-\concept{{annotation sources}}
+\concept{annotation sources}

@@ -41,7 +41,7 @@ source = "ANY")
 
 }
 \seealso{
-Other {annotation databases}: 
+Other annotation databases: 
 \code{\link{AnnotationDb_database}},
 \code{\link{GO_database}},
 \code{\link{annotation_database}},
@@ -50,4 +50,4 @@ Other {annotation databases}:
 \code{\link{rds_cache}},
 \code{\link{rds_database}}
 }
-\concept{{annotation databases}}
+\concept{annotation databases}

@@ -1,7 +1,7 @@
 #' @eval get_description('rds_database')
 #' @export
 #' @include annotation_database_class.R
-#' @family {annotation databases}
+#' @family annotation databases
 rds_database <- function(
         source = character(0),
         ...) {
