@@ -88,7 +88,7 @@ setMethod(
             colNames = obj$colNames,
             startRow = obj$startRow
         )
-        colnames(IN) <- makefuse_unique(colnames(IN))
+        colnames(IN) <- make.unique(colnames(IN))
         IN$.row_id <- seq_len(nrow(IN))
 
         # return
