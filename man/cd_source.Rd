@@ -63,7 +63,7 @@ A \code{cd_source} object inherits the following \code{struct} classes: \cr\cr
 
 \examples{
 M <- cd_source(
-        sheets = c(2, 2),
+        sheets = c(1, 1),
         mz_column = "mz",
         rt_column = "rt",
         id_column = "id",

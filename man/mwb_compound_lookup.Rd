@@ -70,8 +70,12 @@ M <- mwb_compound_lookup(
 
 }
 \references{
-Lloyd GR, Weber RJM (????). \emph{metabolomicsWorkbenchR:
-Metabolomics Workbench in R}. R package version 1.14.1.
+Lloyd GR, Weber RJM (2024). \emph{metabolomicsWorkbenchR:
+Metabolomics Workbench in R}.
+doi:10.18129/B9.bioc.metabolomicsWorkbenchR
+\url{https://doi.org/10.18129/B9.bioc.metabolomicsWorkbenchR}, R package
+version 1.16.0,
+\url{https://bioconductor.org/packages/metabolomicsWorkbenchR}.
 
 Wickham H, François R, Henry L, Müller K, Vaughan D
 (2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version

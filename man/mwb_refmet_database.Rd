@@ -46,7 +46,9 @@ M <- mwb_refmet_database(
 }
 \references{
 Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files
-Across Sessions}. R package version 2.10.2.
+Across Sessions}. doi:10.18129/B9.bioc.BiocFileCache
+\url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
+2.14.0, \url{https://bioconductor.org/packages/BiocFileCache}.
 
 Wickham H (2023). \emph{httr: Tools for Working with URLs and
 HTTP}. R package version 1.4.7,

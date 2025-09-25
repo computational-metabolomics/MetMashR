@@ -51,10 +51,14 @@ M <- mwb_structure(
 
 }
 \references{
-Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot
-Annotations for 'ggplot2'}. R package version 1.1.3,
+Wilke C (2025). \emph{cowplot: Streamlined Plot Theme and Plot
+Annotations for 'ggplot2'}. R package version 1.2.0,
 \url{https://CRAN.R-project.org/package=cowplot}.
 
-Lloyd GR, Weber RJM (????). \emph{metabolomicsWorkbenchR:
-Metabolomics Workbench in R}. R package version 1.14.1.
+Lloyd GR, Weber RJM (2024). \emph{metabolomicsWorkbenchR:
+Metabolomics Workbench in R}.
+doi:10.18129/B9.bioc.metabolomicsWorkbenchR
+\url{https://doi.org/10.18129/B9.bioc.metabolomicsWorkbenchR}, R package
+version 1.16.0,
+\url{https://bioconductor.org/packages/metabolomicsWorkbenchR}.
 }

@@ -48,8 +48,8 @@ Wickham H, François R, Henry L, Müller K, Vaughan D
 (2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
 1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 
-Henry L, Wickham H (2024). \emph{rlang: Functions for Base
-Types and Core R and 'Tidyverse' Features}. R package version 1.1.3,
+Henry L, Wickham H (2025). \emph{rlang: Functions for Base
+Types and Core R and 'Tidyverse' Features}. R package version 1.1.6,
 \url{https://CRAN.R-project.org/package=rlang}.
 }
 \seealso{

@@ -110,16 +110,16 @@ M <- openbabel_structure(
 
 }
 \references{
-Horan K, Girke T (2023). \emph{ChemmineOB: R interface to a
+Horan K, Girke T (2024). \emph{ChemmineOB: R interface to a
 subset of OpenBabel functionalities}. doi:10.18129/B9.bioc.ChemmineOB
 \url{https://doi.org/10.18129/B9.bioc.ChemmineOB}, R package version
-1.40.0, \url{https://bioconductor.org/packages/ChemmineOB}.
+1.44.0, \url{https://bioconductor.org/packages/ChemmineOB}.
 
-Wilke C (2024). \emph{cowplot: Streamlined Plot Theme and Plot
-Annotations for 'ggplot2'}. R package version 1.1.3,
+Wilke C (2025). \emph{cowplot: Streamlined Plot Theme and Plot
+Annotations for 'ggplot2'}. R package version 1.2.0,
 \url{https://CRAN.R-project.org/package=cowplot}.
 
-Ooms J (2023). \emph{rsvg: Render SVG Images into PDF, PNG,
+Ooms J (2025). \emph{rsvg: Render SVG Images into PDF, PNG,
 (Encapsulated) PostScript, or Bitmap Arrays}. R package version
-2.6.0, \url{https://CRAN.R-project.org/package=rsvg}.
+2.7.0, \url{https://CRAN.R-project.org/package=rsvg}.
 }

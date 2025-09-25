@@ -99,7 +99,7 @@ setMethod(
         }
 
         # get trimws
-        trimmed <- lapply(D$data[, cnames], trimws,
+        trimmed <- lapply(D$data[, cnames,drop=FALSE], trimws,
             which = M$which, whitespace = M$whitespace
         )
 
