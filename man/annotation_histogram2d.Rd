@@ -75,7 +75,7 @@ Wickham H (2016). \emph{ggplot2: Elegant Graphics for Data
 Analysis}. Springer-Verlag New York. ISBN 978-3-319-24277-4,
 \url{https://ggplot2.tidyverse.org}.
 
-Pedersen T (2024). \emph{patchwork: The Composer of Plots}. R
-package version 1.2.0,
+Pedersen T (2025). \emph{patchwork: The Composer of Plots}. R
+package version 1.3.2,
 \url{https://CRAN.R-project.org/package=patchwork}.
 }

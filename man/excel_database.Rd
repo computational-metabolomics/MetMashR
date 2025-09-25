@@ -64,8 +64,8 @@ M <- excel_database(
 
 }
 \references{
-Schauberger P, Walker A (2023). \emph{openxlsx: Read, Write
-and Edit xlsx Files}. R package version 4.2.5.2,
+Schauberger P, Walker A (2025). \emph{openxlsx: Read, Write
+and Edit xlsx Files}. R package version 4.2.8,
 \url{https://CRAN.R-project.org/package=openxlsx}.
 }
 \seealso{

@@ -447,12 +447,13 @@ C2 <- annotation_upset_chart(
     factor_name = "compound",
     n_intersections = 10
 )
-g3 <- chart_plot(C2, cd)
+#g3 <- chart_plot(C2, cd)
 C2$factor_name <- "LipidName"
-g4 <- chart_plot(C2, ls)
+#g4 <- chart_plot(C2, ls)
 
 # layout
-cowplot::plot_grid(g1, g2, g3, g4, nrow = 2)
+#cowplot::plot_grid(g1, g2, g3, g4, nrow = 2)
+cowplot::plot_grid(g1, g2, nrow = 2)
 ```
 
 
@@ -737,7 +738,7 @@ C <- annotation_upset_chart(
     min_size = 0,
     n_intersections = 10
 )
-chart_plot(C, predicted(N[3]))
+#chart_plot(C, predicted(N[3]))
 ```
 
 In the next chart we visualise the proportion of annotations from each query,

@@ -49,14 +49,14 @@ M <- GO_database(
 
 }
 \references{
-Carlson M (2023). \emph{GO.db: A set of annotation maps
-describing the entire Gene Ontology}. R package version 3.18.0.
+Carlson M (2024). \emph{GO.db: A set of annotation maps
+describing the entire Gene Ontology}. R package version 3.20.0.
 
-Pagès H, Carlson M, Falcon S, Li N (2023).
+Pagès H, Carlson M, Falcon S, Li N (2024).
 \emph{AnnotationDbi: Manipulation of SQLite-based annotations in
 Bioconductor}. doi:10.18129/B9.bioc.AnnotationDbi
 \url{https://doi.org/10.18129/B9.bioc.AnnotationDbi}, R package version
-1.64.1, \url{https://bioconductor.org/packages/AnnotationDbi}.
+1.68.0, \url{https://bioconductor.org/packages/AnnotationDbi}.
 }
 \seealso{
 \code{\link[GO.db:GOBASE]{GO.db::GO()}}

@@ -271,8 +271,9 @@ g1 <- chart_plot(C, predicted(M), P)
 C <- annotation_upset_chart(
     factor_name = c("inchikey", "InChI.Key")
 )
-g2 <- chart_plot(C, predicted(M), P)
-cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
+#g2 <- chart_plot(C, predicted(M), P)
+#cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
+g1
 ```
 
 The charts show that less than half of the metabolites in MTox700+ are also 
