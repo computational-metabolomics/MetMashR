@@ -61,7 +61,7 @@ annotation_sources.
 }
 \details{
 This object makes use of functionality from the following
-packages:\itemize{ \item{\code{RVenn}} \item{\code{ggVennDiagram}}}
+packages:\itemize{ \item{\code{ggVennDiagram}}}
 }
 \section{Inheritance}{
 
@@ -81,9 +81,6 @@ M <- annotation_venn_chart(
 
 }
 \references{
-Akyol T (2019). \emph{RVenn: Set Operations for Many Sets}. R
-package version 1.1.0, \url{https://CRAN.R-project.org/package=RVenn}.
-
 Gao C, Dusa A (2025). \emph{ggVennDiagram: A 'ggplot2'
 Implement of Venn Diagram}. R package version 1.5.4,
 \url{https://CRAN.R-project.org/package=ggVennDiagram}.

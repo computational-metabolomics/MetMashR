@@ -46,7 +46,7 @@ annotation_venn_chart <- function(factor_name,
             "factor_name", "line_colour", "fill_colour", "labels", "legend",
             "group_column"
         ),
-        libraries = c("RVenn", "ggVennDiagram"),
+        libraries = c("ggVennDiagram"),
         factor_name = entity(
             name = "Factor name",
             description = paste0(
@@ -209,7 +209,7 @@ venn_this <- function(obj, L) {
     }
 
     # venn
-    this <- ggVennDiagram::process_data(RVenn::Venn(L), shape_id = shape)
+    this <- ggVennDiagram::process_data(ggVennDiagram::Venn(L), shape_id = shape)
 
     # ellipse
     vE <- ggVennDiagram::venn_setedge(this)
