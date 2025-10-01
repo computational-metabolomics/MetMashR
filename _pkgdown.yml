@@ -136,6 +136,7 @@ reference:
     - annotation_histogram
     - annotation_histogram2d
     - pubchem_widget
+    - upset_filters
 - title: "BiocFileCache_database helper functions"
   desc: >
     These functions can be used with BiocFileCache_database objects to modify

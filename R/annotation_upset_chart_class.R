@@ -1,31 +1,130 @@
 #' @eval get_description('annotation_upset_chart')
+#' @include annotation_venn_chart.R
 #' @export
-annotation_upset_chart <- function(factor_name,
+#' @details
+#' The plot
+#' object returned is of class 'aplot' which may not be compatible with all plot
+#' combination functions. To combine with other ggplot objects using cowplot or 
+#' patchwork, use ggplotify::as.ggplot() to convert the plot object:
+#' 
+#' \preformatted{
+#' library(ggplotify)
+#' g <- chart_plot(C, data)
+#' g_ggplot <- as.ggplot(g)
+#' cowplot::plot_grid(g1, g_ggplot, nrow = 1)
+#' }
+#' 
+#' @section Filtering:
+#' Use the `filter` parameter to filter intersections based on their properties:
+#' 
+#' \preformatted{
+#' # Filter by minimum size
+#' C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_size(5))
+#' 
+#' # Filter by minimum number of groups
+#' C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_groups(3))
+#' 
+#' # Filter to show only specific combinations
+#' C <- annotation_upset_chart(factor_name = "V1", 
+#'                           filter = upset_intersections(c("A/B", "B/C")))
+#' 
+#' # Custom filter function
+#' custom_filter <- function(region_data) {
+#'   region_data$count >= 3 & grepl("A", region_data$name)
+#' }
+#' C <- annotation_upset_chart(factor_name = "V1", filter = custom_filter)
+#' }
+#' 
+#' @note
+#' The interface to this class has changed. Some parameters have been renamed:
+#' - 'width_ratio' -> 'relative_width'
+#' - 'xlabel' -> 'top_bar_y_label' 
+#' - 'sort_intersections' -> 'order_intersect_by'
+#' - 'intersections' -> 'nintersects'
+#' - 'n_intersections' -> 'nintersects'
+#' - 'queries' -> (removed)
+#' - 'keep_empty_group' -> (removed)
+#' - 'sort_sets' -> 'order_set_by'
+#' 
+#' Old parameter names will trigger deprecation warnings.
+annotation_upset_chart <- function(
+    factor_name,
     group_column = NULL,
-    width_ratio = 0.2,
-    xlabel = "group",
-    sort_intersections = "descending",
-    intersections = "observed",
-    n_intersections = NULL,
-    min_size = 0,
-    queries = list(),
-    keep_empty_groups = FALSE,
+    order_intersect_by = "size",
+    order_set_by = "name",
+    nintersects = NULL,
+    filter = NULL,
+    relative_width = 0.3,
+    relative_height = 3,
+    top_bar_color = "grey30",
+    top_bar_y_label = NULL,
+    top_bar_show_numbers = TRUE,
+    top_bar_numbers_size = 3,
+    sets_bar_color = "grey30",
+    sets_bar_show_numbers = FALSE,
+    sets_bar_x_label = "Set Size",
+    sets_bar_position = "left",
+    intersection_matrix_color = "grey30",
+    specific = TRUE,
     ...) {
-    out <- struct::new_struct(
-        "annotation_upset_chart",
+    
+    # check for old usage
+    dots = list(...)
+    old_slots=c(
+        'width_ratio',
+        'xlabel',
+        'min_size',
+        'sort_intersections',
+        'intersections',
+        'n_intersections',
+        'queries',
+        'keep_empty_group',
+        'sort_sets'
+    )
+    used_old = intersect(names(dots),old_slots)
+    check = length(used_old)>0
+    
+    if (check){
+        .Deprecated('annotation_upset_chart (new signature)',
+                    msg = paste0(
+                        'The interface to this class has changed. See',
+                        '?annotation_upset_chart.'
+                    )
+        )
+        # exclude deprecated
+        dots[used_old] <- NULL
+    }
+
+    # create parameter list
+    params <- list(
         factor_name = factor_name,
         group_column = group_column,
-        width_ratio = width_ratio,
-        xlabel = xlabel,
-        sort_intersections = sort_intersections,
-        intersections = intersections,
-        n_intersections = n_intersections,
-        min_size = min_size,
-        queries = queries,
-        keep_empty_groups = keep_empty_groups,
-        ...
+        order_intersect_by = order_intersect_by,
+        order_set_by = order_set_by,
+        nintersects = nintersects,
+        filter = filter,
+        relative_width = relative_width,
+        relative_height = relative_height,
+        top_bar_color = top_bar_color,
+        top_bar_y_label = top_bar_y_label,
+        top_bar_show_numbers = top_bar_show_numbers,
+        top_bar_numbers_size = top_bar_numbers_size,
+        sets_bar_color = sets_bar_color,
+        sets_bar_show_numbers = sets_bar_show_numbers,
+        sets_bar_x_label = sets_bar_x_label,
+        sets_bar_position = sets_bar_position,
+        intersection_matrix_color = intersection_matrix_color,
+        specific = specific
     )
-
+    
+    # add dots if present
+    if (length(dots) > 0) {
+        params <- c(params, dots)
+    }
+    
+    # create struct object
+    out <- do.call(struct::new_struct, c("annotation_upset_chart", params))
+    
     return(out)
 }
 
@@ -36,14 +135,22 @@ annotation_upset_chart <- function(factor_name,
     slots = c(
         factor_name = "entity",
         group_column = "entity",
-        width_ratio = "entity",
-        xlabel = "entity",
-        sort_intersections = "entity",
-        intersections = "entity",
-        n_intersections = "entity",
-        min_size = "entity",
-        queries = "entity",
-        keep_empty_groups = "entity"
+        order_intersect_by = "entity",
+        order_set_by = "entity",
+        nintersects = "entity",
+        filter = "entity",
+        relative_width = "entity",
+        relative_height = "entity",
+        top_bar_color = "entity",
+        top_bar_y_label = "entity",
+        top_bar_show_numbers = "entity",
+        top_bar_numbers_size = "entity",
+        sets_bar_color = "entity",
+        sets_bar_show_numbers = "entity",
+        sets_bar_x_label = "entity",
+        sets_bar_position = "entity",
+        intersection_matrix_color = "entity",
+        specific = "entity"
     ),
     prototype = list(
         name = "Annotation UpSet chart",
@@ -53,12 +160,13 @@ annotation_upset_chart <- function(factor_name,
         ),
         type = "image",
         .params = c(
-            "factor_name", "group_column", "width_ratio", "xlabel",
-            "sort_intersections", "intersections", "n_intersections",
-            "min_size",
-            "queries", "keep_empty_groups"
+            "factor_name", "group_column", "order_intersect_by", "order_set_by",
+            "nintersects", "filter", "relative_width", "relative_height", "top_bar_color",
+            "top_bar_y_label", "top_bar_show_numbers", "top_bar_numbers_size",
+            "sets_bar_color", "sets_bar_show_numbers", "sets_bar_x_label",
+            "sets_bar_position", "intersection_matrix_color", "specific"
         ),
-        libraries = "ComplexUpset",
+        libraries = "ggVennDiagram",
         factor_name = entity(
             name = "Factor name",
             description = paste0(
@@ -83,46 +191,31 @@ annotation_upset_chart <- function(factor_name,
             value = NULL,
             max_length = 1
         ),
-        width_ratio = entity(
-            name = "Width ratio",
-            description = paste0(
-                "Proportion of plot given to set size bar chart."
-            ),
-            type = "numeric",
-            value = 0.2,
-            max_length = 1
-        ),
-        xlabel = entity(
-            name = "X-axis label",
-            description = paste0(
-                "The label used for the x-axis."
-            ),
-            type = "character",
-            value = "group",
-            max_length = 1
-        ),
-        sort_intersections = enum(
-            name = "Sort intersections",
+        order_intersect_by = enum(
+            name = "Order intersect by",
             description = c(
-                "ascending" = "Groups are sorted by increasing size.",
-                "descending" = "Groups are sorted by decreasing size.",
-                "none" = "Groups are not sorted"
+                "size" = "Intersections are sorted by size (largest first).",
+                "name" = "Intersections are sorted by name alphabetically.",
+                "none" = "Intersections are not sorted"
             ),
             type = "character",
-            value = "descending",
+            value = "size",
             max_length = 1,
-            allowed = c("ascending", "descending", "none")
+            allowed = c("size", "name", "none")
         ),
-        intersections = entity(
-            name = "Intersections",
-            description = paste0(
-                "The intersections to include in the plot."
+        order_set_by = enum(
+            name = "Order set by",
+            description = c(
+                "size" = "Sets are sorted by size (largest first).",
+                "name" = "Sets are sorted by name alphabetically.",
+                "none" = "Sets are not sorted"
             ),
-            type = c("character", "list"),
-            value = "observed",
-            max_length = Inf
+            type = "character",
+            value = "name",
+            max_length = 1,
+            allowed = c("size", "name", "none")
         ),
-        n_intersections = entity(
+        nintersects = entity(
             name = "Number of intersections",
             description = paste0(
                 "The number of intersections to include in the plot."
@@ -131,33 +224,128 @@ annotation_upset_chart <- function(factor_name,
             type = c("numeric", "integer", "NULL"),
             max_length = 1
         ),
-        min_size = entity(
-            name = "Minimum size",
+        filter = entity(
+            name = "Intersection filter",
             description = paste0(
-                "The minimum size of an intersection for it to be included ",
-                "in the plot."
+                "A function or list of functions to filter intersections based on ",
+                "their properties. The function(s) should take region_data as input ",
+                "and return a logical vector indicating which intersections to keep. ",
+                "Use upset_min_size(), upset_min_groups(), upset_max_groups(), ",
+                "upset_intersections(), or create custom filter functions."
             ),
-            value = 0,
-            type = c("numeric", "integer"),
-            max_length = 1
-        ),
-        queries = entity(
-            name = "Queries",
-            description = paste0(
-                "A list of upset queries."
-            ),
-            value = list(),
-            type = c("list"),
+            value = NULL,
+            type = c("function", "NULL"),
             max_length = Inf
         ),
-        keep_empty_groups = entity(
-            name = "Keep empty sets",
+        relative_width = entity(
+            name = "Relative width",
             description = paste0(
-                "whether empty sets should be kept (including sets which are ",
-                "only empty after filtering by size)"
+                "The relative width of the left panel in the upset plot."
+            ),
+            value = 0.3,
+            type = "numeric",
+            max_length = 1
+        ),
+        relative_height = entity(
+            name = "Relative height",
+            description = paste0(
+                "The relative height of the top panel in the upset plot."
+            ),
+            value = 3,
+            type = "numeric",
+            max_length = 1
+        ),
+        top_bar_color = entity(
+            name = "Top bar color",
+            description = paste0(
+                "The color of the top bar chart showing intersection sizes."
+            ),
+            value = "grey30",
+            type = "character",
+            max_length = 1
+        ),
+        top_bar_y_label = entity(
+            name = "Top bar Y label",
+            description = paste0(
+                "The label for the Y-axis of the top bar chart."
+            ),
+            value = NULL,
+            type = c("character", "NULL"),
+            max_length = 1
+        ),
+        top_bar_show_numbers = entity(
+            name = "Show top bar numbers",
+            description = paste0(
+                "Whether to show numbers on the top bar chart."
+            ),
+            value = TRUE,
+            type = "logical",
+            max_length = 1
+        ),
+        top_bar_numbers_size = entity(
+            name = "Top bar numbers size",
+            description = paste0(
+                "The text size of numbers on the top bar chart."
+            ),
+            value = 3,
+            type = "numeric",
+            max_length = 1
+        ),
+        sets_bar_color = entity(
+            name = "Sets bar color",
+            description = paste0(
+                "The color of the sets bar chart."
+            ),
+            value = "grey30",
+            type = "character",
+            max_length = 1
+        ),
+        sets_bar_show_numbers = entity(
+            name = "Show sets bar numbers",
+            description = paste0(
+                "Whether to show numbers on the sets bar chart."
             ),
             value = FALSE,
-            type = c("logical"),
+            type = "logical",
+            max_length = 1
+        ),
+        sets_bar_x_label = entity(
+            name = "Sets bar X label",
+            description = paste0(
+                "The label for the X-axis of the sets bar chart."
+            ),
+            value = "Set Size",
+            type = "character",
+            max_length = 1
+        ),
+        sets_bar_position = enum(
+            name = "Sets bar position",
+            description = c(
+                "left" = "Position the sets bar chart on the left side.",
+                "right" = "Position the sets bar chart on the right side."
+            ),
+            type = "character",
+            value = "left",
+            max_length = 1,
+            allowed = c("left", "right")
+        ),
+        intersection_matrix_color = entity(
+            name = "Intersection matrix color",
+            description = paste0(
+                "The color of the intersection matrix dots and lines."
+            ),
+            value = "grey30",
+            type = "character",
+            max_length = 1
+        ),
+        specific = entity(
+            name = "Specific items only",
+            description = paste0(
+                "Whether to include only specific items in subsets (TRUE) ",
+                "or all overlapping items (FALSE)."
+            ),
+            value = TRUE,
+            type = "logical",
             max_length = 1
         )
     )
@@ -169,86 +357,75 @@ setMethod(
     f = "chart_plot",
     signature = c("annotation_upset_chart", "annotation_source"),
     definition = function(obj, dobj, ...) {
-        L <- list(...)
 
-        if (length(L) > 0) {
-            # more than one dobj
-            L <- c(dobj, L)
+        # handle multiple inputs
+        L = list(...)
+        L = process_venn_dots(L, dobj, obj)
 
-            # if only one column name, assume same column in all sources
-            if (length(obj$factor_name) == 1) {
-                obj$factor_name <- rep(obj$factor_name, length(L))
+        # create Venn object for ggVennDiagram
+        venn_obj <- ggVennDiagram::Venn(L)
+        
+        # apply filters if specified
+        if (!is.null(obj$filter)) {
+            # get region data for filtering
+            region_data <- ggVennDiagram::process_region_data(venn_obj, sep = "/", specific = obj$specific)
+            
+            # apply filter function
+            if (is.function(obj$filter)) {
+                valid_regions <- obj$filter(region_data)
+            } else {
+                valid_regions <- rep(TRUE, nrow(region_data))
             }
-
-            # check we have a column for all sources
-            if (length(obj$factor_name) != length(L)) {
-                stop(
-                    "You must provide either a single factor_name ",
-                    "present in all sources, or provide a factor_name ",
-                    "for each source.\n"
-                )
+            
+            if (any(valid_regions)) {
+                # get all items that appear in valid intersections
+                valid_items <- character(0)
+                for (j in which(valid_regions)) {
+                    region_items <- region_data$item[[j]]
+                    if (length(region_items) > 0) {
+                        valid_items <- c(valid_items, region_items)
+                    }
+                }
+                valid_items <- unique(valid_items)
+                
+                # filter each set to only include items that appear in valid intersections
+                filtered_L <- list()
+                for (i in seq_along(L)) {
+                    set_items <- L[[i]]
+                    filtered_L[[i]] <- intersect(set_items, valid_items)
+                }
+                names(filtered_L) <- names(L)
+                
+                # create new Venn object with filtered data
+                venn_obj <- ggVennDiagram::Venn(filtered_L)
+            } else {
+                # if no valid intersections, create empty Venn object
+                empty_L <- lapply(L, function(x) character(0))
+                names(empty_L) <- names(L)
+                venn_obj <- ggVennDiagram::Venn(empty_L)
             }
-
-            # get tags
-            tags <- lapply(L, param_value, name = "tag")
-            names(L) <- tags
-            L <- lapply(L, param_value, name = "data")
-
-            # get columns
-            L <- mapply("[[", L, obj$factor_name)
-
-            ## create upset table
-            # unique across all sets
-            u <- unique(unlist(L))
-            G <- lapply(L, function(x) {
-                return(u %in% x)
-            })
-            G <- do.call(rbind, G)
-            colnames(G) <- u
-            G <- as.data.frame(t(G))
-        } else if (length(obj$factor_name) > 1) {
-            # comparing multiple columns
-            L <- as.list(dobj$data[obj$factor_name])
-            # unique across all sets
-            u <- unique(unlist(L))
-            G <- lapply(L, function(x) {
-                return(u %in% x)
-            })
-            G <- do.call(rbind, G)
-            colnames(G) <- u
-            G <- as.data.frame(t(G))
-        } else {
-            # only dobj provided
-            L <- levels(factor(dobj$data[[obj$group_column]]))
-            U <- unique(dobj$data[[obj$factor_name]])
-            G <- lapply(U, function(x) {
-                w <- which(dobj$data[[obj$factor_name]] == x)
-                g <- dobj$data[[obj$group_column]][w]
-                out <- L %in% g
-            })
-            G <- as.data.frame(do.call(rbind, G))
-            colnames(G) <- L
-            rownames(G) <- U
         }
-
-        srt <- obj$sort_intersections
-        if (srt == "none") {
-            srt <- FALSE
-        }
-
-        g <- ComplexUpset::upset(
-            G,
-            colnames(G),
-            name = obj$xlabel,
-            width_ratio = obj$width_ratio,
-            sort_intersections = srt,
-            intersections = obj$intersections,
-            n_intersections = obj$n_intersections,
-            min_size = obj$min_size,
-            queries = obj$queries,
-            keep_empty_groups = obj$keep_empty_groups
+        
+        # create the plot
+        g <- ggVennDiagram::plot_upset(
+            venn = venn_obj,
+            nintersects = obj$nintersects,
+            `order.intersect.by` = obj$order_intersect_by,
+            `order.set.by` = obj$order_set_by,
+            relative_width = obj$relative_width,
+            relative_height = obj$relative_height,
+            `top.bar.color` = obj$top_bar_color,
+            `top.bar.y.label` = obj$top_bar_y_label,
+            `top.bar.show.numbers` = obj$top_bar_show_numbers,
+            `top.bar.numbers.size` = obj$top_bar_numbers_size,
+            `sets.bar.color` = obj$sets_bar_color,
+            `sets.bar.show.numbers` = obj$sets_bar_show_numbers,
+            `sets.bar.x.label` = obj$sets_bar_x_label,
+            `sets.bar.position` = obj$sets_bar_position,
+            `intersection.matrix.color` = obj$intersection_matrix_color,
+            specific = obj$specific
         )
-
+        
         return(g)
     }
 )
@@ -267,3 +444,139 @@ setMethod(
         return(g)
     }
 )
+
+# Filter functions for intersection filtering
+#' @export
+upset_min_size <- function(min_size) {
+    function(region_data) {
+        region_data$count >= min_size
+    }
+}
+
+#' @export
+upset_min_groups <- function(min_groups) {
+    function(region_data) {
+        group_counts <- sapply(region_data$name, function(x) {
+            if (x == "") return(0)
+            groups <- strsplit(x, "/")[[1]]
+            length(groups)
+        })
+        group_counts >= min_groups
+    }
+}
+
+#' @export
+upset_max_groups <- function(max_groups) {
+    function(region_data) {
+        group_counts <- sapply(region_data$name, function(x) {
+            if (x == "") return(0)
+            groups <- strsplit(x, "/")[[1]]
+            length(groups)
+        })
+        group_counts <= max_groups
+    }
+}
+
+#' @export
+upset_intersections <- function(combinations) {
+    function(region_data) {
+        # Normalize the input combinations (sort groups alphabetically for consistency)
+        normalized_combinations <- sapply(combinations, function(combo) {
+            groups <- strsplit(combo, "/")[[1]]
+            paste(sort(groups), collapse = "/")
+        })
+        
+        # Normalize the region names for comparison
+        normalized_regions <- sapply(region_data$name, function(name) {
+            if (name == "") return("")
+            groups <- strsplit(name, "/")[[1]]
+            paste(sort(groups), collapse = "/")
+        })
+        
+        # Check which regions match the specified combinations
+        normalized_regions %in% normalized_combinations
+    }
+}
+
+#' UpSet chart filter helper functions
+#' 
+#' These functions create filters for the `annotation_upset_chart` class to 
+#' control which intersections are displayed in UpSet plots. Each function 
+#' returns a filter function that can be used with the `filter` parameter.
+#' 
+#' @param min_size `numeric` The minimum number of items in an intersection
+#' @param min_groups `numeric` The minimum number of groups in an intersection  
+#' @param max_groups `numeric` The maximum number of groups in an intersection
+#' @param combinations `character` Vector of specific intersection combinations to include (e.g., c("A/B", "B/C"))
+#' 
+#' @return A function that takes `region_data` as input and returns a logical 
+#' vector indicating which intersections to keep.
+#' 
+#' @details
+#' These filter functions work by analyzing the region data from the Venn 
+#' diagram to determine which intersections meet the specified criteria:
+#' 
+#' - `upset_min_size()`: Filters intersections based on the number of items
+#' - `upset_min_groups()`: Filters intersections based on the minimum number 
+#'   of groups involved
+#' - `upset_max_groups()`: Filters intersections based on the maximum number 
+#'   of groups involved
+#' - `upset_intersections()`: Filters to show only specific intersection 
+#'   combinations (e.g., "A/B", "B/C", "A/B/C")
+#' 
+#' For complex filtering logic, create custom filter functions:
+#' 
+#' \preformatted{
+#' # Single filter
+#' filter = upset_min_size(5)
+#' 
+#' # Specific combinations only
+#' filter = upset_intersections(c("A/B", "B/C"))
+#' 
+#' # Custom filter function with AND logic
+#' custom_filter <- function(region_data) {
+#'   region_data$count >= 3 & region_data$count <= 10 & grepl("A", region_data$name)
+#' }
+#' 
+#' # Custom filter function with OR logic
+#' or_filter <- function(region_data) {
+#'   region_data$count >= 5 | grepl("B/C", region_data$name)
+#' }
+#' }
+#' 
+#' @examples
+#' \dontrun{
+#' # Filter to show only intersections with 5+ items
+#' C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_size(5))
+#' 
+#' # Filter to show only intersections involving 3+ groups
+#' C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_groups(3))
+#' 
+#' # Filter to show only intersections involving 2-4 groups (custom function)
+#' group_range_filter <- function(region_data) {
+#'   group_counts <- sapply(region_data$name, function(x) {
+#'     if (x == "") return(0)
+#'     groups <- strsplit(x, "/")[[1]]
+#'     length(groups)
+#'   })
+#'   group_counts >= 2 & group_counts <= 4
+#' }
+#' C <- annotation_upset_chart(factor_name = "V1", filter = group_range_filter)
+#' 
+#' # Filter to show only specific combinations
+#' C <- annotation_upset_chart(factor_name = "V1", 
+#'                           filter = upset_intersections(c("A/B", "B/C")))
+#' 
+#' # Custom filter combining size and group criteria
+#' size_and_group_filter <- function(region_data) {
+#'   region_data$count >= 3 & sapply(region_data$name, function(x) {
+#'     if (x == "") return(FALSE)
+#'     groups <- strsplit(x, "/")[[1]]
+#'     length(groups) >= 2
+#'   })
+#' }
+#' C <- annotation_upset_chart(factor_name = "V1", filter = size_and_group_filter)
+#' }
+#' 
+#' @name upset_filters
+NULL

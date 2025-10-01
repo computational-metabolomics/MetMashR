@@ -125,51 +125,10 @@ setMethod(
     f = "chart_plot",
     signature = c("annotation_venn_chart", "annotation_source"),
     definition = function(obj, dobj, ...) {
-        # check for dots
-        L <- list(...)
-
-        # if we got more than one table...
-        if (length(L) > 0) {
-            # gather all annotation_sources
-            L <- c(list(dobj), L)
-
-            # if only one column name, assume same column in all sources
-            if (length(obj$factor_name) == 1) {
-                obj$factor_name <- rep(obj$factor_name, length(L))
-            }
-
-            # check we have a column for all sources
-            if (length(obj$factor_name) != length(L)) {
-                stop(
-                    "You must provide either a single factor_name ",
-                    "present in all sources, or provide a factor_name ",
-                    "for each source.\n"
-                )
-            }
-
-            # get tags
-            tags <- lapply(L, param_value, name = "tag")
-            names(L) <- tags
-
-            # get tables
-            L <- lapply(L, param_value, name = "data")
-
-            # get columns
-            L <- mapply("[[", L, obj$factor_name)
-        } else if (length(obj$factor_name) > 1) {
-            # comparing multiple columns
-            L <- as.list(dobj$data[obj$factor_name])
-        } else {
-            # if we only got one table and one factor...
-            u <- unique(dobj$data[[obj$group_column]])
-
-            # construct list for Venn
-            L <- list()
-            for (k in u) {
-                this <- dobj$data[[obj$factor_name]]
-                L[[k]] <- this[dobj$data[[obj$group_column]] == k]
-            }
-        }
+        
+        # handle multiple inputs
+        L = list(...)
+        L = process_venn_dots(L,dobj,obj)
 
         # max 7(!) groups
         if (length(L) > 7) {
@@ -284,4 +243,52 @@ venn_this <- function(obj, L) {
     g <- g + coord_fixed()
 
     return(g)
+}
+
+
+
+process_venn_dots = function(L,dobj,obj){
+    # if we got more than one table...
+    if (length(L) > 0) {
+        # gather all annotation_sources
+        L <- c(list(dobj), L)
+        
+        # if only one column name, assume same column in all sources
+        if (length(obj$factor_name) == 1) {
+            obj$factor_name <- rep(obj$factor_name, length(L))
+        }
+        
+        # check we have a column for all sources
+        if (length(obj$factor_name) != length(L)) {
+            stop(
+                "You must provide either a single factor_name ",
+                "present in all sources, or provide a factor_name ",
+                "for each source.\n"
+            )
+        }
+        
+        # get tags
+        tags <- lapply(L, param_value, name = "tag")
+        names(L) <- tags
+        
+        # get tables
+        L <- lapply(L, param_value, name = "data")
+        
+        # get columns
+        L <- mapply("[[", L, obj$factor_name)
+    } else if (length(obj$factor_name) > 1) {
+        # comparing multiple columns
+        L <- as.list(dobj$data[obj$factor_name])
+    } else {
+        # if we only got one table and one factor...
+        u <- unique(dobj$data[[obj$group_column]])
+        
+        # construct list for Venn
+        L <- list()
+        for (k in u) {
+            this <- dobj$data[[obj$factor_name]]
+            L[[k]] <- this[dobj$data[[obj$group_column]] == k]
+        }
+    }
+    return(L)
 }

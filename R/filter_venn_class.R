@@ -4,20 +4,16 @@
 filter_venn <- function(factor_name,
     group_column = NULL,
     tables = NULL,
-    levels,
-    mode = "exclude",
-    perl = FALSE,
-    fixed = FALSE,
+    filter = NULL,
+    mode = "include",
     ...) {
     out <- struct::new_struct(
         "filter_venn",
         factor_name = factor_name,
         group_column = group_column,
         tables = tables,
-        levels = levels,
+        filter = filter,
         mode = mode,
-        perl = perl,
-        fixed = fixed,
         ...
     )
     return(out)
@@ -32,36 +28,37 @@ filter_venn <- function(factor_name,
         factor_name = "entity",
         group_column = "entity",
         tables = "entity",
-        levels = "entity",
+        filter = "entity",
         mode = "enum",
         filtered = "entity",
-        flags = "entity",
-        perl = "entity",
-        fixed = "entity"
+        flags = "entity"
     ),
     prototype = list(
         name = "Filter by factor levels",
         description = paste0(
             "Removes (or includes) annotations such that the named column ",
-            "excludes (or includes) the specified levels."
+            "excludes (or includes) the specified intersection levels. ",
+            "Supports any number of groups using intersection-based filtering. ",
+            "If no levels are specified, all available intersection levels ",
+            "will be returned for inspection. If invalid levels are specified, ",
+            "a warning will be shown with the list of valid levels."
         ),
         type = "univariate",
         predicted = "filtered",
         .params = c(
-            "factor_name", "group_column", "tables", "levels", "mode",
-            "perl", "fixed"
+            "factor_name", "group_column", "tables", "filter", "mode"
         ),
         .outputs = c("filtered", "flags"),
         factor_name = entity(
             name = "Factor name",
             description = paste0(
                 "The name of the column(s) in the `annotation_source` to ",
-                "generate a chart from. Up to seven columns can be compared ",
-                "for a single `annotation_source`"
+                "generate intersection groups from. Supports any number of ",
+                "columns for intersection-based filtering."
             ),
             type = "character",
             value = "V1",
-            max_length = 7
+            max_length = Inf
         ),
         group_column = entity(
             name = "Grouping column",
@@ -89,29 +86,35 @@ filter_venn <- function(factor_name,
             value = NULL,
             max_length = Inf
         ),
-        levels = entity(
-            name = "Levels",
-            description = "The venn diagram levels to filter by.",
-            type = c("character"),
-            value = "",
-            max_length = Inf
+        filter = entity(
+            name = "Intersection filter",
+            description = paste0(
+                "A function to filter intersections based on their properties. ",
+                "The function should take region_data as input and return a logical ",
+                "vector indicating which intersections to keep. ",
+                "Use upset_intersections(), upset_min_size(), upset_min_groups(), ",
+                "upset_max_groups(), or create custom filter functions."
+            ),
+            value = NULL,
+            type = c("function", "NULL"),
+            max_length = 1
         ),
         mode = enum(
             name = "Filter mode",
             description = c(
-                "exclude" = paste0(
-                    "The specified levels are removed from the annotation ",
-                    "table."
-                ),
                 "include" = paste0(
-                    "Only the specified levels are retained in the ",
-                    "annotation table."
+                    "Only items that appear in the filtered intersections ",
+                    "are kept in the output."
+                ),
+                "exclude" = paste0(
+                    "Items that appear in the filtered intersections ",
+                    "are removed from the output."
                 )
             ),
             type = c("character"),
-            value = "exclude",
+            value = "include",
             max_length = 1,
-            allowed = c("exclude", "include")
+            allowed = c("include", "exclude")
         ),
         filtered = entity(
             name = "Filtered annotations",
@@ -127,18 +130,6 @@ filter_venn <- function(factor_name,
             value = data.frame(),
             type = "data.frame",
             max_length = Inf
-        ),
-        perl = entity(
-            name = "Use perl",
-            description = "Use a Perl-compatible regex.",
-            value = FALSE,
-            type = "logical"
-        ),
-        fixed = entity(
-            name = "Fixed match",
-            description = "Use exact matching.",
-            value = FALSE,
-            type = "logical"
         )
     )
 )
@@ -152,93 +143,48 @@ setMethod(
     definition = function(M, D) {
         # tables
         L <- M$tables
+        L = process_venn_dots(L, D, M)
 
-        # if we got more than one table...
-        if (length(L) > 0) {
-            # gather all annotation_sources
-            L <- c(list(D), L)
+        # create Venn object and get region data
+        venn_obj <- ggVennDiagram::Venn(L)
+        region_data <- ggVennDiagram::process_region_data(venn_obj, sep = "/", specific = TRUE)
 
-            # if only one column name, assume same column in all sources
-            if (length(M$factor_name) == 1) {
-                M$factor_name <- rep(M$factor_name, length(L))
-            }
-
-            # check we have a column for all sources
-            if (length(M$factor_name) != length(L)) {
-                stop(
-                    "You must provide either a single factor_name ",
-                    "present in all sources, or provide a factor_name ",
-                    "for each source.\n"
-                )
-                M$factor_name <- M$factor_name[1]
-            }
-
-            # get tags
-            tags <- lapply(L, param_value, name = "tag")
-            names(L) <- tags
-
-            # get tables
-            L <- lapply(L, param_value, name = "data")
-
-            # get columns
-            L <- mapply("[[", L, M$factor_name)
-        } else if (length(M$factor_name) > 1) {
-            # comparing multiple columns
-            L <- as.list(D$data[M$factor_name])
+        # apply filter function
+        if (is.function(M$filter)) {
+            valid_regions <- M$filter(region_data)
         } else {
-            # if we only got one table and one factor...
-            u <- unique(D$data[[M$group_column]])
+            valid_regions <- rep(TRUE, nrow(region_data))
+        }
 
-            # construct list for Venn
-            L <- list()
-            for (k in u) {
-                this <- D$data[[M$factor_name]]
-                L[[k]] <- this[D$data[[M$group_column]] == k]
+        # get all items that appear in valid intersections
+        valid_items <- character(0)
+        for (j in which(valid_regions)) {
+            region_items <- region_data$item[[j]]
+            if (length(region_items) > 0) {
+                valid_items <- c(valid_items, region_items)
             }
         }
-
-        # max 7(!) groups
-        if (length(L) > 7) {
-            stop(
-                "Venn chart can only be plotted for up to 7 groups. ",
-                'Try using "Upset" plots (annotation_upset_chart) ',
-                "instead."
-            )
+        valid_items <- unique(valid_items)
+        
+        # filter the main input D based on mode
+        if (M$mode == "include") {
+            keep_rows <- D$data[[M$factor_name[1]]] %in% valid_items
+        } else {
+            keep_rows <- !(D$data[[M$factor_name[1]]] %in% valid_items)
         }
-
-        # process venn
-        this <- ggVennDiagram::process_data(ggVennDiagram::Venn(L))
-
-        # get regions
-        r <- ggVennDiagram::venn_region(this)
-
-        # add region flags
-        D$data[[".filter_venn"]] <- NA
-        for (k in seq_len(nrow(r))) {
-            # rows in table in region
-            w <- which(D$data[[M$factor_name[1]]] %in% r$item[[k]])
-            # add flags
-            D$data[[".filter_venn"]][w] <- r$name[k]
-        }
-
-        # filter
-        M2 <- filter_labels(
-            column_name = ".filter_venn",
-            labels = M$levels,
-            mode = M$mode,
-            perl = M$perl,
-            fixed = M$fixed
+        D2 <- D
+        D2$data <- D2$data[keep_rows, , drop = FALSE]
+        
+        # create flags
+        flags <- data.frame(
+            original_index = which(keep_rows),
+            region = D$data[[M$factor_name[1]]][keep_rows],
+            stringsAsFactors = FALSE
         )
-        M2 <- model_apply(M2, D)
-
-        # remove extra column
-        D2 <- predicted(M2)
-        D2$data$.filter_venn <- NULL
-
-        # update object
+        
         M$filtered <- D2
-        M$flags <- M2$flags
-
+        
+        M$flags <- flags
         return(M)
     }
 )

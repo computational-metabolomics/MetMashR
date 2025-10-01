@@ -75,6 +75,7 @@ suppressWarnings(suppressPackageStartupMessages({
     library(structToolbox)
     library(dplyr)
     library(DT)
+    library(ggplotify)
 }))
 ```
 
@@ -85,6 +86,7 @@ library(ggplot2)
 library(structToolbox)
 library(dplyr)
 library(DT)
+library(ggplotify)
 ```
 
 <br>
@@ -95,7 +97,7 @@ library(DT)
 publications, public databases and relevant toxicological assays.
 
 In this vignette we import the MTox700+ database and combine.merge and "mash" it
-with other databases to explore its contents and it's coverage of chemical, 
+with other databases to explore its contents and its coverage of chemical, 
 biological and toxicological space.
 
 <br>
@@ -239,11 +241,11 @@ C <- annotation_venn_chart(
 g1 <- chart_plot(C, predicted(M), P)
 
 C <- annotation_upset_chart(
-    factor_name = c("inchikey", "InChI.Key")
+    factor_name = c("inchikey", "InChI.Key"),
 )
-#g2 <- chart_plot(C, predicted(M), P)
-#cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
-g1
+g2 <- as.ggplot(chart_plot(C, predicted(M), P)) +
+  theme(plot.margin = unit(c(1, 1, 1, 1), "cm"))
+cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
 ```
 
 The charts show that less than half of the metabolites in MTox700+ are also 

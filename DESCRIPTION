@@ -61,8 +61,8 @@ Collate:
     'annotation_histogram2d_class.R'
     'annotation_pie_chart.R'
     'annotation_table_class.R'
-    'annotation_upset_chart_class.R'
     'annotation_venn_chart.R'
+    'annotation_upset_chart_class.R'
     'calc_ppm_diff_class.R'
     'calc_rt_diff_class.R'
     'lcms_table_class.R'
@@ -150,7 +150,8 @@ Suggests:
     tidyselect,
     ComplexUpset,
     jsonlite,
-    openxlsx
+    openxlsx,
+    ggplotify
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://computational-metabolomics.github.io/MetMashR/

@@ -7,14 +7,22 @@
 annotation_upset_chart(
   factor_name,
   group_column = NULL,
-  width_ratio = 0.2,
-  xlabel = "group",
-  sort_intersections = "descending",
-  intersections = "observed",
-  n_intersections = NULL,
-  min_size = 0,
-  queries = list(),
-  keep_empty_groups = FALSE,
+  order_intersect_by = "size",
+  order_set_by = "name",
+  nintersects = NULL,
+  filter = NULL,
+  relative_width = 0.3,
+  relative_height = 3,
+  top_bar_color = "grey30",
+  top_bar_y_label = NULL,
+  top_bar_show_numbers = TRUE,
+  top_bar_numbers_size = 3,
+  sets_bar_color = "grey30",
+  sets_bar_show_numbers = FALSE,
+  sets_bar_x_label = "Set Size",
+  sets_bar_position = "left",
+  intersection_matrix_color = "grey30",
+  specific = TRUE,
   ...
 )
 }
@@ -29,35 +37,68 @@ table is considered to be a group. This parameter is also ignored if
 more than one \code{factor_name} is provided, as each column is considered
 a group. The default is \code{NULL}.}
 
-\item{width_ratio}{(numeric) Proportion of plot given to set size bar
-chart. The default is \code{0.2}.\cr}
+\item{order_intersect_by}{(character) Order intersect by. Allowed
+values are limited to the following: \itemize{ \item{\code{"size"}:
+Intersections are sorted by size (largest
+first).}\item{\code{"name"}: Intersections are sorted by name
+alphabetically.}\item{\code{"none"}: Intersections are not sorted.}}
+The default is \code{"size"}.}
 
-\item{xlabel}{(character) The label used for the x-axis. The default
-is \code{"group"}.}
+\item{order_set_by}{(character) Order set by. Allowed values are
+limited to the following: \itemize{ \item{\code{"size"}: Sets are
+sorted by size (largest first).}\item{\code{"name"}: Sets are sorted
+by name alphabetically.}\item{\code{"none"}: Sets are not sorted.}}
+The default is \code{"name"}.}
 
-\item{sort_intersections}{(character) Sort intersections. Allowed
-values are limited to the following: \itemize{
-\item{\code{"ascending"}: Groups are sorted by increasing
-size.}\item{\code{"descending"}: Groups are sorted by decreasing
-size.}\item{\code{"none"}: Groups are not sorted.}} The default is
-\code{"descending"}.}
-
-\item{intersections}{(character, list) The intersections to include
-in the plot. The default is \code{"observed"}.}
-
-\item{n_intersections}{(numeric, integer, NULL) The number of
+\item{nintersects}{(numeric, integer, NULL) The number of
 intersections to include in the plot. The default is \code{NULL}.}
 
-\item{min_size}{(numeric, integer) The minimum size of an
-intersection for it to be included in the plot. The default is
-\code{0}.\cr}
+\item{filter}{(function, NULL) A function or list of functions to
+filter intersections based on their properties. The function(s)
+should take region_data as input and return a logical vector
+indicating which intersections to keep. Use upset_min_size(),
+upset_min_groups(), upset_max_groups(), upset_intersections(), or
+create custom filter functions. The default is \code{NULL}.}
 
-\item{queries}{(list) A list of upset queries. The default is
-\code{list()}.}
+\item{relative_width}{(numeric) The relative width of the left panel
+in the upset plot. The default is \code{0.3}.\cr}
 
-\item{keep_empty_groups}{(logical) Whether empty sets should be kept
-(including sets which are only empty after filtering by size). The
-default is \code{FALSE}.\cr}
+\item{relative_height}{(numeric) The relative height of the top panel
+in the upset plot. The default is \code{3}.\cr}
+
+\item{top_bar_color}{(character) The color of the top bar chart
+showing intersection sizes. The default is \code{"grey30"}.}
+
+\item{top_bar_y_label}{(character, NULL) The label for the Y-axis of
+the top bar chart. The default is \code{NULL}.}
+
+\item{top_bar_show_numbers}{(logical) Whether to show numbers on the
+top bar chart. The default is \code{TRUE}.\cr}
+
+\item{top_bar_numbers_size}{(numeric) The text size of numbers on the
+top bar chart. The default is \code{3}.\cr}
+
+\item{sets_bar_color}{(character) The color of the sets bar chart.
+The default is \code{"grey30"}.}
+
+\item{sets_bar_show_numbers}{(logical) Whether to show numbers on the
+sets bar chart. The default is \code{FALSE}.\cr}
+
+\item{sets_bar_x_label}{(character) The label for the X-axis of the
+sets bar chart. The default is \code{"Set Size"}.}
+
+\item{sets_bar_position}{(character) Sets bar position. Allowed
+values are limited to the following: \itemize{ \item{\code{"left"}:
+Position the sets bar chart on the left side.}\item{\code{"right"}:
+Position the sets bar chart on the right side.}} The default is
+\code{"left"}.}
+
+\item{intersection_matrix_color}{(character) The color of the
+intersection matrix dots and lines. The default is \code{"grey30"}.}
+
+\item{specific}{(logical) Whether to include only specific items in
+subsets (TRUE) or all overlapping items (FALSE). The default is
+\code{TRUE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -74,7 +115,34 @@ of an annotation_source.
 }
 \details{
 This object makes use of functionality from the following
-packages:\itemize{ \item{\code{ComplexUpset}}}
+packages:\itemize{ \item{\code{ggVennDiagram}}}
+
+The plot
+object returned is of class 'aplot' which may not be compatible with all plot
+combination functions. To combine with other ggplot objects using cowplot or
+patchwork, use ggplotify::as.ggplot() to convert the plot object:
+
+\preformatted{
+library(ggplotify)
+g <- chart_plot(C, data)
+g_ggplot <- as.ggplot(g)
+cowplot::plot_grid(g1, g_ggplot, nrow = 1)
+}
+}
+\note{
+The interface to this class has changed. Some parameters have been renamed:
+\itemize{
+\item 'width_ratio' -> 'relative_width'
+\item 'xlabel' -> 'top_bar_y_label'
+\item 'sort_intersections' -> 'order_intersect_by'
+\item 'intersections' -> 'nintersects'
+\item 'n_intersections' -> 'nintersects'
+\item 'queries' -> (removed)
+\item 'keep_empty_group' -> (removed)
+\item 'sort_sets' -> 'order_set_by'
+}
+
+Old parameter names will trigger deprecation warnings.
 }
 \section{Inheritance}{
 
@@ -83,29 +151,54 @@ classes: \cr\cr
 \verb{[annotation_upset_chart]} -> \verb{[chart]} -> \verb{[struct_class]}
 }
 
+\section{Filtering}{
+
+Use the \code{filter} parameter to filter intersections based on their properties:
+
+\preformatted{
+# Filter by minimum size
+C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_size(5))
+
+# Filter by minimum number of groups
+C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_groups(3))
+
+# Filter to show only specific combinations
+C <- annotation_upset_chart(factor_name = "V1", 
+                          filter = upset_intersections(c("A/B", "B/C")))
+
+# Custom filter function
+custom_filter <- function(region_data) {
+  region_data$count >= 3 & grepl("A", region_data$name)
+}
+C <- annotation_upset_chart(factor_name = "V1", filter = custom_filter)
+}
+}
+
 \examples{
 M <- annotation_upset_chart(
         factor_name = "V1",
         group_column = NULL,
-        width_ratio = 0.2,
-        xlabel = "group",
-        sort_intersections = "descending",
-        intersections = "observed",
-        n_intersections = NULL,
-        min_size = 0,
-        queries = list(),
-        keep_empty_groups = FALSE)
+        order_intersect_by = "size",
+        order_set_by = "name",
+        nintersects = NULL,
+        filter = NULL,
+        relative_width = 0.3,
+        relative_height = 3,
+        top_bar_color = "grey30",
+        top_bar_y_label = NULL,
+        top_bar_show_numbers = FALSE,
+        top_bar_numbers_size = 3,
+        sets_bar_color = "grey30",
+        sets_bar_show_numbers = FALSE,
+        sets_bar_x_label = "Set Size",
+        sets_bar_position = "left",
+        intersection_matrix_color = "grey30",
+        specific = FALSE)
 
 }
 \references{
-Krassowski M (2020). "ComplexUpset."
-doi:10.5281/zenodo.3700590 \url{https://doi.org/10.5281/zenodo.3700590},
-\url{https://doi.org/10.5281/zenodo.3700590}.
-
-Lex A, Gehlenborg N, Strobelt H, Vuillemot R, Pfister H
-(2014). "UpSet: Visualization of Intersecting Sets,." \emph{IEEE
-Transactions on Visualization and Computer Graphics}, \emph{20}(12),
-1983–1992. doi:10.1109/TVCG.2014.2346248
-\url{https://doi.org/10.1109/TVCG.2014.2346248},
-\url{https://doi.org/10.1109/TVCG.2014.2346248}.
+Gao C, Dusa A (2025). \emph{ggVennDiagram: A 'ggplot2'
+Implement of Venn Diagram}. doi:10.32614/CRAN.package.ggVennDiagram
+\url{https://doi.org/10.32614/CRAN.package.ggVennDiagram}, R package
+version 1.5.4, \url{https://CRAN.R-project.org/package=ggVennDiagram}.
 }

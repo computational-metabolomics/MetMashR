@@ -8,17 +8,15 @@ filter_venn(
   factor_name,
   group_column = NULL,
   tables = NULL,
-  levels,
-  mode = "exclude",
-  perl = FALSE,
-  fixed = FALSE,
+  filter = NULL,
+  mode = "include",
   ...
 )
 }
 \arguments{
 \item{factor_name}{(character) The name of the column(s) in the
-\code{annotation_source} to generate a chart from. Up to seven columns can
-be compared for a single \code{annotation_source}.}
+\code{annotation_source} to generate intersection groups from. Supports
+any number of columns for intersection-based filtering.}
 
 \item{group_column}{(character, NULL) The name of the column in the
 \code{annotation_source} to create groups from in the Venn diagram. This
@@ -32,19 +30,19 @@ the venn groups from. If the only table of interest is the table
 coming in from \code{model_apply} then set \code{tables = NULL} and use
 \code{group_column}. The default is \code{NULL}.}
 
-\item{levels}{(character) The venn diagram levels to filter by.}
+\item{filter}{(function, NULL) A function to filter intersections
+based on their properties. The function should take region_data as
+input and return a logical vector indicating which intersections to
+keep. Use upset_intersections(), upset_min_size(),
+upset_min_groups(), upset_max_groups(), or create custom filter
+functions. The default is \code{NULL}.}
 
 \item{mode}{(character) Filter mode. Allowed values are limited to
-the following: \itemize{ \item{\code{"exclude"}: The specified levels
-are removed from the annotation table.}\item{\code{"include"}: Only
-the specified levels are retained in the annotation table.}} The
-default is \code{"exclude"}.}
-
-\item{perl}{(logical) Use a Perl-compatible regex. The default is
-\code{FALSE}.\cr}
-
-\item{fixed}{(logical) Use exact matching. The default is
-\code{FALSE}.\cr}
+the following: \itemize{ \item{\code{"include"}: Only items that
+appear in the filtered intersections are kept in the
+output.}\item{\code{"exclude"}: Items that appear in the filtered
+intersections are removed from the output.}} The default is
+\code{"include"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -60,7 +58,11 @@ annotations were removed. \cr
 }
 \description{
 Removes (or includes) annotations such that the named
-column excludes (or includes) the specified levels.
+column excludes (or includes) the specified intersection levels.
+Supports any number of groups using intersection-based filtering. If
+no levels are specified, all available intersection levels will be
+returned for inspection. If invalid levels are specified, a warning
+will be shown with the list of valid levels.
 }
 \section{Inheritance}{
 
@@ -74,9 +76,7 @@ M <- filter_venn(
         factor_name = "V1",
         group_column = NULL,
         tables = NULL,
-        levels = "",
-        mode = "exclude",
-        perl = FALSE,
-        fixed = FALSE)
+        filter = NULL,
+        mode = "include")
 
 }

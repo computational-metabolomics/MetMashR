@@ -71,6 +71,7 @@ suppressPackageStartupMessages({
     library(structToolbox)
     library(dplyr)
     library(DT)
+    library(ggplotify)
 })
 ```
 
@@ -78,7 +79,10 @@ suppressPackageStartupMessages({
 # load the packages
 library(MetMashR)
 library(ggplot2)
+library(structToolbox)
 library(dplyr)
+library(DT)
+library(ggplotify)
 ```
 
 <br>
@@ -443,17 +447,16 @@ ls <- lapply(LS, predicted)
 g2 <- chart_plot(C, ls) + ggtitle("Compounds in LS per assay")
 
 # prepare upset object
-#C2 <- annotation_upset_chart(
-#    factor_name = "compound",
-#    n_intersections = 10
-#)
-#g3 <- chart_plot(C2, cd)
-#C2$factor_name <- "LipidName"
-#g4 <- chart_plot(C2, ls)
+C2 <- annotation_upset_chart(
+    factor_name = "compound",
+    nintersects = 10,
+)
+g3 <- chart_plot(C2, cd)
+C2$factor_name <- "LipidName"
+g4 <- chart_plot(C2, ls)
 
 # layout
-#cowplot::plot_grid(g1, g2, g3, g4, nrow = 2)
-cowplot::plot_grid(g1, g2, nrow = 2)
+cowplot::plot_grid(g1, g2, as.ggplot(g3), as.ggplot(g4), nrow = 2)
 
 ```
 
@@ -736,10 +739,9 @@ UpSet plot corresponds to a region in the venn diagram.
 # upset inchikey columns
 C <- annotation_upset_chart(
     factor_name = c("InChIKey", "InChIKey_norm", "stdinchikey_opsin"),
-    min_size = 0,
-    n_intersections = 10
+    nintersects = 10
 )
-#chart_plot(C, predicted(N[3]))
+chart_plot(C, predicted(N[3]))
 ```
 
 In the next chart we visualise the proportion of annotations from each query,
@@ -940,8 +942,7 @@ for (k in c("HILIC_NEG", "HILIC_POS", "LIPIDS_NEG", "LIPIDS_POS")) {
     V <- filter_venn(
         factor_name = "inchikey",
         tables = list(predicted(wf1)),
-        levels = "Standards/Annotations",
-        mode = "include"
+        mode = 'exclude'
     )
     V <- model_apply(V, predicted(wf2))
     VV[[k]] <- predicted(V)
