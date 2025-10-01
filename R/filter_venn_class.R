@@ -207,7 +207,7 @@ setMethod(
         }
 
         # process venn
-        this <- ggVennDiagram::process_data(RVenn::Venn(L))
+        this <- ggVennDiagram::process_data(ggVennDiagram::Venn(L))
 
         # get regions
         r <- ggVennDiagram::venn_region(this)
