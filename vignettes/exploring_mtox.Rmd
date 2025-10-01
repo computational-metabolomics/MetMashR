@@ -139,37 +139,7 @@ M <- model_apply(M, MT)
 
 The chemical (or "metabolite") space covered by the 
 MTox700+ database can be explored in several ways using the data included in 
-the database.
-
-For example, we can generate images of the molecules using the SMILES included 
-in the database. Here we generate images of the first 6 metabolites in the 
-database.
-
-```{r}
-# prepare chart
-C <- openbabel_structure(
-    smiles_column = "smiles",
-    row_index = 1,
-    scale_to_fit = FALSE,
-    image_size = 300,
-    title_column = "metabolite_name",
-    view_port = 400
-)
-
-# first six
-G <- list()
-for (k in 1:6) {
-    # set row idx
-    C$row_index <- k
-    # plot
-    G[[k]] <- chart_plot(C, predicted(M))
-}
-
-# layout
-cowplot::plot_grid(plotlist = G, nrow = 2)
-```
-
-The MTox700+ database also contains information about the structural 
+the database, which contains information about the structural 
 classification of the metabolites based on ChemOnt (a chemical taxonomy) and
 ClassyFire (software to compute the taxonomy of a structure) 
 [10.1186/s13321-016-0174-y].

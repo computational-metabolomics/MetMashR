@@ -103,7 +103,6 @@ Collate:
     'mzrt_match_class.R'
     'normalise_lipids_class.R'
     'normalise_strings_class.R'
-    'openbabel_structure_chart.R'
     'opsin_lookup_class.R'
     'pivot_columns_class.R'
     'prioritise_columns_class.R'
@@ -136,7 +135,6 @@ Suggests:
     BiocStyle,
     BiocFileCache,
     msPurity,
-    ChemmineOB,
     rsvg,
     metabolomicsWorkbenchR,
     KEGGREST,

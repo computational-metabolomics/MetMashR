@@ -477,8 +477,7 @@ pubchem_smile_cache <- rds_database(
 ```
 
 In practice it is better to create your own cache using e.g. `rds_database`, 
-`sql_database` or other `struct_database` objects with write access. See 
-the vignette [TODO] for more details.
+`sql_database` or other `struct_database` objects with write access.
 
 ```{r,message=FALSE, include=TRUE, eval=TRUE}
 # prepare sequence
@@ -527,30 +526,6 @@ M <- model_apply(M, mwb_source(source = "AN000465"))
 Note that because the first step in the workflow is to import data from 
 Metabolomics Workbench, we only need to provide an empty annotation_table as 
 input to `model_apply` as it will be updated when we run the workflow.
-
-Once the table has been processed by our workflow we then use OpenBabel to
-generate images of the molecular structures from SMILES.
-
-```{r}
-# prepare chart
-C <- openbabel_structure(
-    smiles_column = "CanonicalSMILES",
-    row_index = 1,
-    scale_to_fit = FALSE,
-    view_port = 400,
-    image_size = 500
-)
-
-# loop over some records and plot some of the molecules
-G <- list()
-x <- 1
-for (k in c(3, 5)) {
-    C$row_index <- k
-    G[[x]] <- chart_plot(C, predicted(M))
-    x <- x + 1
-}
-cowplot::plot_grid(plotlist = G, nrow = 1, labels = "AUTO")
-```
 
 # Summary
 Extending the templates provided by `struct` to implement workflow steps for 

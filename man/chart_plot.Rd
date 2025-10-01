@@ -3,8 +3,8 @@
 %   R/annotation_histogram_class.R, R/annotation_histogram2d_class.R,
 %   R/annotation_pie_chart.R, R/annotation_upset_chart_class.R,
 %   R/annotation_venn_chart.R, R/chart_plot_doc.R,
-%   R/mwb_structure_chart_class.R, R/openbabel_structure_chart.R,
-%   R/pubchem_structure_chart_class.R, R/pubchem_widget.R
+%   R/mwb_structure_chart_class.R, R/pubchem_structure_chart_class.R,
+%   R/pubchem_widget.R
 \name{chart_plot,annotation_bar_chart,annotation_source-method}
 \alias{chart_plot,annotation_bar_chart,annotation_source-method}
 \alias{chart_plot,annotation_histogram,annotation_source-method}
@@ -16,8 +16,6 @@
 \alias{chart_plot,annotation_venn_chart,list-method}
 \alias{chart_plot}
 \alias{chart_plot,mwb_structure,annotation_source-method}
-\alias{chart_plot,openbabel_structure,character-method}
-\alias{chart_plot,openbabel_structure,annotation_source-method}
 \alias{chart_plot,pubchem_structure,annotation_source-method}
 \alias{chart_plot,pubchem_widget,annotation_source-method}
 \title{chart_plot method}
@@ -39,10 +37,6 @@
 \S4method{chart_plot}{annotation_venn_chart,list}(obj, dobj)
 
 \S4method{chart_plot}{mwb_structure,annotation_source}(obj, dobj)
-
-\S4method{chart_plot}{openbabel_structure,character}(obj, dobj)
-
-\S4method{chart_plot}{openbabel_structure,annotation_source}(obj, dobj)
 
 \S4method{chart_plot}{pubchem_structure,annotation_source}(obj, dobj)
 
