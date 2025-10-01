@@ -73,6 +73,7 @@ M <- pubchem_structure(
 }
 \references{
 Wilke C (2025). \emph{cowplot: Streamlined Plot Theme and Plot
-Annotations for 'ggplot2'}. R package version 1.2.0,
-\url{https://CRAN.R-project.org/package=cowplot}.
+Annotations for 'ggplot2'}. doi:10.32614/CRAN.package.cowplot
+\url{https://doi.org/10.32614/CRAN.package.cowplot}, R package version
+1.2.0, \url{https://CRAN.R-project.org/package=cowplot}.
 }

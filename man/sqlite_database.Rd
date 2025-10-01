@@ -44,8 +44,9 @@ M <- sqlite_database(
 }
 \references{
 Müller K, Wickham H, James DA, Falcon S (2025). \emph{RSQLite:
-SQLite Interface for R}. R package version 2.4.3,
-\url{https://CRAN.R-project.org/package=RSQLite}.
+SQLite Interface for R}. doi:10.32614/CRAN.package.RSQLite
+\url{https://doi.org/10.32614/CRAN.package.RSQLite}, R package version
+2.4.3, \url{https://CRAN.R-project.org/package=RSQLite}.
 }
 \seealso{
 Other database: 

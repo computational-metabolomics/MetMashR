@@ -45,12 +45,16 @@ M <- filter_records(
 }
 \references{
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+doi:10.32614/CRAN.package.dplyr
+\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
 1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 
 Henry L, Wickham H (2025). \emph{rlang: Functions for Base
-Types and Core R and 'Tidyverse' Features}. R package version 1.1.6,
-\url{https://CRAN.R-project.org/package=rlang}.
+Types and Core R and 'Tidyverse' Features}.
+doi:10.32614/CRAN.package.rlang
+\url{https://doi.org/10.32614/CRAN.package.rlang}, R package version
+1.1.6, \url{https://CRAN.R-project.org/package=rlang}.
 }
 \seealso{
 \code{\link[dplyr:filter]{dplyr::filter()}}

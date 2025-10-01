@@ -82,6 +82,7 @@ M <- annotation_venn_chart(
 }
 \references{
 Gao C, Dusa A (2025). \emph{ggVennDiagram: A 'ggplot2'
-Implement of Venn Diagram}. R package version 1.5.4,
-\url{https://CRAN.R-project.org/package=ggVennDiagram}.
+Implement of Venn Diagram}. doi:10.32614/CRAN.package.ggVennDiagram
+\url{https://doi.org/10.32614/CRAN.package.ggVennDiagram}, R package
+version 1.5.4, \url{https://CRAN.R-project.org/package=ggVennDiagram}.
 }

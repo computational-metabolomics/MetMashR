@@ -77,10 +77,10 @@ M <- BiocFileCache_database(
 
 }
 \references{
-Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files
+Shepherd L, Morgan M (2025). \emph{BiocFileCache: Manage Files
 Across Sessions}. doi:10.18129/B9.bioc.BiocFileCache
 \url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
-2.14.0, \url{https://bioconductor.org/packages/BiocFileCache}.
+2.99.6, \url{https://bioconductor.org/packages/BiocFileCache}.
 }
 \seealso{
 Other database: 

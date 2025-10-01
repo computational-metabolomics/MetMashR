@@ -71,14 +71,16 @@ M <- AnnotationDb_select(
 }
 \references{
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}. R package version
+(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+doi:10.32614/CRAN.package.dplyr
+\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
 1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
 
-Pagès H, Carlson M, Falcon S, Li N (2024).
+Pagès H, Carlson M, Falcon S, Li N (2025).
 \emph{AnnotationDbi: Manipulation of SQLite-based annotations in
 Bioconductor}. doi:10.18129/B9.bioc.AnnotationDbi
 \url{https://doi.org/10.18129/B9.bioc.AnnotationDbi}, R package version
-1.68.0, \url{https://bioconductor.org/packages/AnnotationDbi}.
+1.71.1, \url{https://bioconductor.org/packages/AnnotationDbi}.
 }
 \seealso{
 \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}

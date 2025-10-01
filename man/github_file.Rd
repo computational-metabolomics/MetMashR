@@ -73,12 +73,13 @@ M <- github_file(
 
 }
 \references{
-Shepherd L, Morgan M (2024). \emph{BiocFileCache: Manage Files
+Shepherd L, Morgan M (2025). \emph{BiocFileCache: Manage Files
 Across Sessions}. doi:10.18129/B9.bioc.BiocFileCache
 \url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
-2.14.0, \url{https://bioconductor.org/packages/BiocFileCache}.
+2.99.6, \url{https://bioconductor.org/packages/BiocFileCache}.
 
 Wickham H (2023). \emph{httr: Tools for Working with URLs and
-HTTP}. R package version 1.4.7,
-\url{https://CRAN.R-project.org/package=httr}.
+HTTP}. doi:10.32614/CRAN.package.httr
+\url{https://doi.org/10.32614/CRAN.package.httr}, R package version
+1.4.7, \url{https://CRAN.R-project.org/package=httr}.
 }
