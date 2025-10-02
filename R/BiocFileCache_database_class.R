@@ -177,8 +177,7 @@ setMethod(
             x = bfc,
             rid = rid,
             ask = FALSE,
-            FUN = obj$bfc_fun,
-            verbose = FALSE
+            FUN = obj$bfc_fun
         )
     }
 
