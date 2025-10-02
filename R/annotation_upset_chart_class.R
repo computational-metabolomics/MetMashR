@@ -446,6 +446,7 @@ setMethod(
 )
 
 # Filter functions for intersection filtering
+#' @rdname upset_filters
 #' @export
 upset_min_size <- function(min_size) {
     function(region_data) {
@@ -453,6 +454,7 @@ upset_min_size <- function(min_size) {
     }
 }
 
+#' @rdname upset_filters
 #' @export
 upset_min_groups <- function(min_groups) {
     function(region_data) {
@@ -465,6 +467,7 @@ upset_min_groups <- function(min_groups) {
     }
 }
 
+#' @rdname upset_filters
 #' @export
 upset_max_groups <- function(max_groups) {
     function(region_data) {
@@ -477,6 +480,7 @@ upset_max_groups <- function(max_groups) {
     }
 }
 
+#' @rdname upset_filters
 #' @export
 upset_intersections <- function(combinations) {
     function(region_data) {
