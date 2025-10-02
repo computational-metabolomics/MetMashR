@@ -59,7 +59,7 @@ Bioconductor}. doi:10.18129/B9.bioc.AnnotationDbi
 1.71.1, \url{https://bioconductor.org/packages/AnnotationDbi}.
 }
 \seealso{
-\code{\link[GO.db:GOBASE]{GO.db::GO()}}
+\pkg{GO.db}
 
 Other annotation databases: 
 \code{\link{AnnotationDb_database}},

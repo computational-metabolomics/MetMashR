@@ -2,7 +2,7 @@
 #' @export
 #' @include AnnotationDb_database.R
 #' @family annotation databases
-#' @seealso [GO.db::GO()]
+#' @seealso \pkg{GO.db}
 GO_database <- function(source = "GO.db",
     table = "GOBPOFFSPRING",
     ...) {
