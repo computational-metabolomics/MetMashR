@@ -69,8 +69,8 @@ annotation_upset_chart <- function(
     ...) {
     
     # check for old usage
-    dots = list(...)
-    old_slots=c(
+    dots <- list(...)
+    old_slots <- c(
         'width_ratio',
         'xlabel',
         'min_size',
@@ -81,8 +81,8 @@ annotation_upset_chart <- function(
         'keep_empty_group',
         'sort_sets'
     )
-    used_old = intersect(names(dots),old_slots)
-    check = length(used_old)>0
+    used_old <- intersect(names(dots),old_slots)
+    check <- length(used_old)>0
     
     if (check){
         .Deprecated('annotation_upset_chart (new signature)',
@@ -359,8 +359,8 @@ setMethod(
     definition = function(obj, dobj, ...) {
 
         # handle multiple inputs
-        L = list(...)
-        L = process_venn_dots(L, dobj, obj)
+        L <- list(...)
+        L <- process_venn_dots(L, dobj, obj)
 
         # create Venn object for ggVennDiagram
         venn_obj <- ggVennDiagram::Venn(L)

@@ -1,3 +1,10 @@
+# MetMashR v1.3.3
+* Change interface to annotation_upset
+* Use ggVennDiagram instead of ComplexUpset and RVenn
+* Re-use upset code for filter_venn
+* Remove openbabel_structure and ChemmineOB dependency
+* Set bg colour of annotation_barchart to white
+
 # MetMashR v0.99.0
 * Preparation for Bioc submission
 

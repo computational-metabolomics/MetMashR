@@ -143,7 +143,7 @@ setMethod(
     definition = function(M, D) {
         # tables
         L <- M$tables
-        L = process_venn_dots(L, D, M)
+        L <- process_venn_dots(L, D, M)
 
         # create Venn object and get region data
         venn_obj <- ggVennDiagram::Venn(L)
