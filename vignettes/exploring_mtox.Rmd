@@ -149,7 +149,7 @@ ClassyFire (software to compute the taxonomy of a structure)
 In this plot we show the number of metabolites in the MTox700+ database that 
 are assigned to a "superclass" of molecules.
 
-```{r,fig.height=7.5,fig.width=7.5}
+```{r,fig.height=5,fig.width=7.5}
 # initialise chart object
 C <- annotation_bar_chart(
     factor_name = "superclass",
@@ -160,15 +160,23 @@ C <- annotation_bar_chart(
 )
 
 # plot
-g <- chart_plot(C, predicted(M)) + ylim(c(0, 600)) +
-    guides(fill = guide_legend(nrow = 6, title = element_blank())) +
-    theme(legend.position = "bottom", legend.margin = margin())
+g <- 
+    chart_plot(C, predicted(M)) + 
+    ylim(c(0, 600)) +
+    guides(
+        fill = guide_legend(ncol = 1, title = NULL),byrow=TRUE) +
+    theme(
+        legend.position = "right", 
+        legend.margin = margin(),
+        legend.key.size = unit(0.5, "cm"),   
+        legend.text = element_text(size = 10)
+    )
 
 # layout
 leg <- cowplot::get_legend(g)
 cowplot::plot_grid(g + theme(legend.position = "none"), leg,
-    nrow = 2,
-    rel_heights = c(75, 25)
+    nrow = 1,
+    rel_widths = c(50, 50)
 )
 ```
 

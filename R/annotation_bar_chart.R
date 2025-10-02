@@ -182,8 +182,10 @@ setMethod(
             coord_cartesian(clip = "off") +
             structToolbox:::theme_Publication(12) +
             scale_fill_Publication() +
-            theme_Publication()
-
+            theme(
+                panel.background = element_rect(fill = "white", colour = NA),  # the plotting area background
+                plot.background  = element_rect(fill = "white", colour = NA)  # the full plot background
+            )
         # legend
         if (!obj$legend) {
             g <- g + theme(legend.position = "none")
