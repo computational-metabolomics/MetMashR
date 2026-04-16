@@ -81,8 +81,8 @@ M <- pubchem_widget(
 }
 \references{
 Cheng J, Sievert C, Schloerke B, Chang W, Xie Y, Allen J
-(2024). \emph{htmltools: Tools for HTML}.
+(2025). \emph{htmltools: Tools for HTML}.
 doi:10.32614/CRAN.package.htmltools
 \url{https://doi.org/10.32614/CRAN.package.htmltools}, R package version
-0.5.8.1, \url{https://CRAN.R-project.org/package=htmltools}.
+0.5.9, \url{https://CRAN.R-project.org/package=htmltools}.
 }

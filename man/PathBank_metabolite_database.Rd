@@ -70,7 +70,7 @@ M <- PathBank_metabolite_database(
 Shepherd L, Morgan M (2025). \emph{BiocFileCache: Manage Files
 Across Sessions}. doi:10.18129/B9.bioc.BiocFileCache
 \url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
-2.99.6, \url{https://bioconductor.org/packages/BiocFileCache}.
+3.0.0, \url{https://bioconductor.org/packages/BiocFileCache}.
 
 Wickham H (2023). \emph{httr: Tools for Working with URLs and
 HTTP}. doi:10.32614/CRAN.package.httr

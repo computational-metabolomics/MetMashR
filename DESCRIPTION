@@ -1,7 +1,7 @@
 Package: MetMashR
 Type: Package
 Title: Metabolite Mashing with R
-Version: 1.5.0
+Version: 1.5.1
 Authors@R: c(
     person(
         c("Gavin","Rhys"),
@@ -36,11 +36,10 @@ Imports:
     httr,
     scales,
     ggthemes,
-    ggplot2,
     utils,
     rlang,
-    cowplot,
-    stats
+    stats,
+    ggplot2
 Collate: 
     'generics.R'
     'zzz.R'
@@ -151,7 +150,8 @@ Suggests:
     ComplexUpset,
     jsonlite,
     openxlsx,
-    ggplotify
+    ggplotify,
+    cowplot
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://computational-metabolomics.github.io/MetMashR/

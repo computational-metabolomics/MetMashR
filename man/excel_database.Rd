@@ -67,7 +67,7 @@ M <- excel_database(
 Schauberger P, Walker A (2025). \emph{openxlsx: Read, Write
 and Edit xlsx Files}. doi:10.32614/CRAN.package.openxlsx
 \url{https://doi.org/10.32614/CRAN.package.openxlsx}, R package version
-4.2.8, \url{https://CRAN.R-project.org/package=openxlsx}.
+4.2.8.1, \url{https://CRAN.R-project.org/package=openxlsx}.
 }
 \seealso{
 Other annotation databases: 

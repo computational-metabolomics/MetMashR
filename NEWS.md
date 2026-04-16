@@ -1,3 +1,8 @@
+# MetMashR v1.5.1
+* Rebuild documentation
+* move cowplot to Suggests
+* add ggplot2 to namespace imports
+
 # MetMashR v1.3.3
 * Change interface to annotation_upset
 * Use ggVennDiagram instead of ComplexUpset and RVenn

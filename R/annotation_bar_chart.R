@@ -1,5 +1,6 @@
 #' @eval get_description('annotation_bar_chart')
 #' @include annotation_source_class.R
+#' @import ggplot2
 #' @export
 annotation_bar_chart <- function(factor_name,
     label_rotation = FALSE,
