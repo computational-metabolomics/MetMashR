@@ -1,3 +1,6 @@
+# MetMashR v1.7.1
+* add ChEBI lookup class
+
 # MetMashR v1.5.1
 * Rebuild documentation
 * move cowplot to Suggests
