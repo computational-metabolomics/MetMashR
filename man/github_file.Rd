@@ -26,11 +26,11 @@ the specified GitHub repository.}
 \item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache
 the database locally and prevent unnecessary downloads. If a path is
 provided then \code{BiocFileCache} will use this location. If NULL it will
-use the default location (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for
+use the default location (see \code{\link[BiocFileCache:BiocFileCache]{BiocFileCache::BiocFileCache()}} for
 details). The default is \code{NULL}.}
 
 \item{resource_name}{(character) The name given to this resource in
-the cache. (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details). The
+the cache. (see \code{\link[BiocFileCache:BiocFileCache]{BiocFileCache::BiocFileCache()}} for details). The
 default is \code{paste(username, repository_name, file_path, sep =
 "_")}.}
 
@@ -73,13 +73,11 @@ M <- github_file(
 
 }
 \references{
-Shepherd L, Morgan M (2025). \emph{BiocFileCache: Manage Files
-Across Sessions}. doi:10.18129/B9.bioc.BiocFileCache
-\url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
-3.0.0, \url{https://bioconductor.org/packages/BiocFileCache}.
+Shepherd L, Morgan M (2026). \emph{BiocFileCache: Manage Files
+Across Sessions}. R package version 3.2.0.
 
-Wickham H (2023). \emph{httr: Tools for Working with URLs and
+Wickham H (2026). \emph{httr: Tools for Working with URLs and
 HTTP}. doi:10.32614/CRAN.package.httr
-\url{https://doi.org/10.32614/CRAN.package.httr}, R package version
-1.4.7, \url{https://CRAN.R-project.org/package=httr}.
+\url{https://doi.org/10.32614/CRAN.package.httr}. R package version
+1.4.8, \url{https://CRAN.R-project.org/package=httr}.
 }

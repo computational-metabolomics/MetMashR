@@ -26,7 +26,6 @@ Description: A package to merge, filter sort, organise and otherwise mash
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.3.3
 Depends: 
     R (>= 4.3.0),
     struct
@@ -67,8 +66,10 @@ Collate:
     'lcms_table_class.R'
     'cd_source_class.R'
     'chart_plot_doc.R'
+    'chebi_lookup_parsers.R'
     'rest_api_parsers.R'
     'rest_api_class.R'
+    'chebi_lookup_class.R'
     'classyfire_lookup_class.R'
     'combine_columns_class.R'
     'combine_records_class.R'
@@ -158,3 +159,4 @@ URL: https://computational-metabolomics.github.io/MetMashR/
 Roxygen: list(markdown = TRUE)
 biocViews: WorkflowStep, Metabolomics, KEGG
 BugReports: https://github.com/computational-metabolomics/MetMashR/issues
+Config/roxygen2/version: 8.0.0

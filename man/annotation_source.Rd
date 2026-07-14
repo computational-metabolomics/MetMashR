@@ -43,13 +43,13 @@ M <- annotation_source(
 
 }
 \seealso{
-Other annotation databases: 
-\code{\link{AnnotationDb_database}},
-\code{\link{GO_database}},
-\code{\link{annotation_database}},
-\code{\link{excel_database}},
-\code{\link{rdata_database}},
-\code{\link{rds_cache}},
-\code{\link{rds_database}}
+Other annotation databases:
+\code{\link[=AnnotationDb_database]{AnnotationDb_database()}},
+\code{\link[=GO_database]{GO_database()}},
+\code{\link[=annotation_database]{annotation_database()}},
+\code{\link[=excel_database]{excel_database()}},
+\code{\link[=rdata_database]{rdata_database()}},
+\code{\link[=rds_cache]{rds_cache()}},
+\code{\link[=rds_database]{rds_database()}}
 }
 \concept{annotation databases}

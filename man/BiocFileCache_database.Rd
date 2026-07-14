@@ -20,18 +20,18 @@ BiocFileCache_database(
 \item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache
 the database locally and prevent unnecessary downloads. If a path is
 provided then \code{BiocFileCache} will use this location. If NULL it will
-use the default location (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for
+use the default location (see \code{\link[BiocFileCache:BiocFileCache]{BiocFileCache::BiocFileCache()}} for
 details). The default is \code{NULL}.}
 
 \item{resource_name}{(character) The name given to this resource in
-the cache. (see \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::BiocFileCache()}} for details).}
+the cache. (see \code{\link[BiocFileCache:BiocFileCache]{BiocFileCache::BiocFileCache()}} for details).}
 
 \item{bfc_fun}{(function) A function to process the object before
 storing it in the cache, e.g. to store an unzipped file in the cache
 instead of the zipped version. This would prevent needing to unzip
 the resource each time it is retrieved from the cache, but would mean
 using more space on disk. The default function does nothing to the
-resource. See \code{\link[BiocFileCache:BiocFileCache-class]{BiocFileCache::bfcdownload()}} for details.}
+resource. See \code{\link[BiocFileCache:bfcdownload]{BiocFileCache::bfcdownload()}} for details.}
 
 \item{import_fun}{(function) A function to process the object after
 retrieving it from the cache e.g. it might need to be unzipped before
@@ -77,13 +77,11 @@ M <- BiocFileCache_database(
 
 }
 \references{
-Shepherd L, Morgan M (2025). \emph{BiocFileCache: Manage Files
-Across Sessions}. doi:10.18129/B9.bioc.BiocFileCache
-\url{https://doi.org/10.18129/B9.bioc.BiocFileCache}, R package version
-3.0.0, \url{https://bioconductor.org/packages/BiocFileCache}.
+Shepherd L, Morgan M (2026). \emph{BiocFileCache: Manage Files
+Across Sessions}. R package version 3.2.0.
 }
 \seealso{
-Other database: 
-\code{\link{sqlite_database}}
+Other database:
+\code{\link[=sqlite_database]{sqlite_database()}}
 }
 \concept{database}

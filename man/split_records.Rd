@@ -56,6 +56,6 @@ M <- split_records(
 \references{
 Silge J, Robinson D (2016). "tidytext: Text Mining and
 Analysis Using Tidy Data Principles in R." \emph{JOSS}, \emph{1}(3).
-doi:10.21105/joss.00037 \url{https://doi.org/10.21105/joss.00037},
+doi:10.21105/joss.00037 \url{https://doi.org/10.21105/joss.00037}.
 \url{http://dx.doi.org/10.21105/joss.00037}.
 }

@@ -42,20 +42,20 @@ M <- annotation_database(
 
 }
 \seealso{
-Other annotation databases: 
-\code{\link{AnnotationDb_database}},
-\code{\link{GO_database}},
-\code{\link{annotation_source}},
-\code{\link{excel_database}},
-\code{\link{rdata_database}},
-\code{\link{rds_cache}},
-\code{\link{rds_database}}
+Other annotation databases:
+\code{\link[=AnnotationDb_database]{AnnotationDb_database()}},
+\code{\link[=GO_database]{GO_database()}},
+\code{\link[=annotation_source]{annotation_source()}},
+\code{\link[=excel_database]{excel_database()}},
+\code{\link[=rdata_database]{rdata_database()}},
+\code{\link[=rds_cache]{rds_cache()}},
+\code{\link[=rds_database]{rds_database()}}
 
-Other annotation sources: 
-\code{\link{annotation_table}},
-\code{\link{cd_source}},
-\code{\link{ls_source}},
-\code{\link{mspurity_source}}
+Other annotation sources:
+\code{\link[=annotation_table]{annotation_table()}},
+\code{\link[=cd_source]{cd_source()}},
+\code{\link[=ls_source]{ls_source()}},
+\code{\link[=mspurity_source]{mspurity_source()}}
 }
 \concept{annotation databases}
 \concept{annotation sources}

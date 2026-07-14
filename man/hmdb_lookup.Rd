@@ -53,8 +53,8 @@ M <- hmdb_lookup(
 
 }
 \references{
-Temple Lang D (2025). \emph{XML: Tools for Parsing and
+Temple Lang D (2026). \emph{XML: Tools for Parsing and
 Generating XML Within R and S-Plus}. doi:10.32614/CRAN.package.XML
-\url{https://doi.org/10.32614/CRAN.package.XML}, R package version
-3.99-0.20, \url{https://CRAN.R-project.org/package=XML}.
+\url{https://doi.org/10.32614/CRAN.package.XML}. R package version
+3.99-0.23, \url{https://CRAN.R-project.org/package=XML}.
 }

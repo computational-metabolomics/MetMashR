@@ -70,24 +70,20 @@ M <- mwb_compound_lookup(
 
 }
 \references{
-Lloyd GR, Weber RJM (2025). \emph{metabolomicsWorkbenchR:
-Metabolomics Workbench in R}.
-doi:10.18129/B9.bioc.metabolomicsWorkbenchR
-\url{https://doi.org/10.18129/B9.bioc.metabolomicsWorkbenchR}, R package
-version 1.19.0,
-\url{https://bioconductor.org/packages/metabolomicsWorkbenchR}.
+Lloyd GR, Weber RJM (2026). \emph{metabolomicsWorkbenchR:
+Metabolomics Workbench in R}. R package version 1.22.0.
 
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+(2026). \emph{dplyr: A Grammar of Data Manipulation}.
 doi:10.32614/CRAN.package.dplyr
-\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
-1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
+\url{https://doi.org/10.32614/CRAN.package.dplyr}. R package version
+1.2.1, \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{
-Other REST API's: 
-\code{\link{classyfire_lookup}},
-\code{\link{kegg_lookup}},
-\code{\link{lipidmaps_lookup}},
-\code{\link{rest_api}}
+Other REST API's:
+\code{\link[=classyfire_lookup]{classyfire_lookup()}},
+\code{\link[=kegg_lookup]{kegg_lookup()}},
+\code{\link[=lipidmaps_lookup]{lipidmaps_lookup()}},
+\code{\link[=rest_api]{rest_api()}}
 }
 \concept{REST API's}

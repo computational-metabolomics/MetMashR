@@ -12,7 +12,7 @@ be left-joined to the annotation table. Can also be an
 annotation_database.}
 
 \item{by}{(character) A (named) character vector of column names to
-join by e.g. \code{c("A" = "B")} (see \code{\link[dplyr:mutate-joins]{dplyr::left_join}} for details).}
+join by e.g. \code{c("A" = "B")} (see \code{\link[dplyr:left_join]{dplyr::left_join}} for details).}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -25,7 +25,7 @@ slots:
 }
 }
 \description{
-A wrapper around \code{\link[dplyr:mutate-joins]{dplyr::left_join}}. Adds columns to
+A wrapper around \code{\link[dplyr:left_join]{dplyr::left_join}}. Adds columns to
 an annotation table by performing a left-join with an input
 data.frame (annotations on the left of the join).
 }
@@ -48,11 +48,11 @@ M <- add_columns(
 }
 \references{
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+(2026). \emph{dplyr: A Grammar of Data Manipulation}.
 doi:10.32614/CRAN.package.dplyr
-\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
-1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
+\url{https://doi.org/10.32614/CRAN.package.dplyr}. R package version
+1.2.1, \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{
-\code{\link[dplyr:mutate-joins]{dplyr::left_join()}}
+\code{\link[dplyr:left_join]{dplyr::left_join()}}
 }

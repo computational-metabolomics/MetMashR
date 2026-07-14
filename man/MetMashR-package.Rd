@@ -21,6 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Gavin Rhys Lloyd \email{g.r.lloyd@bham.ac.uk} (\href{https://orcid.org/0000-0001-7989-6695}{ORCID})
   \item Ralf Johannes Maria Weber \email{r.j.weber@bham.ac.uk}
 }
 

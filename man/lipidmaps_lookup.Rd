@@ -66,10 +66,10 @@ M <- lipidmaps_lookup(
 
 }
 \seealso{
-Other REST API's: 
-\code{\link{classyfire_lookup}},
-\code{\link{kegg_lookup}},
-\code{\link{mwb_compound_lookup}},
-\code{\link{rest_api}}
+Other REST API's:
+\code{\link[=classyfire_lookup]{classyfire_lookup()}},
+\code{\link[=kegg_lookup]{kegg_lookup()}},
+\code{\link[=mwb_compound_lookup]{mwb_compound_lookup()}},
+\code{\link[=rest_api]{rest_api()}}
 }
 \concept{REST API's}

@@ -48,15 +48,15 @@ M <- annotation_table(
 
 }
 \seealso{
-Other annotation tables: 
-\code{\link{cd_source}},
-\code{\link{ls_source}}
+Other annotation tables:
+\code{\link[=cd_source]{cd_source()}},
+\code{\link[=ls_source]{ls_source()}}
 
-Other annotation sources: 
-\code{\link{annotation_database}},
-\code{\link{cd_source}},
-\code{\link{ls_source}},
-\code{\link{mspurity_source}}
+Other annotation sources:
+\code{\link[=annotation_database]{annotation_database()}},
+\code{\link[=cd_source]{cd_source()}},
+\code{\link[=ls_source]{ls_source()}},
+\code{\link[=mspurity_source]{mspurity_source()}}
 }
 \concept{annotation sources}
 \concept{annotation tables}

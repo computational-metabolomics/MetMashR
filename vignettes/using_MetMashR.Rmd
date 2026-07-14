@@ -422,7 +422,8 @@ WF <-
         context_item = "abbrev",
         output_item = "inchi_key",
         cache = TF,
-        suffix = ""
+        suffix = "",
+        delay = 2
     )
 
 # apply workflow to annotation source

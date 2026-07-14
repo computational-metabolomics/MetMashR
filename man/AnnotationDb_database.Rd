@@ -45,22 +45,22 @@ M <- AnnotationDb_database(
 
 }
 \references{
-Pagès H, Carlson M, Falcon S, Li N (2025).
+Pagès H, Carlson M, Falcon S, Li N (2026).
 \emph{AnnotationDbi: Manipulation of SQLite-based annotations in
 Bioconductor}. doi:10.18129/B9.bioc.AnnotationDbi
-\url{https://doi.org/10.18129/B9.bioc.AnnotationDbi}, R package version
-1.72.0, \url{https://bioconductor.org/packages/AnnotationDbi}.
+\url{https://doi.org/10.18129/B9.bioc.AnnotationDbi}. R package version
+1.74.0, \url{https://bioconductor.org/packages/AnnotationDbi}.
 }
 \seealso{
-\link[AnnotationDbi:AnnotationDb-class]{AnnotationDbi::AnnotationDb}
+\link[AnnotationDbi:AnnotationDb]{AnnotationDbi::AnnotationDb}
 
-Other annotation databases: 
-\code{\link{GO_database}},
-\code{\link{annotation_database}},
-\code{\link{annotation_source}},
-\code{\link{excel_database}},
-\code{\link{rdata_database}},
-\code{\link{rds_cache}},
-\code{\link{rds_database}}
+Other annotation databases:
+\code{\link[=GO_database]{GO_database()}},
+\code{\link[=annotation_database]{annotation_database()}},
+\code{\link[=annotation_source]{annotation_source()}},
+\code{\link[=excel_database]{excel_database()}},
+\code{\link[=rdata_database]{rdata_database()}},
+\code{\link[=rds_cache]{rds_cache()}},
+\code{\link[=rds_database]{rds_database()}}
 }
 \concept{annotation databases}

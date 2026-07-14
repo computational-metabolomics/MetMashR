@@ -197,8 +197,8 @@ M <- annotation_upset_chart(
 
 }
 \references{
-Gao C, Dusa A (2025). \emph{ggVennDiagram: A 'ggplot2'
+Gao C, Dusa A (2026). \emph{ggVennDiagram: A 'ggplot2'
 Implement of Venn Diagram}. doi:10.32614/CRAN.package.ggVennDiagram
-\url{https://doi.org/10.32614/CRAN.package.ggVennDiagram}, R package
-version 1.5.4, \url{https://CRAN.R-project.org/package=ggVennDiagram}.
+\url{https://doi.org/10.32614/CRAN.package.ggVennDiagram}. R package
+version 1.5.7, \url{https://CRAN.R-project.org/package=ggVennDiagram}.
 }

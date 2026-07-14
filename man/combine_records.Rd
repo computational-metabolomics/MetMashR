@@ -59,10 +59,10 @@ M <- combine_records(
 }
 \references{
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+(2026). \emph{dplyr: A Grammar of Data Manipulation}.
 doi:10.32614/CRAN.package.dplyr
-\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
-1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
+\url{https://doi.org/10.32614/CRAN.package.dplyr}. R package version
+1.2.1, \url{https://CRAN.R-project.org/package=dplyr}.
 
 Lloyd GR, Jankevics A, Weber RJM (2020). "struct: an
 R/Bioconductor-based framework for standardized metabolomics data

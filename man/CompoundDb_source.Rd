@@ -47,6 +47,6 @@ Rainer J, Vicini A, Salzer L, Stanstrup J, Badia J,
 Neumann S, Stravs M, Verri Hernandes V, Gatto L, Gibb S, Witting M
 (2022). "A Modular and Expandable Ecosystem for Metabolomics Data
 Annotation in R." \emph{Metabolites}, \emph{12}, 173.
-doi:10.3390/metabo12020173 \url{https://doi.org/10.3390/metabo12020173},
+doi:10.3390/metabo12020173 \url{https://doi.org/10.3390/metabo12020173}.
 \url{https://www.mdpi.com/2218-1989/12/2/173}.
 }

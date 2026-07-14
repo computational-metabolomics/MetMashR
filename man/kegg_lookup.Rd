@@ -71,23 +71,23 @@ M <- kegg_lookup(
 
 }
 \references{
-Tenenbaum D, Maintainer B (2025). \emph{KEGGREST: Client-side
+Tenenbaum D, Maintainer B (2026). \emph{KEGGREST: Client-side
 REST access to the Kyoto Encyclopedia of Genes and Genomes (KEGG)}.
 doi:10.18129/B9.bioc.KEGGREST
-\url{https://doi.org/10.18129/B9.bioc.KEGGREST}, R package version
-1.50.0, \url{https://bioconductor.org/packages/KEGGREST}.
+\url{https://doi.org/10.18129/B9.bioc.KEGGREST}. R package version
+1.52.2, \url{https://bioconductor.org/packages/KEGGREST}.
 
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+(2026). \emph{dplyr: A Grammar of Data Manipulation}.
 doi:10.32614/CRAN.package.dplyr
-\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
-1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
+\url{https://doi.org/10.32614/CRAN.package.dplyr}. R package version
+1.2.1, \url{https://CRAN.R-project.org/package=dplyr}.
 }
 \seealso{
-Other REST API's: 
-\code{\link{classyfire_lookup}},
-\code{\link{lipidmaps_lookup}},
-\code{\link{mwb_compound_lookup}},
-\code{\link{rest_api}}
+Other REST API's:
+\code{\link[=classyfire_lookup]{classyfire_lookup()}},
+\code{\link[=lipidmaps_lookup]{lipidmaps_lookup()}},
+\code{\link[=mwb_compound_lookup]{mwb_compound_lookup()}},
+\code{\link[=rest_api]{rest_api()}}
 }
 \concept{REST API's}

@@ -74,21 +74,21 @@ M <- classyfire_lookup(
 }
 \references{
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+(2026). \emph{dplyr: A Grammar of Data Manipulation}.
 doi:10.32614/CRAN.package.dplyr
-\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
-1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
+\url{https://doi.org/10.32614/CRAN.package.dplyr}. R package version
+1.2.1, \url{https://CRAN.R-project.org/package=dplyr}.
 
-Wickham H (2023). \emph{httr: Tools for Working with URLs and
+Wickham H (2026). \emph{httr: Tools for Working with URLs and
 HTTP}. doi:10.32614/CRAN.package.httr
-\url{https://doi.org/10.32614/CRAN.package.httr}, R package version
-1.4.7, \url{https://CRAN.R-project.org/package=httr}.
+\url{https://doi.org/10.32614/CRAN.package.httr}. R package version
+1.4.8, \url{https://CRAN.R-project.org/package=httr}.
 }
 \seealso{
-Other REST API's: 
-\code{\link{kegg_lookup}},
-\code{\link{lipidmaps_lookup}},
-\code{\link{mwb_compound_lookup}},
-\code{\link{rest_api}}
+Other REST API's:
+\code{\link[=kegg_lookup]{kegg_lookup()}},
+\code{\link[=lipidmaps_lookup]{lipidmaps_lookup()}},
+\code{\link[=mwb_compound_lookup]{mwb_compound_lookup()}},
+\code{\link[=rest_api]{rest_api()}}
 }
 \concept{REST API's}

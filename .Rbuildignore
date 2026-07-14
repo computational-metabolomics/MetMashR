@@ -7,3 +7,5 @@
 ^\.github$
 ^doc$
 ^Meta$
+^\.positai$
+^\.claude$

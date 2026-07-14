@@ -7,7 +7,7 @@
 filter_records(where = wherever(A > 0), ...)
 }
 \arguments{
-\item{where}{(quosures) A list of \code{\link[rlang:quosure-tools]{rlang::quosure}} for evaluation
+\item{where}{(quosures) A list of \code{\link[rlang:quosure]{rlang::quosure}} for evaluation
 e.g. A>10 willselect all rows where the values in column A are
 greater than10. A helper function \code{\link{wherever}} is provided to
 generatea suitable list of quosures. The default is \code{wherever(A
@@ -45,16 +45,16 @@ M <- filter_records(
 }
 \references{
 Wickham H, François R, Henry L, Müller K, Vaughan D
-(2023). \emph{dplyr: A Grammar of Data Manipulation}.
+(2026). \emph{dplyr: A Grammar of Data Manipulation}.
 doi:10.32614/CRAN.package.dplyr
-\url{https://doi.org/10.32614/CRAN.package.dplyr}, R package version
-1.1.4, \url{https://CRAN.R-project.org/package=dplyr}.
+\url{https://doi.org/10.32614/CRAN.package.dplyr}. R package version
+1.2.1, \url{https://CRAN.R-project.org/package=dplyr}.
 
-Henry L, Wickham H (2025). \emph{rlang: Functions for Base
+Henry L, Wickham H (2026). \emph{rlang: Functions for Base
 Types and Core R and 'Tidyverse' Features}.
 doi:10.32614/CRAN.package.rlang
-\url{https://doi.org/10.32614/CRAN.package.rlang}, R package version
-1.1.6, \url{https://CRAN.R-project.org/package=rlang}.
+\url{https://doi.org/10.32614/CRAN.package.rlang}. R package version
+1.3.0, \url{https://CRAN.R-project.org/package=rlang}.
 }
 \seealso{
 \code{\link[dplyr:filter]{dplyr::filter()}}

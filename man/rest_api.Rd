@@ -73,10 +73,10 @@ M <- rest_api(
 
 }
 \seealso{
-Other REST API's: 
-\code{\link{classyfire_lookup}},
-\code{\link{kegg_lookup}},
-\code{\link{lipidmaps_lookup}},
-\code{\link{mwb_compound_lookup}}
+Other REST API's:
+\code{\link[=classyfire_lookup]{classyfire_lookup()}},
+\code{\link[=kegg_lookup]{kegg_lookup()}},
+\code{\link[=lipidmaps_lookup]{lipidmaps_lookup()}},
+\code{\link[=mwb_compound_lookup]{mwb_compound_lookup()}}
 }
 \concept{REST API's}

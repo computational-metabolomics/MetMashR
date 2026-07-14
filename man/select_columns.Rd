@@ -46,14 +46,14 @@ M <- select_columns(
 \references{
 Henry L, Wickham H (2024). \emph{tidyselect: Select from a Set
 of Strings}. doi:10.32614/CRAN.package.tidyselect
-\url{https://doi.org/10.32614/CRAN.package.tidyselect}, R package version
+\url{https://doi.org/10.32614/CRAN.package.tidyselect}. R package version
 1.2.1, \url{https://CRAN.R-project.org/package=tidyselect}.
 
-Henry L, Wickham H (2025). \emph{rlang: Functions for Base
+Henry L, Wickham H (2026). \emph{rlang: Functions for Base
 Types and Core R and 'Tidyverse' Features}.
 doi:10.32614/CRAN.package.rlang
-\url{https://doi.org/10.32614/CRAN.package.rlang}, R package version
-1.1.6, \url{https://CRAN.R-project.org/package=rlang}.
+\url{https://doi.org/10.32614/CRAN.package.rlang}. R package version
+1.3.0, \url{https://CRAN.R-project.org/package=rlang}.
 }
 \seealso{
 \code{\link[dplyr:select]{dplyr::select()}}

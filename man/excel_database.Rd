@@ -66,17 +66,17 @@ M <- excel_database(
 \references{
 Schauberger P, Walker A (2025). \emph{openxlsx: Read, Write
 and Edit xlsx Files}. doi:10.32614/CRAN.package.openxlsx
-\url{https://doi.org/10.32614/CRAN.package.openxlsx}, R package version
+\url{https://doi.org/10.32614/CRAN.package.openxlsx}. R package version
 4.2.8.1, \url{https://CRAN.R-project.org/package=openxlsx}.
 }
 \seealso{
-Other annotation databases: 
-\code{\link{AnnotationDb_database}},
-\code{\link{GO_database}},
-\code{\link{annotation_database}},
-\code{\link{annotation_source}},
-\code{\link{rdata_database}},
-\code{\link{rds_cache}},
-\code{\link{rds_database}}
+Other annotation databases:
+\code{\link[=AnnotationDb_database]{AnnotationDb_database()}},
+\code{\link[=GO_database]{GO_database()}},
+\code{\link[=annotation_database]{annotation_database()}},
+\code{\link[=annotation_source]{annotation_source()}},
+\code{\link[=rdata_database]{rdata_database()}},
+\code{\link[=rds_cache]{rds_cache()}},
+\code{\link[=rds_database]{rds_database()}}
 }
 \concept{annotation databases}

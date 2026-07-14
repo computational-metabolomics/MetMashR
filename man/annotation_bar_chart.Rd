@@ -74,6 +74,6 @@ M <- annotation_bar_chart(
 }
 \references{
 Wickham H (2016). \emph{ggplot2: Elegant Graphics for Data
-Analysis}. Springer-Verlag New York. ISBN 978-3-319-24277-4,
+Analysis}. Springer-Verlag New York. ISBN 978-3-319-24277-4.
 \url{https://ggplot2.tidyverse.org}.
 }
