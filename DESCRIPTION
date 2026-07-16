@@ -160,3 +160,4 @@ Roxygen: list(markdown = TRUE)
 biocViews: WorkflowStep, Metabolomics, KEGG
 BugReports: https://github.com/computational-metabolomics/MetMashR/issues
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

@@ -87,13 +87,54 @@ get_description <- function(id) {
         str <- c(strwrap(str[1:(w - 1)], 70), str[w:length(str)])
     }
 
+    # break any "arg = "value"," line whose quoted string is long enough to
+    # push it past the 100 character Rd line width limit into a paste0()
+    # call split across multiple shorter lines
+    str <- vapply(str, .paste0_long_lines, character(1), USE.NAMES = FALSE)
+
     return(str)
+}
+
+.paste0_long_lines <- function(x) {
+    lines <- strsplit(x, "\n", fixed = TRUE)[[1]]
+    lines <- unlist(lapply(lines, .paste0_long_line))
+    paste(lines, collapse = "\n")
+}
+
+.paste0_long_line <- function(line) {
+    if (nchar(line) <= 100) {
+        return(line)
+    }
+    m <- regmatches(
+        line,
+        regexec('^(\\s*)([a-zA-Z0-9_.]+) = "([^"]*)",\\s*$', line)
+    )[[1]]
+    if (length(m) != 4) {
+        return(line)
+    }
+    indent <- m[2]
+    arg <- m[3]
+    value <- m[4]
+
+    # split roughly in half, preferring a URL-friendly boundary, so each
+    # half comfortably fits within the line width limit
+    mid <- ceiling(nchar(value) / 2)
+    candidates <- gregexpr("[&?/]", value)[[1]]
+    candidates <- candidates[candidates > 0 & candidates <= mid + 15]
+    split_at <- if (length(candidates) > 0) max(candidates) else mid
+
+    c(
+        paste0(indent, arg, " = paste0("),
+        paste0(indent, "    \"", substr(value, 1, split_at), "\","),
+        paste0(indent, "    \"", substr(value, split_at + 1, nchar(value)), "\""),
+        paste0(indent, "),")
+    )
 }
 
 utils::globalVariables(c(
     "Checked", "orange_id", "setNames", # read_cd_compounds_file
     "A", # filter_records
-    "X", "Y", # venn_this
+    "X", "Y", "id", # venn_this
     "rotate", "wrap_plots", "plot_spacer", # annotation_histogram2d
     "compoundVariables",
     "orig_db", "blue_id", "Ion", "Name", "Formula", "mzCloud.Best.Match",

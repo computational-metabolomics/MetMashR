@@ -1,22 +1,16 @@
 #' @eval get_description('chebi_lookup')
 #' @export
 #' @include annotation_source_class.R rest_api_class.R chebi_lookup_parsers.R
-chebi_lookup <- function(query_column,
-    search_by = c("name", "chebi_id"),
-    suffix = "_chebi",
-    records = "best",
-    max_records = "50",
-    delay = 1,
-    ...) {
+chebi_lookup <- function(
+        query_column,
+        search_by = c("name", "chebi_id"),
+        suffix = "_chebi",
+        records = "best",
+        max_records = "50",
+        delay = 1,
+        ...) {
     search_by <- match.arg(search_by)
-
-    # the two ChEBI endpoints have different shapes, so the url_template
-    # is chosen up front based on the direction of the search
-    url_template <- switch(search_by,
-        "name" = "<base_url>/es_search?term=<query_column>&size=<max_records>",
-        "chebi_id" = "<base_url>/compound/<query_column>"
-    )
-
+    
     out <- struct::new_struct(
         "chebi_lookup",
         query_column = query_column,
@@ -25,10 +19,9 @@ chebi_lookup <- function(query_column,
         records = records,
         max_records = max_records,
         delay = delay,
-        url_template = url_template,
         ...
     )
-
+    
     return(out)
 }
 
@@ -190,6 +183,15 @@ setMethod(
     f = "model_apply",
     signature = c("chebi_lookup", "annotation_source"),
     definition = function(M, D) {
+        
+        # the two ChEBI endpoints have different shapes, so the url_template
+        # is chosen up front based on the direction of the search
+        M$url_template <- switch(
+            M$search_by,
+            "name" = "<base_url>/es_search?term=<query_column>&size=<max_records>",
+            "chebi_id" = "<base_url>/compound/<query_column>"
+        )
+        
         # ChEBI's REST API expects the bare numeric part of a ChEBI
         # accession (e.g. "27732") in the URL path when searching by
         # chebi_id, not the full "CHEBI:27732" accession string. A
@@ -197,19 +199,19 @@ setMethod(
         # the query so the original annotation column is left untouched.
         if (identical(M$search_by, "chebi_id")) {
             temp_col <- paste0(".", M$query_column, "_numeric")
-
+            
             D2 <- D
             D2$data[[temp_col]] <- gsub(
                 "^\\s*CHEBI:\\s*", "",
                 as.character(D$data[[M$query_column]]),
                 ignore.case = TRUE
             )
-
+            
             original_query_column <- M$query_column
             M$query_column <- temp_col
-
+            
             M <- callNextMethod(M, D2)
-
+            
             # drop the temporary column and restore the original
             # query_column name now that querying is finished
             M$updated$data[[temp_col]] <- NULL
@@ -217,7 +219,7 @@ setMethod(
         } else {
             M <- callNextMethod(M, D)
         }
-
+        
         return(M)
     }
 )

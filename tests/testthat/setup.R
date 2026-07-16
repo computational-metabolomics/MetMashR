@@ -25,7 +25,12 @@ httptest::set_requester(
             httptest::gsub_request(
                 "http\\://rest.kegg.jp/entities/conv",
                 "kg/"
-            )
+            ) %>%
+            # shorten long/percent-encoded path segments used in the
+            # lipidmaps lookup tests to keep mock fixture paths portable
+            httptest::gsub_request("inchi_key%2Chmdb_id", "ik_hid") %>%
+            httptest::gsub_request("PE%2816%3A0_18%3A1%29", "PE1") %>%
+            httptest::gsub_request("TG%2816%3A0_16%3A1_18%3A2%29", "TG1")
     }
 )
 
@@ -50,6 +55,9 @@ httptest::set_redactor(
             httptest::gsub_response(
                 "http\\://rest.kegg.jp/entities/conv",
                 "kg/"
-            )
+            ) %>%
+            httptest::gsub_response("inchi_key%2Chmdb_id", "ik_hid") %>%
+            httptest::gsub_response("PE%2816%3A0_18%3A1%29", "PE1") %>%
+            httptest::gsub_response("TG%2816%3A0_16%3A1_18%3A2%29", "TG1")
     }
 )

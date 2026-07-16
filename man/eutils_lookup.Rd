@@ -50,7 +50,10 @@ M <- eutils_lookup(
         term = "[pdat]",
         result_fields = "idlist",
         base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
-        url_template = "<base_url>/esearch.fcgi?db=<database>&term=<query_column><term>&retmode=json",
+        url_template = paste0(
+            "<base_url>/esearch.fcgi?db=<database>&",
+            "term=<query_column><term>&retmode=json"
+        ),
         query_column = character(0),
         cache = NULL,
         status_codes = list(),
