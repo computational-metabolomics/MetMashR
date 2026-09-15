@@ -4,7 +4,15 @@
 \alias{mspurity_source}
 \title{msPurity source}
 \usage{
-mspurity_source(source, tag = "msPurity", ...)
+mspurity_source(
+  source,
+  tag = "msPurity",
+  mz_column = "mz",
+  rt_column = "rt",
+  id_column = "id",
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{source}{(ANY) The source of annotation data.}
@@ -12,6 +20,20 @@ mspurity_source(source, tag = "msPurity", ...)
 \item{tag}{(character) A (short) character string that is used to
 represent this source e.g. in column names or source columns when
 used in a workflow. The default is \code{"msPurity"}.}
+
+\item{mz_column}{(character) The column name of the annotation
+data.frame containing m/z values. The default is \code{"mz"}.}
+
+\item{rt_column}{(character) The column name of the annotation
+data.frame containing retention time values. The default is
+\code{"rt"}.}
+
+\item{id_column}{(character) The column name of the annotation
+data.frame containing row identifers. If NULL This will be generated
+automatically. The default is \code{"id"}.}
+
+\item{data}{(data.frame, NULL) A data.frame of annotation data. The
+default is \code{NULL}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -32,11 +54,15 @@ packages:\itemize{ \item{\code{msPurity}}}
 
 A \code{mspurity_source} object inherits the following \code{struct} classes:
 \cr\cr
-\verb{[mspurity_source]} -> \verb{[annotation_source]} -> \verb{[struct_class]}
+\verb{[mspurity_source]} -> \verb{[lcms_table]} -> \verb{[annotation_table]} ->
+\verb{[annotation_source]} -> \verb{[struct_class]}
 }
 
 \examples{
 M <- mspurity_source(
+        mz_column = "mz",
+        rt_column = "rt",
+        id_column = "id",
         tag = character(0),
         data = data.frame(),
         source = "ANY")
@@ -55,6 +81,13 @@ Other annotation sources:
 \code{\link[=annotation_database]{annotation_database()}},
 \code{\link[=annotation_table]{annotation_table()}},
 \code{\link[=cd_source]{cd_source()}},
+\code{\link[=ls_source]{ls_source()}},
+\code{\link[=mwb_study_source]{mwb_study_source()}}
+
+Other annotation tables:
+\code{\link[=annotation_table]{annotation_table()}},
+\code{\link[=cd_source]{cd_source()}},
 \code{\link[=ls_source]{ls_source()}}
 }
 \concept{annotation sources}
+\concept{annotation tables}
