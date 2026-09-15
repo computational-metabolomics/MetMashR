@@ -151,7 +151,6 @@ setMethod(
 
         G <- NULL
         for (k in seq_len(length(batch) - 1)) {
-            print(k)
             start <- batch[k]
             end <- batch[k + 1] - 1
 
