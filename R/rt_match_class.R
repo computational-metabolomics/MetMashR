@@ -136,39 +136,23 @@ setMethod(
         AN$.rt_min <- AN[[D$rt_column]] - M$rt_window[["annotations"]]
         AN$.rt_max <- AN[[D$rt_column]] + M$rt_window[["annotations"]]
 
-        # for each annotation, get variable ids whose rt window overlaps with
-        # the annotation rt window
-        OUT <- list()
-        for (k in seq_len(nrow(AN))) {
-            x <- AN[k, , drop = FALSE]
-
-            # true if overlap
-            w <- which(
-                VM$.rt_min <= x$.rt_max & x$.rt_min <= VM$.rt_max
-            )
-            found <- VM[w, ]
-
-            # if we found any
-            if (length(w) > 0) {
-                # calculate rt diff
-                found$rt_diff <- (found[[M$rt_column]] - x[[D$rt_column]])
-
-                # create duplicate annotations for each id
-                record_list <- rep(list(x), length(w))
-                record_list <- do.call(rbind, record_list)
-                record_list$rt_match_id <- found$.id
-                record_list$rt_match_diff <- found$rt_diff
-                record_list$rt_match <- found[[M$rt_column]]
-            } else {
-                # return record with NA in id column
-                record_list <- x
-                record_list$rt_match_id <- NA
-                record_list$rt_match_diff <- NA
-                record_list$rt_match <- NA
-            }
-            OUT[[k]] <- record_list
-        }
-        OUT <- plyr::rbind.fill(OUT)
+        # see .interval_overlap_join() in mz_match_class.R -- avoids the
+        # per-row which()/rep()/rbind() scan, which materialized huge
+        # intermediate tables (and could exhaust memory) once variable_meta
+        # reaches production scale (tens of thousands of rows)
+        OUT <- .interval_overlap_join(
+            VM = VM,
+            AN = AN,
+            vm_value_column = M$rt_column,
+            an_value_column = D$rt_column,
+            vm_min_column = ".rt_min",
+            vm_max_column = ".rt_max",
+            an_min_column = ".rt_min",
+            an_max_column = ".rt_max",
+            match_id_name = "rt_match_id",
+            match_value_name = "rt_match",
+            match_diff_name = "rt_match_diff"
+        )
 
         # remove extra columns
         w <- which(colnames(OUT) %in% c(".id", ".rt_min", ".rt_max"))
