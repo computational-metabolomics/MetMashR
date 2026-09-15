@@ -209,43 +209,54 @@ setMethod(
 )
 
 
-.read_cd_isomers_file <- function(M, idx) {
-    # COMP FILE
-    input_file <- M$source[idx]
-    sheet <- M$sheets[idx]
-    
-    cd <- openxlsx::read.xlsx(
-        input_file,
-        sheet
-    )
-    
-    # add some ids for joining later
-    cd$blue_id <- NA
-    cd$orange_id <- NA
-    
-    for (k in seq_len(nrow(cd))) {
-        n <- sum(cd$Checked[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
-        cd$blue_id[k] <- n
-        n <- sum(cd$Name[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
-        cd$orange_id[k] <- n
+# Compound Discoverer's Excel exports embed repeated header rows inside the
+# data itself: whenever `cd[[marker_col]]` reads the literal string "Tags",
+# that row holds display labels for the block of records that follows (up to
+# the next such marker). The label row is identical throughout the file, so
+# only the first occurrence is needed. Returns a named character vector
+# suitable for `select(all_of(.))` (name = label from the marker row, value
+# = the underlying raw column name), or NULL if `marker_col` never reads
+# "Tags" (e.g. some exports have no "grey"/per-file block at all).
+.cd_marker_row_rename_map <- function(cd, marker_col) {
+    w <- which(cd[[marker_col]] == "Tags")
+    if (length(w) == 0) {
+        return(NULL)
     }
-    
+    header_row <- cd[w[1], ]
+    map <- unlist(header_row[which(header_row != "")])
+    # blue_id/orange_id are columns we add ourselves below (not part of the
+    # original export), so their marker-row "label" is just noise -- keep
+    # their own name as the label instead
+    added <- names(map) %in% c("blue_id", "orange_id")
+    map[added] <- names(map)[added]
+    setNames(names(map), map)
+}
+
+# Assigns a running block id to `marker_col`: a new id starts every time it
+# reads "TRUE" or "FALSE" (a record boundary), 0 for any rows before the
+# first boundary.
+.cd_block_ids <- function(marker_col) {
+    cumsum(marker_col %in% c("TRUE", "FALSE"))
+}
+
+.read_cd_isomers_file <- function(M, idx) {
+    cd <- openxlsx::read.xlsx(
+        M$source[idx],
+        M$sheets[idx]
+    )
+
+    # ids for joining blue (compound-level) and orange (isomer-level) rows
+    cd$blue_id <- .cd_block_ids(cd$Checked)
+    cd$orange_id <- .cd_block_ids(cd$Name)
+
     ## blue rows
     blue <- cd %>% filter(Checked == "FALSE")
-    
+
     ## orange rows
-    # find colnames
-    w <- which(cd$Checked == "Tags")
-    x <- which(cd[w[1], ] != "")
-    x <- unlist(cd[w[1], x])
-    x[names(x) == "blue_id"] <- "blue_id"
-    x[names(x) == "orange_id"] <- "orange_id"
-    x <- setNames(names(x), x)
-    # filter
     orange <- cd %>%
-        select(all_of(x)) %>%
+        select(all_of(.cd_marker_row_rename_map(cd, "Checked"))) %>%
         filter(Checked %in% c("TRUE", "FALSE"))
-    
+
     return(
         list(
             blue = blue,
@@ -260,49 +271,33 @@ setMethod(
         M$source[idx],
         M$sheets[idx]
     )
-    
-    # add some ids for joining later
-    cd$blue_id <- NA
-    cd$orange_id <- NA
-    
-    for (k in seq_len(nrow(cd))) {
-        n <- sum(cd$Checked[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
-        cd$blue_id[k] <- n
-        n <- sum(cd$Name[seq_len(k)] %in% c("TRUE", "FALSE"), na.rm = TRUE)
-        cd$orange_id[k] <- n
-    }
-    
+
+    # ids for joining blue (compound-level), orange (isomer-level) and grey
+    # (per-file/per-adduct feature-level) rows
+    cd$blue_id <- .cd_block_ids(cd$Checked)
+    cd$orange_id <- .cd_block_ids(cd$Name)
+
     ## blue rows
     blue <- cd %>%
         filter(Checked == "FALSE") %>%
         select(-orange_id)
-    
+
     ## orange rows
-    # find colnames
-    w <- which(cd$Checked == "Tags")
-    x <- which(cd[w[1], ] != "")
-    x <- unlist(cd[w[1], x])
-    x[names(x) == "blue_id"] <- "blue_id"
-    x[names(x) == "orange_id"] <- "orange_id"
-    x <- setNames(names(x), x)
-    # filter
     orange <- cd %>%
-        select(all_of(x)) %>%
+        select(all_of(.cd_marker_row_rename_map(cd, "Checked"))) %>%
         filter(Checked %in% c("TRUE", "FALSE"))
-    
-    ## grey rows
-    # find colnames
-    w <- which(cd$Name == "Tags")
-    x <- which(cd[w[1], ] != "")
-    x <- unlist(cd[w[1], x])
-    x[names(x) == "blue_id"] <- "blue_id"
-    x[names(x) == "orange_id"] <- "orange_id"
-    x <- setNames(names(x), x)
-    # filter
-    grey <- cd %>%
-        select(all_of(x)) %>%
-        filter(Checked == "FALSE")
-    
+
+    ## grey rows -- not every export includes this block; fall back to an
+    ## empty (join-key-only) table rather than erroring when it's absent
+    grey_map <- .cd_marker_row_rename_map(cd, "Name")
+    grey <- if (is.null(grey_map)) {
+        data.frame(blue_id = numeric(0), orange_id = numeric(0))
+    } else {
+        cd %>%
+            select(all_of(grey_map)) %>%
+            filter(Checked == "FALSE")
+    }
+
     return(
         list(
             blue = blue,
