@@ -151,9 +151,14 @@ setMethod(
             # add ids
             out$id <- as.character(seq_len(nrow(out)))
         } else { # empty data.frame
+            # NOTE: this used to size the matrix as 11 + length(M$add_cols),
+            # but ls_source has no `add_cols` slot -- referencing it here
+            # would itself error (`"add_cols" is not valid for this object`)
+            # any time an export produced zero rows, and the +length(...)
+            # would have mismatched the 11 column names below anyway.
             out <- data.frame(matrix(
                 nrow = 0,
-                ncol = (11 + length(M$add_cols))
+                ncol = 11
             ))
             colnames(out) <- c(
                 "Rej.", "LipidIon", "LipidGroup", "Class",
