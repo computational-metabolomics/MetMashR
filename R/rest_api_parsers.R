@@ -122,3 +122,57 @@
     colnames(J) <- params$output
     return(J)
 }
+
+# internal function to parse a Metabolomics Workbench RefMet "match"
+# response, then follow up with a second request to the RefMet "name/all"
+# endpoint to retrieve identifiers (InChIKey, PubChem CID, SMILES) for the
+# matched name - the match endpoint itself only returns descriptive fields
+# (formula, mass, ontology), not identifiers.
+.parse_mwb_refmet_match <- function(response, params) {
+    txt <- httr::content(response, as = "text", encoding = "UTF-8")
+    J <- jsonlite::fromJSON(txt)
+
+    empty <- data.frame(
+        refmet_name = NA_character_,
+        formula = NA_character_,
+        exactmass = NA_character_,
+        super_class = NA_character_,
+        main_class = NA_character_,
+        sub_class = NA_character_,
+        refmet_id = NA_character_,
+        pubchem_cid = NA_character_,
+        inchi_key = NA_character_,
+        smiles = NA_character_,
+        stringsAsFactors = FALSE
+    )
+
+    # unmatched names return HTTP 200 with every field set to "-", not a
+    # 404, so an empty/missing/"-" refmet_name means "no match"
+    if (is.null(J$refmet_name) || identical(J$refmet_name, "-") ||
+        identical(J$refmet_name, "")) {
+        return(empty)
+    }
+
+    out <- as.data.frame(J, stringsAsFactors = FALSE)
+
+    # second hop: identifiers for the matched RefMet name
+    u2 <- paste0(
+        "https://www.metabolomicsworkbench.org/rest/refmet/name/",
+        utils::URLencode(J$refmet_name, reserved = TRUE),
+        "/all"
+    )
+    r2 <- tryCatch(httr::GET(u2), error = function(e) NULL)
+
+    if (!is.null(r2) && httr::status_code(r2) == 200) {
+        j2 <- jsonlite::fromJSON(httr::content(r2, as = "text", encoding = "UTF-8"))
+        out$pubchem_cid <- j2$pubchem_cid %||% NA_character_
+        out$inchi_key <- j2$inchi_key %||% NA_character_
+        out$smiles <- j2$smiles %||% NA_character_
+    } else {
+        out$pubchem_cid <- NA_character_
+        out$inchi_key <- NA_character_
+        out$smiles <- NA_character_
+    }
+
+    return(out)
+}
