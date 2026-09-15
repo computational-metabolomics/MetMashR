@@ -161,6 +161,14 @@ setMethod(
             }
         }
 
+        # vjust: "outside" labels should sit above the bar (vjust = 0, so
+        # the bottom of the label text is anchored at the bar height and
+        # the text extends upward), not centred on the bar's top edge
+        # (the default vjust = 0.5, which draws the label straddling the
+        # line). "inside" labels keep the default, since they are already
+        # pushed down into the bar via a leading newline above.
+        df$vjust <- if (obj$label_location == "outside") 0 else 0.5
+
         # plot
         g <- ggplot(
             data = df,
@@ -177,7 +185,8 @@ setMethod(
                     y = .data[["count"]],
                     label = .data[["label"]],
                     angle = rotate,
-                    hjust = .data[["hjust"]]
+                    hjust = .data[["hjust"]],
+                    vjust = .data[["vjust"]]
                 )
             ) +
             coord_cartesian(clip = "off") +
