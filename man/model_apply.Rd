@@ -9,12 +9,11 @@
 %   R/filter_labels_class.R, R/filter_na_class.R, R/filter_range_class.R,
 %   R/filter_records_class.R, R/filter_venn_class.R, R/id_count_class.R,
 %   R/import_source_class.R, R/kegg_lookup_class.R, R/model_apply_doc.R,
-%   R/mspurity_source_class.R, R/mz_match_class.R, R/mzrt_match_class.R,
-%   R/normalise_lipids_class.R, R/normalise_strings_class.R,
-%   R/pivot_columns_class.R, R/prioritise_columns_class.R,
-%   R/remove_columns_class.R, R/rename_columns_class.R, R/rt_match_class.R,
-%   R/select_columns_class.R, R/split_column_class.R,
-%   R/trim_whitespace_class.R, R/unique_records_class.R
+%   R/mz_match_class.R, R/mzrt_match_class.R, R/normalise_lipids_class.R,
+%   R/normalise_strings_class.R, R/pivot_columns_class.R,
+%   R/prioritise_columns_class.R, R/remove_columns_class.R,
+%   R/rename_columns_class.R, R/rt_match_class.R, R/select_columns_class.R,
+%   R/split_column_class.R, R/trim_whitespace_class.R, R/unique_records_class.R
 \name{model_apply,model,annotation_source-method}
 \alias{model_apply,model,annotation_source-method}
 \alias{model_apply,model,list-method}
@@ -45,7 +44,6 @@
 \alias{model_apply,import_source,annotation_source-method}
 \alias{model_apply,kegg_lookup,annotation_source-method}
 \alias{model_apply}
-\alias{model_apply,mspurity_source,lcms_table-method}
 \alias{model_apply,mz_match,annotation_source-method}
 \alias{model_apply,mzrt_match,lcms_table-method}
 \alias{model_apply,normalise_lipids,annotation_source-method}
@@ -116,8 +114,6 @@
 \S4method{model_apply}{import_source,annotation_source}(M, D)
 
 \S4method{model_apply}{kegg_lookup,annotation_source}(M, D)
-
-\S4method{model_apply}{mspurity_source,lcms_table}(M, D)
 
 \S4method{model_apply}{mz_match,annotation_source}(M, D)
 

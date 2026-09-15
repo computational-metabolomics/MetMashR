@@ -29,10 +29,13 @@ LazyData: false
 Depends: 
     R (>= 4.3.0),
     struct
-Imports: 
+Imports:
     dplyr,
     methods,
     httr,
+    httr2,
+    xml2,
+    plyr,
     scales,
     ggthemes,
     utils,
@@ -70,6 +73,7 @@ Collate:
     'rest_api_parsers.R'
     'rest_api_class.R'
     'chebi_lookup_class.R'
+    'classyfire_batch_lookup_class.R'
     'classyfire_lookup_class.R'
     'combine_columns_class.R'
     'combine_records_class.R'
@@ -92,13 +96,16 @@ Collate:
     'id_count_class.R'
     'import_source_class.R'
     'kegg_lookup_class.R'
+    'lipidmaps_database_class.R'
     'lipidmaps_lookup_class.R'
     'ls_source_class.R'
     'model_apply_doc.R'
     'mspurity_source_class.R'
     'mwb_compound_lookup_class.R'
     'mwb_refmet_database_class.R'
+    'mwb_refmet_lookup_class.R'
     'mwb_structure_chart_class.R'
+    'mwb_study_source_class.R'
     'mz_match_class.R'
     'mzrt_match_class.R'
     'normalise_lipids_class.R'
@@ -107,6 +114,7 @@ Collate:
     'pivot_columns_class.R'
     'prioritise_columns_class.R'
     'pubchem_compound_lookup_class.R'
+    'pubchem_id_exchange_class.R'
     'pubchem_property_lookup_class.R'
     'pubchem_structure_chart_class.R'
     'pubchem_structure_lookup_class.R'
@@ -138,7 +146,6 @@ Suggests:
     rsvg,
     metabolomicsWorkbenchR,
     KEGGREST,
-    plyr,
     magick,
     structToolbox,
     ggVennDiagram,
