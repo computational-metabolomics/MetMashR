@@ -1,0 +1,698 @@
+---
+title: "Case study: reproducing a Metabolite Merging Strategy with MetMashR"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Case study: reproducing a Metabolite Merging Strategy with MetMashR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    fig.align = "center"
+)
+
+.DT <- function(x) {
+    DT::datatable(
+        x,
+        options = list(
+            scrollX = TRUE,
+            pageLength = 10,
+            dom = "ftip"
+        ),
+        rownames = FALSE
+    )
+}
+```
+
+```{r setup, message = FALSE}
+library(struct)
+library(MetMashR)
+library(ggplot2)
+```
+
+# Introduction
+
+Villalba et al. (2023) describe a "Metabolites Merging Strategy" (MMS): a
+three-step procedure for harmonising metabolite annotations reported by
+different studies, databases and publications into one consistent,
+cross-referenced dataset. The steps are:
+
+1. **Translation and merging** - convert whatever identifier each source
+   reports (a name, an InChIKey, or some other identifier) to a common
+   InChIKey, and merge records that share one.
+2. **Attribute retrieval** - for each InChIKey, retrieve descriptive
+   attributes (name, molecular weight/formula) and cross-reference
+   identifiers (PubChem CID, InChI, SMILES, ChEBI, HMDB, KEGG, LipidMaps,
+   DrugBank, CAS) and chemical ontology (kingdom/superclass/class).
+3. **Manual curation** - collapse conjugated acid/base forms of the same
+   compound, retrieve missing attributes, and resolve duplicate/conflicting
+   synonyms.
+
+Their own worked example harmonises urinary asthma metabolites reported
+across three Metabolomics Workbench studies (ST001039, ST001048, ST001317),
+the Human Metabolome Database, and six literature articles.
+
+This vignette reproduces the MWB portion of that case study as a **single
+MetMashR model sequence** - one workflow object built by chaining existing
+(and, where a genuine gap existed, newly added) MetMashR steps with `+` -
+and checks the result against the paper's own published table.
+
+## A note on what "translation" means here
+
+Villalba et al.'s Step 1 used the PubChem Identifier Exchange Service for
+names, and the Chemical Translation Service (CTS) for other identifier
+types. **CTS has since been shut down** - every endpoint of the original
+service now returns a migration notice, and its replacement, CTS-Lite, does
+not support name-to-identifier translation at all (it only matches an
+identifier you already have against its own database). This vignette uses
+[Metabolomics Workbench's RefMet
+service](https://www.metabolomicsworkbench.org/databases/refmet/) as a
+substitute: it plays a similar synonym-resolution role, is still live, and
+in practice its curated picks often line up with the biologically-relevant
+form of a compound (the correct stereoisomer or protonation state) more
+often than a plain PubChem name search does - see the comparison in
+Section \@ref(step1) below.
+
+# Step 0: import the source data
+
+Each study's reported metabolite list is pulled directly from Metabolomics
+Workbench with `mwb_study_source()`, and the three tables are stacked with
+`combine_sources()`.
+
+Only the `metabolite_name` column - the name as originally reported by each
+study - is carried forward into the workflow below. Metabolomics Workbench
+does attach a `refmet_name` to most rows automatically at deposit time, and
+occasionally a `pubchem_id`, but using those would trivialise the exercise:
+the scenario MetMashR's mashing steps are built for is annotation software
+output that has names only, with no standardised identifiers attached. Any
+pre-existing identifiers are kept aside purely so the final comparison in
+Section \@ref(comparison) has a well-defined published answer to check
+against - never fed into the translation steps themselves.
+
+```{r step0, eval = FALSE}
+study_ids <- c("ST001039", "ST001048", "ST001317")
+sources <- lapply(
+    study_ids,
+    function(id) read_source(mwb_study_source(source = id, tag = id))
+)
+
+combine_step <- combine_sources(
+    source_list = list(),
+    keep_cols = "metabolite_name",
+    source_col = "source"
+)
+combined <- predicted(model_apply(combine_step, sources))
+```
+
+```{r step0-run, echo = FALSE}
+study_ids <- c("ST001039", "ST001048", "ST001317")
+```
+
+# Building the model sequence {#step1}
+
+The remaining steps are chained into one `model_seq` object with `+`. To
+avoid overburdening the public APIs involved every time this vignette is
+built, each step that queries an external service is given an `rds_cache`
+pointing at a result set cached with the package (`inst/cached/`); in your
+own workflow you would typically omit `cache` (or point it at your own
+file) so that your queries populate it as you go. Beyond speed, caching
+also leaves a persistent local record of what a service actually returned
+- useful given that services used here can be discontinued or changed with
+no notice, as happened to CTS (Section \@ref(step1)).
+
+```{r cache-setup, eval = FALSE}
+cached <- function(name) {
+    rds_cache(source = system.file(
+        "cached", package = "MetMashR",
+        paste0("mms_case_study_", name, ".rds")
+    ))
+}
+```
+
+## Step 0.5: normalising synonyms
+
+A handful of normalisation rules, developed by inspecting real name-match
+failures, are applied before translation:
+
+- extract a name from its trailing parenthetical gloss when one is present
+  and preceded by whitespace (e.g. `"MEP (Mono-ethyl phthalate)"` ->
+  `"Mono-ethyl phthalate"`) - guarding on the preceding space keeps lipid
+  shorthand like `"LysoPC(18:0)"` (no space before the paren) untouched;
+- strip racemic/stereo markers MetMashR's built-in `racemic_dictionary`
+  doesn't already cover (`"D/L "`, `"DL-"` and their mirror forms);
+- expand the `Lyso-` glycerophospholipid class prefix to LIPID MAPS'
+  shorthand (`"LysoPC"` -> `"LPC"`), which resolves cleanly where the full
+  word often doesn't.
+
+```{r step0.5, eval = FALSE}
+abbrev_dictionary <- list(
+    list(
+        pattern = "\\s\\([^()]+\\)\\s*$",
+        replace = function(inp) {
+            m <- regmatches(
+                inp$x,
+                regexec("\\s\\(([^()]+)\\)\\s*$", inp$x)
+            )
+            if (length(m[[1]]) > 1) trimws(m[[1]][2]) else inp$x
+        }
+    )
+)
+dl_dictionary <- list(
+    list(pattern = "^D/L[ -]?", replace = ""),
+    list(pattern = "^L/D[ -]?", replace = ""),
+    list(pattern = "^DL-?", replace = ""),
+    list(pattern = "^LD-?", replace = "")
+)
+lyso_dictionary <- list(
+    list(pattern = "^Lyso-?PC", replace = "LPC", perl = TRUE, ignore.case = TRUE),
+    list(pattern = "^Lyso-?PE", replace = "LPE", perl = TRUE, ignore.case = TRUE),
+    list(pattern = "^Lyso-?PI", replace = "LPI", perl = TRUE, ignore.case = TRUE),
+    list(pattern = "^Lyso-?PG", replace = "LPG", perl = TRUE, ignore.case = TRUE),
+    list(pattern = "^Lyso-?PS", replace = "LPS", perl = TRUE, ignore.case = TRUE),
+    list(pattern = "^Lyso-?PA", replace = "LPA", perl = TRUE, ignore.case = TRUE)
+)
+
+normalise_step <- normalise_strings(
+    search_column = "metabolite_name",
+    output_column = "name_normalised",
+    dictionary = c(abbrev_dictionary, racemic_dictionary, dl_dictionary, lyso_dictionary)
+)
+```
+
+## Step 1: translation and merging
+
+Two independent translation routes are tried for every (normalised) name:
+[`pubchem_id_exchange()`], which drives PubChem's own batch PUG XML ID
+Exchange service directly, and [`mwb_refmet_lookup()`], the RefMet-based
+substitute for CTS described above. [`prioritise_columns()`] then picks a
+winner per row, **preferring RefMet's pick when one exists**: across the
+name-resolution problems encountered developing this vignette, RefMet
+consistently resolved to the same biologically-relevant
+stereoisomer/protonation state as the paper's own curated table, where a
+plain PubChem name search more often returned a generic, stereochemistry-
+unspecified, or wrongly-charged form of the same compound.
+
+Each phase below is built as a plain `list()` of steps rather than
+pre-chaining it into its own `model_seq` with `+`: `struct` defines `+` for
+`model`/`model` and `model`/`model_seq` combinations, but not for combining
+two already-built `model_seq` objects together, which is what naming each
+phase and joining the phases with `+` at the end would require. Keeping
+each phase a list and flattening with `Reduce("+", ...)` once, at the very
+end (Section \@ref(the-complete-sequence)), sidesteps that gap while still
+keeping the workflow readable in named, logical chunks.
+
+```{r step1, eval = FALSE}
+translate_step <- list(
+    pubchem_id_exchange(
+        query_column = "name_normalised",
+        input_type = "synonyms",
+        output_type = "inchikey",
+        cache = cached("pubchem_id_exchange")
+    ),
+    mwb_refmet_lookup(
+        query_column = "name_normalised",
+        cache = cached("refmet"),
+        delay = 0.5
+    ),
+    # flag cases where the two translation routes agree on connectivity
+    # (same first-14-character InChIKey block) but disagree on
+    # stereochemistry (differ within the first 26 characters) - a signal
+    # that automated resolution is unreliable here and the pick genuinely
+    # needs human review (MMS Step 3c). See Section \@ref(stereoisomers)
+    # for how well this actually catches the mismatches found by checking
+    # against the paper's published result.
+    compute_column(
+        input_columns = c("inchi_key_refmet", "inchikey_pubchem_id_exchange"),
+        output_column = "stereo_ambiguous",
+        fcn = function(x) {
+            a <- x[[1]]
+            b <- x[[2]]
+            ambiguous <- substr(a, 1, 14) == substr(b, 1, 14) &
+                substr(a, 1, 26) != substr(b, 1, 26)
+            ambiguous[is.na(ambiguous)] <- FALSE
+            ambiguous
+        }
+    ),
+    prioritise_columns(
+        column_names = c("inchi_key_refmet", "inchikey_pubchem_id_exchange"),
+        output_name = "InChIKey",
+        source_name = "InChIKey_source",
+        source_tags = c("refmet", "pubchem")
+    ),
+    filter_na(column_name = "InChIKey", mode = "exclude"),
+    combine_records(
+        group_by = "InChIKey",
+        default_fcn = fuse_unique(separator = " || "),
+        fcns = list(
+            metabolite_name = fuse_unique(separator = " || "),
+            source = fuse_unique(separator = " || "),
+            stereo_ambiguous = function(x) any(x, na.rm = TRUE)
+        )
+    )
+)
+```
+
+Names that are already an InChIKey, or reported as some other identifier
+type, pass straight through unchanged: only rows without a value in
+`InChIKey` are actually queried by the translation steps above, since
+`pubchem_id_exchange()`/`mwb_refmet_lookup()` only touch their configured
+`query_column`. None of the three MWB studies used here happen to report
+anything other than a plain name, so this vignette doesn't exercise that
+path directly, but no special-casing is needed for it either.
+
+## Step 2: attribute retrieval
+
+Each translated InChIKey is enriched with: name, molecular weight/formula,
+InChI and SMILES from PubChem (also the source for molecular
+weight/formula, since CTS - the paper's original source for these - is no
+longer available); chemical ontology from ClassyFire (needs a structure,
+so this step runs after the PubChem lookup above supplies one); HMDB, ChEBI
+and LipidMaps identifiers from Metabolomics Workbench's own compound
+database (`mwb_compound_lookup()`, a role CTS also used to fill); and a
+KEGG identifier by chaining through the PubChem CID.
+
+ClassyFire's ontology lookup uses [`classyfire_batch_lookup()`] rather than
+[`classyfire_lookup()`]: the latter is a synchronous, one-compound-per-
+request call, and ClassyFire rate-limits it aggressively enough to make
+several hundred compounds impractical. `classyfire_batch_lookup()` instead
+uses [ClassyFire's own batch submission
+API](https://bitbucket.org/wishartlab/classyfire_api/src/master/) - one (or
+a few, for very large inputs) request covers the whole batch.
+
+DrugBank ID and CAS number, part of the paper's original attribute set, are
+omitted: DrugBank has no accessible public REST API for this kind of
+lookup, and while PubChem's `xrefs` endpoint can return a CAS Registry
+Number for many compounds, no MetMashR object currently wraps it.
+
+```{r step2, eval = FALSE}
+attribute_step <- list(
+    pubchem_property_lookup(
+        query_column = "InChIKey",
+        search_by = "inchikey",
+        property = c(
+            "IUPACName", "MolecularWeight", "MolecularFormula",
+            "InChI", "CanonicalSMILES", "Charge"
+        ),
+        cache = cached("pubchem_property"),
+        delay = 0.4
+    ),
+    classyfire_batch_lookup(
+        query_column = "ConnectivitySMILES_pubchem",
+        output_items = c("kingdom", "superclass", "class"),
+        output_fields = "name",
+        cache = cached("classyfire"),
+        delay = 3
+    ),
+    mwb_compound_lookup(
+        input_item = "inchi_key",
+        query_column = "InChIKey",
+        output_item = c("hmdb_id", "chebi_id", "lm_id", "pubchem_cid"),
+        cache = cached("mwb_compound"),
+        delay = 0.5
+    ),
+    kegg_lookup(
+        get = "compound", from = "pubchem",
+        query_column = "CID_pubchem"
+    )
+)
+```
+
+## Step 3: manual curation
+
+Villalba et al. describe collapsing conjugated acid/base forms using "the
+first 14 characters" of the InChIKey (the connectivity/skeleton hash only).
+Tested against real data, that rule also merges unrelated stereoisomers
+that happen to share a skeleton (D-glucuronic acid and its epimer
+galacturonate, both neutral, is one real example). An InChIKey's *final*
+single character is specifically a protonation flag (`N` = neutral, other
+letters = a specific charge state) - verified here against live PubChem
+`Charge` values - so grouping on everything **except** that last character,
+then keeping whichever group member has the smallest `|Charge|`, collapses
+true conjugate pairs without also merging genuine stereoisomers.
+
+```{r step3, eval = FALSE}
+attr_cols <- c(
+    "IUPACName_pubchem", "MolecularWeight_pubchem", "MolecularFormula_pubchem",
+    "InChI_pubchem", "ConnectivitySMILES_pubchem", "CID_pubchem",
+    "hmdb_id_mwb", "chebi_id_mwb", "lm_id_mwb", "pubchem_cid_mwb",
+    "compound_kegg", "kingdom.name_cfb", "superclass.name_cfb", "class.name_cfb",
+    # keep the winning row's own flag rather than the default fuse_unique(),
+    # which would coerce this logical column to a "TRUE"/"FALSE" string
+    "stereo_ambiguous"
+)
+select_min_fcns <- setNames(
+    lapply(
+        attr_cols,
+        function(x) select_min(min_col = "Charge_pubchem", use_abs = TRUE)
+    ),
+    attr_cols
+)
+
+curation_step <- list(
+    compute_column(
+        input_columns = "InChIKey",
+        output_column = "inchikey_skeleton",
+        # compute_column passes fcn a 1-column data.frame, not a bare vector
+        fcn = function(x) substr(x[[1]], 1, 26)
+    ),
+    combine_records(
+        group_by = "inchikey_skeleton",
+        default_fcn = fuse_unique(separator = " || "),
+        fcns = select_min_fcns
+    ),
+    unique_records()
+)
+```
+
+Missing attributes (a translated InChIKey that some downstream lookup
+couldn't find a match for) surface directly as `NA` in the relevant column
+- inspect these with `filter_na()` in your own workflow to decide whether
+manual review or a further fallback (e.g. `opsin_lookup()`) is warranted.
+
+## The complete sequence
+
+Written out in full, the entire workflow above is one continuous chain of
+steps joined with `+` - a single `model_seq`, built and run once against
+`combined`:
+
+```{r full-workflow-display, eval = FALSE}
+mms_workflow <-
+    normalise_strings(
+        search_column = "metabolite_name",
+        output_column = "name_normalised",
+        dictionary = c(abbrev_dictionary, racemic_dictionary, dl_dictionary, lyso_dictionary)
+    ) +
+    pubchem_id_exchange(
+        query_column = "name_normalised",
+        input_type = "synonyms",
+        output_type = "inchikey",
+        cache = cached("pubchem_id_exchange")
+    ) +
+    mwb_refmet_lookup(
+        query_column = "name_normalised",
+        cache = cached("refmet"),
+        delay = 0.5
+    ) +
+    compute_column(
+        input_columns = c("inchi_key_refmet", "inchikey_pubchem_id_exchange"),
+        output_column = "stereo_ambiguous",
+        fcn = function(x) {
+            a <- x[[1]]
+            b <- x[[2]]
+            ambiguous <- substr(a, 1, 14) == substr(b, 1, 14) &
+                substr(a, 1, 26) != substr(b, 1, 26)
+            ambiguous[is.na(ambiguous)] <- FALSE
+            ambiguous
+        }
+    ) +
+    prioritise_columns(
+        column_names = c("inchi_key_refmet", "inchikey_pubchem_id_exchange"),
+        output_name = "InChIKey",
+        source_name = "InChIKey_source",
+        source_tags = c("refmet", "pubchem")
+    ) +
+    filter_na(column_name = "InChIKey", mode = "exclude") +
+    combine_records(
+        group_by = "InChIKey",
+        default_fcn = fuse_unique(separator = " || "),
+        fcns = list(
+            metabolite_name = fuse_unique(separator = " || "),
+            source = fuse_unique(separator = " || "),
+            stereo_ambiguous = function(x) any(x, na.rm = TRUE)
+        )
+    ) +
+    pubchem_property_lookup(
+        query_column = "InChIKey",
+        search_by = "inchikey",
+        property = c(
+            "IUPACName", "MolecularWeight", "MolecularFormula",
+            "InChI", "CanonicalSMILES", "Charge"
+        ),
+        cache = cached("pubchem_property"),
+        delay = 0.4
+    ) +
+    classyfire_batch_lookup(
+        query_column = "ConnectivitySMILES_pubchem",
+        output_items = c("kingdom", "superclass", "class"),
+        output_fields = "name",
+        cache = cached("classyfire"),
+        delay = 3
+    ) +
+    mwb_compound_lookup(
+        input_item = "inchi_key",
+        query_column = "InChIKey",
+        output_item = c("hmdb_id", "chebi_id", "lm_id", "pubchem_cid"),
+        cache = cached("mwb_compound"),
+        delay = 0.5
+    ) +
+    kegg_lookup(
+        get = "compound", from = "pubchem",
+        query_column = "CID_pubchem"
+    ) +
+    compute_column(
+        input_columns = "InChIKey",
+        output_column = "inchikey_skeleton",
+        fcn = function(x) substr(x[[1]], 1, 26)
+    ) +
+    combine_records(
+        group_by = "inchikey_skeleton",
+        default_fcn = fuse_unique(separator = " || "),
+        fcns = select_min_fcns
+    ) +
+    unique_records()
+
+result <- predicted(model_apply(mms_workflow, combined))
+```
+
+# What the harmonised table looks like
+
+`result$data` is a single flat table: one row per unique compound, with
+every attribute from Steps 1-3 as a column - the InChIKey and its
+provenance, PubChem/RefMet identifiers, ClassyFire ontology, and
+cross-references from MWB, ChEBI, HMDB, LipidMaps and KEGG. A cleaned-up
+subset of the columns is shown below (the full table also carries e.g. the
+raw ClassyFire class *descriptions*, InChI strings and SMILES, omitted here
+just for readability):
+
+```{r result-table, eval = FALSE}
+preview_cols <- c(
+    "metabolite_name", "InChIKey", "IUPACName_pubchem",
+    "MolecularFormula_pubchem", "MolecularWeight_pubchem",
+    "hmdb_id_mwb", "chebi_id_mwb", "pubchem_cid_mwb", "compound_kegg", "lm_id_mwb",
+    "kingdom.name_cfb", "superclass.name_cfb", "class.name_cfb",
+    "stereo_ambiguous", "source"
+)
+.DT(result$data[, preview_cols])
+```
+
+```{r result-table-cached, echo = FALSE}
+.DT(readRDS(system.file("cached", "mms_case_study_result_preview.rds", package = "MetMashR")))
+```
+
+# Comparison against the published result {#comparison}
+
+Villalba et al.'s own final table is published as supplementary material on
+Zenodo (10.5281/zenodo.8226097). It's imported here with
+`BiocFileCache_database()` so it isn't re-downloaded on every build, and
+restricted to compounds attributed to these three MWB studies (the paper's
+HMDB and literature sources are out of scope for this vignette, which only
+implements Step 0 for Metabolomics Workbench).
+
+```{r comparison, eval = FALSE}
+zenodo_url <- paste0(
+    "https://zenodo.org/api/records/8226097/files/",
+    "MDM_Suppl_vSubmitted.xlsx/content"
+)
+gold_db <- BiocFileCache_database(
+    source = zenodo_url,
+    resource_name = "MMS_zenodo_suppl",
+    bfc_fun = cache_as_is,
+    import_fun = function(path) {
+        # the Zenodo API URL has no .xlsx extension; openxlsx needs one
+        tmp <- tempfile(fileext = ".xlsx")
+        file.copy(path, tmp, overwrite = TRUE)
+        on.exit(unlink(tmp))
+        openxlsx::read.xlsx(tmp, sheet = "Table S3", colNames = TRUE)
+    }
+)
+gold_full <- read_database(gold_db)
+gold_mwb <- gold_full[grepl(paste(study_ids, collapse = "|"), gold_full$Reference), ]
+```
+
+```{r venn, eval = FALSE}
+ours <- annotation_source(
+    name = "MetMashR", tag = "MetMashR",
+    data = data.frame(InChIKey = unique(result$data$InChIKey))
+)
+gold <- annotation_source(
+    name = "MMS (Villalba et al.)", tag = "MMS (Villalba et al.)",
+    data = data.frame(InChIKey = unique(gold_mwb$InChIKey))
+)
+
+C <- annotation_venn_chart(
+    factor_name = "InChIKey", labels = TRUE, legend = TRUE,
+    # colour by group with alpha blending in the overlap - annotation_venn_chart()'s
+    # own default is a plain white fill; ".group" turns on ggVennDiagram's
+    # per-group colour mapping (alpha is fixed internally at 1/n groups)
+    fill_colour = ".group"
+)
+chart_plot(C, ours, gold)
+```
+
+```{r venn-image, echo = FALSE, out.width = "70%"}
+knitr::include_graphics(
+    system.file("cached", "mms_case_study_venn.png", package = "MetMashR")
+)
+```
+
+# Characterising the mismatch {#stereoisomers}
+
+Rather than leave "55 only ours, 58 only paper" as an unexplained gap,
+every mismatched pair was checked at the InChIKey skeleton level: the first
+14 characters encode connectivity only, and the first 26 encode
+connectivity plus stereochemistry, leaving only the final character (a
+protonation flag) unaccounted for.
+
+```{r mismatch-check, eval = FALSE}
+our_keys <- unique(result$data$InChIKey)
+gold_keys <- unique(gold_mwb$InChIKey)
+only_ours <- setdiff(our_keys, gold_keys)
+only_gold <- setdiff(gold_keys, our_keys)
+
+skel14 <- function(x) substr(x, 1, 14)
+skel26 <- function(x) substr(x, 1, 26)
+
+pairs <- do.call(rbind, lapply(only_ours, function(k) {
+    g <- only_gold[skel14(only_gold) == skel14(k) & skel26(only_gold) != skel26(k)]
+    if (length(g) == 0) {
+        return(NULL)
+    }
+    data.frame(ours_key = k, gold_key = g)
+}))
+```
+
+Of the 55 compounds only in MetMashR's result, 36 turned out to share a
+skeleton with a paper-only compound but disagree on stereochemistry, 1 is
+the `Phosphocholine`/`Phosphorylcholine` cation-vs-neutral case described
+above, and 18 have no skeletal relationship to any paper-only compound at
+all (likely genuine name-resolution misses).
+
+Breaking the 36 stereo mismatches down further, by which side (if either)
+resolved to the InChIKey's "no stereochemistry specified" stereo layer:
+
+| Direction | Count |
+|---|---|
+| MetMashR resolves to a *specific* stereoisomer, the paper's is unspecified | 24 |
+| Both resolve to a *specific* but *different* stereoisomer | 10 |
+| MetMashR's is unspecified, the paper's is specific | 2 |
+
+The first row isn't really a defect - MetMashR's output is arguably more
+precise than the reference there, not less. The other 12 are the real gap,
+and for at least 10 of them the root cause is checkable directly: the
+paper's *curated* name carries a stereo descriptor the *originally
+reported* name never had (e.g. `Rosmarinate` -> "(S)-rosmarinic acid",
+`Lactose` -> "beta-Lactose", `Biopterin` -> "D-Biopterin"). That
+stereochemistry was added by a human curator and isn't recoverable from the
+bare reported name by any automated lookup.
+
+## How well does `stereo_ambiguous` catch these?
+
+The flag added in Section \@ref(step1) compares MetMashR's own two
+translation routes against *each other*, not against the paper, so its
+recall is necessarily imperfect: it can only catch disagreement it can see.
+
+```{r flag-check, eval = FALSE}
+sum(result$data$stereo_ambiguous, na.rm = TRUE) # rows flagged
+sum(pairs$ours_key %in% result$data$InChIKey[result$data$stereo_ambiguous]) # of the 36, how many caught
+```
+
+In practice it flags 32 of 335 compounds, catching 27 of the 36 known
+mismatches (75%) plus 5 more where the two sources disagreed internally but
+the final pick happened to still match the paper anyway (worth review
+regardless, since that agreement was coincidental). The 9 it misses are
+cases where PubChem ID Exchange and RefMet happen to agree with *each
+other* on the wrong stereoisomer - a shared bias that comparing two sources
+against one another can't detect, and the honest limit of this approach
+without a third, independent source to triangulate against.
+
+## What perfect resolution would look like
+
+To size the ceiling on this specific fix, each of the 36 mismatched
+InChIKeys was relabelled to the paper's matching key (simulating what
+correct manual or better-informed resolution would produce) and the
+overlap recomputed:
+
+```{r resolved-hypothetical, eval = FALSE}
+resolved_keys <- our_keys
+m <- match(resolved_keys, pairs$ours_key)
+hit <- !is.na(m)
+resolved_keys[hit] <- pairs$gold_key[m[hit]]
+resolved_keys <- unique(resolved_keys)
+
+length(intersect(resolved_keys, gold_keys)) # shared, after resolving
+```
+
+```{r venn-resolved-image, echo = FALSE, out.width = "70%"}
+knitr::include_graphics(
+    system.file("cached", "mms_case_study_venn_resolved.png", package = "MetMashR")
+)
+```
+
+Shared compounds rise from 280 (83.6%/82.8%) to **316 (93.5%/93.5%)** -
+resolving the stereochemistry gap alone would close most of the remaining
+distance to the published result, leaving only the 19/22 split from
+genuinely unmatched compounds and (on the paper's side) sources this
+vignette doesn't cover.
+
+# Summary
+
+Reproducing MMS as one MetMashR model sequence required three genuinely new
+objects (`mwb_study_source()` for Step 0, `mwb_refmet_lookup()` as a
+substitute for the now-defunct CTS, `classyfire_batch_lookup()` to make
+Step 2's ontology retrieval tractable at this scale) and one ported from an
+internal sister package (`pubchem_id_exchange()`, a closer match to the
+paper's own "PubChem Identifier Exchange Service" than the synchronous
+per-row lookups MetMashR already had). Everything else - normalisation,
+attribute retrieval, conjugate-form collapsing, deduplication, flagging
+disagreement for review - was already available and needed no new code,
+only careful chaining and, in a couple of places, a column-name fix or a
+widened retry.
+
+The value of building this as one executable, versioned workflow object,
+rather than a paraphrased description of one, showed up directly during
+development: it surfaced a specific ambiguity in the original method's own
+description of conjugate-form collapsing (the literal "first 14
+characters" rule over-merges real stereoisomers), a case where the exact
+external service the original method depended on had been discontinued
+entirely, a case (`Linoleate`) where PubChem correctly resolves a name but
+to a different, valid registration of the same compound than the one a
+curated reference table happens to use, and - the largest single source of
+disagreement with the published result - a systematic tendency for
+automated name resolution to default to a different stereoisomer than a
+human curator would pick from the same bare name (Section
+\@ref(stereoisomers)). None of these are visible in a prose method
+description; all of them are immediately visible, explainable, and at
+least partially fixable once the workflow is code that actually runs.
+
+# Learnings and Benefits of MetMashR
+
+- No code was published; only the data was provided on Zenodo, despite the manuscript describing a specific multi-step pipeline (PubChem Identifier Exchange + CTS + manual curation). Using MetMashR, the pipeline itself would have been the artifact. A single, versioned workflow that can be shared, re-run, and cited alongside the paper, rather than a descriptive text that cannot be executed.
+- The Chemical Translation Service (CTS) used in the paper is now fully shut down, and the CTS-lite replacement doesn't support the required name-to-id lookup. Using MetMashr, online lookups can be cached and version tracked, so that even when a service is no longer available previous results are still reproducible.
+- The conjugate acid/base collapsing rule (using the first 14 characters of the InChIKey) is under-specified in the paper, making it difficult to reproduce exactly. Using MetMashr the code is inspectable and testable.
+- Stereochemistry decisions were made by human curators with no visible trail. Several published names carry stereo descriptors the original reported data never had; they were added during "manual curation."  Using MetMashR, we incorporated a flag into the workflow to track where these discrepencies arise, so it's easier to see where manual curation may need to take place.
+- In the paper, a mechanism to detect when two translation sources disagree is not provided. Their pipeline picks one answer (PubChem or CTS) without providing the selection logic or a record of the ambiguity. Using MetMashr, `prioritise_columns()` clearly captures which result get priority over the other and keeps a record of all results as well as the final resolved values.
+- The case study in the paper is asserted to be reproducible but this is not demonstrated. A reviewer or reader has no way to check the result against the without rebuilding the entire pipeline from scratch using only the method text to guide them. Using MetMashr, the complete workflow can be run in a single step using data obtained from Zenodo and.or Metabolomics Workbench. Venn diagrams and other charts can be used to explore the resulting harmonised table and compare it to the table provided by the paper to explore and diagnose differences caused by e.g. using different id lookup services.
+
+# References
+
+Villalba H, Llambrich M, Gumà J, Brezmes J, Cumeras R. A Metabolites
+Merging Strategy (MMS): Harmonization to Enable Studies' Intercomparison.
+Metabolites 2023;13(12):1167. https://doi.org/10.3390/metabo13121167
