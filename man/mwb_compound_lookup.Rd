@@ -64,6 +64,7 @@ M <- mwb_compound_lookup(
         url_template = "<base_url>/compound/<input_item>/<query_column>/<output_item>",
         query_column = character(0),
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 0.5,
         suffix = "_rest_api")

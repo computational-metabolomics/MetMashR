@@ -60,6 +60,7 @@ M <- lipidmaps_lookup(
         base_url = "https://www.lipidmaps.org/rest",
         url_template = "<base_url>/<context>/<context_item>/<query_column>/<output_item>/json",
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 0.5,
         suffix = "_rest_api")

@@ -9,6 +9,8 @@ kegg_lookup(
   from = "compound",
   query_column,
   suffix = "_kegg",
+  cache = NULL,
+  cache_mode = "update",
   ...
 )
 }
@@ -35,6 +37,28 @@ the type selected for the "from" slot.}
 
 \item{suffix}{(character) A suffix appended to all column names in
 the returned result. The default is \code{"_kegg"}.}
+
+\item{cache}{(annotation_database, NULL) A struct cache object (e.g.
+\code{rds_cache()}) that stores results of previous KEGG conversions,
+keyed by query value. Values already present in the cache are not
+requeried. If not using a cache then set to NULL. The default is
+\code{NULL}.}
+
+\item{cache_mode}{(character) Cache mode. Allowed values are limited
+to the following: \itemize{ \item{\code{"update"}: The normal mode:
+values already in \code{cache} are used as-is, anything missing is queried
+live and the result added to the cache.}\item{\code{"offline"}: Never
+query the live KEGG API - only values already present in \code{cache} are
+returned, and everything else is left as NA. Useful for continuing to
+work with a partially-populated cache while KEGG is unreachable or
+down, without waiting on or erroring against the live service. A
+warning lists how many query values are not covered by the cache when
+this happens (and, if the cache is entirely empty or unset, that
+every value will be returned as NA).}\item{\code{"rebuild"}: Ignore
+any existing cached value and query the live KEGG API for every
+value, overwriting the corresponding entry in \code{cache}. Useful when
+cached results are known to be stale.}} The default is
+\code{"update"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }
@@ -67,7 +91,9 @@ M <- kegg_lookup(
         get = "pubchem",
         from = "compound",
         query_column = "V1",
-        suffix = "_kegg")
+        suffix = "_kegg",
+        cache = NULL,
+        cache_mode = "update")
 
 }
 \references{

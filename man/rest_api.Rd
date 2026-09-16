@@ -11,6 +11,7 @@ rest_api(
   status_codes,
   delay,
   cache = NULL,
+  cache_mode = "update",
   query_column,
   ...
 )
@@ -37,6 +38,21 @@ provided will be passed to httr::stop_for_status().}
 \item{cache}{(annotation_database, NULL) A struct cache object that
 contains parsed responses to previous api queries. If not using a
 cache then set to NULL. The default is \code{NULL}.}
+
+\item{cache_mode}{(character) Cache mode. Allowed values are limited
+to the following: \itemize{ \item{\code{"update"}: The normal mode:
+values already in \code{cache} are used as-is, anything missing is queried
+live and the result added to the cache.}\item{\code{"offline"}: Never
+query the live API - only values already present in \code{cache} are
+returned, and everything else is left as NA. Useful for continuing to
+work with a partially-populated cache while the API is unreachable or
+down, without waiting on or erroring against the live service. A
+warning lists how many query values are not covered by the cache when
+this happens (and, if the cache is entirely empty or unset, that
+every value will be returned as NA).}\item{\code{"rebuild"}: Ignore
+any existing cached value and query the live API for every value,
+overwriting the corresponding entry in \code{cache}. Useful when cached
+results are known to be stale.}} The default is \code{"update"}.}
 
 \item{query_column}{(character) The name of a column in the
 annotation table containing values to search in the api call.}
@@ -67,6 +83,7 @@ M <- rest_api(
         url_template = character(0),
         query_column = character(0),
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 0.5,
         suffix = "_rest_api")

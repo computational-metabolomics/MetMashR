@@ -27,6 +27,7 @@ pubchem_id_exchange <- function(
         output_source_name = NULL,
         n_batches = NULL,
         cache = NULL,
+        cache_mode = "update",
         verbose = FALSE,
         ...) {
     if (!is.null(cache)) {
@@ -45,6 +46,7 @@ pubchem_id_exchange <- function(
         output_source_name = output_source_name,
         n_batches = n_batches,
         cache = cache,
+        cache_mode = cache_mode,
         verbose = verbose,
         ...
     )
@@ -66,6 +68,7 @@ pubchem_id_exchange <- function(
         output_source_name = "entity",
         n_batches = "entity",
         cache = "entity",
+        cache_mode = "enum",
         verbose = "entity",
         request_ids = "entity",
         query_batches = "entity",
@@ -88,7 +91,8 @@ pubchem_id_exchange <- function(
         .params = c(
             "query_column", "output_type", "suffix", "delay",
             "max_attempts", "max_poll_rounds", "input_type", "input_source_name",
-            "output_source_name", "n_batches", "cache", "verbose"
+            "output_source_name", "n_batches", "cache", "cache_mode",
+            "verbose"
         ),
         .outputs = c("updated", "query_batches", "query_values", "request_ids", "trained"),
         query_column = entity(
@@ -196,6 +200,37 @@ pubchem_id_exchange <- function(
             ),
             type = c("annotation_database", "NULL"),
             value = NULL
+        ),
+        cache_mode = enum(
+            name = "Cache mode",
+            description = c(
+                "update" = paste0(
+                    "The normal mode: values already in `cache` are used ",
+                    "as-is, anything missing is submitted to PubChem and ",
+                    "the result added to the cache."
+                ),
+                "offline" = paste0(
+                    "Never submit a batch to PubChem - only values already ",
+                    "present in `cache` are returned, and everything else ",
+                    "is left as NA. Useful for continuing to work with a ",
+                    "partially-populated cache while PubChem is ",
+                    "unreachable or down, without waiting on or erroring ",
+                    "against the live service. A warning lists how many ",
+                    "query values are not covered by the cache when this ",
+                    "happens (and, if the cache is entirely empty or ",
+                    "unset, that every value will be returned as NA)."
+                ),
+                "rebuild" = paste0(
+                    "Ignore any existing cached value and submit every ",
+                    "value to PubChem, overwriting the corresponding ",
+                    "entry in `cache`. Useful when cached results are ",
+                    "known to be stale."
+                )
+            ),
+            type = "character",
+            allowed = c("update", "offline", "rebuild"),
+            value = "update",
+            max_length = 1
         ),
         verbose = entity(
             name = "Verbose output",
@@ -317,6 +352,10 @@ pubchem_id_exchange <- function(
         if (nrow(results) > 0) {
             to_cache <- results
             colnames(to_cache)[colnames(to_cache) == M$query_column] <- ".search"
+            # drop any stale entry for values being (re-)written first
+            # (relevant in "rebuild" mode, a no-op otherwise) so the fresh
+            # result replaces it rather than sitting alongside it
+            cached <- cached[!(cached$.search %in% to_cache$.search), , drop = FALSE]
             cached <- unique(plyr::rbind.fill(cached, to_cache))
             if (is_writable(M$cache)) {
                 write_database(M$cache, cached)
@@ -346,7 +385,11 @@ pubchem_id_exchange <- function(
             relationship = "many-to-many"
         )
     } else {
+        # nothing cached or fetched at all (e.g. cache_mode = "offline"
+        # against an empty/unpopulated cache) - still produce the expected
+        # output column, filled with NA, rather than silently omitting it
         X <- D$data
+        X[[paste0(M$output_type, M$suffix)]] <- NA_character_
     }
 
     D$data <- X
@@ -394,11 +437,13 @@ setMethod(
             return(M)
         }
 
-        # skip anything already in the cache
+        # skip anything already in the cache ("rebuild" mode ignores the
+        # cache here and re-submits every value)
         to_submit <- query_values
+        cached <- NULL
         if (!is.null(M$cache)) {
             cached <- read_source(M$cache)$data
-            if (".search" %in% colnames(cached)) {
+            if (M$cache_mode != "rebuild" && ".search" %in% colnames(cached)) {
                 to_submit <- setdiff(query_values, cached$.search)
             }
         }
@@ -408,6 +453,27 @@ setMethod(
                 "of", length(query_values), "query values already cached\n"
             )
         }
+
+        if (M$cache_mode == "offline") {
+            if (length(to_submit) > 0) {
+                if (is.null(cached) || nrow(cached) == 0) {
+                    warning(
+                        "cache_mode = 'offline' but the cache is empty or ",
+                        "not configured - every value will be left as NA."
+                    )
+                } else {
+                    warning(
+                        length(to_submit), " of ", length(query_values),
+                        " query values are not in the cache and ",
+                        "cache_mode = 'offline' - these will be left as NA ",
+                        "rather than queried live."
+                    )
+                }
+            }
+            M$trained <- TRUE
+            return(M)
+        }
+
         if (length(to_submit) == 0) {
             M$trained <- TRUE
             return(M)

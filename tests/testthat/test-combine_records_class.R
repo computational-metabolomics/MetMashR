@@ -290,6 +290,49 @@ test_that("combine select_min ok", {
 
     expect_equal(nrow(out), 1) # only one value is NA
     expect_equal(out$dbid[1], "B") # B has min rt
+
+    ###############
+    M <- combine_records(
+        group_by = "combine_by",
+        default_fcn = select_min(min_col = "rt2", keep_NA = FALSE),
+        fcns = list()
+    )
+
+    M <- model_apply(M, AN)
+
+    out <- predicted(M)$data
+
+    # all NA and keep_NA = FALSE must still not silently drop the group
+    expect_equal(nrow(out), 3) # all NA so original table returned
+    expect_equal(out$dbid, db$dbid) # all NA so original table returned
+
+    ###############
+    M <- combine_records(
+        group_by = "combine_by",
+        default_fcn = select_min(min_col = "rt3", use_abs = TRUE, unique = TRUE),
+        fcns = list()
+    )
+
+    M <- model_apply(M, AN)
+
+    out <- predicted(M)$data
+
+    expect_equal(nrow(out), 1) # unique = TRUE always returns exactly one row
+    expect_equal(out$dbid[1], "A") # A has min |rt3|
+
+    ###############
+    M <- combine_records(
+        group_by = "combine_by",
+        default_fcn = select_min(min_col = "rt2", unique = TRUE),
+        fcns = list()
+    )
+
+    M <- model_apply(M, AN)
+
+    out <- predicted(M)$data
+
+    # unique = TRUE on an all-NA group must still return exactly one row
+    expect_equal(nrow(out), 1)
 })
 
 test_that("combine select_max ok", {
@@ -353,6 +396,34 @@ test_that("combine select_max ok", {
 
     expect_equal(nrow(out), 3) # all NA so original table returned
     expect_equal(out$dbid, db$dbid) # all NA so original table returned
+
+    ###############
+    M <- combine_records(
+        group_by = "combine_by",
+        default_fcn = select_max(max_col = "rt3", use_abs = TRUE, unique = TRUE),
+        fcns = list()
+    )
+
+    M <- model_apply(M, AN)
+
+    out <- predicted(M)$data
+
+    expect_equal(nrow(out), 1) # unique = TRUE always returns exactly one row
+    expect_equal(out$dbid[1], "C") # C has max |rt3|
+
+    ###############
+    M <- combine_records(
+        group_by = "combine_by",
+        default_fcn = select_max(max_col = "rt2", unique = TRUE),
+        fcns = list()
+    )
+
+    M <- model_apply(M, AN)
+
+    out <- predicted(M)$data
+
+    # unique = TRUE on an all-NA group must still return exactly one row
+    expect_equal(nrow(out), 1)
 
     ###############
     M <- combine_records(

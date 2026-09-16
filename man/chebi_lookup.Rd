@@ -82,6 +82,7 @@ M <- chebi_lookup(
         url_template = "<base_url>/es_search?term=<query_column>&size=<max_records>",
         query_column = character(0),
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 1,
         suffix = "_rest_api")

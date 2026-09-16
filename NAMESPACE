@@ -118,36 +118,50 @@ import(httr)
 import(methods)
 import(rlang)
 import(struct)
-importFrom(dplyr,"%>%")
-importFrom(dplyr,inner_join)
-importFrom(dplyr,join_by)
-importFrom(dplyr,left_join)
-importFrom(httr,GET)
-importFrom(httr,POST)
-importFrom(httr,add_headers)
-importFrom(httr,content)
-importFrom(httr,status_code)
-importFrom(httr2,req_body_raw)
-importFrom(httr2,req_headers)
-importFrom(httr2,req_perform)
-importFrom(httr2,request)
-importFrom(httr2,resp_body_string)
-importFrom(httr2,resp_status)
-importFrom(jsonlite,fromJSON)
-importFrom(jsonlite,toJSON)
-importFrom(methods,setClass)
-importFrom(methods,setGeneric)
-importFrom(methods,setMethod)
+importFrom(dplyr,
+  "%>%",
+  inner_join,
+  join_by,
+  left_join
+)
+importFrom(httr,
+  GET,
+  POST,
+  add_headers,
+  content,
+  status_code
+)
+importFrom(httr2,
+  req_body_raw,
+  req_headers,
+  req_perform,
+  request,
+  resp_body_string,
+  resp_status
+)
+importFrom(jsonlite,
+  fromJSON,
+  toJSON
+)
+importFrom(methods,
+  setClass,
+  setGeneric,
+  setMethod
+)
 importFrom(plyr,rbind.fill)
 importFrom(scales,manual_pal)
 importFrom(stats,setNames)
-importFrom(utils,URLencode)
-importFrom(utils,capture.output)
-importFrom(utils,modifyList)
-importFrom(utils,read.csv)
-importFrom(utils,stack)
-importFrom(utils,unzip)
-importFrom(xml2,read_xml)
-importFrom(xml2,xml_attr)
-importFrom(xml2,xml_find_first)
-importFrom(xml2,xml_text)
+importFrom(utils,
+  URLencode,
+  capture.output,
+  modifyList,
+  read.csv,
+  stack,
+  unzip
+)
+importFrom(xml2,
+  read_xml,
+  xml_attr,
+  xml_find_first,
+  xml_text
+)

@@ -29,6 +29,7 @@ classyfire_batch_lookup <- function(
         max_poll_rounds = 30,
         n_batches = NULL,
         cache = NULL,
+        cache_mode = "update",
         verbose = FALSE,
         ...) {
     if (!is.null(cache)) {
@@ -44,6 +45,7 @@ classyfire_batch_lookup <- function(
         max_poll_rounds = max_poll_rounds,
         n_batches = n_batches,
         cache = cache,
+        cache_mode = cache_mode,
         verbose = verbose,
         ...
     )
@@ -62,6 +64,7 @@ classyfire_batch_lookup <- function(
         max_poll_rounds = "entity",
         n_batches = "entity",
         cache = "entity",
+        cache_mode = "enum",
         verbose = "entity",
         request_ids = "entity",
         query_batches = "entity",
@@ -81,7 +84,8 @@ classyfire_batch_lookup <- function(
         predicted = "updated",
         .params = c(
             "query_column", "output_items", "output_fields", "suffix",
-            "delay", "max_poll_rounds", "n_batches", "cache", "verbose"
+            "delay", "max_poll_rounds", "n_batches", "cache", "cache_mode",
+            "verbose"
         ),
         .outputs = c("updated", "query_batches", "query_values", "request_ids", "trained"),
         query_column = entity(
@@ -169,6 +173,38 @@ classyfire_batch_lookup <- function(
             ),
             type = c("annotation_database", "NULL"),
             value = NULL
+        ),
+        cache_mode = enum(
+            name = "Cache mode",
+            description = c(
+                "update" = paste0(
+                    "The normal mode: values already in `cache` are used ",
+                    "as-is, anything missing is submitted to ClassyFire ",
+                    "and the result added to the cache."
+                ),
+                "offline" = paste0(
+                    "Never submit a batch to ClassyFire - only values ",
+                    "already present in `cache` are returned, and ",
+                    "everything else is left as NA. Useful for continuing ",
+                    "to work with a partially-populated cache while ",
+                    "ClassyFire is unreachable or down, without waiting ",
+                    "on or erroring against the live service. A warning ",
+                    "lists how many query values are not covered by the ",
+                    "cache when this happens (and, if the cache is ",
+                    "entirely empty or unset, that every value will be ",
+                    "returned as NA)."
+                ),
+                "rebuild" = paste0(
+                    "Ignore any existing cached value and submit every ",
+                    "value to ClassyFire, overwriting the corresponding ",
+                    "entry in `cache`. Useful when cached results are ",
+                    "known to be stale."
+                )
+            ),
+            type = "character",
+            allowed = c("update", "offline", "rebuild"),
+            value = "update",
+            max_length = 1
         ),
         verbose = entity(
             name = "Verbose output",
@@ -266,11 +302,13 @@ setMethod(
             return(M)
         }
 
-        # skip anything already in the cache
+        # skip anything already in the cache ("rebuild" mode ignores the
+        # cache here and re-submits every value)
         to_submit <- query_values
+        cached <- NULL
         if (!is.null(M$cache)) {
             cached <- read_source(M$cache)$data
-            if (".search" %in% colnames(cached)) {
+            if (M$cache_mode != "rebuild" && ".search" %in% colnames(cached)) {
                 to_submit <- setdiff(query_values, cached$.search)
             }
         }
@@ -280,6 +318,27 @@ setMethod(
                 "of", length(query_values), "query values already cached\n"
             )
         }
+
+        if (M$cache_mode == "offline") {
+            if (length(to_submit) > 0) {
+                if (is.null(cached) || nrow(cached) == 0) {
+                    warning(
+                        "cache_mode = 'offline' but the cache is empty or ",
+                        "not configured - every value will be left as NA."
+                    )
+                } else {
+                    warning(
+                        length(to_submit), " of ", length(query_values),
+                        " query values are not in the cache and ",
+                        "cache_mode = 'offline' - these will be left as NA ",
+                        "rather than queried live."
+                    )
+                }
+            }
+            M$trained <- TRUE
+            return(M)
+        }
+
         if (length(to_submit) == 0) {
             M$trained <- TRUE
             return(M)
@@ -461,6 +520,9 @@ setMethod(
             if (!is.null(new_results)) {
                 to_cache <- new_results
                 colnames(to_cache)[colnames(to_cache) == M$query_column] <- ".search"
+                # drop any stale entry for values being (re-)written first
+                # (relevant in "rebuild" mode, a no-op otherwise)
+                cached <- cached[!(cached$.search %in% to_cache$.search), , drop = FALSE]
                 cached <- unique(plyr::rbind.fill(cached, to_cache))
                 if (is_writable(M$cache)) {
                     write_database(M$cache, cached)
@@ -476,6 +538,19 @@ setMethod(
         if (is.null(collected)) {
             collected <- data.frame(x = character(0))
             colnames(collected) <- M$query_column
+        }
+        # ensure every expected output column exists (e.g. cache_mode =
+        # "offline" against an empty/unpopulated cache would otherwise
+        # leave `collected` with only the join key, silently dropping
+        # every kingdom/superclass/class column from the result instead
+        # of producing NA for them)
+        for (item in output_items) {
+            for (field in output_fields) {
+                col <- paste0(item, ".", field)
+                if (!(col %in% colnames(collected))) {
+                    collected[[col]] <- rep(NA_character_, nrow(collected))
+                }
+            }
         }
 
         colnames(collected) <- paste0(colnames(collected), M$suffix)

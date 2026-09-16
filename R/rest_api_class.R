@@ -9,6 +9,7 @@ rest_api <- function(base_url,
     status_codes,
     delay,
     cache = NULL,
+    cache_mode = "update",
     query_column,
     ...) {
     # check supplied cache is writable
@@ -24,6 +25,7 @@ rest_api <- function(base_url,
         status_codes = status_codes,
         delay = delay,
         cache = cache,
+        cache_mode = cache_mode,
         query_column = query_column,
         ...
     )
@@ -38,6 +40,7 @@ rest_api <- function(base_url,
         url_template = "entity",
         query_column = "entity",
         cache = "entity",
+        cache_mode = "enum",
         status_codes = "entity",
         parse_response = "entity",
         updated = "entity",
@@ -53,7 +56,7 @@ rest_api <- function(base_url,
         predicted = "updated",
         .params = c(
             "base_url", "url_template", "query_column",
-            "cache", "status_codes", "delay", "suffix"
+            "cache", "cache_mode", "status_codes", "delay", "suffix"
         ),
         .outputs = c("updated"),
         base_url = entity(
@@ -72,6 +75,37 @@ rest_api <- function(base_url,
             ),
             type = c("annotation_database", "NULL"),
             value = NULL
+        ),
+        cache_mode = enum(
+            name = "Cache mode",
+            description = c(
+                "update" = paste0(
+                    "The normal mode: values already in `cache` are used ",
+                    "as-is, anything missing is queried live and the ",
+                    "result added to the cache."
+                ),
+                "offline" = paste0(
+                    "Never query the live API - only values already ",
+                    "present in `cache` are returned, and everything else ",
+                    "is left as NA. Useful for continuing to work with a ",
+                    "partially-populated cache while the API is ",
+                    "unreachable or down, without waiting on or erroring ",
+                    "against the live service. A warning lists how many ",
+                    "query values are not covered by the cache when this ",
+                    "happens (and, if the cache is entirely empty or ",
+                    "unset, that every value will be returned as NA)."
+                ),
+                "rebuild" = paste0(
+                    "Ignore any existing cached value and query the live ",
+                    "API for every value, overwriting the corresponding ",
+                    "entry in `cache`. Useful when cached results are ",
+                    "known to be stale."
+                )
+            ),
+            type = "character",
+            allowed = c("update", "offline", "rebuild"),
+            value = "update",
+            max_length = 1
         ),
         url_template = entity(
             name = "URL template",
@@ -182,10 +216,18 @@ setMethod(
             }
         }
 
-
-
+        # offline mode against no/empty cache always returns everything as
+        # NA - warn up front rather than only implicitly via the per-value
+        # "missed" warning below
+        if (M$cache_mode == "offline" && (is.null(cached) || nrow(cached) == 0)) {
+            warning(
+                "cache_mode = 'offline' but the cache is empty or not ",
+                "configured - every value will be left as NA."
+            )
+        }
 
         collected <- list()
+        missed <- character(0)
         # for each query term
         for (k in D$data[[M$query_column]]) {
             if (is.na(k)) {
@@ -196,9 +238,10 @@ setMethod(
             # build url
             u <- .build_api_url(M, query_column = as.character(k))
 
-            # check cache if used
+            # check cache if used (skipped entirely in "rebuild" mode, which
+            # always re-queries live regardless of what is already cached)
             parsed <- NULL
-            if (!is.null(cached)) {
+            if (!is.null(cached) && M$cache_mode != "rebuild") {
                 # filter on query column
                 parsed <-
                     cached %>%
@@ -214,8 +257,14 @@ setMethod(
                 }
             }
 
-            # if not using cache, or no hits in cache
-            if (is.null(parsed)) {
+            # not in the cache, and not allowed to query live: leave as NA
+            if (is.null(parsed) && M$cache_mode == "offline") {
+                missed <- c(missed, as.character(k))
+                parsed <- list()
+                parsed[[M$query_column]] <- k
+                parsed <- as.data.frame(parsed)
+            } else if (is.null(parsed)) {
+                # if not using cache, no hits in cache, or cache_mode = "rebuild"
                 # delay
                 Sys.sleep(M$delay)
 
@@ -243,10 +292,16 @@ setMethod(
                 parsed[[M$query_column]] <- k
 
                 # update cached (even if not saving cache,
-                # to avoid same query multiple times)
+                # to avoid same query multiple times) - drop any stale
+                # entry for this key first (relevant for "rebuild" mode,
+                # a no-op otherwise) so the fresh result replaces it
+                # rather than sitting alongside it
                 forcache <- parsed
                 colnames(forcache)[colnames(parsed) == M$query_column] <-
                     ".search"
+                if (!is.null(cached)) {
+                    cached <- cached[cached$.search != k, , drop = FALSE]
+                }
                 cached <- plyr::rbind.fill(cached, forcache)
 
                 if (!is.null(M$cache)) {
@@ -265,6 +320,14 @@ setMethod(
 
             # collect results
             collected[[k]] <- parsed
+        }
+
+        if (length(missed) > 0) {
+            warning(
+                length(missed), " query value(s) are not in the cache and ",
+                "cache_mode = 'offline' - these will be left as NA rather ",
+                "than queried live."
+            )
         }
         # join results, pad missing columns with NA to get all columns
         collected <- plyr::rbind.fill(collected)

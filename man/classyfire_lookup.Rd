@@ -67,6 +67,7 @@ M <- classyfire_lookup(
         url_template = "<base_url>/<query_column>.json",
         query_column = character(0),
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 0.5,
         suffix = "_rest_api")
@@ -82,7 +83,7 @@ doi:10.32614/CRAN.package.dplyr
 Wickham H (2026). \emph{httr: Tools for Working with URLs and
 HTTP}. doi:10.32614/CRAN.package.httr
 \url{https://doi.org/10.32614/CRAN.package.httr}. R package version
-1.4.8, \url{https://CRAN.R-project.org/package=httr}.
+1.4.9, \url{https://CRAN.R-project.org/package=httr}.
 }
 \seealso{
 Other REST API's:

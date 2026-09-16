@@ -60,6 +60,7 @@ M <- pubchem_property_lookup(
         url_template = "<base_url>/<search_by>/<query_column>/property/<property>/JSON",
         query_column = character(0),
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 0.5,
         suffix = "_rest_api")

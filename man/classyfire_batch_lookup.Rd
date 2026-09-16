@@ -16,6 +16,7 @@ classyfire_batch_lookup(
   max_poll_rounds = 30,
   n_batches = NULL,
   cache = NULL,
+  cache_mode = "update",
   verbose = FALSE,
   ...
 )
@@ -67,6 +68,22 @@ service can go down or change without notice, as happened to the
 Chemical Translation Service this package once depended on (see
 \code{\link[=mwb_refmet_lookup]{mwb_refmet_lookup()}}). If not using a cache then set to NULL. The
 default is \code{NULL}.}
+
+\item{cache_mode}{(character) Cache mode. Allowed values are limited
+to the following: \itemize{ \item{\code{"update"}: The normal mode:
+values already in \code{cache} are used as-is, anything missing is
+submitted to ClassyFire and the result added to the
+cache.}\item{\code{"offline"}: Never submit a batch to ClassyFire -
+only values already present in \code{cache} are returned, and everything
+else is left as NA. Useful for continuing to work with a
+partially-populated cache while ClassyFire is unreachable or down,
+without waiting on or erroring against the live service. A warning
+lists how many query values are not covered by the cache when this
+happens (and, if the cache is entirely empty or unset, that every
+value will be returned as NA).}\item{\code{"rebuild"}: Ignore any
+existing cached value and submit every value to ClassyFire,
+overwriting the corresponding entry in \code{cache}. Useful when cached
+results are known to be stale.}} The default is \code{"update"}.}
 
 \item{verbose}{(logical) Whether to print debug information during
 execution. The default is \code{FALSE}.\cr}
@@ -130,6 +147,7 @@ M <- classyfire_batch_lookup(
         max_poll_rounds = 30,
         n_batches = NULL,
         cache = NULL,
+        cache_mode = "update",
         verbose = FALSE)
 
 }
