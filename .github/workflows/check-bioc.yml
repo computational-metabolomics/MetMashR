@@ -38,7 +38,7 @@ env:
   run_covr: 'true'
   run_pkgdown: 'true'
   has_RUnit: 'false'
-  cache-version: 'cache-v1'
+  cache-version: 'cache-v4'
   run_docker: 'false'
   bioc_version: 'bioc-devel'
   ## Valid options are:
@@ -109,7 +109,7 @@ jobs:
       ## https://github.com/r-lib/actions/blob/master/examples/check-standard.yaml
       ## If they update their steps, we will also need to update ours.
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       ## R is already included in the Bioconductor docker images
       - name: Setup R from r-lib
@@ -135,11 +135,11 @@ jobs:
       ## Use cached R packages
       - name: Restore R package cache
         if: "!contains(github.event.head_commit.message, '/nocache')"
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ matrix.config.os }}-${{ matrix.config.r }}-${{ matrix.config.bioc }}-${{ inputs.cache-version }}
-          restore-keys: ${{ matrix.config.os }}-${{ matrix.config.r }}-${{ matrix.config.bioc }}--${{ inputs.cache-version }}
+          key: ${{ matrix.config.os }}-${{ matrix.config.r }}-${{ matrix.config.bioc }}-${{ env.cache-version }}
+          restore-keys: ${{ matrix.config.os }}-${{ matrix.config.r }}-${{ matrix.config.bioc }}-${{ env.cache-version }}
 
       ## remotes is needed for isntalling the Linux system dependencies
       ## as well as other R packages later on.
@@ -236,7 +236,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Install pkgdown
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           remotes::install_github("r-lib/pkgdown")
         shell: Rscript {0}
@@ -292,11 +292,14 @@ jobs:
         shell: Rscript {0}
 
       - name: Install package
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: R CMD INSTALL .
 
       - name: Build pkgdown site
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        env:
+          ## devel docs are built into docs/dev/, release docs into docs/
+          PKGDOWN_DEV_MODE: ${{ env.bioc_version == 'bioc-devel' && 'devel' || 'release' }}
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
         ## Note that you need to run pkgdown::deploy_to_branch(new_process = FALSE)
@@ -305,13 +308,13 @@ jobs:
         ## makes the git history recognizable by pkgdown.
 
       - name: Install deploy dependencies
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           apt-get update && apt-get -y install rsync
 
       - name: Deploy pkgdown site to GitHub pages 🚀
-        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
-        uses: JamesIves/github-pages-deploy-action@releases/v4
+        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           clean: false
           branch: gh-pages
@@ -319,7 +322,7 @@ jobs:
 
       - name: Upload check results
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ runner.os }}-${{ matrix.config.r }}-${{ matrix.config.bioc }}-results
           path: check
@@ -333,7 +336,7 @@ jobs:
     steps:
       - name: Checkout Repository
         if: "!contains(github.event.head_commit.message, '/nodocker') && env.run_docker == 'true' && github.ref == 'refs/heads/devel'"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Register repo name
         if: "!contains(github.event.head_commit.message, '/nodocker') && env.run_docker == 'true' && github.ref == 'refs/heads/devel'"
@@ -343,15 +346,15 @@ jobs:
 
       - name: Set up QEMU
         if: "!contains(github.event.head_commit.message, '/nodocker') && env.run_docker == 'true' && github.ref == 'refs/heads/devel'"
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
         if: "!contains(github.event.head_commit.message, '/nodocker') && env.run_docker == 'true' && github.ref == 'refs/heads/devel'"
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to Docker Hub
         if: "!contains(github.event.head_commit.message, '/nodocker') && env.run_docker == 'true' && github.ref == 'refs/heads/devel'"
-        uses: docker/login-action@v2
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -365,7 +368,7 @@ jobs:
 
       - name: Build and Push Docker
         if: "!contains(github.event.head_commit.message, '/nodocker') && env.run_docker == 'true' && github.ref == 'refs/heads/devel' && success()"
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true
