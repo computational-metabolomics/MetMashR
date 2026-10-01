@@ -10,6 +10,7 @@ chebi_lookup(
   suffix = "_chebi",
   records = "best",
   max_records = "50",
+  columns = ".all",
   delay = 1,
   ...
 )
@@ -45,6 +46,14 @@ from the ChEBI search API when search_by = "name" (passed as the
 "size" query parameter). Has no effect when search_by = "chebi_id".
 The default is \code{"50"}.}
 
+\item{columns}{(character) The columns to include in the result. One
+or more of "chebi_id", "name" (search_by = "name" only), "synonym"
+(search_by = "chebi_id" only), "inchikey", "smiles", "inchi",
+"formula", "mass", "monoisotopicmass", "charge", "stars" (ChEBI's own
+curation-quality rating, 3 = fully manually annotated). Keyword
+".all" (the default) returns every column available for the chosen
+search_by direction. The default is \code{".all"}.}
+
 \item{delay}{(numeric, integer) Delay in seconds between API calls.
 ChEBI's REST API does not publish a specific rate limit, so this
 default is a conservative courtesy value; increase it if you see
@@ -78,6 +87,7 @@ M <- chebi_lookup(
         search_by = "name",
         records = "best",
         max_records = "50",
+        columns = ".all",
         base_url = "https://www.ebi.ac.uk/chebi/backend/api/public",
         url_template = "<base_url>/es_search?term=<query_column>&size=<max_records>",
         query_column = character(0),

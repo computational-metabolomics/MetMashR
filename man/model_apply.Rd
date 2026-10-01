@@ -5,15 +5,16 @@
 %   R/calc_rt_diff_class.R, R/rest_api_class.R, R/chebi_lookup_class.R,
 %   R/combine_columns_class.R, R/combine_records_class.R, R/combine_sources.R,
 %   R/compute_column_class.R, R/compute_record_class.R,
-%   R/database_lookup_class.R, R/expand_records_class.R,
-%   R/filter_labels_class.R, R/filter_na_class.R, R/filter_range_class.R,
-%   R/filter_records_class.R, R/filter_venn_class.R, R/id_count_class.R,
-%   R/import_source_class.R, R/kegg_lookup_class.R, R/model_apply_doc.R,
-%   R/mz_match_class.R, R/mzrt_match_class.R, R/normalise_lipids_class.R,
-%   R/normalise_strings_class.R, R/pivot_columns_class.R,
-%   R/prioritise_columns_class.R, R/remove_columns_class.R,
-%   R/rename_columns_class.R, R/rt_match_class.R, R/select_columns_class.R,
-%   R/split_column_class.R, R/trim_whitespace_class.R, R/unique_records_class.R
+%   R/cts_lite_lookup_class.R, R/database_lookup_class.R,
+%   R/expand_records_class.R, R/filter_labels_class.R, R/filter_na_class.R,
+%   R/filter_range_class.R, R/filter_records_class.R, R/filter_venn_class.R,
+%   R/id_count_class.R, R/import_source_class.R, R/kegg_lookup_class.R,
+%   R/model_apply_doc.R, R/mz_match_class.R, R/mzrt_match_class.R,
+%   R/normalise_lipids_class.R, R/normalise_strings_class.R,
+%   R/pivot_columns_class.R, R/prioritise_columns_class.R,
+%   R/remove_columns_class.R, R/rename_columns_class.R, R/rt_match_class.R,
+%   R/select_columns_class.R, R/split_column_class.R,
+%   R/trim_whitespace_class.R, R/unique_records_class.R
 \name{model_apply,model,annotation_source-method}
 \alias{model_apply,model,annotation_source-method}
 \alias{model_apply,model,list-method}
@@ -33,6 +34,7 @@
 \alias{model_apply,combine_sources,list-method}
 \alias{model_apply,compute_column,annotation_source-method}
 \alias{model_apply,compute_record,annotation_source-method}
+\alias{model_apply,cts_lite_lookup,annotation_source-method}
 \alias{model_apply,database_lookup,annotation_source-method}
 \alias{model_apply,split_records,annotation_source-method}
 \alias{model_apply,filter_labels,annotation_source-method}
@@ -94,6 +96,8 @@
 \S4method{model_apply}{compute_column,annotation_source}(M, D)
 
 \S4method{model_apply}{compute_record,annotation_source}(M, D)
+
+\S4method{model_apply}{cts_lite_lookup,annotation_source}(M, D)
 
 \S4method{model_apply}{database_lookup,annotation_source}(M, D)
 

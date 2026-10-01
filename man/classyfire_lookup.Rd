@@ -88,6 +88,7 @@ HTTP}. doi:10.32614/CRAN.package.httr
 \seealso{
 Other REST API's:
 \code{\link[=classyfire_batch_lookup]{classyfire_batch_lookup()}},
+\code{\link[=cts_lite_lookup]{cts_lite_lookup()}},
 \code{\link[=kegg_lookup]{kegg_lookup()}},
 \code{\link[=lipidmaps_lookup]{lipidmaps_lookup()}},
 \code{\link[=mwb_compound_lookup]{mwb_compound_lookup()}},

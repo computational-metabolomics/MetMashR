@@ -9,7 +9,7 @@ test_that("kegg_lookup queries ok", {
 
     M <- kegg_lookup(
         get = "compound",
-        from = "pubchem",
+        from = "pubchem_sid",
         query_column = "pubchem_sid",
         suffix = ""
     )
@@ -37,7 +37,7 @@ test_that("kegg_lookup errors", {
 
     expect_error({
         M <- kegg_lookup(
-            get = "pubchem",
+            get = "pubchem_sid",
             from = "chebi",
             query_column = "pubchem_sid",
             suffix = ""
@@ -55,7 +55,7 @@ test_that("kegg_lookup works correctly when there are no hits", {
 
     M <- kegg_lookup(
         get = "compound",
-        from = "pubchem",
+        from = "pubchem_sid",
         query_column = "pubchem_sid",
         suffix = ""
     )
@@ -80,7 +80,7 @@ test_that("kegg_lookup works correctly when there are no data", {
 
     M <- kegg_lookup(
         get = "compound",
-        from = "pubchem",
+        from = "pubchem_sid",
         query_column = "pubchem_sid",
         suffix = ""
     )
@@ -113,7 +113,7 @@ test_that("kegg_lookup cache_mode = 'offline' avoids live queries and leaves unc
 
     M <- kegg_lookup(
         get = "compound",
-        from = "pubchem",
+        from = "pubchem_sid",
         query_column = "pubchem_sid",
         suffix = "",
         cache = cache,
@@ -143,7 +143,7 @@ test_that("kegg_lookup cache_mode = 'offline' with an empty cache warns clearly"
 
     M <- kegg_lookup(
         get = "compound",
-        from = "pubchem",
+        from = "pubchem_sid",
         query_column = "pubchem_sid",
         suffix = "",
         cache = cache,
@@ -177,7 +177,7 @@ test_that("kegg_lookup cache_mode = 'rebuild' re-queries and overwrites a stale 
 
     M <- kegg_lookup(
         get = "compound",
-        from = "pubchem",
+        from = "pubchem_sid",
         query_column = "pubchem_sid",
         suffix = "",
         cache = cache,

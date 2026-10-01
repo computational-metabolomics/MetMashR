@@ -5,7 +5,7 @@
 \title{Convert to or from kegg identifiers}
 \usage{
 kegg_lookup(
-  get = "pubchem",
+  get = "pubchem_sid",
   from = "compound",
   query_column,
   suffix = "_kegg",
@@ -20,16 +20,16 @@ the following: \itemize{ \item{\code{"compound"}: KEGG small molecule
 database.}\item{\code{"glycan"}: KEGG glycan
 database.}\item{\code{"drug"}: KEGG drug
 database.}\item{\code{"chebi"}: Chemical Entities of Biological
-Interest (ChEBI) database.}\item{\code{"pubchem"}: PubChem Substance
-Identifier.}} The default is \code{"pubchem"}.}
+Interest (ChEBI) database.}\item{\code{"pubchem_sid"}: PubChem
+Substance Identifier.}} The default is \code{"pubchem_sid"}.}
 
 \item{from}{(character) From identifier. Allowed values are limited
 to the following: \itemize{ \item{\code{"compound"}: KEGG small
 molecule database.}\item{\code{"glycan"}: KEGG glycan
 database.}\item{\code{"drug"}: KEGG drug
 database.}\item{\code{"chebi"}: Chemical Entities of Biological
-Interest (ChEBI) database.}\item{\code{"pubchem"}: PubChem Substance
-Identifier.}} The default is \code{"compound"}.}
+Interest (ChEBI) database.}\item{\code{"pubchem_sid"}: PubChem
+Substance Identifier.}} The default is \code{"compound"}.}
 
 \item{query_column}{(character) The name of the column containing
 identifiers to search the database for. They should be identifiers of
@@ -48,16 +48,11 @@ requeried. If not using a cache then set to NULL. The default is
 to the following: \itemize{ \item{\code{"update"}: The normal mode:
 values already in \code{cache} are used as-is, anything missing is queried
 live and the result added to the cache.}\item{\code{"offline"}: Never
-query the live KEGG API - only values already present in \code{cache} are
-returned, and everything else is left as NA. Useful for continuing to
-work with a partially-populated cache while KEGG is unreachable or
-down, without waiting on or erroring against the live service. A
-warning lists how many query values are not covered by the cache when
-this happens (and, if the cache is entirely empty or unset, that
-every value will be returned as NA).}\item{\code{"rebuild"}: Ignore
-any existing cached value and query the live KEGG API for every
-value, overwriting the corresponding entry in \code{cache}. Useful when
-cached results are known to be stale.}} The default is
+query the live KEGG API. Only values already present in \code{cache} are
+returned, and everything else is left as NA.}\item{\code{"rebuild"}:
+Ignore any existing cached value and query the live KEGG API for
+every value, overwriting the corresponding entry in \code{cache}. Useful
+when cached results are known to be stale.}} The default is
 \code{"update"}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
@@ -88,7 +83,7 @@ A \code{kegg_lookup} object inherits the following \code{struct} classes:
 
 \examples{
 M <- kegg_lookup(
-        get = "pubchem",
+        get = "pubchem_sid",
         from = "compound",
         query_column = "V1",
         suffix = "_kegg",
@@ -113,6 +108,7 @@ doi:10.32614/CRAN.package.dplyr
 Other REST API's:
 \code{\link[=classyfire_batch_lookup]{classyfire_batch_lookup()}},
 \code{\link[=classyfire_lookup]{classyfire_lookup()}},
+\code{\link[=cts_lite_lookup]{cts_lite_lookup()}},
 \code{\link[=lipidmaps_lookup]{lipidmaps_lookup()}},
 \code{\link[=mwb_compound_lookup]{mwb_compound_lookup()}},
 \code{\link[=mwb_refmet_lookup]{mwb_refmet_lookup()}},

@@ -7,10 +7,21 @@ chebi_lookup <- function(
         suffix = "_chebi",
         records = "best",
         max_records = "50",
+        columns = ".all",
         delay = 1,
         ...) {
     search_by <- match.arg(search_by)
-    
+
+    allowed_columns <- c(
+        "chebi_id", "name", "synonym", "inchikey", "smiles", "inchi",
+        "formula", "mass", "monoisotopicmass", "charge", "stars", ".all"
+    )
+    check <- all(columns %in% allowed_columns)
+    if (!check) {
+        w <- which(!(columns %in% allowed_columns))
+        stop("Invalid columns: ", paste0(columns[w], collapse = ", "))
+    }
+
     out <- struct::new_struct(
         "chebi_lookup",
         query_column = query_column,
@@ -18,10 +29,11 @@ chebi_lookup <- function(
         suffix = suffix,
         records = records,
         max_records = max_records,
+        columns = columns,
         delay = delay,
         ...
     )
-    
+
     return(out)
 }
 
@@ -31,7 +43,8 @@ chebi_lookup <- function(
     slots = c(
         search_by = "enum",
         records = "enum",
-        max_records = "entity"
+        max_records = "entity",
+        columns = "entity"
     ),
     prototype = list(
         name = "ID/synonym lookup via ChEBI",
@@ -42,7 +55,7 @@ chebi_lookup <- function(
         ),
         type = "rest_api",
         predicted = "updated",
-        .params = c("search_by", "records", "max_records"),
+        .params = c("search_by", "records", "max_records", "columns"),
         citations = list(
             bibentry(
                 bibtype = "article",
@@ -141,6 +154,21 @@ chebi_lookup <- function(
             type = "character",
             value = "50",
             max_length = 1
+        ),
+        columns = entity(
+            name = "Columns to return",
+            description = paste0(
+                'The columns to include in the result. One or more of ',
+                '"chebi_id", "name" (search_by = "name" only), "synonym" ',
+                '(search_by = "chebi_id" only), "inchikey", "smiles", ',
+                '"inchi", "formula", "mass", "monoisotopicmass", "charge", ',
+                '"stars" (ChEBI\'s own curation-quality rating, 3 = fully ',
+                'manually annotated). Keyword ".all" (the default) returns ',
+                'every column available for the chosen search_by direction.'
+            ),
+            type = "character",
+            value = ".all",
+            max_length = Inf
         ),
         delay = entity(
             name = "Delay query",

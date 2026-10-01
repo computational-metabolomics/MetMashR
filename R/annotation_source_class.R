@@ -239,21 +239,13 @@ setMethod(
         xd <- x$data
         yd <- y$data
 
-        # rename columns. matching_columns is documented/specified as
-        # c(old_name = new_name) (e.g. c('hello'='world') renames 'hello' to
-        # 'world'), but dplyr::rename(any_of(v)) treats a named vector `v` as
-        # new_name = old_name (i.e. names(v) = new, v = old) -- the opposite
-        # convention. Passing matching_columns directly here silently did
-        # nothing for a source that only had the "old" column (renamed a
-        # column that was never present), and for a source that already had
-        # the "new" column name, actively renamed it away. Invert it once so
-        # rename() sees the new/old pairing it actually expects.
+        # rename columns. matching_columns is keyed as new_name = old_name
+        # (e.g. c('a'='aa') renames 'aa' to 'a'), the same convention
+        # dplyr::rename(any_of(v)) itself expects (names(v) = new, v = old),
+        # and the same one `keep_cols` below relies on via names(matching_columns).
         if (!is.null(matching_columns)) {
-            matching_columns_inv <- stats::setNames(
-                names(matching_columns), matching_columns
-            )
-            xd <- x$data %>% rename(any_of(matching_columns_inv))
-            yd <- y$data %>% rename(any_of(matching_columns_inv))
+            xd <- x$data %>% rename(any_of(matching_columns))
+            yd <- y$data %>% rename(any_of(matching_columns))
         }
 
         # add source columns

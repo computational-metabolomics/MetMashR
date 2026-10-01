@@ -2,7 +2,7 @@
 #' @export
 #' @include annotation_source_class.R
 #' @family REST API's
-kegg_lookup <- function(get = "pubchem",
+kegg_lookup <- function(get = "pubchem_sid",
     from = "compound",
     query_column,
     suffix = "_kegg",
@@ -17,8 +17,8 @@ kegg_lookup <- function(get = "pubchem",
             "or pubchem ids"
         )
     }
-    if (get %in% c("pubchem", "chebi") &
-        from %in% c("pubchem", "chebi")) {
+    if (get %in% c("pubchem_sid", "chebi") &
+        from %in% c("pubchem_sid", "chebi")) {
         stop(
             "pubchem and chebi ids can only be converted to compound, drug ",
             "or glycan ids"
@@ -86,12 +86,12 @@ kegg_lookup <- function(get = "pubchem",
                 "chebi" = paste0(
                     "Chemical Entities of Biological Interest (ChEBI) database"
                 ),
-                "pubchem" = "PubChem Substance Identifier"
+                "pubchem_sid" = "PubChem Substance Identifier"
             ),
             type = "character",
             max_length = 1,
-            allowed = c("compound", "glycan", "drug", "chebi", "pubchem"),
-            value = "pubchem"
+            allowed = c("compound", "glycan", "drug", "chebi", "pubchem_sid"),
+            value = "pubchem_sid"
         ),
         from = enum(
             name = "From identifier",
@@ -102,11 +102,11 @@ kegg_lookup <- function(get = "pubchem",
                 "chebi" = paste0(
                     "Chemical Entities of Biological Interest (ChEBI) database"
                 ),
-                "pubchem" = "PubChem Substance Identifier"
+                "pubchem_sid" = "PubChem Substance Identifier"
             ),
             type = "character",
             max_length = 1,
-            allowed = c("compound", "glycan", "drug", "chebi", "pubchem"),
+            allowed = c("compound", "glycan", "drug", "chebi", "pubchem_sid"),
             value = "compound"
         ),
         updated = entity(
@@ -148,15 +148,9 @@ kegg_lookup <- function(get = "pubchem",
                     "result added to the cache."
                 ),
                 "offline" = paste0(
-                    "Never query the live KEGG API - only values already ",
+                    "Never query the live KEGG API. Only values already ",
                     "present in `cache` are returned, and everything else ",
-                    "is left as NA. Useful for continuing to work with a ",
-                    "partially-populated cache while KEGG is unreachable ",
-                    "or down, without waiting on or erroring against the ",
-                    "live service. A warning lists how many query values ",
-                    "are not covered by the cache when this happens (and, ",
-                    "if the cache is entirely empty or unset, that every ",
-                    "value will be returned as NA)."
+                    "is left as NA."
                 ),
                 "rebuild" = paste0(
                     "Ignore any existing cached value and query the live ",
@@ -229,12 +223,16 @@ setMethod(
         }
 
         if (length(to_query) > 0) {
+            
+            kegg_from <- if (M$from == "pubchem_sid") "pubchem" else M$from
+            kegg_get <- if (M$get == "pubchem_sid") "pubchem" else M$get
+
             # add from str
-            src_str <- paste(M$from, to_query, sep = ":")
+            src_str <- paste(kegg_from, to_query, sep = ":")
 
             # query kegg
             result <- KEGGREST::keggConv(
-                target = M$get,
+                target = kegg_get,
                 source = src_str,
                 querySize = 100
             )

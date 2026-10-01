@@ -34,6 +34,7 @@ export(compute_median)
 export(compute_mode)
 export(compute_record)
 export(count_records)
+export(cts_lite_lookup)
 export(database_lookup)
 export(eutils_lookup)
 export(excel_database)
@@ -129,7 +130,8 @@ importFrom(httr,
   POST,
   add_headers,
   content,
-  status_code
+  status_code,
+  stop_for_status
 )
 importFrom(httr2,
   req_body_raw,

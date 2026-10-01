@@ -41,7 +41,8 @@ Imports:
     utils,
     rlang,
     stats,
-    ggplot2
+    ggplot2,
+    jsonlite
 Collate: 
     'generics.R'
     'zzz.R'
@@ -80,6 +81,7 @@ Collate:
     'combine_sources.R'
     'compute_column_class.R'
     'compute_record_class.R'
+    'cts_lite_lookup_class.R'
     'database_lookup_class.R'
     'dictionaries.R'
     'eutils_lookup_class.R'
@@ -156,7 +158,6 @@ Suggests:
     tidyr,
     tidyselect,
     ComplexUpset,
-    jsonlite,
     openxlsx,
     ggplotify,
     cowplot

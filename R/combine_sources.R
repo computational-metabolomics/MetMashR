@@ -94,7 +94,7 @@ combine_sources <- function(source_list,
             name = "Matching columns",
             description = paste0(
                 "A named vector of columns names to be created by merging ",
-                "columns from individual sources. e.g. `c('hello'='world')` ",
+                "columns from individual sources. e.g. `c('world'='hello')` ",
                 "will rename the ",
                 "'hello' column to 'world' if found in any of the tables."
             ),
