@@ -73,6 +73,33 @@ theme_Publication <- function(base_size = 14) { # , base_family="helvetica") {
     return(E)
 }
 
+# GET request to the GitHub API. Unauthenticated requests are limited to 60
+# per hour per IP address, so a GITHUB_PAT or GITHUB_TOKEN environment variable
+# is used if available.
+.github_api_get <- function(url) {
+    token <- Sys.getenv("GITHUB_PAT", Sys.getenv("GITHUB_TOKEN"))
+    if (nzchar(token)) {
+        response <- httr::GET(
+            url, httr::add_headers(Authorization = paste("token", token))
+        )
+    } else {
+        response <- httr::GET(url)
+    }
+
+    remaining <- httr::headers(response)[["x-ratelimit-remaining"]]
+    if (httr::status_code(response) %in% c(403, 429) &&
+        identical(remaining, "0")) {
+        stop(
+            "GitHub API rate limit exceeded for ", url, ". Set a GITHUB_PAT ",
+            "environment variable to increase the limit.",
+            call. = FALSE
+        )
+    }
+    httr::stop_for_status(response)
+
+    return(response)
+}
+
 get_description <- function(id) {
     str <- struct::get_description(id)
     str <- gsub("[a annotation_source]", "annotation_source()", str, fixed = TRUE)

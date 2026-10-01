@@ -89,18 +89,16 @@ setMethod(
     signature = c("MTox700plus_database"), definition = function(obj) {
         # use github api to get url
         if (obj$version == "latest") {
-            response <- httr::GET(paste0(
+            response <- .github_api_get(paste0(
                 "https://api.github.com/repos/michabohealthscience/",
                 "MTox700plus/releases/latest"
             ))
         } else { # assume its a tag
-            response <- httr::GET(paste0(
+            response <- .github_api_get(paste0(
                 "https://api.github.com/repos/michabohealthscience/",
                 "MTox700plus/releases/tags/", obj$version
             ))
         }
-        # stop if issue
-        httr::stop_for_status(response)
         # otherwise parse content
         J <- httr::content(response, as = "parsed")
 
