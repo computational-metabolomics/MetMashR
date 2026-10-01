@@ -71,6 +71,7 @@ reference:
   contents:
   - rest_api
   - ends_with('_lookup')
+  - pubchem_id_exchange
 - title: "Annotation table mashing"
   desc: >
     These models provide steps for cleaning, filtering, prioritising and 

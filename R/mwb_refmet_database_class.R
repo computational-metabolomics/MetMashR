@@ -57,12 +57,20 @@ setMethod(
         bfc <- BiocFileCache::BiocFileCache(obj$bfc)
         path <- BiocFileCache::bfcrpath(bfc, u)
 
-        # read
-        df <- jsonlite::fromJSON(path)
+        # read without simplification; simplifying this large file with
+        # jsonlite::fromJSON() can crash R
+        x <- jsonlite::fromJSON(path, simplifyVector = FALSE)
 
-        # convert to df
-        df <- lapply(df, as.data.frame)
-        df <- plyr::rbind.fill(df)
+        # convert list of records to df, with NA for missing fields
+        cols <- unique(unlist(lapply(x, names)))
+        df <- lapply(cols, function(k) {
+            vapply(x, function(r) {
+                v <- r[[k]]
+                if (length(v) == 0) NA_character_ else as.character(v[[1]])
+            }, character(1))
+        })
+        names(df) <- cols
+        df <- as.data.frame(df, stringsAsFactors = FALSE)
 
         # return
         return(df)
