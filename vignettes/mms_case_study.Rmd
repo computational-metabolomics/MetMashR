@@ -16,8 +16,7 @@ vignette: >
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
-    fig.align = "center",
-    fig.path = paste0(tempdir(), "/mms_case_study_figures/")
+    fig.align = "center"
 )
 
 .DT <- function(x) {

@@ -9,7 +9,7 @@
 prioritise, combine and otherwise "mash" together metabolite annotations from
 multiple sources.
 
-## Lay summary
+## Summary
 
 Metabolomics measures the small molecules (metabolites) in a sample, such as
 blood, urine or water. Instruments like mass spectrometers detect thousands of
