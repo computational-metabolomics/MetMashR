@@ -239,7 +239,10 @@ setMethod(
         xd <- x$data
         yd <- y$data
 
-        # rename columns
+        # rename columns. matching_columns is keyed as new_name = old_name
+        # (e.g. c('a'='aa') renames 'aa' to 'a'), the same convention
+        # dplyr::rename(any_of(v)) itself expects (names(v) = new, v = old),
+        # and the same one `keep_cols` below relies on via names(matching_columns).
         if (!is.null(matching_columns)) {
             xd <- x$data %>% rename(any_of(matching_columns))
             yd <- y$data %>% rename(any_of(matching_columns))

@@ -1,4 +1,9 @@
 url: https://computational-metabolomics.github.io/MetMashR/
+# release docs at the site root, devel docs under dev/. Bioconductor version
+# numbers can't be auto-detected, so the mode is set by the PKGDOWN_DEV_MODE
+# env var in the GitHub workflow ("release" or "devel")
+development:
+  mode: auto
 template:
   bootstrap: 5
   bootswatch: flatly
@@ -17,8 +22,8 @@ navbar:
         href: articles/annotate_mixtures.html
       - text: Exploring the MTox700+ database
         href: articles/exploring_mtox.html
-      - text: Processing Annotations for LCMS of Daphnia samples
-        href: articles/daphnia_example.html
+      - text: "Case study: reimplementing the Metabolites Merging Strategy"
+        href: articles/mms_case_study.html
   right:
     - icon: fa-github
       href: https://github.com/computational-metabolomics/MetMashR
@@ -71,6 +76,7 @@ reference:
   contents:
   - rest_api
   - ends_with('_lookup')
+  - pubchem_id_exchange
 - title: "Annotation table mashing"
   desc: >
     These models provide steps for cleaning, filtering, prioritising and 

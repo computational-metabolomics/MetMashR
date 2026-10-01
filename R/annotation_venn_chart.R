@@ -127,8 +127,8 @@ setMethod(
     definition = function(obj, dobj, ...) {
         
         # handle multiple inputs
-        L = list(...)
-        L = process_venn_dots(L,dobj,obj)
+        L <- list(...)
+        L <- process_venn_dots(L,dobj,obj)
 
         # max 7(!) groups
         if (length(L) > 7) {
@@ -247,7 +247,7 @@ venn_this <- function(obj, L) {
 
 
 
-process_venn_dots = function(L,dobj,obj){
+process_venn_dots <- function(L,dobj,obj){
     # if we got more than one table...
     if (length(L) > 0) {
         # gather all annotation_sources

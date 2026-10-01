@@ -144,6 +144,9 @@ setMethod(
         field = "fpath", exact = TRUE
     )$rid
 
+    # if duplicate entries exist, use the most recent one
+    rid <- utils::tail(rid, 1)
+
     # if not present, then add it
     if (!length(rid)) {
         rid <- names(

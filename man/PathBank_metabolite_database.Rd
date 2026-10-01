@@ -73,7 +73,7 @@ Across Sessions}. R package version 3.2.0.
 Wickham H (2026). \emph{httr: Tools for Working with URLs and
 HTTP}. doi:10.32614/CRAN.package.httr
 \url{https://doi.org/10.32614/CRAN.package.httr}. R package version
-1.4.8, \url{https://CRAN.R-project.org/package=httr}.
+1.4.9, \url{https://CRAN.R-project.org/package=httr}.
 
 Wishart, S D, Li, Carin, Marcu, Ana, Badran, Hasan, Pon,
 Allison, Budinski, Zachary, Patron, Jonas, Lipton, Debra, Cao, Xuan,

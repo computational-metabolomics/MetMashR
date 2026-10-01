@@ -141,20 +141,33 @@ setMethod(
         )
 
         # for each annotation
-        OUT <- apply(X, 1, function(x) {
+        # NOTE: this used to iterate with apply(X, 1, ...), but apply()
+        # coerces the whole data.frame to a character matrix before handing
+        # out rows -- for a numeric query_column that right-pads values for
+        # column-width alignment (e.g. 2519 becomes "   2519 "), which then
+        # fails to match a numeric database column. Any row that "misses"
+        # this way gets its database_column value overwritten with that
+        # padded string, so do.call(rbind, ...) ends up combining numeric
+        # and character pieces and coerces the whole column to character --
+        # silently wrong matches, and often a type mismatch crash in the
+        # left_join() below. Indexing query_values directly keeps each
+        # value's real type, avoiding both problems.
+        query_values <- X[[M$query_column]]
+        OUT <- lapply(seq_len(nrow(X)), function(k) {
+            qv <- query_values[[k]]
+
             # search for database rows that match the annotation column
-            w <- which(M$database[[M$database_column]] ==
-                x[[M$query_column]])
+            w <- which(M$database[[M$database_column]] == qv)
 
             if (length(w) == 0) {
                 # if no hits in db then return no_match
                 found <- M$database[1, , drop = FALSE]
                 found[1, ] <- M$not_found
-                found[[M$database_column]] <- x[[M$query_column]]
+                found[[M$database_column]] <- qv
             } else {
                 found <- M$database[w, , drop = FALSE]
             }
-            return(found)
+            found
         })
         OUT <- do.call(rbind, OUT)
 

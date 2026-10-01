@@ -168,8 +168,12 @@ setMethod(
 
         if (obj$label_location == "inside") {
             offset <- 1
+            xrange <- c(0.5, 1.6)
         } else {
             offset <- 1.6
+            # extra headroom beyond the offset itself, so outside labels
+            # have room to render instead of being clipped at the panel edge
+            xrange <- c(0.3, 2.1)
         }
 
         if (obj$count_na) {
@@ -237,7 +241,7 @@ setMethod(
                 hjust = df$hjust,
             ) +
             theme(plot.margin = unit(c(1, 1, 1, 1), "lines")) +
-            xlim(c(0.5, 1.6)) +
+            xlim(xrange) +
             scale_fill_Publication()
 
         # legend

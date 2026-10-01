@@ -50,6 +50,7 @@ SQLite Interface for R}. doi:10.32614/CRAN.package.RSQLite
 }
 \seealso{
 Other database:
-\code{\link[=BiocFileCache_database]{BiocFileCache_database()}}
+\code{\link[=BiocFileCache_database]{BiocFileCache_database()}},
+\code{\link[=lipidmaps_database]{lipidmaps_database()}}
 }
 \concept{database}

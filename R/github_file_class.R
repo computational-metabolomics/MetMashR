@@ -82,13 +82,10 @@ setMethod(
     f = "read_database",
     signature = c("github_file"), definition = function(obj) {
         # use github api to get url
-        response <- httr::GET(paste0(
+        response <- .github_api_get(paste0(
             "https://api.github.com/repos/", obj$username, "/",
             obj$repository_name, "/contents/", obj$file_path
         ))
-
-        # stop if issue
-        httr::stop_for_status(response)
         # otherwise parse content
         J <- httr::content(response, as = "parsed")
 

@@ -269,29 +269,39 @@ fuse <- function(separator, na_string = "NA") {
 #' the index of the maximum value in a another column.
 #' @param max_col (character) the column name to search for the maximum value.
 #' @param use_abs (logical) If TRUE then the sign of the values is ignored
-#' @param keep_NA (logical) If TRUE then records with NA are returned as well as
-#' the record with the maximum value.
+#' @param keep_NA (logical) If TRUE keeps records with NA values. Ignored if
+#' `unique = TRUE`.
+#' @param unique (logical) If TRUE then exactly one record is returned even
+#' when multiple records tie, by taking the first matching record. This
+#' guarantees a single, deterministic and reproducible result per group
+#' instead of one row per tied record.
 #' @export
-select_max <- function(max_col, use_abs = FALSE, keep_NA = FALSE) {
+select_max <- function(max_col, use_abs = FALSE, keep_NA = FALSE, unique = FALSE) {
     fcn <- expr(function(x) {
         # get values
         vals <- as.numeric(pick(!!max_col)[[1]])
-        # if all NA, return all records
-        if (all(is.na(vals))) {
-            return(x)
-        }
+
         # use abs if requested
         if (!!use_abs) {
             vals <- abs(vals)
         }
 
-        w2 <- integer()
-        if (!all(is.na(vals))) {
-            # get index of max
-            w <- which.max(vals)
-            # find all matches to the min
-            w2 <- which(vals == max(vals, na.rm = TRUE))
+        if (!!unique) {
+            # single, deterministic winner: the first record matching the
+            # maximum value, or the first record at all if every value is NA
+            if (all(is.na(vals))) {
+                return(x[1])
+            }
+            return(x[which.max(vals)])
         }
+
+        # if all NA, return all records
+        if (all(is.na(vals))) {
+            return(x)
+        }
+
+        # find all matches to the max
+        w2 <- which(vals == max(vals, na.rm = TRUE))
 
         # find NA if requested
         if (!!keep_NA) {
@@ -309,9 +319,9 @@ select_max <- function(max_col, use_abs = FALSE, keep_NA = FALSE) {
 #' @param min_col (character) the column name to search for the minimum value.
 #' @param use_abs (logical) If TRUE then the sign of the values is ignored.
 #' @param keep_NA (logical) If TRUE then records with NA are returned as well as
-#' the record with the minimum value.
+#' the record with the minimum value. Ignored if `unique = TRUE`.
 #' @export
-select_min <- function(min_col, use_abs = FALSE, keep_NA = FALSE) {
+select_min <- function(min_col, use_abs = FALSE, keep_NA = FALSE, unique = FALSE) {
     fcn <- expr(function(x) {
         # get values
         vals <- as.numeric(pick(!!min_col)[[1]])
@@ -321,13 +331,22 @@ select_min <- function(min_col, use_abs = FALSE, keep_NA = FALSE) {
             vals <- abs(vals)
         }
 
-        w2 <- integer()
-        if (!all(is.na(vals))) {
-            # get index of min
-            w <- which.min(vals)
-            # find all matches to the min
-            w2 <- which(vals == min(vals, na.rm = TRUE))
+        if (!!unique) {
+            # single, deterministic winner: the first record matching the
+            # minimum value, or the first record at all if every value is NA
+            if (all(is.na(vals))) {
+                return(x[1])
+            }
+            return(x[which.min(vals)])
         }
+
+        # if all NA, return all records (consistent with select_max())
+        if (all(is.na(vals))) {
+            return(x)
+        }
+
+        # find all matches to the min
+        w2 <- which(vals == min(vals, na.rm = TRUE))
 
         # find NA if requested
         if (!!keep_NA) {

@@ -14,7 +14,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r annotate-mixtures-1, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
@@ -51,7 +51,7 @@ The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible
 with your 
 current R version can be installed using BiocManager.
 
-```{r,eval = FALSE, include = TRUE}
+```{r annotate-mixtures-2, eval = FALSE, include = TRUE}
 # install BiocManager if not present
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
@@ -63,7 +63,7 @@ BiocManager::install("MetMashR")
 
 Once installed you can activate the packages in the usual way:
 
-```{r, eval=TRUE, include=FALSE}
+```{r annotate-mixtures-3, eval=TRUE, include=FALSE}
 suppressPackageStartupMessages({
     # load the packages
     library(MetMashR)
@@ -75,7 +75,7 @@ suppressPackageStartupMessages({
 })
 ```
 
-```{r, eval=FALSE, include=TRUE}
+```{r annotate-mixtures-4, eval=FALSE, include=TRUE}
 # load the packages
 library(MetMashR)
 library(ggplot2)
@@ -152,7 +152,7 @@ metabolite + adduct to multiple peaks. Here we choose the match with highest
 mzcloud score using the `select_max` helper function with the combine_records` 
 object. This object is a wrapper for [dplyr::reframe()].
 
-```{r}
+```{r annotate-mixtures-5}
 # prepare workflow
 M <- import_source() +
     add_labels(
@@ -221,12 +221,12 @@ column to be defined.
 A summary of the table for e.g. the HILIC_NEG assay can be displayed on the 
 console:
 
-```{r}
+```{r annotate-mixtures-6}
 predicted(CD$HILIC_NEG)
 ```
 The HILIC_NEG table is shown below.
 
-```{r,echo=FALSE}
+```{r annotate-mixtures-7, echo=FALSE}
 .DT(predicted(CD$HILIC_NEG)$data)
 ```
 
@@ -235,7 +235,7 @@ explore the impact of different workflow steps. For example, we can display
 the different compound matched present before and after filtering as pie charts.
 
 First, we create the pie chart object and specify some parameters.
-```{r}
+```{r annotate-mixtures-8}
 C <- annotation_pie_chart(
     factor_name = "compound_match",
     label_rotation = FALSE,
@@ -253,7 +253,7 @@ using `ggplot2`, and arrange the plots using `cowplot`.
 Note that we use square brackets to index the step of the workflow we want to
 access e.g. `HILIC_NEG[3]`.
 
-```{r}
+```{r annotate-mixtures-9}
 # plot individual charts
 g1 <- chart_plot(C, predicted(CD$HILIC_NEG[3])) +
     ggtitle("Compound matches\nafter filtering") +
@@ -290,7 +290,7 @@ If there is a wide distribution then this may indicate false
 positives. If the distribution is offset from zero then this indicates some 
 m/z drift is present. 
 
-```{r}
+```{r annotate-mixtures-10}
 C <- annotation_histogram(
     factor_name = "library_ppm_diff", vline = c(-2, 2)
 )
@@ -323,7 +323,7 @@ For LS we resolve duplicates by selecting the annotation with the smallest
 ppm error. We use the `combine_records` object with the `select_min` helper
 function to do this.
 
-```{r}
+```{r annotate-mixtures-11}
 # prepare workflow
 M <- import_source() +
     add_labels(
@@ -376,13 +376,13 @@ The `LS` variable is now a list containing the workflow for each assay.
 A summary of the table for e.g. the LIPIDS_NEG assay can be displayed on the 
 console:
 
-```{r}
+```{r annotate-mixtures-12}
 predicted(LS$LIPIDS_NEG)
 ```
 
 The LIPIDS_NEG table is shown below.
 
-```{r, echo=FALSE}
+```{r annotate-mixtures-13, echo=FALSE}
 .DT(predicted(LS$LIPIDS_NEG)$data)
 ```
 
@@ -390,7 +390,7 @@ The LIPIDS_NEG table is shown below.
 explore the impact of different workflow steps. For example, we can display
 the different Grades present before and after filtering as pie charts.
 
-```{r}
+```{r annotate-mixtures-14}
 C <- annotation_pie_chart(
     factor_name = "Grade",
     label_rotation = FALSE,
@@ -426,7 +426,7 @@ names present in each table.
 Here, we compare the compound names for each assay within each source, to see 
 if there is any overlap i.e. the same metabolite detecting in several assays.
 
-```{r}
+```{r annotate-mixtures-15}
 # prepare venn chart object
 C <- annotation_venn_chart(
     factor_name = "compound",
@@ -493,7 +493,7 @@ into a new column called "adduct".
 Here we specify that all columns should be retained from both tables, padding 
 with NA if not present; columns with the same name are automatically merged.
 
-```{r}
+```{r annotate-mixtures-16}
 # get all the cleaned annotation tables in one list
 all_source_tables <- lapply(c(CD, LS), predicted)
 
@@ -523,7 +523,7 @@ Now that the tables have been combined we can explore the table using charts.
 For example, we visualise the number of annotations for each assay from both 
 sources.
 
-```{r}
+```{r annotate-mixtures-17}
 C <- annotation_pie_chart(
     factor_name = "assay",
     label_rotation = FALSE,
@@ -542,7 +542,7 @@ chart_plot(C, predicted(combine_workflow)) +
 
 In this next example we compare the number of annotations from each source.
 
-```{r}
+```{r annotate-mixtures-18}
 # change to plot source_name column
 C$factor_name <- "source_name"
 chart_plot(C, predicted(combine_workflow)) +
@@ -566,7 +566,7 @@ PubChem by using their REST API.
 For this vignette we use cached results so that we don't overburden the api; 
 in practice you would create your own (see [TODO]).
 
-```{r}
+```{r annotate-mixtures-19}
 # import cached results
 inchikey_cache <- rds_database(
     source = file.path(
@@ -633,7 +633,7 @@ parts. If there is no result from OPSIN then a PubChem search
 based on the normalised names is prioritised over a PubChem search using the
 non-normalised names.
 
-```{r}
+```{r annotate-mixtures-20}
 # prepare cached results for vignette
 inchikey_cache2 <- rds_database(
     source = file.path(
@@ -714,7 +714,7 @@ identifiers that we were unable to obtain without normalisation.
 The use of OPSIN then added a further 31 identifiers. The column of combined
 identifers therefore contains 
 
-```{r}
+```{r annotate-mixtures-21}
 # venn inchikey columns
 C <- annotation_venn_chart(
     factor_name = c("InChIKey", "InChIKey_norm", "stdinchikey_opsin"),
@@ -735,7 +735,7 @@ Due to complexity, Venn charts are limited to 7 sets. UpSet plots are an
 alternative chart than can accomodate many more sets. Each veritcal bar in the 
 UpSet plot corresponds to a region in the venn diagram.
 
-```{r}
+```{r annotate-mixtures-22}
 # upset inchikey columns
 C <- annotation_upset_chart(
     factor_name = c("InChIKey", "InChIKey_norm", "stdinchikey_opsin"),
@@ -753,7 +753,7 @@ multiple rows. You can see that in the end only a small proportion (12.1%) of
 the 
 identifiers are from the least reliable query based on the non-normalised name.
 
-```{r}
+```{r annotate-mixtures-23}
 # pie source of inchikey
 C <- annotation_pie_chart(
     factor_name = "inchikey_source",
@@ -776,7 +776,7 @@ chart_plot(C, predicted(N)) +
 To keep the records with the highest confidence identifiers We can remove the 
 annotations based on the `name` query using the `filter_labels` object.
 
-```{r}
+```{r annotate-mixtures-24}
 # prepare workflow
 FL <- filter_labels(
     column_name = "inchikey_source",
@@ -804,7 +804,7 @@ known to be included in each of the mixtures.
 The first step is to import the tables of standards for each mixture. The data 
 has ready been saved as an RDS file so we can use `rds_database` to import it.
 
-```{r}
+```{r annotate-mixtures-25}
 # prepare object
 R <- rds_database(
     source = file.path(
@@ -818,7 +818,7 @@ R <- rds_database(
 R <- read_source(R)
 ```
 
-```{r, echo=FALSE}
+```{r annotate-mixtures-26, echo=FALSE}
 .DT(R$data)
 ```
 The standards table contains a list of metabolites and the the mixture they were 
@@ -837,7 +837,7 @@ MTox700+ and use it to obtain InChIKey identifiers by matching the the HMBD
 identifiers. An alternative might be to use `hmdb_lookup` and/or 
 `pubchem_property_lookup`.
 
-```{r}
+```{r annotate-mixtures-27}
 # convert standard mixtures to source, then get inchikey from MTox700+
 SM <- import_source() +
     filter_na(
@@ -876,7 +876,7 @@ In this next plot we show the overlap in standards for each assay detected by
 manual observation.
 
 
-```{r}
+```{r annotate-mixtures-28}
 C <- annotation_venn_chart(
     factor_name = "inchikey",
     group_column = "ion_mode",
@@ -899,7 +899,7 @@ annotation software annotate the standards.
 
 Here we plot a venn diagram showing the overlap in identifiers.
 
-```{r,fig.width=4}
+```{r annotate-mixtures-29, fig.width=4}
 # get processed data
 AN <- predicted(FF)
 AN$tag <- "Annotations"
@@ -925,7 +925,7 @@ These are followed by a 4-set Venn diagram that
 shows the overlap between annotations from each assay that matched to a 
 standard.
 
-```{r,fig.height  = 10, fig.width = 8}
+```{r annotate-mixtures-30, fig.height  = 10, fig.width = 8}
 G <- list()
 VV <- list()
 for (k in c("HILIC_NEG", "HILIC_POS", "LIPIDS_NEG", "LIPIDS_POS")) {
@@ -960,7 +960,7 @@ The majority of the standards were correctly annotated in the HILIC_NEG assay.
 
 In the next plot we compare the overlap in InChIKey for each source.
 
-```{r,fig.height  = 3, fig.width = 8}
+```{r annotate-mixtures-31, fig.height  = 3, fig.width = 8}
 G <- list()
 for (k in c("CD", "LS")) {
     wf <- filter_labels(
@@ -978,7 +978,7 @@ cowplot::plot_grid(plotlist = G, nrow = 1, labels = c("CD", "LS"))
 <br>
 
 # Session Info
-```{r}
+```{r annotate-mixtures-32}
 sessionInfo()
 ```
 

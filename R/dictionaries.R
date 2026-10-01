@@ -79,9 +79,13 @@ tripeptide_dictionary <- list(
 racemic_dictionary <- list(
     list(pattern = "-(-)-", replace = "-", fixed = TRUE),
     list(pattern = "-(+)-", replace = "-", fixed = TRUE),
-    list(pattern = "^L(+)-", replace = "L-", fixed = TRUE),
-    list(pattern = "^D(-)-", replace = "D-", fixed = TRUE),
-    list(pattern = "(\\x{00b1})", replace = "", fixed = TRUE)
+    list(pattern = "^L\\(\\+\\)-", replace = "L-"),
+    list(pattern = "^D\\(-\\)-", replace = "D-"),
+    list(pattern = "(\\x{00b1})", replace = ""),
+    list(pattern = "^D/L[ -]?", replace = ""),
+    list(pattern = "^L/D[ -]?", replace = ""),
+    list(pattern = "^DL-?", replace = ""),
+    list(pattern = "^LD-?", replace = "")
 )
 
 

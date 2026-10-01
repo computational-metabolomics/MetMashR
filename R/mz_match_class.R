@@ -1,6 +1,7 @@
 #' @eval get_description('mz_match')
 #' @export
 #' @include annotation_source_class.R
+#' @importFrom dplyr join_by inner_join
 mz_match <- function(variable_meta,
     mz_column,
     ppm_window,
@@ -151,48 +152,21 @@ setMethod(
             AN_mz_max = AN$.mz_max
         )
 
-        # for each annotation, get variable ids whose ppw window overlaps with
-        # the annotation ppm window
-        OUT <- list()
-        for (k in seq_len(nrow(AN))) {
-            x <- AN[k, , drop = FALSE]
-
-            # true if overlap
-            w <- which(
-                VM$.mz_min <= x$.mz_max & x$.mz_min <= VM$.mz_max
-            )
-            found <- VM[w, ]
-
-            # if we found any
-            if (length(w) > 0) {
-                # calculate mz diff
-                found$mz_diff <- (found[[M$mz_column]] - x[[D$mz_column]])
-                # ppm difference
-                found$ppm_diff <- 1e6 *
-                    (found$mz_diff / x[[D$mz_column]])
-                found$ppm_diff2 <- 1e6 *
-                    (-found$mz_diff / found[[M$mz_column]])
-
-                # create duplicate annotations for each id
-                record_list <- rep(list(x), length(w))
-                record_list <- do.call(rbind, record_list)
-                record_list$mz_match_id <- found$.id
-                record_list$mz_match_diff <- found$mz_diff
-                record_list$ppm_match_diff_an <- found$ppm_diff
-                record_list$ppm_match_diff_vm <- found$ppm_diff2
-                record_list$mz_match <- found[[M$mz_column]]
-            } else {
-                # return record with NA in id column
-                record_list <- x
-                record_list$mz_match_id <- NA
-                record_list$mz_match_diff <- NA
-                record_list$ppm_match_diff_an <- NA
-                record_list$ppm_match_diff_vm <- NA
-                record_list$mz_match <- NA
-            }
-            OUT[[k]] <- record_list
-        }
-        OUT <- plyr::rbind.fill(OUT)
+        OUT <- .interval_overlap_join(
+            VM = VM,
+            AN = AN,
+            vm_value_column = M$mz_column,
+            an_value_column = D$mz_column,
+            vm_min_column = ".mz_min",
+            vm_max_column = ".mz_max",
+            an_min_column = ".mz_min",
+            an_max_column = ".mz_max",
+            match_id_name = "mz_match_id",
+            match_value_name = "mz_match",
+            match_diff_name = "mz_match_diff",
+            an_ppm_diff_name = "ppm_match_diff_an",
+            vm_ppm_diff_name = "ppm_match_diff_vm"
+        )
 
         # remove extra columns
         w <- which(colnames(OUT) %in% c(".id", ".mz_min", ".mz_max"))
@@ -205,3 +179,70 @@ setMethod(
         return(M)
     }
 )
+
+#' Match two sets of numeric intervals (e.g. mz or rt windows) and return
+#' every overlapping (annotation row, variable_meta row) pair.
+#'
+#' Uses `dplyr`'s overlap join (`join_by(overlaps(...))`, `dplyr` >= 1.1.0)
+#' to find every VM row whose `[vm_min_column, vm_max_column]` window
+#' overlaps an AN row's `[an_min_column, an_max_column]` window, rather than
+#' the previous per-row `which()` scan plus `rep()`/`rbind()` per annotation
+#' row -- at production scale (tens of thousands of variable_meta rows) that
+#' per-row approach could build many-hundred-thousand-row intermediate
+#' objects in a way that exhausted memory. The join itself only ever sees a
+#' minimal 4-column frame from each side (never the full VM/AN tables), so
+#' there's no risk of an accidental column-name collision with either
+#' table's own columns.
+#' @noRd
+.interval_overlap_join <- function(
+        VM, AN, vm_value_column, an_value_column,
+        vm_min_column, vm_max_column, an_min_column, an_max_column,
+        match_id_name, match_value_name, match_diff_name,
+        an_ppm_diff_name = NULL, vm_ppm_diff_name = NULL) {
+    vm_slim <- data.frame(
+        ..vm_id = VM$.id,
+        ..vm_value = VM[[vm_value_column]],
+        ..vm_min = VM[[vm_min_column]],
+        ..vm_max = VM[[vm_max_column]]
+    )
+    an_slim <- data.frame(
+        ..an_row = seq_len(nrow(AN)),
+        ..an_value = AN[[an_value_column]],
+        ..an_min = AN[[an_min_column]],
+        ..an_max = AN[[an_max_column]]
+    )
+
+    # overlaps(x_lower, x_upper, y_lower, y_upper) matches wherever
+    # [..an_min, ..an_max] overlaps [..vm_min, ..vm_max] in any capacity
+    # (bounds="[]" by default, i.e. <=/>=, matching the previous behaviour)
+    joined <- dplyr::inner_join(
+        an_slim, vm_slim,
+        by = dplyr::join_by(overlaps(..an_min, ..an_max, ..vm_min, ..vm_max))
+    )
+
+    matched <- AN[joined$..an_row, , drop = FALSE]
+    diff <- joined$..vm_value - joined$..an_value
+    matched[[match_id_name]] <- joined$..vm_id
+    matched[[match_diff_name]] <- diff
+    if (!is.null(an_ppm_diff_name)) {
+        matched[[an_ppm_diff_name]] <- 1e6 * (diff / joined$..an_value)
+    }
+    if (!is.null(vm_ppm_diff_name)) {
+        matched[[vm_ppm_diff_name]] <- 1e6 * (-diff / joined$..vm_value)
+    }
+    matched[[match_value_name]] <- joined$..vm_value
+
+    # AN rows with no overlapping VM row keep a single NA-filled record
+    unmatched_idx <- setdiff(seq_len(nrow(AN)), joined$..an_row)
+    if (length(unmatched_idx) > 0) {
+        un <- AN[unmatched_idx, , drop = FALSE]
+        un[[match_id_name]] <- NA
+        un[[match_diff_name]] <- NA
+        if (!is.null(an_ppm_diff_name)) un[[an_ppm_diff_name]] <- NA
+        if (!is.null(vm_ppm_diff_name)) un[[vm_ppm_diff_name]] <- NA
+        un[[match_value_name]] <- NA
+        matched <- rbind(matched, un)
+    }
+
+    return(matched)
+}

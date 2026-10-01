@@ -22,7 +22,7 @@ combined.}
 
 \item{matching_columns}{(character, NULL) A named vector of columns
 names to be created by merging columns from individual sources. e.g.
-\code{c('hello'='world')} will rename the 'hello' column to 'world' if
+\code{c('world'='hello')} will rename the 'hello' column to 'world' if
 found in any of the tables. The default is \code{NULL}.}
 
 \item{keep_cols}{(character, NULL) A list of column names to keep in

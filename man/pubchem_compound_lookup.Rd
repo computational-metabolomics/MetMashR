@@ -64,6 +64,7 @@ M <- pubchem_compound_lookup(
         url_template = "<base_url>/<search_by>/<query_column>/<output>/JSON",
         query_column = character(0),
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 0.5,
         suffix = "_rest_api")

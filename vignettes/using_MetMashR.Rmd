@@ -12,7 +12,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r using-metmashr-1, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
@@ -89,7 +89,7 @@ are compatible
 with your 
 current R version can be installed using BiocManager.
 
-```{r,eval = FALSE, include = TRUE}
+```{r using-metmashr-2, eval = FALSE, include = TRUE}
 # install BiocManager if not present
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
@@ -101,7 +101,7 @@ BiocManager::install("MetMashR")
 
 Once installed you can activate the packages in the usual way:
 
-```{r, eval=TRUE, include=FALSE}
+```{r using-metmashr-3, eval=TRUE, include=FALSE}
 suppressPackageStartupMessages({
     # load the packages
     library(MetMashR)
@@ -112,7 +112,7 @@ suppressPackageStartupMessages({
 })
 ```
 
-```{r, eval=FALSE, include=TRUE}
+```{r using-metmashr-4, eval=FALSE, include=TRUE}
 # load the packages
 library(struct)
 library(MetMashR)
@@ -168,7 +168,7 @@ source. For example the `read_source` method for `ls_source` object reads in
 the exported data file from LipidSearch by stripping the header and parsing the
 rest of the file into a table.
 
-```{r}
+```{r using-metmashr-5}
 # prepare source object
 AT <- ls_source(
     source = system.file(
@@ -198,7 +198,7 @@ to augment an `annotation_table` with additional information.
 Like other sources, `annotation_database` objects have a `read_source` method 
 specific to the database.
 
-```{r}
+```{r using-metmashr-6}
 # prepare source object
 MT <- MTox700plus_database()
 
@@ -212,7 +212,7 @@ MT
 `annotation_database` objects also have a `read_database` method to read the 
 table directly to a data.frame.
 
-```{r}
+```{r using-metmashr-7}
 # prepare source object
 MT <- MTox700plus_database()
 
@@ -254,7 +254,7 @@ The `import_source` model (workflow step) allows you to do this. Note that using
 this object will replace the existing `annotation_source` and is really intended
 to be used as the first step in a workflow.
 
-```{r}
+```{r using-metmashr-8}
 # prepare source object
 AT <- ls_source(
     source = system.file(
@@ -292,7 +292,7 @@ Both models and model sequences can be applied to an `annotation_source` objects
 using the `model_apply` method. In this example we import the source, and then 
 apply a filtering step to remove records with a lower Grading.
 
-```{r}
+```{r using-metmashr-9}
 # prepare source object
 AT <- ls_source(
     source = system.file(
@@ -325,7 +325,7 @@ The `predicted` method returns the processed
 Indexing can also be used with a model sequence to extract the processed 
 annotation source after that step in the workflow.
 
-```{r}
+```{r using-metmashr-10}
 # source after import and before filtering
 predicted(WF[1])
 ```
@@ -391,7 +391,7 @@ The `rest_api` template object includes the ability to cache results locally,
 in order to reduce the number of api queries. This means a `rest_api` object can
 be included in a workflow and updated as more results are collected over time. 
 
-```{r}
+```{r using-metmashr-11}
 # prepare source object
 AT <- ls_source(
     source = system.file(
@@ -436,7 +436,7 @@ predicted(WF)
 Note that the cache is stored as an `annotation_database` object, and can be 
 used in workflows like any other `annotation_source`.
 
-```{r}
+```{r using-metmashr-12}
 # retrieve cache
 TF <- read_source(TF)
 
@@ -490,7 +490,7 @@ Additional fields in the list item can be any of the additional inputs to
 For example here we create a dictionary to convert some of the lipid abbreviations
 to the LipidMaps standard, and replace underscores with forward slashes:
 
-```{r}
+```{r using-metmashr-13}
 custom_dict <- list(
     list(
         pattern = "AcCa",
@@ -513,7 +513,7 @@ custom_dict <- list(
 We can now use this dictionary in a workflow to create a new column of "normalised"
 lipid names and (hopefully) get fewer NA when querying LipidMaps:
 
-```{r}
+```{r using-metmashr-14}
 # prepare workflow
 WF <-
     # step 1 import source from file
@@ -585,7 +585,7 @@ For the Lipids example above, we collapse multiple records for the same LipidNam
 into a single record, and collapse e.g. multiple inchikeys into a single string 
 separated by semi colons.
 
-```{r}
+```{r using-metmashr-15}
 # prepare workflow
 CR <- combine_records(
     group_by = "LipidName",
@@ -623,7 +623,7 @@ different requirements see `?combine_records_helper_functions` for a complete
 list.
 
 # Session Info
-```{r}
+```{r using-metmashr-16}
 sessionInfo()
 ```
 

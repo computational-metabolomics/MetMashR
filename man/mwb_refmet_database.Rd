@@ -51,7 +51,7 @@ Across Sessions}. R package version 3.2.0.
 Wickham H (2026). \emph{httr: Tools for Working with URLs and
 HTTP}. doi:10.32614/CRAN.package.httr
 \url{https://doi.org/10.32614/CRAN.package.httr}. R package version
-1.4.8, \url{https://CRAN.R-project.org/package=httr}.
+1.4.9, \url{https://CRAN.R-project.org/package=httr}.
 
 Wickham H (2011). "The Split-Apply-Combine Strategy for
 Data Analysis." \emph{Journal of Statistical Software}, \emph{40}(1), 1-29.

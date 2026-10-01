@@ -1,15 +1,38 @@
 #' @eval get_description('mspurity_source')
-#' @include annotation_source_class.R
+#' @include annotation_source_class.R lcms_table_class.R
 #' @family annotation sources
+#' @family annotation tables
 #' @export mspurity_source
 mspurity_source <- function(source,
     tag = "msPurity",
+    mz_column = "mz",
+    rt_column = "rt",
+    id_column = "id",
+    data = NULL,
     ...) {
+    if (is.null(data)) {
+        data <- data.frame()
+    }
+
+    if (nrow(data) == 0 & ncol(data) == 0) {
+        data <- data.frame(
+            id = character(0),
+            mz = numeric(0),
+            rt = numeric(0)
+        )
+        colnames(data) <- c(id_column, mz_column, rt_column)
+    }
+
     # new object
     out <- new_struct(
         "mspurity_source",
         source = source,
         tag = tag,
+        mz_column = mz_column,
+        rt_column = rt_column,
+        id_column = id_column,
+        data = data,
+        .required = c(mz_column, id_column, rt_column),
         ...
     )
     return(out)
@@ -18,7 +41,7 @@ mspurity_source <- function(source,
 
 .mspurity_source <- setClass(
     "mspurity_source",
-    contains = c("annotation_source"),
+    contains = c("lcms_table"),
     prototype = list(
         name = "msPurity source",
         description = paste0(
@@ -26,17 +49,53 @@ mspurity_source <- function(source,
             format created by the `msPurity` package."
         ),
         type = "annotation source",
-        libraries = "msPurity"
+        libraries = "msPurity",
+        data = .set_entity_value(
+            obj = "lcms_table",
+            param_id = "data",
+            value = data.frame(
+                id = character(0),
+                mz = character(0),
+                rt = character(0)
+            )
+        ),
+        id_column = .set_entity_value(
+            obj = "lcms_table",
+            param_id = "id_column",
+            value = "id"
+        ),
+        mz_column = .set_entity_value(
+            obj = "lcms_table",
+            param_id = "mz_column",
+            value = "mz"
+        ),
+        rt_column = .set_entity_value(
+            obj = "lcms_table",
+            param_id = "rt_column",
+            value = "rt"
+        )
     )
 )
 
 
+# NOTE: this used to be a `model_apply(M, D)` method with a two-argument
+# signature c("mspurity_source", "lcms_table"), writing its result into an
+# `M$imported` output slot. `mspurity_source` never declared that slot (it
+# contained only `annotation_source`, which has no `predicted`/output
+# machinery -- that's a `model`-only concept), so every call errored with
+# `"imported" is not a valid param, output or column name`. Following
+# `cd_source`/`ls_source`'s pattern instead: `mspurity_source` now contains
+# `lcms_table` directly (so it has its own mz_column/rt_column/id_column)
+# and is populated in place via a single-argument `read_source(obj)` method,
+# exactly like those two.
 #' @export
-#' @template model_apply
+#' @rdname read_source
 setMethod(
-    f = "model_apply",
-    signature = c("mspurity_source", "lcms_table"),
-    definition = function(M, D) {
+    f = "read_source",
+    signature = c("mspurity_source"),
+    definition = function(obj) {
+        M <- obj
+
         # check for zero content
         check <- readLines(M$source)
         if (check[1] == "" | check[1] == "\"\"") {
@@ -82,14 +141,8 @@ setMethod(
             df <- data.frame(matrix(NA, nrow = 0, ncol = length(cols)))
             colnames(df) <- cols
 
-            D$data <- df
-            D$mz_column <- "mz"
-            D$rt_column <- "rt"
-            D$id_column <- "id"
-            D$tag <- M$tag
-            M$imported <- D
-
-            return(M)
+            obj$data <- df
+            return(obj)
         }
 
         mtox_output <- read.csv(file = M$source, sep = ",", row.names = 1)
@@ -131,22 +184,8 @@ setMethod(
         ions <- gsub("[\\-]+$", "-1", ions, perl = TRUE)
         mtox_output$library_accession.ion <- ions
 
-        # add extra columns if requested
-        if (length(M$add_cols) > 0) {
-            for (g in seq_len(length(M$add_cols))) {
-                mtox_output[[names(M$add_cols)[g]]] <- M$add_cols[[g]]
-            }
-        }
+        obj$data <- mtox_output
 
-        D$data <- mtox_output
-
-        D$mz_column <- "mz"
-        D$rt_column <- "rt"
-        D$id_column <- "id"
-        D$tag <- M$tag
-
-        M$imported <- D
-
-        return(M)
+        return(obj)
     }
 )

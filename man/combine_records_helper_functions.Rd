@@ -25,9 +25,9 @@ compute_median(na.rm = TRUE)
 
 fuse(separator, na_string = "NA")
 
-select_max(max_col, use_abs = FALSE, keep_NA = FALSE)
+select_max(max_col, use_abs = FALSE, keep_NA = FALSE, unique = FALSE)
 
-select_min(min_col, use_abs = FALSE, keep_NA = FALSE)
+select_min(min_col, use_abs = FALSE, keep_NA = FALSE, unique = FALSE)
 
 select_match(match_col, search_col, separator, na_string = "NA")
 
@@ -65,6 +65,11 @@ matches with the same priority}
 \item{use_abs}{(logical) If TRUE then the sign of the values is ignored.}
 
 \item{keep_NA}{(logical) If TRUE keeps records with NA values}
+
+\item{unique}{(logical) If TRUE then exactly one record is returned even
+when multiple records tie, by taking the first matching record. This
+guarantees a single, deterministic and reproducible result per group
+instead of one row per tied record.}
 
 \item{min_col}{(character) the column name to search for the minimum value.}
 

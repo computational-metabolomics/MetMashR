@@ -67,6 +67,7 @@ M <- classyfire_lookup(
         url_template = "<base_url>/<query_column>.json",
         query_column = character(0),
         cache = NULL,
+        cache_mode = "update",
         status_codes = list(),
         delay = 0.5,
         suffix = "_rest_api")
@@ -82,13 +83,17 @@ doi:10.32614/CRAN.package.dplyr
 Wickham H (2026). \emph{httr: Tools for Working with URLs and
 HTTP}. doi:10.32614/CRAN.package.httr
 \url{https://doi.org/10.32614/CRAN.package.httr}. R package version
-1.4.8, \url{https://CRAN.R-project.org/package=httr}.
+1.4.9, \url{https://CRAN.R-project.org/package=httr}.
 }
 \seealso{
 Other REST API's:
+\code{\link[=classyfire_batch_lookup]{classyfire_batch_lookup()}},
+\code{\link[=cts_lite_lookup]{cts_lite_lookup()}},
 \code{\link[=kegg_lookup]{kegg_lookup()}},
 \code{\link[=lipidmaps_lookup]{lipidmaps_lookup()}},
 \code{\link[=mwb_compound_lookup]{mwb_compound_lookup()}},
+\code{\link[=mwb_refmet_lookup]{mwb_refmet_lookup()}},
+\code{\link[=pubchem_id_exchange]{pubchem_id_exchange()}},
 \code{\link[=rest_api]{rest_api()}}
 }
 \concept{REST API's}

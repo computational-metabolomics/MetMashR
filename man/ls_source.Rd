@@ -69,11 +69,13 @@ Other annotation sources:
 \code{\link[=annotation_database]{annotation_database()}},
 \code{\link[=annotation_table]{annotation_table()}},
 \code{\link[=cd_source]{cd_source()}},
-\code{\link[=mspurity_source]{mspurity_source()}}
+\code{\link[=mspurity_source]{mspurity_source()}},
+\code{\link[=mwb_study_source]{mwb_study_source()}}
 
 Other annotation tables:
 \code{\link[=annotation_table]{annotation_table()}},
-\code{\link[=cd_source]{cd_source()}}
+\code{\link[=cd_source]{cd_source()}},
+\code{\link[=mspurity_source]{mspurity_source()}}
 }
 \concept{annotation sources}
 \concept{annotation tables}

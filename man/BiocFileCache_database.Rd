@@ -82,6 +82,7 @@ Across Sessions}. R package version 3.2.0.
 }
 \seealso{
 Other database:
+\code{\link[=lipidmaps_database]{lipidmaps_database()}},
 \code{\link[=sqlite_database]{sqlite_database()}}
 }
 \concept{database}
