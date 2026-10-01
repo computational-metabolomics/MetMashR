@@ -10,3 +10,4 @@
 ^\.positai$
 ^\.claude$
 ^man-roxygen$
+^\.gitattributes$

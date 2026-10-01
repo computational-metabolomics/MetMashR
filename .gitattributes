@@ -1,0 +1,3 @@
+# keep httptest mock responses and snapshots byte-identical on Windows
+# checkouts (CRLF conversion breaks parsing of the mocked responses)
+tests/testthat/*/** -text
