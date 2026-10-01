@@ -16,7 +16,7 @@ vignette: >
 
 
   
-```{r, include = FALSE}
+```{r exploring-mtox-1, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
@@ -55,7 +55,7 @@ library(BiocStyle)
   with your 
   current R version can be installed using BiocManager.
   
-```{r,eval = FALSE, include = TRUE}
+```{r exploring-mtox-2, eval = FALSE, include = TRUE}
 # install BiocManager if not present
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
@@ -67,7 +67,7 @@ BiocManager::install("MetMashR")
   
   Once installed you can activate the packages in the usual way:
   
-```{r, eval=TRUE, include=FALSE}
+```{r exploring-mtox-3, eval=TRUE, include=FALSE}
 suppressWarnings(suppressPackageStartupMessages({
     # load the packages
     library(MetMashR)
@@ -79,7 +79,7 @@ suppressWarnings(suppressPackageStartupMessages({
 }))
 ```
 
-```{r, eval=FALSE, include=TRUE}
+```{r exploring-mtox-4, eval=FALSE, include=TRUE}
 # load the packages
 library(MetMashR)
 library(ggplot2)
@@ -106,7 +106,7 @@ biological and toxicological space.
 The MTox700+ database can be imported using the `MTox700plus_database` object.
 It can be imported to a data.frame using the `read_database` method.
 
-```{r}
+```{r exploring-mtox-5}
 # prep object
 MT <- MTox700plus_database(
     version = "latest",
@@ -120,7 +120,7 @@ df <- read_database(MT)
 .DT(df)
 ```
 
-```{r}
+```{r exploring-mtox-6}
 # prepare workflow that uses MTox700+ as a source
 M <-
     import_source() +
@@ -149,7 +149,7 @@ ClassyFire (software to compute the taxonomy of a structure)
 In this plot we show the number of metabolites in the MTox700+ database that 
 are assigned to a "superclass" of molecules.
 
-```{r,fig.height=5,fig.width=7.5}
+```{r exploring-mtox-7, fig.height=5,fig.width=7.5}
 # initialise chart object
 C <- annotation_bar_chart(
     factor_name = "superclass",
@@ -226,7 +226,7 @@ toxicologial relevance, and PathBank is more general.
 In th example below we import PathBank as a source, and use a venn diagram to 
 compare the overlap between inchikey identifiers in PathBank and MTox700+.
 
-```{r,fig.width=8,warning=FALSE}
+```{r exploring-mtox-8, fig.width=8,warning=FALSE}
 # object M already contains the MTox700+ database as a source
 
 # prepare PathBank as a source
@@ -273,7 +273,7 @@ retrieved from the cache.
 We request a number of columns from PathBank, including pathway information and
 additional identifiers such as HMBD ID and KEGG ID.
 
-```{r}
+```{r exploring-mtox-9}
 # prepare object
 X <- database_lookup(
     query_column = "inchikey",
@@ -293,7 +293,7 @@ X <- model_apply(X, predicted(M))
 We can now visualise e.g. the subject of the pathways captured by the MTox700+ 
 database.
 
-```{r}
+```{r exploring-mtox-10}
 C <- annotation_bar_chart(
     factor_name = "Pathway.Subject",
     label_rotation = TRUE,
@@ -321,13 +321,13 @@ rows than the original MTox700+ database, as each MTox700+ record has been
 replicated for each match in the PathBank database.
 
 e.g. after importing MTox700+ the number of records was:
-```{r}
+```{r exploring-mtox-11}
 # Number in MTox700+
 nrow(predicted(M)$data)
 ```
 
 After combing with PathBank the number of records is:
-```{r}
+```{r exploring-mtox-12}
 # Number after PathBank lookup
 nrow(predicted(X)$data)
 ```
@@ -336,7 +336,7 @@ Sometimes it is useful to collapse this information into a single record per
 metabolite. We can use the `combine_records` object and its helper functions to
 do this in a `MetMashR` workflow.
 
-```{r}
+```{r exploring-mtox-13}
 # prepare object
 X <- database_lookup(
     query_column = "inchikey",
@@ -365,13 +365,13 @@ combined into a single string using the " || " separator.
 We can now extract the pathways associated with a particular metabolite. For 
 example Glycolic acid:
 
-```{r}
+```{r exploring-mtox-14}
 # get index of metabolite
 w <- which(predicted(X)$data$metabolite_name == "Glycolic acid")
 ```
 
 The pathways associated with Glycolic acid are:
-```{r}
+```{r exploring-mtox-15}
 # print list of pathways
 predicted(X)$data$Pathway.Name[w]
 ```
@@ -379,7 +379,7 @@ predicted(X)$data$Pathway.Name[w]
 <br>
 
 # Session Info
-```{r}
+```{r exploring-mtox-16}
 sessionInfo()
 ```
 

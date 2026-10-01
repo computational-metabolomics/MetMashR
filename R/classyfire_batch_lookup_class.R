@@ -1,6 +1,8 @@
 #' @eval get_description('classyfire_batch_lookup')
 #' @export
 #' @include annotation_source_class.R
+#' @param M A `classyfire_batch_lookup` object.
+#' @param D An [annotation_source()] object.
 #' @importFrom methods setClass setMethod setGeneric
 #' @importFrom httr POST GET content add_headers status_code
 #' @importFrom jsonlite fromJSON toJSON

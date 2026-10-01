@@ -37,7 +37,7 @@ The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible
 with your 
 current R version can be installed using BiocManager.
 
-```{r,eval = FALSE, include = TRUE}
+```{r extending-metmashr-1, eval = FALSE, include = TRUE}
 # install BiocManager if not present
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
@@ -49,7 +49,7 @@ BiocManager::install("MetMashR")
 
 Once installed you can activate the packages in the usual way:
 
-```{r, eval=TRUE, include=FALSE}
+```{r extending-metmashr-2, eval=TRUE, include=FALSE}
 suppressPackageStartupMessages({
     # load the packages
     library(struct)
@@ -59,7 +59,7 @@ suppressPackageStartupMessages({
 })
 ```
 
-```{r, eval=FALSE, include=TRUE}
+```{r extending-metmashr-3, eval=FALSE, include=TRUE}
 # load the packages
 library(struct)
 library(MetMashR)
@@ -89,7 +89,7 @@ AN <- do_query(
 The imported table has 747 rows and 8 columns. For brevity in this vignette 
 we have cached the first 10 rows and stored them in the package.
 
-```{r, include=FALSE,eval=TRUE}
+```{r extending-metmashr-4, include=FALSE,eval=TRUE}
 AN <- readRDS(
     system.file("extdata/AN000465_subset.rds", package = "MetMashR")
 )
@@ -97,7 +97,7 @@ AN <- readRDS(
 
 We can convert the imported table into an `annotation_table`:
 
-```{r}
+```{r extending-metmashr-5}
 AT <- annotation_table(data = AN, id_column = NULL)
 ```
 
@@ -186,7 +186,7 @@ additional values to the base `struct` object like name and description without
 including them in the function definition, in case we want to override the 
 values defined in the prototype of the class definition in the previous section.
 
-```{r}
+```{r extending-metmashr-6}
 mwb_source <- function(...) {
     # new object
     out <- new_struct(
@@ -204,7 +204,7 @@ parse the source files into an `annotation_table`.
 
 Here we use `setMethod` to define the method for the new source.
 
-```{r, eval=TRUE,include=TRUE}
+```{r extending-metmashr-7, eval=TRUE,include=TRUE}
 setMethod(
     f = "read_database",
     signature = c("mwb_source"),
@@ -234,7 +234,7 @@ source object.
 The new `mwb_source` and `method_apply` method are ready to use. To import the 
 table we can use the `import_source` method:
 
-```{r}
+```{r extending-metmashr-8}
 # initialise source
 SRC <- mwb_source(
     source = "AN000465"
@@ -293,7 +293,7 @@ set_struct_obj(
 We can now create an instance of our new model, and use the `show` method to
 display information about it.
 
-```{r}
+```{r extending-metmashr-9}
 M <- drop_empty_columns()
 show(M)
 ```
@@ -303,7 +303,7 @@ will
 search for columns of missing values and then remove them from the 
 `annotation_table`. To define this method we use the `set_obj_method` function.
 
-```{r}
+```{r extending-metmashr-10}
 set_obj_method(
     class_name = "drop_empty_columns",
     method_name = "model_apply",
@@ -340,15 +340,15 @@ Note that in the `signature` we specify that the second input is an
 The new model is ready to use. We can test it using the `model_apply` method, 
 and check that some columns have been removed.
 
-```{r}
+```{r extending-metmashr-11}
 M <- model_apply(M, AT)
 ```
 The number of columns before was:
-```{r}
+```{r extending-metmashr-12}
 ncol(AT$data)
 ```
 The number of columns afterwards is:
-```{r}
+```{r extending-metmashr-13}
 ncol(M$updated$data)
 ```
 
@@ -361,7 +361,7 @@ part of the molecule name.
 As we did for `drop_empty_columns` we use the `set_struct_obj` and 
 `set_obj_method` function to create our new workflow step.
 
-```{r}
+```{r extending-metmashr-14}
 # define new model object
 set_struct_obj(
     class_name = "remove_suffix",
@@ -442,7 +442,7 @@ the workflow instead of importing it in-line. We also import some cached REST
 API responses so that we dont overburden the service when generating the 
 vignette.
 
-```{r, eval=FALSE,include = TRUE}
+```{r extending-metmashr-15, eval=FALSE,include = TRUE}
 # refmet
 refmet <- mwb_refmet_database()
 
@@ -459,7 +459,7 @@ pubchem_smile_cache <- rds_database(
 )
 ```
 
-```{r, eval=TRUE,include=FALSE}
+```{r extending-metmashr-16, eval=TRUE,include=FALSE}
 refmet <- mwb_refmet_database()
 
 pubchem_cid_cache <- rds_database(
@@ -479,7 +479,7 @@ pubchem_smile_cache <- rds_database(
 In practice it is better to create your own cache using e.g. `rds_database`, 
 `sql_database` or other `struct_database` objects with write access.
 
-```{r,message=FALSE, include=TRUE, eval=TRUE}
+```{r extending-metmashr-17, message=FALSE, include=TRUE, eval=TRUE}
 # prepare sequence
 M <- import_source() +
     drop_empty_columns() +
@@ -537,7 +537,7 @@ workflow steps MetMashR can also be extended to include additional
 annotation sources.
 
 # Session Info
-```{r}
+```{r extending-metmashr-18}
 sessionInfo()
 ```
 

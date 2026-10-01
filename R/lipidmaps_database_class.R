@@ -18,12 +18,13 @@
 #' @family database
 lipidmaps_database <- function(bfc_path = NULL,
     resource_name = "MetMashR_lipidmaps",
+    source = paste0(
+        "https://www.lipidmaps.org/rest/compound/lm_id/LM/all/download"
+    ),
     ...) {
     out <- struct::new_struct(
         "lipidmaps_database",
-        source = paste0(
-            "https://www.lipidmaps.org/rest/compound/lm_id/LM/all/download"
-        ),
+        source = source,
         bfc_path = bfc_path,
         resource_name = resource_name,
         ...

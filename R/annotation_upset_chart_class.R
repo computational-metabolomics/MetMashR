@@ -85,11 +85,10 @@ annotation_upset_chart <- function(
     check <- length(used_old)>0
     
     if (check){
-        .Deprecated('annotation_upset_chart (new signature)',
-                    msg = paste0(
-                        'The interface to this class has changed. See',
-                        '?annotation_upset_chart.'
-                    )
+        warning(
+            'The interface to this class has changed. See ',
+            '?annotation_upset_chart.',
+            call. = FALSE
         )
         # exclude deprecated
         dots[used_old] <- NULL
@@ -458,11 +457,11 @@ upset_min_size <- function(min_size) {
 #' @export
 upset_min_groups <- function(min_groups) {
     function(region_data) {
-        group_counts <- sapply(region_data$name, function(x) {
+        group_counts <- vapply(region_data$name, function(x) {
             if (x == "") return(0)
             groups <- strsplit(x, "/")[[1]]
-            length(groups)
-        })
+            as.numeric(length(groups))
+        }, numeric(1))
         group_counts >= min_groups
     }
 }
@@ -471,11 +470,11 @@ upset_min_groups <- function(min_groups) {
 #' @export
 upset_max_groups <- function(max_groups) {
     function(region_data) {
-        group_counts <- sapply(region_data$name, function(x) {
+        group_counts <- vapply(region_data$name, function(x) {
             if (x == "") return(0)
             groups <- strsplit(x, "/")[[1]]
-            length(groups)
-        })
+            as.numeric(length(groups))
+        }, numeric(1))
         group_counts <= max_groups
     }
 }
@@ -485,17 +484,17 @@ upset_max_groups <- function(max_groups) {
 upset_intersections <- function(combinations) {
     function(region_data) {
         # Normalize the input combinations (sort groups alphabetically for consistency)
-        normalized_combinations <- sapply(combinations, function(combo) {
+        normalized_combinations <- vapply(combinations, function(combo) {
             groups <- strsplit(combo, "/")[[1]]
             paste(sort(groups), collapse = "/")
-        })
+        }, character(1))
         
         # Normalize the region names for comparison
-        normalized_regions <- sapply(region_data$name, function(name) {
+        normalized_regions <- vapply(region_data$name, function(name) {
             if (name == "") return("")
             groups <- strsplit(name, "/")[[1]]
             paste(sort(groups), collapse = "/")
-        })
+        }, character(1))
         
         # Check which regions match the specified combinations
         normalized_regions %in% normalized_combinations
@@ -549,7 +548,11 @@ upset_intersections <- function(combinations) {
 #' }
 #' 
 #' @examples
-#' \dontrun{
+#' # create a filter function that keeps intersections with 5+ items
+#' f <- upset_min_size(5)
+#' is.function(f)
+#'
+#' \donttest{
 #' # Filter to show only intersections with 5+ items
 #' C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_size(5))
 #' 

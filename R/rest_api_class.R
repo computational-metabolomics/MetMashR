@@ -436,7 +436,7 @@ setMethod(
         stop(
             "'getURL()' failed:",
             "\n  URL: ", URL,
-            "\n  error: ", conditionMessage(result)
+            "\n  reason: ", conditionMessage(result)
         )
     }
 

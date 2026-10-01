@@ -4,7 +4,12 @@
 \alias{lipidmaps_database}
 \title{LIPID MAPS database}
 \usage{
-lipidmaps_database(bfc_path = NULL, resource_name = "MetMashR_lipidmaps", ...)
+lipidmaps_database(
+  bfc_path = NULL,
+  resource_name = "MetMashR_lipidmaps",
+  source = paste0("https://www.lipidmaps.org/rest/compound/lm_id/LM/all/download"),
+  ...
+)
 }
 \arguments{
 \item{bfc_path}{(character, NULL) \code{BiocFileCache} is used to cache
@@ -16,6 +21,9 @@ details). The default is \code{NULL}.}
 \item{resource_name}{(character) The name given to this resource in
 the cache. (see \code{\link[BiocFileCache:BiocFileCache]{BiocFileCache::BiocFileCache()}} for details). The
 default is \code{"MetMashR_lipidmaps"}.}
+
+\item{source}{(ANY) The source of annotation data. The default is
+\code{paste0("https://www.lipidmaps.org/rest/compound/lm_id/LM/all/download")}.}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
 }

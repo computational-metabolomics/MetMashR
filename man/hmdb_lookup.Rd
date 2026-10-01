@@ -57,5 +57,5 @@ M <- hmdb_lookup(
 Temple Lang D (2026). \emph{XML: Tools for Parsing and
 Generating XML Within R and S-Plus}. doi:10.32614/CRAN.package.XML
 \url{https://doi.org/10.32614/CRAN.package.XML}. R package version
-3.99-0.24, \url{https://CRAN.R-project.org/package=XML}.
+3.99-0.25, \url{https://CRAN.R-project.org/package=XML}.
 }

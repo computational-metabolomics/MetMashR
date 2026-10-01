@@ -6,17 +6,13 @@ output:
     toc_depth: 2
     number_sections: true
     toc_float: true
-  html_document:
-    toc: true
-    toc_depth: '2'
-    df_print: paged
-  word_document:
-    toc: true
-vignette: "%\\VignetteEncoding{UTF-8} %\\VignetteIndexEntry{Case study: reimplementing
-  the Metabolites Merging Strategy with MetMashR} %\\VignetteEngine{knitr::rmarkdown}\n"
+vignette: >
+  %\VignetteIndexEntry{Case study: reimplementing the Metabolites Merging Strategy with MetMashR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r mms-case-study-1, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
@@ -210,7 +206,7 @@ split_ambiguous_name_step <- split_records(
   alongside an abbreviation (e.g. `"MEP (Mono-ethyl phthalate)"` becomes
   `"Mono-ethyl phthalate"`)
   
-```{r,step0.52}
+```{r mms-case-study-2, step0.52}
 # matches any trailing "(...)", not just abbrev(expansion). 
 # e.g. "LysoPC (16:0)" -> "16:0". OK for this dataset; check before reusing 
 # elsewhere
@@ -234,7 +230,7 @@ abbrev_dictionary <- list(
 - expand Lyso-glycerophospholipid class prefixes to LIPID MAPS
   shorthand (`"LysoPC"` becomes `"LPC"`).
 
-```{r, step0.53}
+```{r mms-case-study-3, step0.53}
 # dictionary to convert lyso-lipids to LIPID MAPS shorthand
 lyso_dictionary <- list(
     list(pattern = "^Lyso-?PC", replace = "LPC", perl = TRUE, ignore.case = TRUE),
@@ -254,7 +250,7 @@ is applied first, on its own, so `ambiguous_name_step` and
 remaining dictionaries are then applied to `name_tidied` (now one row per
 candidate name) to produce the final `name_normalised`.
 
-```{r,step0.54}
+```{r mms-case-study-4, step0.54}
 # workflow steps to apply the cleaning steps to the metabolite names
 normalise_step <- list(
     normalise_strings(
@@ -751,6 +747,6 @@ Metabolites 2023;13(12):1167. https://doi.org/10.3390/metabo13121167
 
 # Session Info
 
-```{r, warning=FALSE}
+```{r mms-case-study-5, warning=FALSE}
 sessionInfo()
 ```

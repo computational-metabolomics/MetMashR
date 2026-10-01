@@ -1,6 +1,8 @@
 #' @eval get_description('pubchem_id_exchange')
 #' @export
 #' @include annotation_source_class.R
+#' @param M A `pubchem_id_exchange` object.
+#' @param D An [annotation_source()] object.
 #' @importFrom methods setClass setMethod setGeneric
 #' @importFrom xml2 read_xml xml_find_first xml_text xml_attr
 #' @importFrom httr2 request req_body_raw req_headers req_perform resp_body_string resp_status
@@ -515,8 +517,8 @@ setMethod(
     f = "model_apply",
     signature = c("pubchem_id_exchange", "annotation_source"),
     definition = function(M, D) {
-        M = model_train(M,D)
-        M = model_predict(M,D)
+        M <- model_train(M,D)
+        M <- model_predict(M,D)
         return(M)
     }
 )
@@ -689,7 +691,7 @@ setMethod(
             return(NULL)
         }
     }, error = function(e) {
-        warning(paste("Failed to submit PUG request:", e$message))
+        warning("Failed to submit PUG request: ", e$message)
         return(NULL)
     })
 }
@@ -741,13 +743,13 @@ setMethod(
                     return(xml2::xml_text(url_node))
                 }
             } else if (status %in% c("server-error", "input-error", "data-error")) {
-                stop(paste("PUG request failed with status:", status))
+                stop("PUG request failed with status: ", status)
             }
         }
 
         return(NA_character_)
     }, error = function(e) {
-        stop(paste("Error polling PUG status:", e$message))
+        stop("Polling PUG status failed: ", e$message)
     })
 
     if (is.character(result) && length(result) == 1 && !is.na(result)) {
@@ -776,7 +778,7 @@ setMethod(
         }
 
         parsed_lines <- strsplit(lines, "\t")
-        max_cols <- max(sapply(parsed_lines, length))
+        max_cols <- max(lengths(parsed_lines))
 
         parsed_lines <- lapply(parsed_lines, function(x) {
             if (length(x) < max_cols) {
@@ -798,7 +800,7 @@ setMethod(
 
         return(result_df)
     }, error = function(e) {
-        stop(paste("Failed to download PUG results:", e$message))
+        stop("Failed to download PUG results: ", e$message)
     })
 }
 

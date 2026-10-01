@@ -89,6 +89,10 @@ results are known to be stale.}} The default is \code{"update"}.}
 execution. The default is \code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
+
+\item{M}{A \code{classyfire_batch_lookup} object.}
+
+\item{D}{An \code{\link[=annotation_source]{annotation_source()}} object.}
 }
 \value{
 A \code{classyfire_batch_lookup} object with the following

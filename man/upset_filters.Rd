@@ -68,7 +68,11 @@ or_filter <- function(region_data) {
 }
 }
 \examples{
-\dontrun{
+# create a filter function that keeps intersections with 5+ items
+f <- upset_min_size(5)
+is.function(f)
+
+\donttest{
 # Filter to show only intersections with 5+ items
 C <- annotation_upset_chart(factor_name = "V1", filter = upset_min_size(5))
 

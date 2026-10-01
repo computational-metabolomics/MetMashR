@@ -84,7 +84,7 @@ get_description <- function(id) {
     str <- gsub("      ", "        ", str)
     w <- which(grepl("M <- ", str))
     if (length(w) > 0) {
-        str <- c(strwrap(str[1:(w - 1)], 70), str[w:length(str)])
+        str <- c(strwrap(str[seq_len(w - 1)], 70), str[w:length(str)])
     }
 
     # break any "arg = "value"," line whose quoted string is long enough to
@@ -138,5 +138,6 @@ utils::globalVariables(c(
     "rotate", "wrap_plots", "plot_spacer", # annotation_histogram2d
     "compoundVariables",
     "orig_db", "blue_id", "Ion", "Name", "Formula", "mzCloud.Best.Match",
-    "Charge", "Area"
+    "Charge", "Area",
+    "overlaps", "..an_min", "..an_max", "..vm_min", "..vm_max" # interval join
 ))
