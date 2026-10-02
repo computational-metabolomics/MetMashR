@@ -1,41 +1,55 @@
 # *Met*abolite *Mash*ing in *R* (MetMashR)
 
-`MetMashR` is an R package that can be used to import, clean, filter,
-prioritise, combine and otherwise “mash” together metabolite annotations
-from multiple sources.
+[![BioC
+version](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fbioconductor.org%2Fconfig.yaml&query=%24.release_version&label=Bioconductor)](https://bioconductor.org/packages/MetMashR)
+[![BioC
+status](https://bioconductor.org/shields/build/release/bioc/MetMashR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/MetMashR)
+[![License:
+GPL-3](https://img.shields.io/badge/License-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+
+`MetMashR` is an R/Bioconductor package for integrating, harmonising and
+processing metabolite annotations from multiple sources using modular,
+reproducible workflows.
 
 ## Summary
 
-Metabolomics measures the small molecules (metabolites) in a sample,
-such as blood, urine or water. Instruments like mass spectrometers
-detect thousands of signals, and software tools try to work out which
-molecule each signal belongs to. This is called annotation. Different
-tools often disagree, name the same molecule in different ways, or
-report several possible matches for one signal.
+Metabolomics is the analysis of small molecules, or metabolites, in
+biological and environmental samples (e.g. blood, urine and water).
+Liquid chromatography–mass spectrometry (LC–MS) is widely used in
+metabolomics and produces complex datasets from which thousands of LC–MS
+features can be detected. Computational annotation tools attempt to
+associate these features with candidate chemical compounds, but
+different tools may produce conflicting annotations, use inconsistent
+compound names or identifiers, or report multiple candidates for a
+single feature.
 
-`MetMashR` helps researchers bring these annotations together. It reads
-the output of different annotation tools into a common format, cleans
-and standardises molecule names, looks up extra information in public
-databases such as PubChem, ChEBI, KEGG and LIPID MAPS, and filters and
-combines the results. Each of these jobs is a separate building block,
-and blocks are chained into a workflow. The workflow can be shared and
-re-run, so the same steps are applied in the same way every time.
+`MetMashR` integrates and harmonises metabolite annotations from
+multiple sources. It imports annotation outputs into a common structure
+and provides modular tools for cleaning, standardising, filtering,
+prioritising and combining annotations, as well as enriching them with
+information from resources such as PubChem, ChEBI, KEGG and LIPID MAPS.
+These steps can be combined into reproducible workflows that can be
+reused and applied consistently across analyses. MetMashR was developed
+primarily for LC–MS annotation workflows, but its modular framework can
+also be extended to other analytical platforms.
 
-## Links
+## Documentation and resources
 
-- Documentation (release):
-  <https://computational-metabolomics.github.io/MetMashR/>
-- Documentation (devel):
-  <https://computational-metabolomics.github.io/MetMashR/dev/>
-- Bioconductor (release):
-  <https://bioconductor.org/packages/release/bioc/html/MetMashR.html>
-- Bioconductor (devel):
-  <https://bioconductor.org/packages/devel/bioc/html/MetMashR.html>
-- Source code: <https://github.com/computational-metabolomics/MetMashR>
-- Bug reports:
-  <https://github.com/computational-metabolomics/MetMashR/issues>
+- Documentation
+  - release: <https://computational-metabolomics.github.io/MetMashR/>
+  - devel: <https://computational-metabolomics.github.io/MetMashR/dev/>
+- Bioconductor
+  - release:
+    <https://bioconductor.org/packages/release/bioc/html/MetMashR.html>
+  - devel:
+    <https://bioconductor.org/packages/devel/bioc/html/MetMashR.html>
+- GitHub
+  - Source code:
+    <https://github.com/computational-metabolomics/MetMashR>
+  - Bug reports and feature requests:
+    <https://github.com/computational-metabolomics/MetMashR/issues>
 
-## Vignettes and case studies
+### Vignettes and case studies
 
 - [Using
   MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html):
@@ -79,7 +93,7 @@ To install the development version from GitHub:
 \
 `remotes``::`[`install_github`](https://remotes.r-lib.org/reference/install_github.html)`(``"computational-metabolomics/MetMashR"``)`
 
-## Example workflow
+## Quick start
 
 This example uses LipidSearch annotations that are included with the
 package. The workflow imports the annotations, keeps only the
@@ -127,6 +141,25 @@ annotations of the same lipid into a single record.
 The [Using
 MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html)
 vignette describes these and many other workflow steps in detail.
+
+## Maintainer
+
+Gavin Rhys Lloyd University of Birmingham <g.r.lloyd@bham.ac.uk>
+
+For bug reports and feature requests, please use the [GitHub issue
+tracker](https://github.com/computational-metabolomics/MetMashR/issues).
+
+## Citation
+
+To obtain the recommended citation for `MetMashR` in R, run:
+
+\
+[`citation`](https://rdrr.io/r/utils/citation.html)`(``"MetMashR"``)`
+
+## License
+
+`MetMashR` is distributed under the GNU General Public License version 3
+(GPL-3).
 
 # Package index
 
@@ -215,9 +248,6 @@ various services.
 - [`chebi_lookup()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chebi_lookup.md)
   : ID/synonym lookup via ChEBI
 - [`classyfire_batch_lookup()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/classyfire_batch_lookup.md)
-  [`model_train(`*`<classyfire_batch_lookup>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/classyfire_batch_lookup.md)
-  [`model_apply(`*`<classyfire_batch_lookup>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/classyfire_batch_lookup.md)
-  [`model_predict(`*`<classyfire_batch_lookup>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/classyfire_batch_lookup.md)
   : ClassyFire batch lookup
 - [`classyfire_lookup()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/classyfire_lookup.md)
   : Query ClassyFire database
@@ -244,9 +274,6 @@ various services.
 - [`pubchem_property_lookup()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/pubchem_property_lookup.md)
   : Compound property lookup via pubchem
 - [`pubchem_id_exchange()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/pubchem_id_exchange.md)
-  [`model_train(`*`<pubchem_id_exchange>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/pubchem_id_exchange.md)
-  [`model_apply(`*`<pubchem_id_exchange>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/pubchem_id_exchange.md)
-  [`model_predict(`*`<pubchem_id_exchange>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/pubchem_id_exchange.md)
   : PubChem ID Exchange via PUG
 
 ## Annotation table mashing
@@ -406,61 +433,12 @@ Supporting functions are used by MetMashR
 - [`wherever()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/wherever.md)
   : Filter helper function to select records
 
-- [`chart_plot(`*`<annotation_bar_chart>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<annotation_histogram>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<annotation_histogram2d>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<annotation_pie_chart>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<annotation_venn_chart>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<annotation_venn_chart>`*`,`*`<list>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<annotation_upset_chart>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<annotation_upset_chart>`*`,`*`<list>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<mwb_structure>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<pubchem_structure>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
-  [`chart_plot(`*`<pubchem_widget>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
+- [`chart_plot()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/chart_plot.md)
   : chart_plot method
 
-- [`model_apply(`*`<model>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<model>`*`,`*`<list>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<model_seq>`*`,`*`<list>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<model_seq>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<AnnotationDb_select>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<CompoundDb_source>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<add_columns>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<add_labels>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<calc_ppm_diff>`*`,`*`<annotation_table>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<calc_rt_diff>`*`,`*`<annotation_table>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<rest_api>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<chebi_lookup>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<combine_columns>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<combine_records>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<combine_sources>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<combine_sources>`*`,`*`<list>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<compute_column>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<compute_record>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<cts_lite_lookup>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<database_lookup>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<split_records>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<filter_labels>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<filter_na>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<filter_range>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<filter_records>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<filter_venn>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<id_counts>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<import_source>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<kegg_lookup>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<mz_match>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<mzrt_match>`*`,`*`<lcms_table>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<normalise_lipids>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<normalise_strings>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<pivot_columns>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<prioritise_columns>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<remove_columns>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<rename_columns>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<rt_match>`*`,`*`<annotation_table>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<select_columns>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<split_column>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<trim_whitespace>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
-  [`model_apply(`*`<unique_records>`*`,`*`<annotation_source>`*`)`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
+- [`model_apply()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
+  [`model_train()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
+  [`model_predict()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/model_apply.md)
   : Apply method
 
 # Articles

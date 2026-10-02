@@ -26,15 +26,6 @@ pubchem_id_exchange(
   verbose = FALSE,
   ...
 )
-
-# S4 method for class 'pubchem_id_exchange,annotation_source'
-model_train(M, D)
-
-# S4 method for class 'pubchem_id_exchange,annotation_source'
-model_apply(M, D)
-
-# S4 method for class 'pubchem_id_exchange,annotation_source'
-model_predict(M, D)
 ```
 
 ## Arguments
@@ -137,16 +128,6 @@ model_predict(M, D)
 - ...:
 
   Additional slots and values passed to `struct_class`.
-
-- M:
-
-  A `pubchem_id_exchange` object.
-
-- D:
-
-  An
-  [`annotation_source()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/annotation_source.md)
-  object.
 
 ## Value
 

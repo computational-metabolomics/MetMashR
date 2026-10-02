@@ -1,41 +1,55 @@
 # *Met*abolite *Mash*ing in *R* (MetMashR)
 
-`MetMashR` is an R package that can be used to import, clean, filter,
-prioritise, combine and otherwise “mash” together metabolite annotations
-from multiple sources.
+[![BioC
+version](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fbioconductor.org%2Fconfig.yaml&query=%24.release_version&label=Bioconductor)](https://bioconductor.org/packages/MetMashR)
+[![BioC
+status](https://bioconductor.org/shields/build/release/bioc/MetMashR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/MetMashR)
+[![License:
+GPL-3](https://img.shields.io/badge/License-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+
+`MetMashR` is an R/Bioconductor package for integrating, harmonising and
+processing metabolite annotations from multiple sources using modular,
+reproducible workflows.
 
 ## Summary
 
-Metabolomics measures the small molecules (metabolites) in a sample,
-such as blood, urine or water. Instruments like mass spectrometers
-detect thousands of signals, and software tools try to work out which
-molecule each signal belongs to. This is called annotation. Different
-tools often disagree, name the same molecule in different ways, or
-report several possible matches for one signal.
+Metabolomics is the analysis of small molecules, or metabolites, in
+biological and environmental samples (e.g. blood, urine and water).
+Liquid chromatography–mass spectrometry (LC–MS) is widely used in
+metabolomics and produces complex datasets from which thousands of LC–MS
+features can be detected. Computational annotation tools attempt to
+associate these features with candidate chemical compounds, but
+different tools may produce conflicting annotations, use inconsistent
+compound names or identifiers, or report multiple candidates for a
+single feature.
 
-`MetMashR` helps researchers bring these annotations together. It reads
-the output of different annotation tools into a common format, cleans
-and standardises molecule names, looks up extra information in public
-databases such as PubChem, ChEBI, KEGG and LIPID MAPS, and filters and
-combines the results. Each of these jobs is a separate building block,
-and blocks are chained into a workflow. The workflow can be shared and
-re-run, so the same steps are applied in the same way every time.
+`MetMashR` integrates and harmonises metabolite annotations from
+multiple sources. It imports annotation outputs into a common structure
+and provides modular tools for cleaning, standardising, filtering,
+prioritising and combining annotations, as well as enriching them with
+information from resources such as PubChem, ChEBI, KEGG and LIPID MAPS.
+These steps can be combined into reproducible workflows that can be
+reused and applied consistently across analyses. MetMashR was developed
+primarily for LC–MS annotation workflows, but its modular framework can
+also be extended to other analytical platforms.
 
-## Links
+## Documentation and resources
 
-- Documentation (release):
-  <https://computational-metabolomics.github.io/MetMashR/>
-- Documentation (devel):
-  <https://computational-metabolomics.github.io/MetMashR/dev/>
-- Bioconductor (release):
-  <https://bioconductor.org/packages/release/bioc/html/MetMashR.html>
-- Bioconductor (devel):
-  <https://bioconductor.org/packages/devel/bioc/html/MetMashR.html>
-- Source code: <https://github.com/computational-metabolomics/MetMashR>
-- Bug reports:
-  <https://github.com/computational-metabolomics/MetMashR/issues>
+- Documentation
+  - release: <https://computational-metabolomics.github.io/MetMashR/>
+  - devel: <https://computational-metabolomics.github.io/MetMashR/dev/>
+- Bioconductor
+  - release:
+    <https://bioconductor.org/packages/release/bioc/html/MetMashR.html>
+  - devel:
+    <https://bioconductor.org/packages/devel/bioc/html/MetMashR.html>
+- GitHub
+  - Source code:
+    <https://github.com/computational-metabolomics/MetMashR>
+  - Bug reports and feature requests:
+    <https://github.com/computational-metabolomics/MetMashR/issues>
 
-## Vignettes and case studies
+### Vignettes and case studies
 
 - [Using
   MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html):
@@ -79,7 +93,7 @@ To install the development version from GitHub:
 \
 `remotes``::`[`install_github`](https://remotes.r-lib.org/reference/install_github.html)`(``"computational-metabolomics/MetMashR"``)`
 
-## Example workflow
+## Quick start
 
 This example uses LipidSearch annotations that are included with the
 package. The workflow imports the annotations, keeps only the
@@ -127,3 +141,22 @@ annotations of the same lipid into a single record.
 The [Using
 MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html)
 vignette describes these and many other workflow steps in detail.
+
+## Maintainer
+
+Gavin Rhys Lloyd University of Birmingham <g.r.lloyd@bham.ac.uk>
+
+For bug reports and feature requests, please use the [GitHub issue
+tracker](https://github.com/computational-metabolomics/MetMashR/issues).
+
+## Citation
+
+To obtain the recommended citation for `MetMashR` in R, run:
+
+\
+[`citation`](https://rdrr.io/r/utils/citation.html)`(``"MetMashR"``)`
+
+## License
+
+`MetMashR` is distributed under the GNU General Public License version 3
+(GPL-3).

@@ -1002,10 +1002,10 @@ In the next plot we compare the overlap in InChIKey for each source.
 `#> [11] magrittr_2.0.5              compiler_4.6.1             `\
 `#> [13] rlang_1.3.0                 sass_0.4.10                `\
 `#> [15] tools_4.6.1                 yaml_2.3.12                `\
-`#> [17] knitr_1.52                  S4Arrays_1.13.1            `\
+`#> [17] knitr_1.52                  S4Arrays_1.13.2            `\
 `#> [19] labeling_0.4.3              htmlwidgets_1.6.4          `\
 `#> [21] bit_4.6.0                   curl_8.0.0                 `\
-`#> [23] sp_2.2-3                    DelayedArray_0.39.7        `\
+`#> [23] sp_2.2-3                    DelayedArray_0.39.8        `\
 `#> [25] plyr_1.8.9                  xml2_1.6.0                 `\
 `#> [27] RColorBrewer_1.1-3          aplot_0.3.2                `\
 `#> [29] abind_1.4-8                 withr_3.0.3                `\
@@ -1039,6 +1039,6 @@ In the next plot we compare the overlap in InChIKey for each source.
 `#> [85] memoise_2.0.1               ggfun_0.2.1                `\
 `#> [87] bslib_0.12.0                Rcpp_1.1.2                 `\
 `#> [89] zip_3.0.2                   gridExtra_2.3.1            `\
-`#> [91] SparseArray_1.13.3          xfun_0.61                  `\
+`#> [91] SparseArray_1.13.4          xfun_0.61                  `\
 `#> [93] fs_2.1.0                    MatrixGenerics_1.25.0      `\
 `#> [95] forcats_1.0.1               pkgconfig_2.0.3`

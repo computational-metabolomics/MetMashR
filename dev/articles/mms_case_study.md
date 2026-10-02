@@ -779,9 +779,9 @@ Intercomparison. Metabolites 2023;13(12):1167.
 `#> [19] tools_4.6.1                   yaml_2.3.12                  `\
 `#> [21] tidytext_0.4.3                data.table_1.18.6.1          `\
 `#> [23] knitr_1.52                    labeling_0.4.3               `\
-`#> [25] S4Arrays_1.13.1               htmlwidgets_1.6.4            `\
+`#> [25] S4Arrays_1.13.2               htmlwidgets_1.6.4            `\
 `#> [27] bit_4.6.0                     curl_8.0.0                   `\
-`#> [29] DelayedArray_0.39.7           plyr_1.8.9                   `\
+`#> [29] DelayedArray_0.39.8           plyr_1.8.9                   `\
 `#> [31] xml2_1.6.0                    RColorBrewer_1.1-3           `\
 `#> [33] abind_1.4-8                   withr_3.0.3                  `\
 `#> [35] purrr_1.2.2                   BiocGenerics_0.59.12         `\
@@ -811,6 +811,6 @@ Intercomparison. Metabolites 2023;13(12):1167.
 `#> [83] Biobase_2.73.2                SnowballC_0.7.1              `\
 `#> [85] openxlsx_4.2.9                memoise_2.0.1                `\
 `#> [87] bslib_0.12.0                  zip_3.0.2                    `\
-`#> [89] Rcpp_1.1.2                    SparseArray_1.13.3           `\
+`#> [89] Rcpp_1.1.2                    SparseArray_1.13.4           `\
 `#> [91] xfun_0.61                     fs_2.1.0                     `\
 `#> [93] MatrixGenerics_1.25.0         pkgconfig_2.0.3`

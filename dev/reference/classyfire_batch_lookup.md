@@ -21,15 +21,6 @@ classyfire_batch_lookup(
   verbose = FALSE,
   ...
 )
-
-# S4 method for class 'classyfire_batch_lookup,annotation_source'
-model_train(M, D)
-
-# S4 method for class 'classyfire_batch_lookup,annotation_source'
-model_apply(M, D)
-
-# S4 method for class 'classyfire_batch_lookup,annotation_source'
-model_predict(M, D)
 ```
 
 ## Arguments
@@ -120,16 +111,6 @@ model_predict(M, D)
 - ...:
 
   Additional slots and values passed to `struct_class`.
-
-- M:
-
-  A `classyfire_batch_lookup` object.
-
-- D:
-
-  An
-  [`annotation_source()`](https://computational-metabolomics.github.io/MetMashR/dev/reference/annotation_source.md)
-  object.
 
 ## Value
 

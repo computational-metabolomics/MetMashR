@@ -48,12 +48,12 @@
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/computational-metabolomics/MetMashR" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://www.birmingham.ac.uk/research/activity/phenome-centre/index.aspx" aria-label="Phenome Centre Birmingham"><span class="fa fa-flask"></span></a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-music"></span></button>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Related Bioconductor packages"><span class="fa fa-cubes"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-">
 <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/MetMashR.html">MetMashR</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/struct.html">struct</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/structToolbox.html">structToolbox</a></li>
-    <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html">metabolmicsWorkbenchR</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html">metabolomicsWorkbenchR</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/pmp.html">pmp</a></li>
   </ul>
 </li>
@@ -68,36 +68,46 @@
 <div class="page-header"><h1 id="metabolite-mashing-in-r-metmashr">
 <u>Met</u>abolite <u>Mash</u>ing in <u>R</u> (MetMashR)<a class="anchor" aria-label="anchor" href="#metabolite-mashing-in-r-metmashr"></a>
 </h1></div>
-<!-- badges: start -->
-
-<p><code>MetMashR</code> is an R package that can be used to import, clean, filter, prioritise, combine and otherwise “mash” together metabolite annotations from multiple sources.</p>
+<p><a href="https://bioconductor.org/packages/MetMashR" class="external-link"><img src="https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fbioconductor.org%2Fconfig.yaml&amp;query=%24.release_version&amp;label=Bioconductor" alt="BioC version"></a> <a href="https://bioconductor.org/checkResults/release/bioc-LATEST/MetMashR" class="external-link"><img src="https://bioconductor.org/shields/build/release/bioc/MetMashR.svg" alt="BioC status"></a> <a href="https://www.gnu.org/licenses/gpl-3.0.html" class="external-link"><img src="https://img.shields.io/badge/License-GPL--3-blue.svg" alt="License: GPL-3"></a></p>
+<p><code>MetMashR</code> is an R/Bioconductor package for integrating, harmonising and processing metabolite annotations from multiple sources using modular, reproducible workflows.</p>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
-<p>Metabolomics measures the small molecules (metabolites) in a sample, such as blood, urine or water. Instruments like mass spectrometers detect thousands of signals, and software tools try to work out which molecule each signal belongs to. This is called annotation. Different tools often disagree, name the same molecule in different ways, or report several possible matches for one signal.</p>
-<p><code>MetMashR</code> helps researchers bring these annotations together. It reads the output of different annotation tools into a common format, cleans and standardises molecule names, looks up extra information in public databases such as PubChem, ChEBI, KEGG and LIPID MAPS, and filters and combines the results. Each of these jobs is a separate building block, and blocks are chained into a workflow. The workflow can be shared and re-run, so the same steps are applied in the same way every time.</p>
+<p>Metabolomics is the analysis of small molecules, or metabolites, in biological and environmental samples (e.g. blood, urine and water). Liquid chromatography–mass spectrometry (LC–MS) is widely used in metabolomics and produces complex datasets from which thousands of LC–MS features can be detected. Computational annotation tools attempt to associate these features with candidate chemical compounds, but different tools may produce conflicting annotations, use inconsistent compound names or identifiers, or report multiple candidates for a single feature.</p>
+<p><code>MetMashR</code> integrates and harmonises metabolite annotations from multiple sources. It imports annotation outputs into a common structure and provides modular tools for cleaning, standardising, filtering, prioritising and combining annotations, as well as enriching them with information from resources such as PubChem, ChEBI, KEGG and LIPID MAPS. These steps can be combined into reproducible workflows that can be reused and applied consistently across analyses. MetMashR was developed primarily for LC–MS annotation workflows, but its modular framework can also be extended to other analytical platforms.</p>
 </div>
 <div class="section level2">
-<h2 id="links">Links<a class="anchor" aria-label="anchor" href="#links"></a>
+<h2 id="documentation-and-resources">Documentation and resources<a class="anchor" aria-label="anchor" href="#documentation-and-resources"></a>
 </h2>
 <ul>
-<li>Documentation (release): <a href="https://computational-metabolomics.github.io/MetMashR/" class="uri">https://computational-metabolomics.github.io/MetMashR/</a>
+<li>Documentation
+<ul>
+<li>release: <a href="https://computational-metabolomics.github.io/MetMashR/" class="uri">https://computational-metabolomics.github.io/MetMashR/</a>
 </li>
-<li>Documentation (devel): <a href="https://computational-metabolomics.github.io/MetMashR/dev/" class="uri">https://computational-metabolomics.github.io/MetMashR/dev/</a>
-</li>
-<li>Bioconductor (release): <a href="https://bioconductor.org/packages/release/bioc/html/MetMashR.html" class="external-link uri">https://bioconductor.org/packages/release/bioc/html/MetMashR.html</a>
-</li>
-<li>Bioconductor (devel): <a href="https://bioconductor.org/packages/devel/bioc/html/MetMashR.html" class="external-link uri">https://bioconductor.org/packages/devel/bioc/html/MetMashR.html</a>
-</li>
-<li>Source code: <a href="https://github.com/computational-metabolomics/MetMashR" class="external-link uri">https://github.com/computational-metabolomics/MetMashR</a>
-</li>
-<li>Bug reports: <a href="https://github.com/computational-metabolomics/MetMashR/issues" class="external-link uri">https://github.com/computational-metabolomics/MetMashR/issues</a>
+<li>devel: <a href="https://computational-metabolomics.github.io/MetMashR/dev/" class="uri">https://computational-metabolomics.github.io/MetMashR/dev/</a>
 </li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="vignettes-and-case-studies">Vignettes and case studies<a class="anchor" aria-label="anchor" href="#vignettes-and-case-studies"></a>
-</h2>
+</li>
+<li>Bioconductor
+<ul>
+<li>release: <a href="https://bioconductor.org/packages/release/bioc/html/MetMashR.html" class="external-link uri">https://bioconductor.org/packages/release/bioc/html/MetMashR.html</a>
+</li>
+<li>devel: <a href="https://bioconductor.org/packages/devel/bioc/html/MetMashR.html" class="external-link uri">https://bioconductor.org/packages/devel/bioc/html/MetMashR.html</a>
+</li>
+</ul>
+</li>
+<li>GitHub
+<ul>
+<li>Source code: <a href="https://github.com/computational-metabolomics/MetMashR" class="external-link uri">https://github.com/computational-metabolomics/MetMashR</a>
+</li>
+<li>Bug reports and feature requests: <a href="https://github.com/computational-metabolomics/MetMashR/issues" class="external-link uri">https://github.com/computational-metabolomics/MetMashR/issues</a>
+</li>
+</ul>
+</li>
+</ul>
+<div class="section level3">
+<h3 id="vignettes-and-case-studies">Vignettes and case studies<a class="anchor" aria-label="anchor" href="#vignettes-and-case-studies"></a>
+</h3>
 <ul>
 <li>
 <a href="https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html">Using MetMashR</a>: an introduction to annotation sources, workflow steps, REST API lookups, dictionaries and combining records.</li>
@@ -110,6 +120,7 @@
 <li>
 <a href="https://computational-metabolomics.github.io/MetMashR/articles/mms_case_study.html">Case study: reimplementing the Metabolites Merging Strategy</a>: a case study reproducing a published annotation-merging strategy as a <code>MetMashR</code> workflow.</li>
 </ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -130,7 +141,7 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"computational-metabolomics/MetMashR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example-workflow">Example workflow<a class="anchor" aria-label="anchor" href="#example-workflow"></a>
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p>This example uses LipidSearch annotations that are included with the package. The workflow imports the annotations, keeps only the higher-confidence ones (grades A and B), then combines duplicate annotations of the same lipid into a single record.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -172,6 +183,24 @@
 <span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">WF</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>The <a href="https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html">Using MetMashR</a> vignette describes these and many other workflow steps in detail.</p>
 </div>
+<div class="section level2">
+<h2 id="maintainer">Maintainer<a class="anchor" aria-label="anchor" href="#maintainer"></a>
+</h2>
+<p>Gavin Rhys Lloyd University of Birmingham <a href="mailto:g.r.lloyd@bham.ac.uk" class="email">g.r.lloyd@bham.ac.uk</a></p>
+<p>For bug reports and feature requests, please use the <a href="https://github.com/computational-metabolomics/MetMashR/issues" class="external-link">GitHub issue tracker</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>To obtain the recommended citation for <code>MetMashR</code> in R, run:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"MetMashR"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p><code>MetMashR</code> is distributed under the GNU General Public License version 3 (GPL-3).</p>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -179,7 +208,6 @@
 <li><a href="https://www.bioconductor.org/packages/MetMashR" class="external-link">View on Bioconductor</a></li>
 <li><a href="https://github.com/computational-metabolomics/MetMashR/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/computational-metabolomics/MetMashR/issues" class="external-link">Report a bug</a></li>
-<li><a href="https://bioconductor.org/packages/release/bioc/html/MetMashR.html" class="external-link">View on Bioconductor</a></li>
 </ul>
 </div>
 
@@ -206,13 +234,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://bioconductor.org/packages/MetMashR" class="external-link"><img src="https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fbioconductor.org%2Fconfig.yaml&amp;query=%24.release_version&amp;label=Bioconductor" alt="BioC version"></a></li>
-<li><a href="https://bioconductor.org/checkResults/release/bioc-LATEST/MetMashR" class="external-link"><img src="https://bioconductor.org/shields/build/release/bioc/MetMashR.svg" alt="BioC status"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>

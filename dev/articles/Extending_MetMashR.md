@@ -548,14 +548,14 @@ MetMashR can also be extended to include additional annotation sources.
 `#> [31] htmltools_0.5.9             sass_0.4.10                `\
 `#> [33] yaml_2.3.12                 pkgdown_2.2.1.9000         `\
 `#> [35] pillar_1.11.1               jquerylib_0.1.4            `\
-`#> [37] DelayedArray_0.39.7         cachem_1.1.0               `\
+`#> [37] DelayedArray_0.39.8         cachem_1.1.0               `\
 `#> [39] abind_1.4-8                 tidyselect_1.2.1           `\
 `#> [41] digest_0.6.39               stringi_1.8.9              `\
 `#> [43] dplyr_1.2.1                 purrr_1.2.2                `\
 `#> [45] bookdown_0.48               ggthemes_6.0.0             `\
 `#> [47] fastmap_1.2.0               grid_4.6.1                 `\
-`#> [49] cli_3.6.6                   SparseArray_1.13.3         `\
-`#> [51] magrittr_2.0.5              S4Arrays_1.13.1            `\
+`#> [49] cli_3.6.6                   SparseArray_1.13.4         `\
+`#> [51] magrittr_2.0.5              S4Arrays_1.13.2            `\
 `#> [53] withr_3.0.3                 filelock_1.0.3             `\
 `#> [55] scales_1.4.0                bit64_4.8.6                `\
 `#> [57] rmarkdown_2.32              XVector_0.53.0             `\

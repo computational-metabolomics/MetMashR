@@ -363,9 +363,9 @@ The pathways associated with Glycolic acid are:
 `#> [13] rlang_1.3.0                 sass_0.4.10                `\
 `#> [15] tools_4.6.1                 yaml_2.3.12                `\
 `#> [17] knitr_1.52                  labeling_0.4.3             `\
-`#> [19] S4Arrays_1.13.1             htmlwidgets_1.6.4          `\
+`#> [19] S4Arrays_1.13.2             htmlwidgets_1.6.4          `\
 `#> [21] bit_4.6.0                   sp_2.2-3                   `\
-`#> [23] curl_8.0.0                  DelayedArray_0.39.7        `\
+`#> [23] curl_8.0.0                  DelayedArray_0.39.8        `\
 `#> [25] plyr_1.8.9                  xml2_1.6.0                 `\
 `#> [27] RColorBrewer_1.1-3          aplot_0.3.2                `\
 `#> [29] abind_1.4-8                 withr_3.0.3                `\
@@ -398,6 +398,6 @@ The pathways associated with Glycolic acid are:
 `#> [83] Biobase_2.73.2              memoise_2.0.1              `\
 `#> [85] ggfun_0.2.1                 bslib_0.12.0               `\
 `#> [87] Rcpp_1.1.2                  gridExtra_2.3.1            `\
-`#> [89] SparseArray_1.13.3          xfun_0.61                  `\
+`#> [89] SparseArray_1.13.4          xfun_0.61                  `\
 `#> [91] forcats_1.0.1               fs_2.1.0                   `\
 `#> [93] MatrixGenerics_1.25.0       pkgconfig_2.0.3`
