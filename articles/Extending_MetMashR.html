@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Extending MetMashR • MetMashR</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Extending MetMashR">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,17 @@
     <li><a class="dropdown-item" href="../articles/Extending_MetMashR.html">Extending MetMashR</a></li>
     <li><a class="dropdown-item" href="../articles/annotate_mixtures.html">Annotating mixtures of standards</a></li>
     <li><a class="dropdown-item" href="../articles/exploring_mtox.html">Exploring the MTox700+ database</a></li>
-    <li><a class="dropdown-item" href="../articles/daphnia_example.html">Processing Annotations for LCMS of Daphnia samples</a></li>
+    <li><a class="dropdown-item" href="../articles/mms_case_study.html">Case study: reimplementing the Metabolites Merging Strategy</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-versions" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Versions</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-versions">
+<li><a class="dropdown-item" href="../index.html">devel (this site)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.23/bioc/html/MetMashR.html">Bioconductor 3.23 (v1.6.0)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.22/bioc/html/MetMashR.html">Bioconductor 3.22 (v1.4.0)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.21/bioc/html/MetMashR.html">Bioconductor 3.21 (v1.2.1)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.20/bioc/html/MetMashR.html">Bioconductor 3.20 (v1.0.0)</a></li>
   </ul>
 </li>
       </ul>
@@ -45,12 +55,12 @@
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/computational-metabolomics/MetMashR" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://www.birmingham.ac.uk/research/activity/phenome-centre/index.aspx" aria-label="Phenome Centre Birmingham"><span class="fa fa-flask"></span></a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-music"></span></button>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Related Bioconductor packages"><span class="fa fa-cubes"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-">
 <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/MetMashR.html">MetMashR</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/struct.html">struct</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/structToolbox.html">structToolbox</a></li>
-    <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html">metabolmicsWorkbenchR</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html">metabolomicsWorkbenchR</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/pmp.html">pmp</a></li>
   </ul>
 </li>
@@ -71,9 +81,9 @@
                         <h4 data-toc-skip class="author">Gavin Rhys
 Lloyd</h4>
             
-            <h4 data-toc-skip class="date">2024-11-05</h4>
+            <h4 data-toc-skip class="date">2026-10-02</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/v1.0.0/vignettes/Extending_MetMashR.Rmd" class="external-link"><code>vignettes/Extending_MetMashR.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/vignettes/Extending_MetMashR.Rmd" class="external-link"><code>vignettes/Extending_MetMashR.Rmd</code></a></small>
       <div class="d-none name"><code>Extending_MetMashR.Rmd</code></div>
     </div>
 
@@ -92,7 +102,7 @@ include new sources bespoke to your requirements.</p>
 <div class="section level2">
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>The latest versions of <em><a href="https://bioconductor.org/packages/3.20/struct" class="external-link">struct</a></em> and
+<p>The latest versions of <em><a href="https://bioconductor.org/packages/3.24/struct" class="external-link">struct</a></em> and
 <code>MetMashR</code> that are compatible with your current R version
 can be installed using BiocManager.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -150,7 +160,7 @@ already in the table.</p>
 <li>removal of suffix from duplicate molecule names</li>
 </ul>
 <p>We will implement these steps here as an example of how to add new
-workflow steps using the <em><a href="https://bioconductor.org/packages/3.20/struct" class="external-link">struct</a></em>
+workflow steps using the <em><a href="https://bioconductor.org/packages/3.24/struct" class="external-link">struct</a></em>
 package template system. We will also implement an new
 <code>annotation_source</code> to import the data from Metabolomics
 Workbench as part of the workflow.</p>
@@ -292,15 +302,15 @@ e.g. to look up PubChem Ids etc.</p>
 <h2 id="adding-annotation-workflow-steps">Adding annotation workflow steps<a class="anchor" aria-label="anchor" href="#adding-annotation-workflow-steps"></a>
 </h2>
 <p><code>MetMashR</code> workflow steps use the <code>model</code>
-template from the <em><a href="https://bioconductor.org/packages/3.20/struct" class="external-link">struct</a></em>
+template from the <em><a href="https://bioconductor.org/packages/3.24/struct" class="external-link">struct</a></em>
 package. Although originally intended for statistical methods, the
 <code>model</code> template is a flexible way to implement many
 different kinds of workflow step.</p>
-<p>The <em><a href="https://bioconductor.org/packages/3.20/struct" class="external-link">struct</a></em>
+<p>The <em><a href="https://bioconductor.org/packages/3.24/struct" class="external-link">struct</a></em>
 package provides convenience functions for “on-the-fly” implementation
 of new model objects. Here will will use the convenience functions to
 implement the first new model. Examples of this are also included in the
-<em><a href="https://bioconductor.org/packages/3.20/struct" class="external-link">struct</a></em>
+<em><a href="https://bioconductor.org/packages/3.24/struct" class="external-link">struct</a></em>
 package vignette.</p>
 <div class="section level3">
 <h3 id="empty-column-removal">Empty column removal<a class="anchor" aria-label="anchor" href="#empty-column-removal"></a>
@@ -506,8 +516,7 @@ when generating the vignette.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>In practice it is better to create your own cache using
 e.g. <code>rds_database</code>, <code>sql_database</code> or other
-<code>struct_database</code> objects with write access. See the vignette
-[TODO] for more details.</p>
+<code>struct_database</code> objects with write access.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># prepare sequence</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_source.html">import_source</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -554,29 +563,6 @@ e.g. <code>rds_database</code>, <code>sql_database</code> or other
 from Metabolomics Workbench, we only need to provide an empty
 annotation_table as input to <code>model_apply</code> as it will be
 updated when we run the workflow.</p>
-<p>Once the table has been processed by our workflow we then use
-OpenBabel to generate images of the molecular structures from
-SMILES.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># prepare chart</span></span>
-<span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/openbabel_structure.html">openbabel_structure</a></span><span class="op">(</span></span>
-<span>    smiles_column <span class="op">=</span> <span class="st">"CanonicalSMILES"</span>,</span>
-<span>    row_index <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    scale_to_fit <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    view_port <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>    image_size <span class="op">=</span> <span class="fl">500</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># loop over some records and plot some of the molecules</span></span>
-<span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">k</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">C</span><span class="op">$</span><span class="va">row_index</span> <span class="op">&lt;-</span> <span class="va">k</span></span>
-<span>    <span class="va">G</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span>plotlist <span class="op">=</span> <span class="va">G</span>, nrow <span class="op">=</span> <span class="fl">1</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Extending_MetMashR_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
@@ -592,15 +578,15 @@ annotation sources.</p>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
+<span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.5 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
-<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
@@ -617,58 +603,53 @@ annotation sources.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] ggplot2_3.5.1                 metabolomicsWorkbenchR_1.16.0</span></span>
-<span><span class="co">#&gt; [3] MetMashR_1.0.0                struct_1.18.0                </span></span>
-<span><span class="co">#&gt; [5] BiocStyle_2.34.0             </span></span>
+<span><span class="co">#&gt; [1] ggplot2_4.0.3                 metabolomicsWorkbenchR_1.23.0</span></span>
+<span><span class="co">#&gt; [3] MetMashR_1.7.2                struct_1.25.0                </span></span>
+<span><span class="co">#&gt; [5] BiocStyle_2.41.0             </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] tidyselect_1.2.1            farver_2.1.2               </span></span>
-<span><span class="co">#&gt;  [3] dplyr_1.1.4                 blob_1.2.4                 </span></span>
-<span><span class="co">#&gt;  [5] filelock_1.0.3              fastmap_1.2.0              </span></span>
-<span><span class="co">#&gt;  [7] BiocFileCache_2.14.0        digest_0.6.37              </span></span>
-<span><span class="co">#&gt;  [9] lifecycle_1.0.4             rsvg_2.6.1                 </span></span>
-<span><span class="co">#&gt; [11] RSQLite_2.3.7               magrittr_2.0.3             </span></span>
-<span><span class="co">#&gt; [13] compiler_4.4.1              rlang_1.1.4                </span></span>
-<span><span class="co">#&gt; [15] sass_0.4.9                  tools_4.4.1                </span></span>
-<span><span class="co">#&gt; [17] utf8_1.2.4                  yaml_2.3.10                </span></span>
-<span><span class="co">#&gt; [19] data.table_1.16.2           knitr_1.48                 </span></span>
-<span><span class="co">#&gt; [21] labeling_0.4.3              S4Arrays_1.6.0             </span></span>
-<span><span class="co">#&gt; [23] htmlwidgets_1.6.4           curl_5.2.3                 </span></span>
-<span><span class="co">#&gt; [25] ontologyIndex_2.12          bit_4.5.0                  </span></span>
-<span><span class="co">#&gt; [27] DelayedArray_0.32.0         plyr_1.8.9                 </span></span>
-<span><span class="co">#&gt; [29] abind_1.4-8                 withr_3.0.2                </span></span>
-<span><span class="co">#&gt; [31] purrr_1.0.2                 BiocGenerics_0.52.0        </span></span>
-<span><span class="co">#&gt; [33] desc_1.4.3                  grid_4.4.1                 </span></span>
-<span><span class="co">#&gt; [35] stats4_4.4.1                fansi_1.0.6                </span></span>
-<span><span class="co">#&gt; [37] colorspace_2.1-1            scales_1.3.0               </span></span>
-<span><span class="co">#&gt; [39] MultiAssayExperiment_1.32.0 SummarizedExperiment_1.36.0</span></span>
-<span><span class="co">#&gt; [41] cli_3.6.3                   rmarkdown_2.28             </span></span>
-<span><span class="co">#&gt; [43] crayon_1.5.3                ragg_1.3.3                 </span></span>
-<span><span class="co">#&gt; [45] generics_0.1.3              httr_1.4.7                 </span></span>
-<span><span class="co">#&gt; [47] DBI_1.2.3                   cachem_1.1.0               </span></span>
-<span><span class="co">#&gt; [49] stringr_1.5.1               zlibbioc_1.52.0            </span></span>
-<span><span class="co">#&gt; [51] ggthemes_5.1.0              BiocManager_1.30.25        </span></span>
-<span><span class="co">#&gt; [53] XVector_0.46.0              matrixStats_1.4.1          </span></span>
-<span><span class="co">#&gt; [55] vctrs_0.6.5                 Matrix_1.7-1               </span></span>
-<span><span class="co">#&gt; [57] jsonlite_1.8.9              bookdown_0.41              </span></span>
-<span><span class="co">#&gt; [59] IRanges_2.40.0              S4Vectors_0.44.0           </span></span>
-<span><span class="co">#&gt; [61] bit64_4.5.2                 magick_2.8.5               </span></span>
-<span><span class="co">#&gt; [63] systemfonts_1.1.0           jquerylib_0.1.4            </span></span>
-<span><span class="co">#&gt; [65] glue_1.8.0                  ChemmineOB_1.44.0          </span></span>
-<span><span class="co">#&gt; [67] pkgdown_2.1.1.9000          cowplot_1.1.3              </span></span>
-<span><span class="co">#&gt; [69] stringi_1.8.4               gtable_0.3.6               </span></span>
-<span><span class="co">#&gt; [71] GenomeInfoDb_1.42.0         GenomicRanges_1.58.0       </span></span>
-<span><span class="co">#&gt; [73] UCSC.utils_1.2.0            munsell_0.5.1              </span></span>
-<span><span class="co">#&gt; [75] tibble_3.2.1                pillar_1.9.0               </span></span>
-<span><span class="co">#&gt; [77] htmltools_0.5.8.1           GenomeInfoDbData_1.2.13    </span></span>
-<span><span class="co">#&gt; [79] R6_2.5.1                    dbplyr_2.5.0               </span></span>
-<span><span class="co">#&gt; [81] textshaping_0.4.0           evaluate_1.0.1             </span></span>
-<span><span class="co">#&gt; [83] lattice_0.22-6              Biobase_2.66.0             </span></span>
-<span><span class="co">#&gt; [85] highr_0.11                  memoise_2.0.1              </span></span>
-<span><span class="co">#&gt; [87] bslib_0.8.0                 Rcpp_1.0.13                </span></span>
-<span><span class="co">#&gt; [89] SparseArray_1.6.0           xfun_0.48                  </span></span>
-<span><span class="co">#&gt; [91] fs_1.6.4                    MatrixGenerics_1.18.0      </span></span>
-<span><span class="co">#&gt; [93] pkgconfig_2.0.3</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] SummarizedExperiment_1.43.0 gtable_0.3.6               </span></span>
+<span><span class="co">#&gt;  [3] xfun_0.61                   bslib_0.12.0               </span></span>
+<span><span class="co">#&gt;  [5] httr2_1.3.0                 htmlwidgets_1.6.4          </span></span>
+<span><span class="co">#&gt;  [7] Biobase_2.73.2              lattice_0.23-1             </span></span>
+<span><span class="co">#&gt;  [9] vctrs_0.7.3                 tools_4.6.1                </span></span>
+<span><span class="co">#&gt; [11] generics_0.1.4              curl_8.0.0                 </span></span>
+<span><span class="co">#&gt; [13] stats4_4.6.1                RSQLite_3.53.3             </span></span>
+<span><span class="co">#&gt; [15] tibble_3.3.1                blob_1.3.0                 </span></span>
+<span><span class="co">#&gt; [17] pkgconfig_2.0.3             Matrix_1.7-6               </span></span>
+<span><span class="co">#&gt; [19] data.table_1.18.6.1         dbplyr_2.6.0               </span></span>
+<span><span class="co">#&gt; [21] RColorBrewer_1.1-3          S7_0.2.2                   </span></span>
+<span><span class="co">#&gt; [23] desc_1.4.3                  S4Vectors_0.51.10          </span></span>
+<span><span class="co">#&gt; [25] lifecycle_1.0.5             compiler_4.6.1             </span></span>
+<span><span class="co">#&gt; [27] farver_2.1.2                stringr_1.6.0              </span></span>
+<span><span class="co">#&gt; [29] textshaping_1.0.5           Seqinfo_1.3.2              </span></span>
+<span><span class="co">#&gt; [31] htmltools_0.5.9             sass_0.4.10                </span></span>
+<span><span class="co">#&gt; [33] yaml_2.3.12                 pkgdown_2.2.1.9000         </span></span>
+<span><span class="co">#&gt; [35] pillar_1.11.1               jquerylib_0.1.4            </span></span>
+<span><span class="co">#&gt; [37] DelayedArray_0.39.8         cachem_1.1.0               </span></span>
+<span><span class="co">#&gt; [39] abind_1.4-8                 tidyselect_1.2.1           </span></span>
+<span><span class="co">#&gt; [41] digest_0.6.39               stringi_1.8.9              </span></span>
+<span><span class="co">#&gt; [43] dplyr_1.2.1                 purrr_1.2.2                </span></span>
+<span><span class="co">#&gt; [45] bookdown_0.48               ggthemes_6.0.0             </span></span>
+<span><span class="co">#&gt; [47] fastmap_1.2.0               grid_4.6.1                 </span></span>
+<span><span class="co">#&gt; [49] cli_3.6.6                   SparseArray_1.13.4         </span></span>
+<span><span class="co">#&gt; [51] magrittr_2.0.5              S4Arrays_1.13.2            </span></span>
+<span><span class="co">#&gt; [53] withr_3.0.3                 filelock_1.0.3             </span></span>
+<span><span class="co">#&gt; [55] scales_1.4.0                bit64_4.8.6                </span></span>
+<span><span class="co">#&gt; [57] rmarkdown_2.32              XVector_0.53.0             </span></span>
+<span><span class="co">#&gt; [59] httr_1.4.9                  matrixStats_1.5.0          </span></span>
+<span><span class="co">#&gt; [61] bit_4.6.0                   otel_0.2.0                 </span></span>
+<span><span class="co">#&gt; [63] ragg_1.5.2                  memoise_2.0.1              </span></span>
+<span><span class="co">#&gt; [65] evaluate_1.0.5              knitr_1.52                 </span></span>
+<span><span class="co">#&gt; [67] GenomicRanges_1.65.4        IRanges_2.47.5             </span></span>
+<span><span class="co">#&gt; [69] MultiAssayExperiment_1.39.1 BiocFileCache_3.3.0        </span></span>
+<span><span class="co">#&gt; [71] rlang_1.3.0                 Rcpp_1.1.2                 </span></span>
+<span><span class="co">#&gt; [73] DBI_1.3.0                   glue_1.8.1                 </span></span>
+<span><span class="co">#&gt; [75] xml2_1.6.0                  BiocManager_1.30.27        </span></span>
+<span><span class="co">#&gt; [77] BiocGenerics_0.59.12        jsonlite_2.0.0             </span></span>
+<span><span class="co">#&gt; [79] R6_2.6.1                    plyr_1.8.9                 </span></span>
+<span><span class="co">#&gt; [81] MatrixGenerics_1.25.0       systemfonts_1.3.2          </span></span>
+<span><span class="co">#&gt; [83] fs_2.1.0</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -681,7 +662,7 @@ annotation sources.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.9000.</p>
 </div>
 
     </footer>

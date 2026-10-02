@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Annotation of mixtures of standards • MetMashR</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Annotation of mixtures of standards">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,17 @@
     <li><a class="dropdown-item" href="../articles/Extending_MetMashR.html">Extending MetMashR</a></li>
     <li><a class="dropdown-item" href="../articles/annotate_mixtures.html">Annotating mixtures of standards</a></li>
     <li><a class="dropdown-item" href="../articles/exploring_mtox.html">Exploring the MTox700+ database</a></li>
-    <li><a class="dropdown-item" href="../articles/daphnia_example.html">Processing Annotations for LCMS of Daphnia samples</a></li>
+    <li><a class="dropdown-item" href="../articles/mms_case_study.html">Case study: reimplementing the Metabolites Merging Strategy</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-versions" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Versions</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-versions">
+<li><a class="dropdown-item" href="../index.html">devel (this site)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.23/bioc/html/MetMashR.html">Bioconductor 3.23 (v1.6.0)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.22/bioc/html/MetMashR.html">Bioconductor 3.22 (v1.4.0)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.21/bioc/html/MetMashR.html">Bioconductor 3.21 (v1.2.1)</a></li>
+    <li><a class="external-link dropdown-item" href="https://bioconductor.org/packages/3.20/bioc/html/MetMashR.html">Bioconductor 3.20 (v1.0.0)</a></li>
   </ul>
 </li>
       </ul>
@@ -45,12 +55,12 @@
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/computational-metabolomics/MetMashR" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://www.birmingham.ac.uk/research/activity/phenome-centre/index.aspx" aria-label="Phenome Centre Birmingham"><span class="fa fa-flask"></span></a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-music"></span></button>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Related Bioconductor packages"><span class="fa fa-cubes"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-">
 <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/MetMashR.html">MetMashR</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/struct.html">struct</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/structToolbox.html">structToolbox</a></li>
-    <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html">metabolmicsWorkbenchR</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html">metabolomicsWorkbenchR</a></li>
     <li><a class="external-link dropdown-item" href="https://www.bioconductor.org/packages/release/bioc/html/pmp.html">pmp</a></li>
   </ul>
 </li>
@@ -63,21 +73,21 @@
 
 
 
-<link href="annotate_mixtures_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<link href="annotate_mixtures_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
 <script src="annotate_mixtures_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="annotate_mixtures_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="annotate_mixtures_files/datatables-binding-0.33/datatables.js"></script><link href="annotate_mixtures_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="annotate_mixtures_files/datatables-binding-0.34.0/datatables.js"></script><link href="annotate_mixtures_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="annotate_mixtures_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="annotate_mixtures_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script><link href="annotate_mixtures_files/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
-<script src="annotate_mixtures_files/crosstalk-1.2.1/js/crosstalk.min.js"></script><div class="row">
+<script src="annotate_mixtures_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script><link href="annotate_mixtures_files/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="annotate_mixtures_files/crosstalk-1.2.2/js/crosstalk.min.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Annotation of mixtures of standards</h1>
                         <h4 data-toc-skip class="author">Gavin Rhys
 Lloyd</h4>
             
-            <h4 data-toc-skip class="date">2024-11-05</h4>
+            <h4 data-toc-skip class="date">2026-10-02</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/v1.0.0/vignettes/annotate_mixtures.Rmd" class="external-link"><code>vignettes/annotate_mixtures.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/vignettes/annotate_mixtures.Rmd" class="external-link"><code>vignettes/annotate_mixtures.Rmd</code></a></small>
       <div class="d-none name"><code>annotate_mixtures.Rmd</code></div>
     </div>
 
@@ -87,7 +97,7 @@ Lloyd</h4>
 <div class="section level2">
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>The latest versions of <em><a href="https://bioconductor.org/packages/3.20/struct" class="external-link">struct</a></em> and
+<p>The latest versions of <em><a href="https://bioconductor.org/packages/3.24/struct" class="external-link">struct</a></em> and
 <code>MetMashR</code> that are compatible with your current R version
 can be installed using BiocManager.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -103,7 +113,10 @@ can be installed using BiocManager.</p>
 <code class="sourceCode R"><span><span class="co"># load the packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://computational-metabolomics.github.io/MetMashR/">MetMashR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computational-metabolomics/structToolbox" class="external-link">structToolbox</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/DT" class="external-link">DT</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/GuangchuangYu/ggplotify" class="external-link">ggplotify</a></span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -284,8 +297,6 @@ want to access e.g. <code>HILIC_NEG[3]</code>.</p>
 <span></span>
 <span><span class="co"># get legend</span></span>
 <span><span class="va">leg</span> <span class="op">&lt;-</span> <span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/get_legend.html" class="external-link">get_legend</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in get_plot_component(plot, "guide-box"): Multiple components found;</span></span>
-<span><span class="co">#&gt; returning the first one. To return all, use `return_all = TRUE`.</span></span>
 <span></span>
 <span><span class="co"># layout</span></span>
 <span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span></span>
@@ -295,7 +306,7 @@ want to access e.g. <code>HILIC_NEG[3]</code>.</p>
 <span>    nrow <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    rel_widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-9-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-9-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>It is clear from these plots that the filter has removed all
 annotations without a “full match”.</p>
 <p><br></p>
@@ -313,7 +324,7 @@ some m/z drift is present.</p>
 <span><span class="va">G</span><span class="op">$</span><span class="va">HILIC_POS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">CD</span><span class="op">$</span><span class="va">HILIC_POS</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span>plotlist <span class="op">=</span> <span class="va">G</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"HILIC_NEG"</span>, <span class="st">"HILIC_POS"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-10-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-10-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Note that we plotted the distribution based on the step before
 filtering by range, and set the vertical red lines equal to the range
 filter so that we can see which parts of the histogram are affected by
@@ -425,7 +436,7 @@ filtering as pie charts.</p>
 <span></span>
 <span></span>
 <span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">g2</span>, <span class="va">g1</span>, nrow <span class="op">=</span> <span class="fl">1</span>, align <span class="op">=</span> <span class="st">"v"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-14-1.png" width="700" style="display: block; margin: auto;"><br></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-14-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"><br></p>
 </div>
 </div>
 <div class="section level2">
@@ -464,15 +475,15 @@ detecting in several assays.</p>
 <span><span class="co"># prepare upset object</span></span>
 <span><span class="va">C2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_upset_chart.html">annotation_upset_chart</a></span><span class="op">(</span></span>
 <span>    factor_name <span class="op">=</span> <span class="st">"compound"</span>,</span>
-<span>    n_intersections <span class="op">=</span> <span class="fl">10</span></span>
+<span>    nintersects <span class="op">=</span> <span class="fl">10</span>,</span>
 <span><span class="op">)</span></span>
 <span><span class="va">g3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C2</span>, <span class="va">cd</span><span class="op">)</span></span>
 <span><span class="va">C2</span><span class="op">$</span><span class="va">factor_name</span> <span class="op">&lt;-</span> <span class="st">"LipidName"</span></span>
 <span><span class="va">g4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C2</span>, <span class="va">ls</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># layout</span></span>
-<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span>, <span class="va">g3</span>, <span class="va">g4</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-15-1.png" width="700" style="display: block; margin: auto;"></p>
+<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplotify/man/as.ggplot.html" class="external-link">as.ggplot</a></span><span class="op">(</span><span class="va">g3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplotify/man/as.ggplot.html" class="external-link">as.ggplot</a></span><span class="op">(</span><span class="va">g4</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-15-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>The diagram for CD shows the largest amount of overlap is between
 assays with the same ion mode.</p>
 <p>For LS the number of annotations is quite small, so the diagram is
@@ -553,7 +564,7 @@ assay from both sources.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Annotations per assay"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">1</span>, <span class="fl">1.5</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Assay"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-17-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-17-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>In this next example we compare the number of annotations from each
 source.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -563,7 +574,7 @@ source.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Annotations per source"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">1</span>, <span class="fl">1.5</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Source"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-18-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-18-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="adding-identifiers">Adding identifiers<a class="anchor" aria-label="anchor" href="#adding-identifiers"></a>
@@ -733,7 +744,7 @@ combined identifers therefore contains</p>
 <span>        colour <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Source"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">1</span>, <span class="fl">1.5</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-21-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-21-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Due to complexity, Venn charts are limited to 7 sets. UpSet plots are
 an alternative chart than can accomodate many more sets. Each veritcal
 bar in the UpSet plot corresponds to a region in the venn diagram.</p>
@@ -741,11 +752,10 @@ bar in the UpSet plot corresponds to a region in the venn diagram.</p>
 <code class="sourceCode R"><span><span class="co"># upset inchikey columns</span></span>
 <span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_upset_chart.html">annotation_upset_chart</a></span><span class="op">(</span></span>
 <span>    factor_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"InChIKey"</span>, <span class="st">"InChIKey_norm"</span>, <span class="st">"stdinchikey_opsin"</span><span class="op">)</span>,</span>
-<span>    min_size <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    n_intersections <span class="op">=</span> <span class="fl">10</span></span>
+<span>    nintersects <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">N</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-22-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-22-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>In the next chart we visualise the proportion of annotations from
 each query, after prioritisation and merging has taken place.</p>
 <p>Note that in this case some of the identifiers might be the same if
@@ -770,7 +780,7 @@ least reliable query based on the non-normalised name.</p>
 <span>        colour <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Source"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">1</span>, <span class="fl">1.5</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-23-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-23-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>To keep the records with the highest confidence identifiers We can
 remove the annotations based on the <code>name</code> query using the
 <code>filter_labels</code> object.</p>
@@ -791,7 +801,7 @@ remove the annotations based on the <code>name</code> query using the
 <span><span class="co">#&gt; name:          combined</span></span>
 <span><span class="co">#&gt; description:   A source created by combining two or more sources</span></span>
 <span><span class="co">#&gt; input params:  tag, data, source </span></span>
-<span><span class="co">#&gt; annotations:   465 rows x 33 columns</span></span></code></pre></div>
+<span><span class="co">#&gt; annotations:   467 rows x 33 columns</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -883,7 +893,7 @@ detected by manual observation.</p>
 <span></span>
 <span><span class="co">## plot</span></span>
 <span><span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">SM</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-28-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-28-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 </div>
@@ -910,7 +920,7 @@ the ability of the annotation software annotate the standards.</p>
 <span></span>
 <span><span class="co"># plot</span></span>
 <span><span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="va">sM</span>, <span class="va">AN</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"All assays, all sources"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-29-1.png" width="384" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-29-1.png" class="r-plt" alt="" width="384" style="display: block; margin: auto;"></p>
 <p>It can been seen that there is a large number of annotations not
 present in the standard. These are false positives.</p>
 <p>In the next plot we show similar Venn diagrams but for each assay
@@ -934,8 +944,7 @@ standard.</p>
 <span>    <span class="va">V</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_venn.html">filter_venn</a></span><span class="op">(</span></span>
 <span>        factor_name <span class="op">=</span> <span class="st">"inchikey"</span>,</span>
 <span>        tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">wf1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        levels <span class="op">=</span> <span class="st">"Standards/Annotations"</span>,</span>
-<span>        mode <span class="op">=</span> <span class="st">"include"</span></span>
+<span>        mode <span class="op">=</span> <span class="st">'exclude'</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">V</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">V</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">wf2</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">VV</span><span class="op">[[</span><span class="va">k</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span></span>
@@ -947,7 +956,7 @@ standard.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span><span class="va">r1</span>, <span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="va">VV</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span>, rel_heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-30-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-30-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>The majority of the standards were correctly annotated in the
 HILIC_NEG assay.</p>
 <p>In the next plot we compare the overlap in InChIKey for each
@@ -965,7 +974,7 @@ source.</p>
 <span>    <span class="va">G</span><span class="op">[[</span><span class="va">k</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chart_plot.html">chart_plot</a></span><span class="op">(</span><span class="va">C</span>, <span class="va">sM</span>, <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">wf1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span>plotlist <span class="op">=</span> <span class="va">G</span>, nrow <span class="op">=</span> <span class="fl">1</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD"</span>, <span class="st">"LS"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="annotate_mixtures_files/figure-html/unnamed-chunk-31-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="annotate_mixtures_files/figure-html/annotate-mixtures-31-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -973,13 +982,13 @@ source.</p>
 </h2>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
+<span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.5 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
-<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
@@ -996,60 +1005,59 @@ source.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] DT_0.33              dplyr_1.1.4          structToolbox_1.18.0</span></span>
-<span><span class="co">#&gt; [4] ggplot2_3.5.1        MetMashR_1.0.0       struct_1.18.0       </span></span>
-<span><span class="co">#&gt; [7] BiocStyle_2.34.0    </span></span>
+<span><span class="co">#&gt; [1] ggplotify_0.1.3      DT_0.34.0            dplyr_1.2.1         </span></span>
+<span><span class="co">#&gt; [4] structToolbox_1.25.0 ggplot2_4.0.3        MetMashR_1.7.2      </span></span>
+<span><span class="co">#&gt; [7] struct_1.25.0        BiocStyle_2.41.0    </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] tidyselect_1.2.1            blob_1.2.4                 </span></span>
+<span><span class="co">#&gt;  [1] tidyselect_1.2.1            blob_1.3.0                 </span></span>
 <span><span class="co">#&gt;  [3] farver_2.1.2                filelock_1.0.3             </span></span>
-<span><span class="co">#&gt;  [5] fastmap_1.2.0               BiocFileCache_2.14.0       </span></span>
-<span><span class="co">#&gt;  [7] digest_0.6.37               lifecycle_1.0.4            </span></span>
-<span><span class="co">#&gt;  [9] RSQLite_2.3.7               magrittr_2.0.3             </span></span>
-<span><span class="co">#&gt; [11] compiler_4.4.1              rlang_1.1.4                </span></span>
-<span><span class="co">#&gt; [13] sass_0.4.9                  tools_4.4.1                </span></span>
-<span><span class="co">#&gt; [15] utf8_1.2.4                  yaml_2.3.10                </span></span>
-<span><span class="co">#&gt; [17] knitr_1.48                  S4Arrays_1.6.0             </span></span>
+<span><span class="co">#&gt;  [5] S7_0.2.2                    fastmap_1.2.0              </span></span>
+<span><span class="co">#&gt;  [7] BiocFileCache_3.3.0         digest_0.6.39              </span></span>
+<span><span class="co">#&gt;  [9] lifecycle_1.0.5             RSQLite_3.53.3             </span></span>
+<span><span class="co">#&gt; [11] magrittr_2.0.5              compiler_4.6.1             </span></span>
+<span><span class="co">#&gt; [13] rlang_1.3.0                 sass_0.4.10                </span></span>
+<span><span class="co">#&gt; [15] tools_4.6.1                 yaml_2.3.12                </span></span>
+<span><span class="co">#&gt; [17] knitr_1.52                  S4Arrays_1.13.2            </span></span>
 <span><span class="co">#&gt; [19] labeling_0.4.3              htmlwidgets_1.6.4          </span></span>
-<span><span class="co">#&gt; [21] bit_4.5.0                   curl_5.2.3                 </span></span>
-<span><span class="co">#&gt; [23] ontologyIndex_2.12          sp_2.1-4                   </span></span>
-<span><span class="co">#&gt; [25] DelayedArray_0.32.0         plyr_1.8.9                 </span></span>
-<span><span class="co">#&gt; [27] abind_1.4-8                 withr_3.0.2                </span></span>
-<span><span class="co">#&gt; [29] purrr_1.0.2                 BiocGenerics_0.52.0        </span></span>
-<span><span class="co">#&gt; [31] desc_1.4.3                  grid_4.4.1                 </span></span>
-<span><span class="co">#&gt; [33] stats4_4.4.1                fansi_1.0.6                </span></span>
-<span><span class="co">#&gt; [35] colorspace_2.1-1            scales_1.3.0               </span></span>
-<span><span class="co">#&gt; [37] SummarizedExperiment_1.36.0 cli_3.6.3                  </span></span>
-<span><span class="co">#&gt; [39] rmarkdown_2.28              crayon_1.5.3               </span></span>
-<span><span class="co">#&gt; [41] ragg_1.3.3                  generics_0.1.3             </span></span>
-<span><span class="co">#&gt; [43] httr_1.4.7                  DBI_1.2.3                  </span></span>
-<span><span class="co">#&gt; [45] cachem_1.1.0                stringr_1.5.1              </span></span>
-<span><span class="co">#&gt; [47] zlibbioc_1.52.0             ggthemes_5.1.0             </span></span>
-<span><span class="co">#&gt; [49] BiocManager_1.30.25         XVector_0.46.0             </span></span>
-<span><span class="co">#&gt; [51] matrixStats_1.4.1           vctrs_0.6.5                </span></span>
-<span><span class="co">#&gt; [53] Matrix_1.7-1                jsonlite_1.8.9             </span></span>
-<span><span class="co">#&gt; [55] bookdown_0.41               patchwork_1.3.0            </span></span>
-<span><span class="co">#&gt; [57] IRanges_2.40.0              S4Vectors_0.44.0           </span></span>
-<span><span class="co">#&gt; [59] bit64_4.5.2                 systemfonts_1.1.0          </span></span>
-<span><span class="co">#&gt; [61] crosstalk_1.2.1             jquerylib_0.1.4            </span></span>
-<span><span class="co">#&gt; [63] tidyr_1.3.1                 ggVennDiagram_1.5.2        </span></span>
-<span><span class="co">#&gt; [65] glue_1.8.0                  pkgdown_2.1.1.9000         </span></span>
-<span><span class="co">#&gt; [67] cowplot_1.1.3               stringi_1.8.4              </span></span>
-<span><span class="co">#&gt; [69] gtable_0.3.6                RVenn_1.1.0                </span></span>
-<span><span class="co">#&gt; [71] GenomeInfoDb_1.42.0         GenomicRanges_1.58.0       </span></span>
-<span><span class="co">#&gt; [73] UCSC.utils_1.2.0            ComplexUpset_1.3.3         </span></span>
-<span><span class="co">#&gt; [75] munsell_0.5.1               tibble_3.2.1               </span></span>
-<span><span class="co">#&gt; [77] pillar_1.9.0                htmltools_0.5.8.1          </span></span>
-<span><span class="co">#&gt; [79] GenomeInfoDbData_1.2.13     dbplyr_2.5.0               </span></span>
-<span><span class="co">#&gt; [81] R6_2.5.1                    textshaping_0.4.0          </span></span>
-<span><span class="co">#&gt; [83] evaluate_1.0.1              lattice_0.22-6             </span></span>
-<span><span class="co">#&gt; [85] Biobase_2.66.0              highr_0.11                 </span></span>
-<span><span class="co">#&gt; [87] openxlsx_4.2.7.1            memoise_2.0.1              </span></span>
-<span><span class="co">#&gt; [89] bslib_0.8.0                 Rcpp_1.0.13                </span></span>
-<span><span class="co">#&gt; [91] zip_2.3.1                   gridExtra_2.3              </span></span>
-<span><span class="co">#&gt; [93] SparseArray_1.6.0           xfun_0.48                  </span></span>
-<span><span class="co">#&gt; [95] fs_1.6.4                    MatrixGenerics_1.18.0      </span></span>
-<span><span class="co">#&gt; [97] pkgconfig_2.0.3</span></span></code></pre></div>
+<span><span class="co">#&gt; [21] bit_4.6.0                   curl_8.0.0                 </span></span>
+<span><span class="co">#&gt; [23] sp_2.2-3                    DelayedArray_0.39.8        </span></span>
+<span><span class="co">#&gt; [25] plyr_1.8.9                  xml2_1.6.0                 </span></span>
+<span><span class="co">#&gt; [27] RColorBrewer_1.1-3          aplot_0.3.2                </span></span>
+<span><span class="co">#&gt; [29] abind_1.4-8                 withr_3.0.3                </span></span>
+<span><span class="co">#&gt; [31] purrr_1.2.2                 BiocGenerics_0.59.12       </span></span>
+<span><span class="co">#&gt; [33] desc_1.4.3                  grid_4.6.1                 </span></span>
+<span><span class="co">#&gt; [35] stats4_4.6.1                scales_1.4.0               </span></span>
+<span><span class="co">#&gt; [37] SummarizedExperiment_1.43.0 cli_3.6.6                  </span></span>
+<span><span class="co">#&gt; [39] rmarkdown_2.32              ragg_1.5.2                 </span></span>
+<span><span class="co">#&gt; [41] generics_0.1.4              otel_0.2.0                 </span></span>
+<span><span class="co">#&gt; [43] httr_1.4.9                  DBI_1.3.0                  </span></span>
+<span><span class="co">#&gt; [45] cachem_1.1.0                stringr_1.6.0              </span></span>
+<span><span class="co">#&gt; [47] ggthemes_6.0.0              BiocManager_1.30.27        </span></span>
+<span><span class="co">#&gt; [49] XVector_0.53.0              matrixStats_1.5.0          </span></span>
+<span><span class="co">#&gt; [51] vctrs_0.7.3                 yulab.utils_0.2.5          </span></span>
+<span><span class="co">#&gt; [53] Matrix_1.7-6                jsonlite_2.0.0             </span></span>
+<span><span class="co">#&gt; [55] bookdown_0.48               patchwork_1.3.2            </span></span>
+<span><span class="co">#&gt; [57] gridGraphics_0.5-1          IRanges_2.47.5             </span></span>
+<span><span class="co">#&gt; [59] S4Vectors_0.51.10           bit64_4.8.6                </span></span>
+<span><span class="co">#&gt; [61] systemfonts_1.3.2           crosstalk_1.2.2            </span></span>
+<span><span class="co">#&gt; [63] jquerylib_0.1.4             tidyr_1.3.2                </span></span>
+<span><span class="co">#&gt; [65] glue_1.8.1                  ggVennDiagram_1.5.7        </span></span>
+<span><span class="co">#&gt; [67] pkgdown_2.2.1.9000          cowplot_1.2.0              </span></span>
+<span><span class="co">#&gt; [69] stringi_1.8.9               gtable_0.3.6               </span></span>
+<span><span class="co">#&gt; [71] GenomicRanges_1.65.4        tibble_3.3.1               </span></span>
+<span><span class="co">#&gt; [73] pillar_1.11.1               rappdirs_0.3.4             </span></span>
+<span><span class="co">#&gt; [75] htmltools_0.5.9             Seqinfo_1.3.2              </span></span>
+<span><span class="co">#&gt; [77] dbplyr_2.6.0                R6_2.6.1                   </span></span>
+<span><span class="co">#&gt; [79] httr2_1.3.0                 textshaping_1.0.5          </span></span>
+<span><span class="co">#&gt; [81] evaluate_1.0.5              lattice_0.23-1             </span></span>
+<span><span class="co">#&gt; [83] Biobase_2.73.2              openxlsx_4.2.9             </span></span>
+<span><span class="co">#&gt; [85] memoise_2.0.1               ggfun_0.2.1                </span></span>
+<span><span class="co">#&gt; [87] bslib_0.12.0                Rcpp_1.1.2                 </span></span>
+<span><span class="co">#&gt; [89] zip_3.0.2                   gridExtra_2.3.1            </span></span>
+<span><span class="co">#&gt; [91] SparseArray_1.13.4          xfun_0.61                  </span></span>
+<span><span class="co">#&gt; [93] fs_2.1.0                    MatrixGenerics_1.25.0      </span></span>
+<span><span class="co">#&gt; [95] forcats_1.0.1               pkgconfig_2.0.3</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -1062,7 +1070,7 @@ source.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.9000.</p>
 </div>
 
     </footer>
