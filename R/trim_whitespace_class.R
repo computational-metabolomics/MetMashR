@@ -87,6 +87,7 @@ trim_whitespace <- function(column_names,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("trim_whitespace", "annotation_source"),

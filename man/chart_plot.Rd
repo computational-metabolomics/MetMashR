@@ -20,27 +20,7 @@
 \alias{chart_plot,pubchem_widget,annotation_source-method}
 \title{chart_plot method}
 \usage{
-\S4method{chart_plot}{annotation_bar_chart,annotation_source}(obj, dobj)
-
-\S4method{chart_plot}{annotation_histogram,annotation_source}(obj, dobj)
-
-\S4method{chart_plot}{annotation_histogram2d,annotation_source}(obj, dobj)
-
-\S4method{chart_plot}{annotation_pie_chart,annotation_source}(obj, dobj)
-
-\S4method{chart_plot}{annotation_venn_chart,annotation_source}(obj, dobj, ...)
-
-\S4method{chart_plot}{annotation_venn_chart,list}(obj, dobj)
-
-\S4method{chart_plot}{annotation_upset_chart,annotation_source}(obj, dobj, ...)
-
-\S4method{chart_plot}{annotation_upset_chart,list}(obj, dobj)
-
-\S4method{chart_plot}{mwb_structure,annotation_source}(obj, dobj)
-
-\S4method{chart_plot}{pubchem_structure,annotation_source}(obj, dobj)
-
-\S4method{chart_plot}{pubchem_widget,annotation_source}(obj, dobj)
+chart_plot(obj, dobj, ...)
 }
 \arguments{
 \item{obj}{a chart object}

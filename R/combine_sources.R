@@ -152,6 +152,7 @@ combine_sources <- function(source_list,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("combine_sources", "annotation_source"),
@@ -173,6 +174,7 @@ setMethod(
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("combine_sources", "list"),

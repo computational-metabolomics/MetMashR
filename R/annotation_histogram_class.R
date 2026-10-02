@@ -106,6 +106,7 @@ annotation_histogram <- function(factor_name,
 
 #' @export
 #' @template chart_plot
+#' @usage NULL
 setMethod(
     f = "chart_plot",
     signature = c("annotation_histogram", "annotation_source"),

@@ -50,6 +50,7 @@ compute_record <- function(fcn,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("compute_record", "annotation_source"),

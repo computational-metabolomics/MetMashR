@@ -1,8 +1,6 @@
 #' @eval get_description('pubchem_id_exchange')
 #' @export
 #' @include annotation_source_class.R
-#' @param M A `pubchem_id_exchange` object.
-#' @param D An [annotation_source()] object.
 #' @importFrom methods setClass setMethod setGeneric
 #' @importFrom xml2 read_xml xml_find_first xml_text xml_attr
 #' @importFrom httr2 request req_body_raw req_headers req_perform resp_body_string resp_status
@@ -408,7 +406,8 @@ pubchem_id_exchange <- function(
 }
 
 #' @export
-#' @rdname pubchem_id_exchange
+#' @rdname model_apply
+#' @usage NULL
 setMethod(
     f = "model_train",
     signature = c("pubchem_id_exchange", "annotation_source"),
@@ -512,7 +511,8 @@ setMethod(
 
 
 #' @export
-#' @rdname pubchem_id_exchange
+#' @rdname model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("pubchem_id_exchange", "annotation_source"),
@@ -524,7 +524,8 @@ setMethod(
 )
 
 #' @export
-#' @rdname pubchem_id_exchange
+#' @rdname model_apply
+#' @usage NULL
 setMethod(
     f = "model_predict",
     signature = c("pubchem_id_exchange", "annotation_source"),

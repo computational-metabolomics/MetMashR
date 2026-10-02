@@ -2,9 +2,6 @@
 % Please edit documentation in R/classyfire_batch_lookup_class.R
 \name{classyfire_batch_lookup}
 \alias{classyfire_batch_lookup}
-\alias{model_train,classyfire_batch_lookup,annotation_source-method}
-\alias{model_apply,classyfire_batch_lookup,annotation_source-method}
-\alias{model_predict,classyfire_batch_lookup,annotation_source-method}
 \title{ClassyFire batch lookup}
 \usage{
 classyfire_batch_lookup(
@@ -20,12 +17,6 @@ classyfire_batch_lookup(
   verbose = FALSE,
   ...
 )
-
-\S4method{model_train}{classyfire_batch_lookup,annotation_source}(M, D)
-
-\S4method{model_apply}{classyfire_batch_lookup,annotation_source}(M, D)
-
-\S4method{model_predict}{classyfire_batch_lookup,annotation_source}(M, D)
 }
 \arguments{
 \item{query_column}{(character) The name of a column in the
@@ -89,10 +80,6 @@ results are known to be stale.}} The default is \code{"update"}.}
 execution. The default is \code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
-
-\item{M}{A \code{classyfire_batch_lookup} object.}
-
-\item{D}{An \code{\link[=annotation_source]{annotation_source()}} object.}
 }
 \value{
 A \code{classyfire_batch_lookup} object with the following

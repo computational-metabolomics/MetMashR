@@ -104,6 +104,7 @@ rt_match <- function(
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("rt_match", "annotation_table"),

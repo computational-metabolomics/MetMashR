@@ -28,6 +28,7 @@ CompoundDb_source <- function(source,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("CompoundDb_source", "annotation_source"),

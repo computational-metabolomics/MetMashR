@@ -207,6 +207,7 @@ chebi_lookup <- function(
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("chebi_lookup", "annotation_source"),

@@ -159,6 +159,7 @@ annotation_pie_chart <- function(factor_name,
 
 #' @export
 #' @template chart_plot
+#' @usage NULL
 setMethod(
     f = "chart_plot",
     signature = c("annotation_pie_chart", "annotation_source"),

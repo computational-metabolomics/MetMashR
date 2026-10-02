@@ -100,6 +100,7 @@ calc_ppm_diff <- function(obs_mz_column,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("calc_ppm_diff", "annotation_table"),

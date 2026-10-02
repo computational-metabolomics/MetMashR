@@ -104,6 +104,7 @@ prioritise_columns <- function(column_names,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("prioritise_columns", "annotation_source"),

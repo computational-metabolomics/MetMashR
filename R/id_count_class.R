@@ -70,6 +70,7 @@ id_counts <- function(
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("id_counts", "annotation_source"),

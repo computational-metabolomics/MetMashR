@@ -57,6 +57,7 @@ mwb_structure <- function(query_column,
 
 #' @export
 #' @template chart_plot
+#' @usage NULL
 setMethod(
     f = "chart_plot",
     signature = c("mwb_structure", "annotation_source"),

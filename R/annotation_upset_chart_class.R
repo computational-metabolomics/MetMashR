@@ -352,6 +352,7 @@ annotation_upset_chart <- function(
 
 #' @export
 #' @template chart_plot
+#' @usage NULL
 setMethod(
     f = "chart_plot",
     signature = c("annotation_upset_chart", "annotation_source"),
@@ -431,6 +432,7 @@ setMethod(
 
 #' @export
 #' @template chart_plot
+#' @usage NULL
 setMethod(
     f = "chart_plot",
     signature = c("annotation_upset_chart", "list"),

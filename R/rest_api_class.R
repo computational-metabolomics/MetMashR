@@ -180,6 +180,7 @@ rest_api <- function(base_url,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("rest_api", "annotation_source"),

@@ -37,6 +37,7 @@ import_source <- function(...) {
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("import_source", "annotation_source"),

@@ -150,6 +150,7 @@ mzrt_match <- function(variable_meta,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("mzrt_match", "lcms_table"),

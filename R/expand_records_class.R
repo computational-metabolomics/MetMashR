@@ -80,6 +80,7 @@ split_records <- function(column_name,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("split_records", "annotation_source"),

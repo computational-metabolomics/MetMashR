@@ -120,6 +120,7 @@ pubchem_widget <- function(query_column,
 
 #' @export
 #' @template chart_plot
+#' @usage NULL
 setMethod(
     f = "chart_plot",
     signature = c("pubchem_widget", "annotation_source"),

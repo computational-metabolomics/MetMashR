@@ -1,6 +1,7 @@
 #' chart_plot method
 #'
 #' Plots a chart object
+#' @usage chart_plot(obj, dobj, ...)
 #' @param obj a chart object
 #' @param dobj a struct object
 #' @param ... additiional inputs to chart_plot

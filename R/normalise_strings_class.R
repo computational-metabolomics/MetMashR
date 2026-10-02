@@ -89,6 +89,7 @@ normalise_strings <- function(search_column,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("normalise_strings", "annotation_source"),

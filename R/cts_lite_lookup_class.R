@@ -274,6 +274,7 @@ cts_lite_lookup <- function(
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("cts_lite_lookup", "annotation_source"),

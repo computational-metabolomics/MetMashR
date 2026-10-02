@@ -1,8 +1,6 @@
 #' @eval get_description('classyfire_batch_lookup')
 #' @export
 #' @include annotation_source_class.R
-#' @param M A `classyfire_batch_lookup` object.
-#' @param D An [annotation_source()] object.
 #' @importFrom methods setClass setMethod setGeneric
 #' @importFrom httr POST GET content add_headers status_code
 #' @importFrom jsonlite fromJSON toJSON
@@ -288,7 +286,8 @@ classyfire_batch_lookup <- function(
 }
 
 #' @export
-#' @rdname classyfire_batch_lookup
+#' @rdname model_apply
+#' @usage NULL
 setMethod(
     f = "model_train",
     signature = c("classyfire_batch_lookup", "annotation_source"),
@@ -391,7 +390,8 @@ setMethod(
 )
 
 #' @export
-#' @rdname classyfire_batch_lookup
+#' @rdname model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("classyfire_batch_lookup", "annotation_source"),
@@ -403,7 +403,8 @@ setMethod(
 )
 
 #' @export
-#' @rdname classyfire_batch_lookup
+#' @rdname model_apply
+#' @usage NULL
 setMethod(
     f = "model_predict",
     signature = c("classyfire_batch_lookup", "annotation_source"),

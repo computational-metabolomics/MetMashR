@@ -2,9 +2,6 @@
 % Please edit documentation in R/pubchem_id_exchange_class.R
 \name{pubchem_id_exchange}
 \alias{pubchem_id_exchange}
-\alias{model_train,pubchem_id_exchange,annotation_source-method}
-\alias{model_apply,pubchem_id_exchange,annotation_source-method}
-\alias{model_predict,pubchem_id_exchange,annotation_source-method}
 \title{PubChem ID Exchange via PUG}
 \usage{
 pubchem_id_exchange(
@@ -23,12 +20,6 @@ pubchem_id_exchange(
   verbose = FALSE,
   ...
 )
-
-\S4method{model_train}{pubchem_id_exchange,annotation_source}(M, D)
-
-\S4method{model_apply}{pubchem_id_exchange,annotation_source}(M, D)
-
-\S4method{model_predict}{pubchem_id_exchange,annotation_source}(M, D)
 }
 \arguments{
 \item{query_column}{(character) The name of a column in the
@@ -98,10 +89,6 @@ known to be stale.}} The default is \code{"update"}.}
 execution. The default is \code{FALSE}.\cr}
 
 \item{...}{Additional slots and values passed to \code{struct_class}.}
-
-\item{M}{A \code{pubchem_id_exchange} object.}
-
-\item{D}{An \code{\link[=annotation_source]{annotation_source()}} object.}
 }
 \value{
 A \code{pubchem_id_exchange} object with the following

@@ -118,6 +118,7 @@ database_lookup <- function(query_column,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("database_lookup", "annotation_source"),

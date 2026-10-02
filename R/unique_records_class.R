@@ -37,6 +37,7 @@ fuse_unique_records <- setClass(
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("unique_records", "annotation_source"),

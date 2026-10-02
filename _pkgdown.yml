@@ -31,15 +31,16 @@ navbar:
     - icon: fa-flask
       href: https://www.birmingham.ac.uk/research/activity/phenome-centre/index.aspx
       aria-label: 'Phenome Centre Birmingham'
-    - icon: fa-music
-      menu: 
+    - icon: fa-cubes
+      aria-label: 'Related Bioconductor packages'
+      menu:
       - text: MetMashR
         href: https://www.bioconductor.org/packages/release/bioc/html/MetMashR.html
       - text: struct
         href: https://www.bioconductor.org/packages/release/bioc/html/struct.html
       - text: structToolbox
         href: https://www.bioconductor.org/packages/release/bioc/html/structToolbox.html
-      - text: metabolmicsWorkbenchR
+      - text: metabolomicsWorkbenchR
         href: https://www.bioconductor.org/packages/release/bioc/html/metabolomicsWorkbenchR.html
       - text: pmp
         href: https://www.bioconductor.org/packages/release/bioc/html/pmp.html
@@ -166,8 +167,3 @@ reference:
   - wherever
   - chart_plot
   - model_apply
-home:
-  links:
-  - text: View on Bioconductor
-    href: https://bioconductor.org/packages/release/bioc/html/MetMashR.html
-

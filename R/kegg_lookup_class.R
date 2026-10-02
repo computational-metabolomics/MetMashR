@@ -170,6 +170,7 @@ kegg_lookup <- function(get = "pubchem_sid",
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("kegg_lookup", "annotation_source"),

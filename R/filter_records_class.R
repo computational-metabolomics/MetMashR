@@ -88,6 +88,7 @@ filter_records <- function(where = wherever(A > 0), ...) {
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("filter_records", "annotation_source"),

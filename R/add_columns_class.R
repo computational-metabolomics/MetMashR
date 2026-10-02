@@ -77,6 +77,7 @@ add_columns <- function(new_columns, by, ...) {
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("add_columns", "annotation_source"),

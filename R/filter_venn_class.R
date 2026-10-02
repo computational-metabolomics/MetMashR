@@ -137,6 +137,7 @@ filter_venn <- function(factor_name,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("filter_venn", "annotation_source"),

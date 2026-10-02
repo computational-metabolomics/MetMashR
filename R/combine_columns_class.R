@@ -115,6 +115,7 @@ combine_columns <- function(column_names,
 
 #' @export
 #' @template model_apply
+#' @usage NULL
 setMethod(
     f = "model_apply",
     signature = c("combine_columns", "annotation_source"),
