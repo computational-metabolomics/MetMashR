@@ -1,9 +1,4 @@
 url: https://computational-metabolomics.github.io/MetMashR/
-# release docs at the site root, devel docs under dev/. Bioconductor version
-# numbers can't be auto-detected, so the mode is set by the PKGDOWN_DEV_MODE
-# env var in the GitHub workflow ("release" or "devel")
-development:
-  mode: auto
 template:
   bootstrap: 5
   bootswatch: flatly

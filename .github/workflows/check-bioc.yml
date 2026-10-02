@@ -236,7 +236,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Install pkgdown
-        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           remotes::install_github("r-lib/pkgdown")
         shell: Rscript {0}
@@ -292,31 +292,29 @@ jobs:
         shell: Rscript {0}
 
       - name: Install package
-        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: R CMD INSTALL .
 
       - name: Build pkgdown site
-        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
-        env:
-          ## devel docs are built into docs/dev/, release docs into docs/
-          PKGDOWN_DEV_MODE: ${{ env.bioc_version == 'bioc-devel' && 'devel' || 'release' }}
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
-        shell: Rscript {0}
+        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        ## also adds a "Versions" menu linking to each Bioconductor release
+        run: Rscript .github/scripts/build_pkgdown_site.R
         ## Note that you need to run pkgdown::deploy_to_branch(new_process = FALSE)
         ## at least one locally before this will work. This creates the gh-pages
         ## branch (erasing anything you haven't version controlled!) and
         ## makes the git history recognizable by pkgdown.
 
       - name: Install deploy dependencies
-        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           apt-get update && apt-get -y install rsync
 
       - name: Deploy pkgdown site to GitHub pages 🚀
-        if: (github.ref == 'refs/heads/devel' || startsWith(github.ref, 'refs/heads/RELEASE_')) && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          clean: false
+          ## replace the whole site, removing stale files (e.g. the old dev/ folder)
+          clean: true
           branch: gh-pages
           folder: docs
 

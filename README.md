@@ -14,9 +14,7 @@ Metabolomics is the analysis of small molecules, or metabolites, in biological a
 
 ## Documentation and resources
 
-- Documentation
-  - release: <https://computational-metabolomics.github.io/MetMashR/>
-  - devel: <https://computational-metabolomics.github.io/MetMashR/dev/>
+- Documentation: <https://computational-metabolomics.github.io/MetMashR/>
 
 - Bioconductor
   - release: <https://bioconductor.org/packages/release/bioc/html/MetMashR.html>
