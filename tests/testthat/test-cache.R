@@ -40,3 +40,29 @@ test_that("sqlite cache reads/writes", {
     # compare
     expect_true(all(check == db))
 })
+
+test_that("rest_api cache_mode = 'offline' does not rewrite the cache", {
+    tf <- tempfile(fileext = ".rds")
+    cache <- rds_cache(source = tf)
+    write_database(cache, data.frame(.search = "2244", Title = "Aspirin"))
+    old_time <- as.POSIXct("2020-01-01", tz = "UTC")
+    Sys.setFileTime(tf, old_time)
+
+    D <- annotation_table(
+        data = data.frame(id = c(1, 2), cid = c("2244", "702")),
+        id_column = "id"
+    )
+    M <- pubchem_property_lookup(
+        query_column = "cid",
+        search_by = "cid",
+        property = "Title",
+        cache = cache,
+        cache_mode = "offline"
+    )
+    expect_warning(M <- model_apply(M, D), "cache_mode")
+
+    out <- predicted(M)$data
+    expect_equal(out$Title_pubchem[1], "Aspirin")
+    expect_true(is.na(out$Title_pubchem[2]))
+    expect_equal(as.numeric(file.mtime(tf)), as.numeric(old_time))
+})

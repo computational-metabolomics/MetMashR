@@ -256,6 +256,15 @@ setMethod(
 
             colnames(df) <- c(".search", out_col)
 
+            # keggConv omits ids with no match; record them as NA so they
+            # are cached (and not re-queried) like any other result
+            no_hit <- setdiff(to_query, df$.search)
+            if (length(no_hit) > 0) {
+                no_hit_df <- data.frame(.search = no_hit)
+                no_hit_df[[out_col]] <- NA_character_
+                df <- rbind(df, no_hit_df)
+            }
+
             if (!is.null(M$cache)) {
                 # drop any stale entry for values being (re-)written first
                 # (relevant in "rebuild" mode, a no-op otherwise)

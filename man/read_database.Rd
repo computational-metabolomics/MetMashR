@@ -4,7 +4,7 @@
 %   R/MTox700plus_database_class.R, R/PathBank_metabolite_database_class.R,
 %   R/excel_database_class.R, R/github_file_class.R,
 %   R/mwb_refmet_database_class.R, R/rdata_database_class.R,
-%   R/rds_database_class.R, R/sqlite_database_class.R
+%   R/rds_database_class.R, R/sqlite_database_class.R, R/zenodo_file_class.R
 \name{read_database}
 \alias{read_database}
 \alias{read_database,annotation_database-method}
@@ -18,6 +18,7 @@
 \alias{read_database,rdata_database-method}
 \alias{read_database,rds_database-method}
 \alias{read_database,sqlite_database-method}
+\alias{read_database,zenodo_file-method}
 \title{Read a database}
 \usage{
 read_database(obj, ...)
@@ -43,6 +44,8 @@ read_database(obj, ...)
 \S4method{read_database}{rds_database}(obj)
 
 \S4method{read_database}{sqlite_database}(obj)
+
+\S4method{read_database}{zenodo_file}(obj)
 }
 \arguments{
 \item{obj}{An \code{annotation_database} object}

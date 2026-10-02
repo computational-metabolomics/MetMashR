@@ -6,13 +6,29 @@ pubchem_property_lookup <- function(query_column,
     suffix = "_pubchem",
     property = "InChIKey",
     ...) {
-    # check properties
+    # PubChem renamed these properties and no longer returns the old names
+    renamed <- c(
+        CanonicalSMILES = "ConnectivitySMILES",
+        IsomericSMILES = "SMILES"
+    )
+    w <- property %in% names(renamed)
+    if (any(w)) {
+        warning(
+            "PubChem property names ",
+            paste0(property[w], collapse = ", "),
+            " are deprecated; using ",
+            paste0(renamed[property[w]], collapse = ", "),
+            " instead."
+        )
+        property[w] <- renamed[property[w]]
+    }
 
+    # check properties
     allowed <- c(
         "MolecularFormula",
         "MolecularWeight",
-        "CanonicalSMILES",
-        "IsomericSMILES",
+        "ConnectivitySMILES",
+        "SMILES",
         "InChI",
         "InChIKey",
         "IUPACName",

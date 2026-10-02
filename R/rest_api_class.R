@@ -331,19 +331,9 @@ setMethod(
             )
         }
         # join results, pad missing columns with NA to get all columns
+        # (the cache was already written after each live query above, so it
+        # is not rewritten here when nothing was fetched e.g. offline mode)
         collected <- plyr::rbind.fill(collected)
-
-        # update cache if using
-        if (!is.null(M$cache)) {
-            # keep unique records
-            cached <- unique(cached)
-            # write to cache
-            if (is_writable(M$cache)) {
-                write_database(M$cache, cached)
-            } else {
-                warning("Cache is not writable and could not be updated.")
-            }
-        }
 
         # add suffix
         colnames(collected) <- paste0(colnames(collected), M$suffix)

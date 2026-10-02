@@ -62,6 +62,7 @@ reference:
   - ends_with('_database')
   - rds_cache
   - github_file
+  - zenodo_file
   - is_writable
   - read_database
   - write_database

@@ -195,3 +195,38 @@ test_that("kegg_lookup cache_mode = 'rebuild' re-queries and overwrites a stale 
     refreshed <- read_source(cache)$data
     expect_equal(refreshed$compound[refreshed$.search == "3937"], "C00668")
 })
+
+test_that("kegg_lookup caches values with no KEGG match as NA", {
+    tf <- tempfile(fileext = ".rds")
+    cache <- rds_cache(source = tf)
+
+    db <- data.frame(
+        "id" = c(1, 2, 3),
+        "pubchem_sid" = c(3937, 3938, 1)
+    )
+    D <- annotation_table(data = db, id_column = "id")
+
+    M <- kegg_lookup(
+        get = "compound",
+        from = "pubchem_sid",
+        query_column = "pubchem_sid",
+        suffix = "",
+        cache = cache
+    )
+
+    with_mock_dir("kg0", {
+        M <- model_apply(M, D)
+    })
+
+    # pubchem_sid 1 has no match but is still recorded in the cache
+    cached <- read_source(cache)$data
+    expect_true("1" %in% cached$.search)
+    expect_true(is.na(cached$compound[cached$.search == "1"]))
+
+    # so an offline rerun finds every value and does not warn
+    M$cache_mode <- "offline"
+    expect_no_warning(M <- model_apply(M, D))
+    out <- predicted(M)$data
+    expect_equal(out$compound[1], "C00668")
+    expect_true(is.na(out$compound[3]))
+})

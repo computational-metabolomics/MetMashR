@@ -132,6 +132,7 @@ Collate:
     'sqlite_database_class.R'
     'trim_whitespace_class.R'
     'unique_records_class.R'
+    'zenodo_file_class.R'
 Suggests: 
     covr,
     httptest,
