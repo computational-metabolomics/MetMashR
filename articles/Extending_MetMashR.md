@@ -476,7 +476,7 @@ with write access.
 `        query_column ``=`` ``"pubchem_cid"``,`\
 `        search_by ``=`` ``"cid"``,`\
 `        suffix ``=`` ``""``,`\
-`        property ``=`` ``"CanonicalSMILES"``,`\
+`        property ``=`` ``"ConnectivitySMILES"``,`\
 `        delay ``=`` ``0.2``,`\
 `        cache ``=`` ``pubchem_smile_cache`\
 `    ``)`\

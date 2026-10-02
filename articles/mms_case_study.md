@@ -58,8 +58,25 @@ For the same reason the ChEBI variant does not query the MWB compound
 database for cross-references; it uses the ChEBI identifier it already
 has to retrieve KEGG. Normalisation, the PubChem and ClassyFire
 attribute lookups and the InChIKey skeleton grouping in Step 3 do not
-depend on which service supplied the InChIKey, so they are shared by
-both variants.
+depend on which service supplied the InChIKey, so both variants use the
+same steps. Each variant has its own lookup caches, however, so no
+response retrieved for one variant is reused by the other and the two
+workflows remain independent.
+
+The workflow for each MMS step is shown as a flow diagram, read from
+left to right. Each box names the MetMashR function used for that step
+of the workflow and summarises what it does, and its colour indicates
+the kind of step:
+
+![Legend: blue boxes are external lookups, peach boxes compute a column,
+red boxes filter records, yellow boxes merge records and green boxes
+split records.](mms_figures/mms_legend.png)
+
+Steps that use the same function in both variants are drawn once, even
+where their settings (such as the input column) differ slightly. Where
+the variants use different functions, the path splits into one row per
+variant (RefMet above, ChEBI below), with each edge labelled by
+workflow, and rejoins at the next step they have in common.
 
 ## Importing the source data
 
@@ -105,21 +122,21 @@ name-based translation.
 
 The remaining lookup and processing steps are chained into a single
 model sequence. The translation and attribute-retrieval steps use
-pre-existing `rds_cache` files with `cache_mode = "offline"`. Cached
-responses are reused; query values absent from a cache are left as `NA`.
-A live rerun requires a supported online cache mode and a writable cache
-location. These lookup caches do not, by themselves, archive the MWB
-study downloads or the separately imported Zenodo comparison file.
+pre-existing `rds_cache` files with `cache_mode = "offline"`, one per
+lookup per variant. Cached responses are reused; query values absent
+from a cache are left as `NA`. A live rerun requires a supported online
+cache mode and a writable cache location. These lookup caches do not, by
+themselves, archive the MWB study downloads or the separately imported
+Zenodo comparison file.
 
 \
-`# Function that returns an rds_cache by name. Caches for steps shared by both`\
-`# variants are keyed by name/InChIKey, not by the service that produced the`\
-`# InChIKey. The chebi_name and cts_lite caches are specific to the ChEBI variant.`\
-`cached`` ``<-`` ``function``(``name``, ``variant`` ``=`` ``FALSE``)`` ``{`\
-`    ``prefix`` ``<-`` ``if`` ``(``variant``)`` ``"mms_case_study_chebi_variant_"`` ``else`` ``"mms_case_study_"`\
+`# Function that returns the rds_cache for a lookup in one variant`\
+`# ("refmet" or "chebi"). Every lookup has a separate cache per variant so that`\
+`# the two workflows do not share any retrieved responses.`\
+`cached`` ``<-`` ``function``(``variant``, ``name``)`` ``{`\
 `    `[`rds_cache`](https://computational-metabolomics.github.io/MetMashR/reference/rds_cache.md)`(``source ``=`` `[`file.path`](https://rdrr.io/r/base/file.path.html)`(`\
 `        `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"cached"``, package ``=`` ``"MetMashR"``)``,`\
-`        `[`paste0`](https://rdrr.io/r/base/paste.html)`(``prefix``, ``name``, ``".rds"``)`\
+`        `[`paste0`](https://rdrr.io/r/base/paste.html)`(``"mms_case_study_"``, ``variant``, ``"_"``, ``name``, ``".rds"``)`\
 `    ``)``)`\
 `}`
 
@@ -222,6 +239,13 @@ tidied name before it is split; the remaining dictionaries are then
 applied to `name_tidied` (now one row per candidate name) to produce the
 final `name_normalised`.
 
+![Normalisation flow diagram: normalise_strings producing name_tidied,
+compute_column for ambiguous_name, split_records splitting name_tidied,
+and normalise_strings producing
+name_normalised.](mms_figures/mms_normalise.png)
+
+Normalisation workflow, the same in both variants.
+
 \
 `# workflow steps to apply the cleaning steps to the metabolite names`\
 `normalise_step`` ``<-`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
@@ -245,11 +269,14 @@ final `name_normalised`.
 
 ### Translation and merging (MMS Step 1)
 
-Villalba et al. used the PubChem Identifier Exchange Service and the
-Chemical Translation Service (CTS) for identifier translation. Both
-variants here use PubChem; they differ in the second service, which is
-either the Metabolomics Workbench RefMet service or ChEBI. Neither
-depends on CTS.
+Villalba et al. translated names to InChIKeys with the PubChem
+Identifier Exchange Service and the Chemical Translation Service (CTS).
+CTS has since closed, and its successor CTS-Lite cannot translate names,
+so CTS is not used for translation here. Instead, both variants pair
+PubChem with a second name-translation service: RefMet in the RefMet
+variant, and ChEBI in the ChEBI variant. CTS-Lite appears only later, in
+Step 2 of the ChEBI variant, where it retrieves attributes for an
+InChIKey that has already been found.
 
 [`pubchem_id_exchange()`](https://computational-metabolomics.github.io/MetMashR/reference/pubchem_id_exchange.md)
 and either
@@ -273,15 +300,27 @@ identical full InChIKeys. The variant-specific steps are built by a
 small helper, and the complete sequences are assembled with Reduce() at
 the end.
 
+![Step 1 flow diagram: pubchem_id_exchange, then a split into
+mwb_refmet_lookup for the RefMet variant and chebi_lookup for the ChEBI
+variant, rejoining at compute_column for ambiguous_inchikey, then
+prioritise_columns, filter_na and
+combine_records.](mms_figures/mms_step1_translation.png)
+
+MMS Step 1 workflow. The variants differ only in the second
+name-translation lookup.
+
 \
-`# query pubchem by synonym and return inchikey (shared)`\
-`pubchem_translate`` ``<-`` `[`pubchem_id_exchange`](https://computational-metabolomics.github.io/MetMashR/reference/pubchem_id_exchange.md)`(`\
-`    query_column ``=`` ``"name_normalised"``,`\
-`    input_type ``=`` ``"synonyms"``,`\
-`    output_type ``=`` ``"inchikey"``,`\
-`    cache ``=`` ``cached``(``"pubchem_id_exchange"``)``,`\
-`    cache_mode ``=`` ``"offline"`\
-`)`\
+`# query pubchem by synonym and return inchikey (same step in both variants,`\
+`# each with its own cache)`\
+`pubchem_translate`` ``<-`` ``function``(``variant``)`` ``{`\
+`    `[`pubchem_id_exchange`](https://computational-metabolomics.github.io/MetMashR/reference/pubchem_id_exchange.md)`(`\
+`        query_column ``=`` ``"name_normalised"``,`\
+`        input_type ``=`` ``"synonyms"``,`\
+`        output_type ``=`` ``"inchikey"``,`\
+`        cache ``=`` ``cached``(``variant``, ``"pubchem_id_exchange"``)``,`\
+`        cache_mode ``=`` ``"offline"`\
+`    ``)`\
+`}`\
 \
 `# flag disagreement, prioritise the second service, drop records with no`\
 `# inchikey and merge duplicates. inchikey_col is the column returned by the`\
@@ -328,11 +367,11 @@ the end.
 `# RefMet variant`\
 `translate_refmet`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
 `    `[`list`](https://rdrr.io/r/base/list.html)`(`\
-`        ``pubchem_translate``,`\
+`        ``pubchem_translate``(``"refmet"``)``,`\
 `        ``# query refmet by synonym`\
 `        `[`mwb_refmet_lookup`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_refmet_lookup.md)`(`\
 `            query_column ``=`` ``"name_normalised"``,`\
-`            cache ``=`` ``cached``(``"refmet"``)``,`\
+`            cache ``=`` ``cached``(``"refmet"``, ``"mwb_refmet"``)``,`\
 `            cache_mode ``=`` ``"offline"``,`\
 `            delay ``=`` ``0.5`\
 `        ``)`\
@@ -343,12 +382,12 @@ the end.
 `# ChEBI variant`\
 `translate_chebi`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
 `    `[`list`](https://rdrr.io/r/base/list.html)`(`\
-`        ``pubchem_translate``,`\
+`        ``pubchem_translate``(``"chebi"``)``,`\
 `        ``# query chebi by name and return a chebi accession, name and inchikey`\
 `        `[`chebi_lookup`](https://computational-metabolomics.github.io/MetMashR/reference/chebi_lookup.md)`(`\
 `            query_column ``=`` ``"name_normalised"``,`\
 `            search_by ``=`` ``"name"``,`\
-`            cache ``=`` ``cached``(``"chebi_name"``, variant ``=`` ``TRUE``)``,`\
+`            cache ``=`` ``cached``(``"chebi"``, ``"chebi_name"``)``,`\
 `            cache_mode ``=`` ``"offline"``,`\
 `            delay ``=`` ``1`\
 `        ``)`\
@@ -374,8 +413,9 @@ following attributes:
 
 - name, molecular weight, molecular formula, InChI and SMILES from
   PubChem
-- chemical ontology from ClassyFire, HMDB, ChEBI and LipidMaps
-  identifiers from Metabolomics Workbench compound database
+- chemical ontology (kingdom, superclass and class) from ClassyFire
+- HMDB, ChEBI, LipidMaps and PubChem CID identifiers from the
+  Metabolomics Workbench compound database
 - a KEGG identifier using `KEGGREST`, an R package that queries the KEGG
   API.
 
@@ -401,18 +441,29 @@ but is not built on the `rest_api` base class because CTS-Lite’s API is
 POST/batch-based (one request takes a space-separated list of queries),
 which does not fit `rest_api`’s one `GET` per query value.
 
+![Step 2 flow diagram: pubchem_property_lookup and
+classyfire_batch_lookup, then a split into mwb_compound_lookup for the
+RefMet variant and compute_column for chebi_number for the ChEBI
+variant, rejoining at kegg_lookup, followed by cts_lite_lookup for the
+ChEBI variant only.](mms_figures/mms_step2_attributes.png)
+
+MMS Step 2 workflow. The variants differ in how the ChEBI identifier for
+the KEGG lookup is obtained, and only the ChEBI variant queries
+CTS-Lite.
+
 \
-`# PubChem properties and ClassyFire classes, shared by both variants`\
-`attribute_core`` ``<-`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
+`# PubChem properties and ClassyFire classes (same steps in both variants,`\
+`# each with its own caches)`\
+`attribute_core`` ``<-`` ``function``(``variant``)`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
 `    ``# query the inchikey with pubchem and return various properties`\
 `    `[`pubchem_property_lookup`](https://computational-metabolomics.github.io/MetMashR/reference/pubchem_property_lookup.md)`(`\
 `        query_column ``=`` ``"InChIKey"``,`\
 `        search_by ``=`` ``"inchikey"``,`\
 `        property ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
 `            ``"IUPACName"``, ``"MolecularWeight"``, ``"MolecularFormula"``,`\
-`            ``"InChI"``, ``"CanonicalSMILES"``, ``"Charge"`\
+`            ``"InChI"``, ``"ConnectivitySMILES"``, ``"Charge"`\
 `        ``)``,`\
-`        cache ``=`` ``cached``(``"pubchem_property"``)``,`\
+`        cache ``=`` ``cached``(``variant``, ``"pubchem_property"``)``,`\
 `        cache_mode ``=`` ``"offline"``,`\
 `        delay ``=`` ``0.4`\
 `    ``)``,`\
@@ -422,7 +473,7 @@ which does not fit `rest_api`’s one `GET` per query value.
 `        query_column ``=`` ``"ConnectivitySMILES_pubchem"``,`\
 `        output_items ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"kingdom"``, ``"superclass"``, ``"class"``)``,`\
 `        output_fields ``=`` ``"name"``,`\
-`        cache ``=`` ``cached``(``"classyfire"``)``,`\
+`        cache ``=`` ``cached``(``variant``, ``"classyfire"``)``,`\
 `        cache_mode ``=`` ``"offline"``,`\
 `        delay ``=`` ``3`\
 `    ``)`\
@@ -430,7 +481,7 @@ which does not fit `rest_api`’s one `GET` per query value.
 \
 `# RefMet variant`\
 `attribute_step`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
-`    ``attribute_core``,`\
+`    ``attribute_core``(``"refmet"``)``,`\
 `    `[`list`](https://rdrr.io/r/base/list.html)`(`\
 `        ``# query the inchikey with MWB and return other cross reference`\
 `        ``# identifiers`\
@@ -438,7 +489,7 @@ which does not fit `rest_api`’s one `GET` per query value.
 `            input_item ``=`` ``"inchi_key"``,`\
 `            query_column ``=`` ``"InChIKey"``,`\
 `            output_item ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"hmdb_id"``, ``"chebi_id"``, ``"lm_id"``, ``"pubchem_cid"``)``,`\
-`            cache ``=`` ``cached``(``"mwb_compound"``)``,`\
+`            cache ``=`` ``cached``(``"refmet"``, ``"mwb_compound"``)``,`\
 `            cache_mode ``=`` ``"offline"``,`\
 `            delay ``=`` ``0.5`\
 `        ``)``,`\
@@ -448,7 +499,7 @@ which does not fit `rest_api`’s one `GET` per query value.
 `            get ``=`` ``"compound"``,`\
 `            from ``=`` ``"chebi"``,`\
 `            query_column ``=`` ``"chebi_id_mwb"``,`\
-`            cache ``=`` ``cached``(``"kegg"``)``,`\
+`            cache ``=`` ``cached``(``"refmet"``, ``"kegg"``)``,`\
 `            cache_mode ``=`` ``"offline"`\
 `        ``)`\
 `    ``)`\
@@ -457,7 +508,7 @@ which does not fit `rest_api`’s one `GET` per query value.
 `# ChEBI variant: no MWB lookup. The ChEBI id comes from chebi_lookup() and`\
 `# CTS-Lite is added.`\
 `attribute_step_chebi`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
-`    ``attribute_core``,`\
+`    ``attribute_core``(``"chebi"``)``,`\
 `    `[`list`](https://rdrr.io/r/base/list.html)`(`\
 `        ``# kegg_lookup() expects the bare ChEBI number, not "CHEBI:nnnn"`\
 `        `[`compute_column`](https://computational-metabolomics.github.io/MetMashR/reference/compute_column.md)`(`\
@@ -469,12 +520,12 @@ which does not fit `rest_api`’s one `GET` per query value.
 `            get ``=`` ``"compound"``,`\
 `            from ``=`` ``"chebi"``,`\
 `            query_column ``=`` ``"chebi_number"``,`\
-`            cache ``=`` ``cached``(``"kegg"``)``,`\
+`            cache ``=`` ``cached``(``"chebi"``, ``"kegg"``)``,`\
 `            cache_mode ``=`` ``"offline"`\
 `        ``)``,`\
 `        `[`cts_lite_lookup`](https://computational-metabolomics.github.io/MetMashR/reference/cts_lite_lookup.md)`(`\
 `            query_column ``=`` ``"InChIKey"``,`\
-`            cache ``=`` ``cached``(``"cts_lite"``, variant ``=`` ``TRUE``)``,`\
+`            cache ``=`` ``cached``(``"chebi"``, ``"cts_lite"``)``,`\
 `            cache_mode ``=`` ``"offline"`\
 `        ``)`\
 `    ``)`\
@@ -487,6 +538,12 @@ group records by the InChIKey 14-character skeleton, disregarding
 stereochemical distinctions. Because of this, a reported name’s D-/L-
 prefix cannot be accepted or rejected on the basis of this workflow
 alone.
+
+![Step 3 flow diagram: compute_column for inchikey_skeleton,
+combine_records by inchikey_skeleton and
+unique_records.](mms_figures/mms_step3_curation.png)
+
+MMS Step 3 workflow, the same in both variants.
 
 \
 `# create model sequence`\
@@ -595,10 +652,14 @@ PubChem CID columns, and includes the CTS-Lite columns:
 
 The published supplementary dataset is available on Zenodo
 (<doi:10.5281/zenodo.8226097>). It is imported with
-[`BiocFileCache_database()`](https://computational-metabolomics.github.io/MetMashR/reference/BiocFileCache_database.md)
-and restricted to compounds attributed to the three MWB studies. The
-original publication’s HMDB and literature sources are outside the scope
-of this vignette.
+[`zenodo_file()`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md),
+which downloads the file once and caches it locally using
+`BiocFileCache`; later builds reuse the cached copy, so an internet
+connection is only needed the first time (or set `offline = TRUE` to
+skip the check for a newer version). The table is restricted to
+compounds attributed to the three MWB studies. The original
+publication’s HMDB and literature sources are outside the scope of this
+vignette.
 
 This comparison uses the same 14-character InChIKey skeleton as the
 grouping in Step 3. A small MetMashR workflow processes the imported
@@ -607,23 +668,12 @@ full-key identity or the accuracy or completeness of the attached
 attributes.
 
 \
-`# url to the content`\
-`zenodo_url`` ``<-`` `[`paste0`](https://rdrr.io/r/base/paste.html)`(`\
-`    ``"https://zenodo.org/api/records/8226097/files/"``,`\
-`    ``"MDM_Suppl_vSubmitted.xlsx/content"`\
-`)`\
-\
-`# prepare BiocFileCache object`\
-`gold_db`` ``<-`` `[`BiocFileCache_database`](https://computational-metabolomics.github.io/MetMashR/reference/BiocFileCache_database.md)`(`\
-`    source ``=`` ``zenodo_url``,`\
-`    resource_name ``=`` ``"MMS_zenodo_suppl"``,`\
-`    bfc_fun ``=`` ``cache_as_is``,`\
+`# supplementary file from the Zenodo record, cached with BiocFileCache`\
+`gold_db`` ``<-`` `[`zenodo_file`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md)`(`\
+`    record_id ``=`` ``8226097``,`\
+`    file_name ``=`` ``"MDM_Suppl_vSubmitted.xlsx"``,`\
 `    import_fun ``=`` ``function``(``path``)`` ``{`\
-`        ``# the Zenodo API URL has no .xlsx extension; openxlsx needs one`\
-`        ``tmp`` ``<-`` `[`tempfile`](https://rdrr.io/r/base/tempfile.html)`(``fileext ``=`` ``".xlsx"``)`\
-`        `[`file.copy`](https://rdrr.io/r/base/files.html)`(``path``, ``tmp``, overwrite ``=`` ``TRUE``)`\
-`        `[`on.exit`](https://rdrr.io/r/base/on.exit.html)`(`[`unlink`](https://rdrr.io/r/base/unlink.html)`(``tmp``)``)`\
-`        ``openxlsx``::`[`read.xlsx`](https://rdrr.io/pkg/openxlsx/man/read.xlsx.html)`(``tmp``, sheet ``=`` ``"Table S3"``, colNames ``=`` ``TRUE``)`\
+`        ``openxlsx``::`[`read.xlsx`](https://rdrr.io/pkg/openxlsx/man/read.xlsx.html)`(``path``, sheet ``=`` ``"Table S3"``, colNames ``=`` ``TRUE``)`\
 `    ``}`\
 `)`\
 \
@@ -674,12 +724,15 @@ The table below summarises how each variant overlaps with it.
 
 The two variants share 291 of their combined 386 skeletons, with 38 only
 in the RefMet variant and 57 only in the ChEBI + CTS-Lite variant.
-Comparing the two rows above indicates how much the choice of
-translation service affects the final overlap with the published result,
-and how much of that should be attributed to genuine differences rather
-than the RefMet/MWB circularity concern described in the introduction.
-Overlap indicates agreement in skeleton membership, but does not
-establish stereochemical equivalence or validate the attached
+Comparing the two rows above shows how much the choice of translation
+service changes the overlap with the published result. It does not, on
+its own, show how much of the RefMet variant’s agreement is due to the
+RefMet/MWB circularity described in the introduction: a lower overlap
+for the ChEBI variant could reflect that circularity, but could equally
+reflect ChEBI recognising fewer of the names used in these studies.
+Separating the two requires inspecting the records that only one variant
+matched. Overlap indicates agreement in skeleton membership, but does
+not establish stereochemical equivalence or validate the attached
 identifiers.
 
 The causes of the remaining differences are not established by the
@@ -701,23 +754,29 @@ responses, and the effects of normalisation and grouping.
 - **Inspectable grouping rules**. The first-14-character grouping rule
   is explicit in the code, making this implementation’s treatment of
   structural detail visible and testable.
-- **Targeted ambiguity flag**. The `ambiguous_inchikey` column
-  identifies a specific disagreement between RefMet and PubChem results.
-  It does not reconstruct the original publication’s curation decisions
-  or flag every ambiguity introduced by the workflow.
+- **Targeted ambiguity flag**. The `ambiguous_inchikey` column flags
+  records where the second translation service (RefMet or ChEBI) and
+  PubChem return InChIKeys with the same skeleton but different
+  stereochemical or isotopic layers, and records that Step 3 merged
+  despite having different full InChIKeys. It does not reconstruct the
+  original publication’s curation decisions or flag every ambiguity
+  introduced by the workflow.
 - **Explicit source preference**.
   [`prioritise_columns()`](https://computational-metabolomics.github.io/MetMashR/reference/prioritise_columns.md)
-  specifies that RefMet takes priority over PubChem and records the
-  selected source. Source-specific lookup results are also retained as
-  columns for inspection.
+  specifies that the second service (RefMet or ChEBI) takes priority
+  over PubChem and records the selected source. Source-specific lookup
+  results are also retained as columns for inspection.
 - **Swappable translation source**. Replacing
   [`mwb_refmet_lookup()`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_refmet_lookup.md)
   with
   [`chebi_lookup()`](https://computational-metabolomics.github.io/MetMashR/reference/chebi_lookup.md)
-  required no change to Steps 2 or 3, which are built around the
-  resulting `InChIKey` rather than the service that produced it.
-  Differences between the two variants are therefore attributable to the
-  translation-service swap and the CTS-Lite augmentation.
+  required no change to the PubChem and ClassyFire lookup steps or to
+  Step 3, which are built around the resulting `InChIKey` rather than
+  the service that produced it. Of the steps that differ, only
+  translation affects which records are kept; the Step 2 differences
+  (dropping the MWB compound lookup, adding CTS-Lite) only change which
+  attributes are attached. Differences in the skeletons each variant
+  reports therefore come from the translation-service swap alone.
 - **Extending beyond the built-in REST API classes**. CTS-Lite’s
   batch/POST API does not fit the `rest_api` base class, so
   [`cts_lite_lookup()`](https://computational-metabolomics.github.io/MetMashR/reference/cts_lite_lookup.md)

@@ -152,8 +152,20 @@ annotation counts.</li>
 database for cross-references; it uses the ChEBI identifier it already
 has to retrieve KEGG. Normalisation, the PubChem and ClassyFire
 attribute lookups and the InChIKey skeleton grouping in Step 3 do not
-depend on which service supplied the InChIKey, so they are shared by
-both variants.</p>
+depend on which service supplied the InChIKey, so both variants use the
+same steps. Each variant has its own lookup caches, however, so no
+response retrieved for one variant is reused by the other and the two
+workflows remain independent.</p>
+<p>The workflow for each MMS step is shown as a flow diagram, read from
+left to right. Each box names the MetMashR function used for that step
+of the workflow and summarises what it does, and its colour indicates
+the kind of step:</p>
+<p><img src="mms_figures/mms_legend.png" class="r-plt" alt="Legend: blue boxes are external lookups, peach boxes compute a column, red boxes filter records, yellow boxes merge records and green boxes split records." width="100%" style="display: block; margin: auto;"></p>
+<p>Steps that use the same function in both variants are drawn once,
+even where their settings (such as the input column) differ slightly.
+Where the variants use different functions, the path splits into one row
+per variant (RefMet above, ChEBI below), with each edge labelled by
+workflow, and rejoins at the next step they have in common.</p>
 </div>
 <div class="section level2">
 <h2 id="importing-the-source-data">Importing the source data<a class="anchor" aria-label="anchor" href="#importing-the-source-data"></a>
@@ -193,25 +205,25 @@ available, are excluded to test the name-based translation.</p>
 <span><span class="co">#&gt; [1] 738</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="step1">Building the model sequence<a class="anchor" aria-label="anchor" href="#step1"></a>
+<h2 id="building-the-model-sequence">Building the model sequence<a class="anchor" aria-label="anchor" href="#building-the-model-sequence"></a>
 </h2>
 <p>The remaining lookup and processing steps are chained into a single
 model sequence. The translation and attribute-retrieval steps use
 pre-existing <code>rds_cache</code> files with
-<code>cache_mode = "offline"</code>. Cached responses are reused; query
-values absent from a cache are left as <code>NA</code>. A live rerun
-requires a supported online cache mode and a writable cache location.
-These lookup caches do not, by themselves, archive the MWB study
-downloads or the separately imported Zenodo comparison file.</p>
+<code>cache_mode = "offline"</code>, one per lookup per variant. Cached
+responses are reused; query values absent from a cache are left as
+<code>NA</code>. A live rerun requires a supported online cache mode and
+a writable cache location. These lookup caches do not, by themselves,
+archive the MWB study downloads or the separately imported Zenodo
+comparison file.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Function that returns an rds_cache by name. Caches for steps shared by both</span></span>
-<span><span class="co"># variants are keyed by name/InChIKey, not by the service that produced the</span></span>
-<span><span class="co"># InChIKey. The chebi_name and cts_lite caches are specific to the ChEBI variant.</span></span>
-<span><span class="va">cached</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">name</span>, <span class="va">variant</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">prefix</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">variant</span><span class="op">)</span> <span class="st">"mms_case_study_chebi_variant_"</span> <span class="kw">else</span> <span class="st">"mms_case_study_"</span></span>
+<code class="sourceCode R"><span><span class="co"># Function that returns the rds_cache for a lookup in one variant</span></span>
+<span><span class="co"># ("refmet" or "chebi"). Every lookup has a separate cache per variant so that</span></span>
+<span><span class="co"># the two workflows do not share any retrieved responses.</span></span>
+<span><span class="va">cached</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">variant</span>, <span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/rds_cache.html">rds_cache</a></span><span class="op">(</span>source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="va">name</span>, <span class="st">".rds"</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"mms_case_study_"</span>, <span class="va">variant</span>, <span class="st">"_"</span>, <span class="va">name</span>, <span class="st">".rds"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="section level3">
@@ -315,6 +327,11 @@ first, on its own, so <code>ambiguous_name_step</code> and
 before it is split; the remaining dictionaries are then applied to
 <code>name_tidied</code> (now one row per candidate name) to produce the
 final <code>name_normalised</code>.</p>
+<div class="figure" style="text-align: center">
+<img src="mms_figures/mms_normalise.png" class="r-plt" alt="Normalisation flow diagram: normalise_strings producing name_tidied, compute_column for ambiguous_name, split_records splitting name_tidied, and normalise_strings producing name_normalised." width="100%"><p class="caption">
+Normalisation workflow, the same in both variants.
+</p>
+</div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># workflow steps to apply the cleaning steps to the metabolite names</span></span>
 <span><span class="va">normalise_step</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -339,11 +356,14 @@ final <code>name_normalised</code>.</p>
 <div class="section level3">
 <h3 id="translation-and-merging-mms-step-1">Translation and merging (MMS Step 1)<a class="anchor" aria-label="anchor" href="#translation-and-merging-mms-step-1"></a>
 </h3>
-<p>Villalba et al. used the PubChem Identifier Exchange Service and the
-Chemical Translation Service (CTS) for identifier translation. Both
-variants here use PubChem; they differ in the second service, which is
-either the Metabolomics Workbench RefMet service or ChEBI. Neither
-depends on CTS.</p>
+<p>Villalba et al. translated names to InChIKeys with the PubChem
+Identifier Exchange Service and the Chemical Translation Service (CTS).
+CTS has since closed, and its successor CTS-Lite cannot translate names,
+so CTS is not used for translation here. Instead, both variants pair
+PubChem with a second name-translation service: RefMet in the RefMet
+variant, and ChEBI in the ChEBI variant. CTS-Lite appears only later, in
+Step 2 of the ChEBI variant, where it retrieves attributes for an
+InChIKey that has already been found.</p>
 <p><code><a href="../reference/pubchem_id_exchange.html">pubchem_id_exchange()</a></code> and either
 <code><a href="../reference/mwb_refmet_lookup.html">mwb_refmet_lookup()</a></code> or <code><a href="../reference/chebi_lookup.html">chebi_lookup()</a></code> attempt
 a match for each normalised name using the supplied caches.
@@ -361,15 +381,24 @@ the returned InChIKeys for review, exclude records with no selected
 InChIKey, and merge records with identical full InChIKeys. The
 variant-specific steps are built by a small helper, and the complete
 sequences are assembled with Reduce() at the end.</p>
+<div class="figure" style="text-align: center">
+<img src="mms_figures/mms_step1_translation.png" class="r-plt" alt="Step 1 flow diagram: pubchem_id_exchange, then a split into mwb_refmet_lookup for the RefMet variant and chebi_lookup for the ChEBI variant, rejoining at compute_column for ambiguous_inchikey, then prioritise_columns, filter_na and combine_records." width="100%"><p class="caption">
+MMS Step 1 workflow. The variants differ only in the second
+name-translation lookup.
+</p>
+</div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># query pubchem by synonym and return inchikey (shared)</span></span>
-<span><span class="va">pubchem_translate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pubchem_id_exchange.html">pubchem_id_exchange</a></span><span class="op">(</span></span>
-<span>    query_column <span class="op">=</span> <span class="st">"name_normalised"</span>,</span>
-<span>    input_type <span class="op">=</span> <span class="st">"synonyms"</span>,</span>
-<span>    output_type <span class="op">=</span> <span class="st">"inchikey"</span>,</span>
-<span>    cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"pubchem_id_exchange"</span><span class="op">)</span>,</span>
-<span>    cache_mode <span class="op">=</span> <span class="st">"offline"</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># query pubchem by synonym and return inchikey (same step in both variants,</span></span>
+<span><span class="co"># each with its own cache)</span></span>
+<span><span class="va">pubchem_translate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">variant</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="../reference/pubchem_id_exchange.html">pubchem_id_exchange</a></span><span class="op">(</span></span>
+<span>        query_column <span class="op">=</span> <span class="st">"name_normalised"</span>,</span>
+<span>        input_type <span class="op">=</span> <span class="st">"synonyms"</span>,</span>
+<span>        output_type <span class="op">=</span> <span class="st">"inchikey"</span>,</span>
+<span>        cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="va">variant</span>, <span class="st">"pubchem_id_exchange"</span><span class="op">)</span>,</span>
+<span>        cache_mode <span class="op">=</span> <span class="st">"offline"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># flag disagreement, prioritise the second service, drop records with no</span></span>
 <span><span class="co"># inchikey and merge duplicates. inchikey_col is the column returned by the</span></span>
@@ -416,11 +445,11 @@ sequences are assembled with Reduce() at the end.</p>
 <span><span class="co"># RefMet variant</span></span>
 <span><span class="va">translate_refmet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="va">pubchem_translate</span>,</span>
+<span>        <span class="fu">pubchem_translate</span><span class="op">(</span><span class="st">"refmet"</span><span class="op">)</span>,</span>
 <span>        <span class="co"># query refmet by synonym</span></span>
 <span>        <span class="fu"><a href="../reference/mwb_refmet_lookup.html">mwb_refmet_lookup</a></span><span class="op">(</span></span>
 <span>            query_column <span class="op">=</span> <span class="st">"name_normalised"</span>,</span>
-<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"refmet"</span><span class="op">)</span>,</span>
+<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"refmet"</span>, <span class="st">"mwb_refmet"</span><span class="op">)</span>,</span>
 <span>            cache_mode <span class="op">=</span> <span class="st">"offline"</span>,</span>
 <span>            delay <span class="op">=</span> <span class="fl">0.5</span></span>
 <span>        <span class="op">)</span></span>
@@ -431,12 +460,12 @@ sequences are assembled with Reduce() at the end.</p>
 <span><span class="co"># ChEBI variant</span></span>
 <span><span class="va">translate_chebi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="va">pubchem_translate</span>,</span>
+<span>        <span class="fu">pubchem_translate</span><span class="op">(</span><span class="st">"chebi"</span><span class="op">)</span>,</span>
 <span>        <span class="co"># query chebi by name and return a chebi accession, name and inchikey</span></span>
 <span>        <span class="fu"><a href="../reference/chebi_lookup.html">chebi_lookup</a></span><span class="op">(</span></span>
 <span>            query_column <span class="op">=</span> <span class="st">"name_normalised"</span>,</span>
 <span>            search_by <span class="op">=</span> <span class="st">"name"</span>,</span>
-<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"chebi_name"</span>, variant <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"chebi"</span>, <span class="st">"chebi_name"</span><span class="op">)</span>,</span>
 <span>            cache_mode <span class="op">=</span> <span class="st">"offline"</span>,</span>
 <span>            delay <span class="op">=</span> <span class="fl">1</span></span>
 <span>        <span class="op">)</span></span>
@@ -460,8 +489,10 @@ following attributes:</p>
 <ul>
 <li>name, molecular weight, molecular formula, InChI and SMILES from
 PubChem</li>
-<li>chemical ontology from ClassyFire, HMDB, ChEBI and LipidMaps
-identifiers from Metabolomics Workbench compound database</li>
+<li>chemical ontology (kingdom, superclass and class) from
+ClassyFire</li>
+<li>HMDB, ChEBI, LipidMaps and PubChem CID identifiers from the
+Metabolomics Workbench compound database</li>
 <li>a KEGG identifier using <code>KEGGREST</code>, an R package that
 queries the KEGG API.</li>
 </ul>
@@ -483,18 +514,26 @@ lookups, but is not built on the <code>rest_api</code> base class
 because CTS-Lite’s API is POST/batch-based (one request takes a
 space-separated list of queries), which does not fit
 <code>rest_api</code>’s one <code>GET</code> per query value.</p>
+<div class="figure" style="text-align: center">
+<img src="mms_figures/mms_step2_attributes.png" class="r-plt" alt="Step 2 flow diagram: pubchem_property_lookup and classyfire_batch_lookup, then a split into mwb_compound_lookup for the RefMet variant and compute_column for chebi_number for the ChEBI variant, rejoining at kegg_lookup, followed by cts_lite_lookup for the ChEBI variant only." width="100%"><p class="caption">
+MMS Step 2 workflow. The variants differ in how the ChEBI identifier for
+the KEGG lookup is obtained, and only the ChEBI variant queries
+CTS-Lite.
+</p>
+</div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># PubChem properties and ClassyFire classes, shared by both variants</span></span>
-<span><span class="va">attribute_core</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># PubChem properties and ClassyFire classes (same steps in both variants,</span></span>
+<span><span class="co"># each with its own caches)</span></span>
+<span><span class="va">attribute_core</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">variant</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="co"># query the inchikey with pubchem and return various properties</span></span>
 <span>    <span class="fu"><a href="../reference/pubchem_property_lookup.html">pubchem_property_lookup</a></span><span class="op">(</span></span>
 <span>        query_column <span class="op">=</span> <span class="st">"InChIKey"</span>,</span>
 <span>        search_by <span class="op">=</span> <span class="st">"inchikey"</span>,</span>
 <span>        property <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>            <span class="st">"IUPACName"</span>, <span class="st">"MolecularWeight"</span>, <span class="st">"MolecularFormula"</span>,</span>
-<span>            <span class="st">"InChI"</span>, <span class="st">"CanonicalSMILES"</span>, <span class="st">"Charge"</span></span>
+<span>            <span class="st">"InChI"</span>, <span class="st">"ConnectivitySMILES"</span>, <span class="st">"Charge"</span></span>
 <span>        <span class="op">)</span>,</span>
-<span>        cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"pubchem_property"</span><span class="op">)</span>,</span>
+<span>        cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="va">variant</span>, <span class="st">"pubchem_property"</span><span class="op">)</span>,</span>
 <span>        cache_mode <span class="op">=</span> <span class="st">"offline"</span>,</span>
 <span>        delay <span class="op">=</span> <span class="fl">0.4</span></span>
 <span>    <span class="op">)</span>,</span>
@@ -504,7 +543,7 @@ space-separated list of queries), which does not fit
 <span>        query_column <span class="op">=</span> <span class="st">"ConnectivitySMILES_pubchem"</span>,</span>
 <span>        output_items <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"kingdom"</span>, <span class="st">"superclass"</span>, <span class="st">"class"</span><span class="op">)</span>,</span>
 <span>        output_fields <span class="op">=</span> <span class="st">"name"</span>,</span>
-<span>        cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"classyfire"</span><span class="op">)</span>,</span>
+<span>        cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="va">variant</span>, <span class="st">"classyfire"</span><span class="op">)</span>,</span>
 <span>        cache_mode <span class="op">=</span> <span class="st">"offline"</span>,</span>
 <span>        delay <span class="op">=</span> <span class="fl">3</span></span>
 <span>    <span class="op">)</span></span>
@@ -512,7 +551,7 @@ space-separated list of queries), which does not fit
 <span></span>
 <span><span class="co"># RefMet variant</span></span>
 <span><span class="va">attribute_step</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">attribute_core</span>,</span>
+<span>    <span class="fu">attribute_core</span><span class="op">(</span><span class="st">"refmet"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="co"># query the inchikey with MWB and return other cross reference</span></span>
 <span>        <span class="co"># identifiers</span></span>
@@ -520,7 +559,7 @@ space-separated list of queries), which does not fit
 <span>            input_item <span class="op">=</span> <span class="st">"inchi_key"</span>,</span>
 <span>            query_column <span class="op">=</span> <span class="st">"InChIKey"</span>,</span>
 <span>            output_item <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hmdb_id"</span>, <span class="st">"chebi_id"</span>, <span class="st">"lm_id"</span>, <span class="st">"pubchem_cid"</span><span class="op">)</span>,</span>
-<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"mwb_compound"</span><span class="op">)</span>,</span>
+<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"refmet"</span>, <span class="st">"mwb_compound"</span><span class="op">)</span>,</span>
 <span>            cache_mode <span class="op">=</span> <span class="st">"offline"</span>,</span>
 <span>            delay <span class="op">=</span> <span class="fl">0.5</span></span>
 <span>        <span class="op">)</span>,</span>
@@ -530,7 +569,7 @@ space-separated list of queries), which does not fit
 <span>            get <span class="op">=</span> <span class="st">"compound"</span>,</span>
 <span>            from <span class="op">=</span> <span class="st">"chebi"</span>,</span>
 <span>            query_column <span class="op">=</span> <span class="st">"chebi_id_mwb"</span>,</span>
-<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"kegg"</span><span class="op">)</span>,</span>
+<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"refmet"</span>, <span class="st">"kegg"</span><span class="op">)</span>,</span>
 <span>            cache_mode <span class="op">=</span> <span class="st">"offline"</span></span>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
@@ -539,7 +578,7 @@ space-separated list of queries), which does not fit
 <span><span class="co"># ChEBI variant: no MWB lookup. The ChEBI id comes from chebi_lookup() and</span></span>
 <span><span class="co"># CTS-Lite is added.</span></span>
 <span><span class="va">attribute_step_chebi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">attribute_core</span>,</span>
+<span>    <span class="fu">attribute_core</span><span class="op">(</span><span class="st">"chebi"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="co"># kegg_lookup() expects the bare ChEBI number, not "CHEBI:nnnn"</span></span>
 <span>        <span class="fu"><a href="../reference/compute_column.html">compute_column</a></span><span class="op">(</span></span>
@@ -551,12 +590,12 @@ space-separated list of queries), which does not fit
 <span>            get <span class="op">=</span> <span class="st">"compound"</span>,</span>
 <span>            from <span class="op">=</span> <span class="st">"chebi"</span>,</span>
 <span>            query_column <span class="op">=</span> <span class="st">"chebi_number"</span>,</span>
-<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"kegg"</span><span class="op">)</span>,</span>
+<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"chebi"</span>, <span class="st">"kegg"</span><span class="op">)</span>,</span>
 <span>            cache_mode <span class="op">=</span> <span class="st">"offline"</span></span>
 <span>        <span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="../reference/cts_lite_lookup.html">cts_lite_lookup</a></span><span class="op">(</span></span>
 <span>            query_column <span class="op">=</span> <span class="st">"InChIKey"</span>,</span>
-<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"cts_lite"</span>, variant <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>            cache <span class="op">=</span> <span class="fu">cached</span><span class="op">(</span><span class="st">"chebi"</span>, <span class="st">"cts_lite"</span><span class="op">)</span>,</span>
 <span>            cache_mode <span class="op">=</span> <span class="st">"offline"</span></span>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
@@ -570,6 +609,11 @@ we group records by the InChIKey 14-character skeleton, disregarding
 stereochemical distinctions. Because of this, a reported name’s D-/L-
 prefix cannot be accepted or rejected on the basis of this workflow
 alone.</p>
+<div class="figure" style="text-align: center">
+<img src="mms_figures/mms_step3_curation.png" class="r-plt" alt="Step 3 flow diagram: compute_column for inchikey_skeleton, combine_records by inchikey_skeleton and unique_records." width="100%"><p class="caption">
+MMS Step 3 workflow, the same in both variants.
+</p>
+</div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create model sequence</span></span>
 <span><span class="va">curation_step</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -673,38 +717,31 @@ PubChem CID columns, and includes the CTS-Lite columns:</p>
 <span><span class="op">)</span></span>
 <span><span class="fu">.DT</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result_chebi</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="va">chebi_cols</span><span class="op">]</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"data":[["Quinic acid","Galacturonate","2-Hydroxybutyrate","L-Isoleucine","Ornithine","Cortisol 21-Acetate","4-Aminobenzoate","Tetrahydrocortisol","Tryptamine","2-Methylglutarate"],["AAWZDTNXLSGCEK-WYWMIBKRSA-N","AEMOLEFTQBMNLQ-BKBMJHBISA-M","AFENDNXGAFYKQO-GSVOUGTGSA-M","AGPKZVBTJJNPAG-WHFBIAKZSA-N","AHLPHDHHMVZTML-UHFFFAOYSA-N","ALEXXDVDDISNDU-JZYPGELDSA-N","ALYNCZNDIQEVRV-UHFFFAOYSA-M","AODPIQQILQLWGS-GXBDJPPSSA-N","APJYDQYYACXCRM-UHFFFAOYSA-N","AQYCMVICBNBXNA-UHFFFAOYSA-L"],["NA","(2S,3R,4S,5R,6S)-3,4,5,6-tetrahydroxyoxane-2-carboxylate","(2R)-2-hydroxybutanoate","(2S,3S)-2-amino-3-methylpentanoic acid","2,5-diaminopentanoic acid","[2-[(8S,9S,10R,11S,13S,14S,17R)-11,17-dihydroxy-10,13-dimethyl-3-oxo-2,6,7,8,9,11,12,14,15,16-decahydro-1H-cyclopenta[a]phenanthren-17-yl]-2-oxoethyl] acetate","4-aminobenzoate","2-hydroxy-1-[(3R,5R,8S,9S,10S,11S,13S,14S,17R)-3,11,17-trihydroxy-10,13-dimethyl-1,2,3,4,5,6,7,8,9,11,12,14,15,16-tetradecahydrocyclopenta[a]phenanthren-17-yl]ethanone","2-(1H-indol-3-yl)ethanamine","2-methylpentanedioate"],["NA","C6H9O7-","C4H7O3-","C6H13NO2","C5H12N2O2","C23H32O6","C7H6NO2-","C21H34O5","C10H12N2","C6H8O4-2"],["NA","193.13","103.10","131.17","132.16","404.5","136.13","366.5","160.22","144.12"],["CHEBI:17521","CHEBI:58658","CHEBI:232384","CHEBI:17191","CHEBI:18257","CHEBI:17609","CHEBI:17836","CHEBI:28320","CHEBI:16765","CHEBI:84980"],["C00296","NA","NA","C00407","C01602","C02821","NA","C05472","C00398","NA"],["NA","NA","NA","Organic compounds","Organic compounds","Organic compounds","NA","Organic compounds","Organic compounds","NA"],["NA","NA","NA","Organic acids and derivatives","Organic acids and derivatives","Lipids and lipid-like molecules","NA","Lipids and lipid-like molecules","Organoheterocyclic compounds","NA"],["NA","NA","NA","Carboxylic acids and derivatives","Carboxylic acids and derivatives","Steroids and steroid derivatives","NA","Steroids and steroid derivatives","Indoles and derivatives","NA"],["Quinate","alpha-D-galacturonate","(R)-2-hydroxybutanoate","L-Isoleucine","2,5-Diaminopentanoic Acid","Hydrocortisone Acetate","4-Aminobenzoate","Tetrahydrocortisol","Tryptamine","2-Methylpentanedioate"],["14","4","3","17","9","15","11","9","17","5"],[true,false,true,false,true,false,false,false,false,false],[false,false,false,false,false,false,false,false,false,false],["ST001039","ST001048 || ST001317","ST001048 || ST001317","ST001317","ST001039 || ST001048","ST001048","ST001048","ST001039","ST001039 || ST001048","ST001048 || ST001317"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>metabolite_name<\/th>\n      <th>InChIKey<\/th>\n      <th>IUPACName_pubchem<\/th>\n      <th>MolecularFormula_pubchem<\/th>\n      <th>MolecularWeight_pubchem<\/th>\n      <th>chebi_id_chebi<\/th>\n      <th>compound_kegg<\/th>\n      <th>kingdom.name_cfb<\/th>\n      <th>superclass.name_cfb<\/th>\n      <th>class.name_cfb<\/th>\n      <th>compound_name_cts<\/th>\n      <th>annotation_type_count_cts<\/th>\n      <th>ambiguous_inchikey<\/th>\n      <th>ambiguous_name<\/th>\n      <th>source<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"pageLength":10,"dom":"ftip","columnDefs":[{"name":"metabolite_name","targets":0},{"name":"InChIKey","targets":1},{"name":"IUPACName_pubchem","targets":2},{"name":"MolecularFormula_pubchem","targets":3},{"name":"MolecularWeight_pubchem","targets":4},{"name":"chebi_id_chebi","targets":5},{"name":"compound_kegg","targets":6},{"name":"kingdom.name_cfb","targets":7},{"name":"superclass.name_cfb","targets":8},{"name":"class.name_cfb","targets":9},{"name":"compound_name_cts","targets":10},{"name":"annotation_type_count_cts","targets":11},{"name":"ambiguous_inchikey","targets":12},{"name":"ambiguous_name","targets":13},{"name":"source","targets":14}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"data":[["Quinic acid","Galacturonate","2-Hydroxybutyrate","L-Isoleucine","Ornithine","Cortisol 21-Acetate","4-Aminobenzoate","Tetrahydrocortisol","Tryptamine","2-Methylglutarate"],["AAWZDTNXLSGCEK-WYWMIBKRSA-N","AEMOLEFTQBMNLQ-BKBMJHBISA-M","AFENDNXGAFYKQO-GSVOUGTGSA-M","AGPKZVBTJJNPAG-WHFBIAKZSA-N","AHLPHDHHMVZTML-UHFFFAOYSA-N","ALEXXDVDDISNDU-JZYPGELDSA-N","ALYNCZNDIQEVRV-UHFFFAOYSA-M","AODPIQQILQLWGS-GXBDJPPSSA-N","APJYDQYYACXCRM-UHFFFAOYSA-N","AQYCMVICBNBXNA-UHFFFAOYSA-L"],["NA","(2S,3R,4S,5R,6S)-3,4,5,6-tetrahydroxyoxane-2-carboxylate","(2R)-2-hydroxybutanoate","(2S,3S)-2-amino-3-methylpentanoic acid","2,5-diaminopentanoic acid","[2-[(8S,9S,10R,11S,13S,14S,17R)-11,17-dihydroxy-10,13-dimethyl-3-oxo-2,6,7,8,9,11,12,14,15,16-decahydro-1H-cyclopenta[a]phenanthren-17-yl]-2-oxoethyl] acetate","4-aminobenzoate","2-hydroxy-1-[(3R,5R,8S,9S,10S,11S,13S,14S,17R)-3,11,17-trihydroxy-10,13-dimethyl-1,2,3,4,5,6,7,8,9,11,12,14,15,16-tetradecahydrocyclopenta[a]phenanthren-17-yl]ethanone","2-(1H-indol-3-yl)ethanamine","2-methylpentanedioate"],["NA","C6H9O7-","C4H7O3-","C6H13NO2","C5H12N2O2","C23H32O6","C7H6NO2-","C21H34O5","C10H12N2","C6H8O4-2"],["NA","193.13","103.10","131.17","132.16","404.5","136.13","366.5","160.22","144.12"],["CHEBI:17521","CHEBI:58658","CHEBI:232384","CHEBI:17191","CHEBI:18257","CHEBI:17609","CHEBI:17836","CHEBI:28320","CHEBI:16765","CHEBI:84980"],["C00296","NA","NA","C00407","C01602","C02821","C00568","C05472","C00398","NA"],["NA","Organic compounds","Organic compounds","Organic compounds","Organic compounds","Organic compounds","Organic compounds","Organic compounds","Organic compounds","Organic compounds"],["NA","Organic oxygen compounds","Lipids and lipid-like molecules","Organic acids and derivatives","Organic acids and derivatives","Lipids and lipid-like molecules","Benzenoids","Lipids and lipid-like molecules","Organoheterocyclic compounds","Lipids and lipid-like molecules"],["NA","Organooxygen compounds","Fatty Acyls","Carboxylic acids and derivatives","Carboxylic acids and derivatives","Steroids and steroid derivatives","Benzene and substituted derivatives","Steroids and steroid derivatives","Indoles and derivatives","Fatty Acyls"],["Quinate","alpha-D-galacturonate","(R)-2-hydroxybutanoate","L-Isoleucine","2,5-Diaminopentanoic Acid","Hydrocortisone Acetate","4-Aminobenzoate","Tetrahydrocortisol","Tryptamine","2-Methylpentanedioate"],["14","4","3","17","9","15","11","9","17","5"],[true,false,true,false,true,false,false,false,false,false],[false,false,false,false,false,false,false,false,false,false],["ST001039","ST001048 || ST001317","ST001048 || ST001317","ST001317","ST001039 || ST001048","ST001048","ST001048","ST001039","ST001039 || ST001048","ST001048 || ST001317"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>metabolite_name<\/th>\n      <th>InChIKey<\/th>\n      <th>IUPACName_pubchem<\/th>\n      <th>MolecularFormula_pubchem<\/th>\n      <th>MolecularWeight_pubchem<\/th>\n      <th>chebi_id_chebi<\/th>\n      <th>compound_kegg<\/th>\n      <th>kingdom.name_cfb<\/th>\n      <th>superclass.name_cfb<\/th>\n      <th>class.name_cfb<\/th>\n      <th>compound_name_cts<\/th>\n      <th>annotation_type_count_cts<\/th>\n      <th>ambiguous_inchikey<\/th>\n      <th>ambiguous_name<\/th>\n      <th>source<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"pageLength":10,"dom":"ftip","columnDefs":[{"name":"metabolite_name","targets":0},{"name":"InChIKey","targets":1},{"name":"IUPACName_pubchem","targets":2},{"name":"MolecularFormula_pubchem","targets":3},{"name":"MolecularWeight_pubchem","targets":4},{"name":"chebi_id_chebi","targets":5},{"name":"compound_kegg","targets":6},{"name":"kingdom.name_cfb","targets":7},{"name":"superclass.name_cfb","targets":8},{"name":"class.name_cfb","targets":9},{"name":"compound_name_cts","targets":10},{"name":"annotation_type_count_cts","targets":11},{"name":"ambiguous_inchikey","targets":12},{"name":"ambiguous_name","targets":13},{"name":"source","targets":14}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level2">
 <h2 id="comparison-against-the-published-result">Comparison against the published result<a class="anchor" aria-label="anchor" href="#comparison-against-the-published-result"></a>
 </h2>
 <p>The published supplementary dataset is available on Zenodo (<a href="doi:10.5281/zenodo.8226097" class="uri">doi:10.5281/zenodo.8226097</a>). It is imported with
-<code><a href="../reference/BiocFileCache_database.html">BiocFileCache_database()</a></code> and restricted to compounds
-attributed to the three MWB studies. The original publication’s HMDB and
-literature sources are outside the scope of this vignette.</p>
+<code><a href="../reference/zenodo_file.html">zenodo_file()</a></code>, which downloads the file once and caches it
+locally using <code>BiocFileCache</code>; later builds reuse the cached
+copy, so an internet connection is only needed the first time (or set
+<code>offline = TRUE</code> to skip the check for a newer version). The
+table is restricted to compounds attributed to the three MWB studies.
+The original publication’s HMDB and literature sources are outside the
+scope of this vignette.</p>
 <p>This comparison uses the same 14-character InChIKey skeleton as the
 grouping in Step 3. A small MetMashR workflow processes the imported
 data before comparison. We only evaluate skeleton membership, not
 full-key identity or the accuracy or completeness of the attached
 attributes.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># url to the content</span></span>
-<span><span class="va">zenodo_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>    <span class="st">"https://zenodo.org/api/records/8226097/files/"</span>,</span>
-<span>    <span class="st">"MDM_Suppl_vSubmitted.xlsx/content"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># prepare BiocFileCache object</span></span>
-<span><span class="va">gold_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BiocFileCache_database.html">BiocFileCache_database</a></span><span class="op">(</span></span>
-<span>    source <span class="op">=</span> <span class="va">zenodo_url</span>,</span>
-<span>    resource_name <span class="op">=</span> <span class="st">"MMS_zenodo_suppl"</span>,</span>
-<span>    bfc_fun <span class="op">=</span> <span class="va">cache_as_is</span>,</span>
+<code class="sourceCode R"><span><span class="co"># supplementary file from the Zenodo record, cached with BiocFileCache</span></span>
+<span><span class="va">gold_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/zenodo_file.html">zenodo_file</a></span><span class="op">(</span></span>
+<span>    record_id <span class="op">=</span> <span class="fl">8226097</span>,</span>
+<span>    file_name <span class="op">=</span> <span class="st">"MDM_Suppl_vSubmitted.xlsx"</span>,</span>
 <span>    import_fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="co"># the Zenodo API URL has no .xlsx extension; openxlsx needs one</span></span>
-<span>        <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".xlsx"</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="va">path</span>, <span class="va">tmp</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/on.exit.html" class="external-link">on.exit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html" class="external-link">read.xlsx</a></span><span class="op">(</span><span class="va">tmp</span>, sheet <span class="op">=</span> <span class="st">"Table S3"</span>, colNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>        <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html" class="external-link">read.xlsx</a></span><span class="op">(</span><span class="va">path</span>, sheet <span class="op">=</span> <span class="st">"Table S3"</span>, colNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -748,19 +785,22 @@ attributes.</p>
 <p><img src="mms_case_study_files/figure-html/comparison-1.png" class="r-plt" alt="" width="70%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
-<h2 id="stereoisomers">Characterising the mismatch<a class="anchor" aria-label="anchor" href="#stereoisomers"></a>
+<h2 id="characterising-the-mismatch">Characterising the mismatch<a class="anchor" aria-label="anchor" href="#characterising-the-mismatch"></a>
 </h2>
 <p>At the skeleton level, the published MWB subset contains 336 entries.
 The table below summarises how each variant overlaps with it.</p>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"filter":"none","vertical":false,"data":[["MetMashR (RefMet)","MetMashR (ChEBI + CTS-Lite)"],[329,348],[317,293],[96.40000000000001,84.2],[94.3,87.2],[12,55],[19,43]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>variant<\/th>\n      <th>n_skeletons<\/th>\n      <th>shared_with_published<\/th>\n      <th>pct_of_variant<\/th>\n      <th>pct_of_published<\/th>\n      <th>only_in_variant<\/th>\n      <th>only_in_published<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"pageLength":10,"dom":"ftip","columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"name":"variant","targets":0},{"name":"n_skeletons","targets":1},{"name":"shared_with_published","targets":2},{"name":"pct_of_variant","targets":3},{"name":"pct_of_published","targets":4},{"name":"only_in_variant","targets":5},{"name":"only_in_published","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><p>The two variants share 291 of their combined 386 skeletons, with 38
 only in the RefMet variant and 57 only in the ChEBI + CTS-Lite variant.
-Comparing the two rows above indicates how much the choice of
-translation service affects the final overlap with the published result,
-and how much of that should be attributed to genuine differences rather
-than the RefMet/MWB circularity concern described in the introduction.
-Overlap indicates agreement in skeleton membership, but does not
-establish stereochemical equivalence or validate the attached
+Comparing the two rows above shows how much the choice of translation
+service changes the overlap with the published result. It does not, on
+its own, show how much of the RefMet variant’s agreement is due to the
+RefMet/MWB circularity described in the introduction: a lower overlap
+for the ChEBI variant could reflect that circularity, but could equally
+reflect ChEBI recognising fewer of the names used in these studies.
+Separating the two requires inspecting the records that only one variant
+matched. Overlap indicates agreement in skeleton membership, but does
+not establish stereochemical equivalence or validate the attached
 identifiers.</p>
 <p>The causes of the remaining differences are not established by the
 aggregate overlap alone. Unresolved synonyms may contribute, but
@@ -788,22 +828,28 @@ grouping rule is explicit in the code, making this implementation’s
 treatment of structural detail visible and testable.</li>
 <li>
 <strong>Targeted ambiguity flag</strong>. The
-<code>ambiguous_inchikey</code> column identifies a specific
-disagreement between RefMet and PubChem results. It does not reconstruct
-the original publication’s curation decisions or flag every ambiguity
-introduced by the workflow.</li>
+<code>ambiguous_inchikey</code> column flags records where the second
+translation service (RefMet or ChEBI) and PubChem return InChIKeys with
+the same skeleton but different stereochemical or isotopic layers, and
+records that Step 3 merged despite having different full InChIKeys. It
+does not reconstruct the original publication’s curation decisions or
+flag every ambiguity introduced by the workflow.</li>
 <li>
 <strong>Explicit source preference</strong>.
-<code><a href="../reference/prioritise_columns.html">prioritise_columns()</a></code> specifies that RefMet takes priority
-over PubChem and records the selected source. Source-specific lookup
-results are also retained as columns for inspection.</li>
+<code><a href="../reference/prioritise_columns.html">prioritise_columns()</a></code> specifies that the second service
+(RefMet or ChEBI) takes priority over PubChem and records the selected
+source. Source-specific lookup results are also retained as columns for
+inspection.</li>
 <li>
 <strong>Swappable translation source</strong>. Replacing
 <code><a href="../reference/mwb_refmet_lookup.html">mwb_refmet_lookup()</a></code> with <code><a href="../reference/chebi_lookup.html">chebi_lookup()</a></code>
-required no change to Steps 2 or 3, which are built around the resulting
-<code>InChIKey</code> rather than the service that produced it.
-Differences between the two variants are therefore attributable to the
-translation-service swap and the CTS-Lite augmentation.</li>
+required no change to the PubChem and ClassyFire lookup steps or to Step
+3, which are built around the resulting <code>InChIKey</code> rather
+than the service that produced it. Of the steps that differ, only
+translation affects which records are kept; the Step 2 differences
+(dropping the MWB compound lookup, adding CTS-Lite) only change which
+attributes are attached. Differences in the skeletons each variant
+reports therefore come from the translation-service swap alone.</li>
 <li>
 <strong>Extending beyond the built-in REST API classes</strong>.
 CTS-Lite’s batch/POST API does not fit the <code>rest_api</code> base

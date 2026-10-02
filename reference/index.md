@@ -72,6 +72,8 @@ meta data, such as molecular identifiers, pathways etc.
   : rds cache
 - [`github_file()`](https://computational-metabolomics.github.io/MetMashR/reference/github_file.md)
   : GitHub file
+- [`zenodo_file()`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md)
+  : Zenodo file
 - [`is_writable()`](https://computational-metabolomics.github.io/MetMashR/reference/is_writable.md)
   : Is database writable
 

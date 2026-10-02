@@ -39,6 +39,9 @@ read_database(obj)
 
 # S4 method for class 'sqlite_database'
 read_database(obj)
+
+# S4 method for class 'zenodo_file'
+read_database(obj)
 ```
 
 ## Arguments
