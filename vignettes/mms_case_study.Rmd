@@ -6,6 +6,7 @@ output:
     toc_depth: 2
     number_sections: true
     toc_float: true
+bibliography: mms_case_study.bib
 vignette: >
   %\VignetteIndexEntry{Case study: reimplementing the Metabolites Merging Strategy with MetMashR}
   %\VignetteEngine{knitr::rmarkdown}
@@ -40,7 +41,7 @@ library(ggplot2)
 
 # Introduction
 
-Villalba et al. (2023) describe a three-step procedure for harmonising
+@villalba2023 describe a three-step procedure for harmonising
 metabolite annotations reported by different studies, databases and
 publications into one consistent, cross-referenced dataset. The main steps
 of their "Metabolites Merging Strategy" (MMS) are:
@@ -58,8 +59,9 @@ of their "Metabolites Merging Strategy" (MMS) are:
    synonyms.
 
 The worked example included in the original publication harmonises urinary
-asthma metabolites reported across three Metabolomics Workbench (MWB)
-studies (ST001039, ST001048, ST001317), the Human Metabolome Database, and
+asthma metabolites reported across three Metabolomics Workbench [MWB,
+@sud2016] studies (ST001039, ST001048, ST001317), the Human Metabolome
+Database, and
 six literature articles.
 
 This vignette reimplements the MWB portion of that case study as a single
@@ -71,16 +73,18 @@ it does not reproduce every manual curation decision.
 Two variants of the workflow are built from the same steps and compared at the
 end:
 
-1. **RefMet variant.** Names are translated using PubChem and the Metabolomics
-   Workbench RefMet service, preferring RefMet's result when available.
+1. **RefMet variant.** Names are translated using PubChem [@kim2023]
+   and the Metabolomics Workbench RefMet service [@fahy2020],
+   preferring RefMet's result when available.
 2. **ChEBI + CTS-Lite variant.** The input names come from Metabolomics
    Workbench, and RefMet is also a Metabolomics Workbench service, so the
    RefMet translation is not fully independent of the data it is translating:
    any naming convention or curation quirk shared between the two could
-   inflate agreement with the published result. This variant substitutes ChEBI,
-   an independently curated database unaffiliated with MWB, for RefMet. It also
-   adds CTS-Lite (the Fiehn Lab's successor to the now-closed Chemical
-   Translation Service) as an extra attribute source. CTS-Lite cannot translate
+   inflate agreement with the published result. This variant substitutes ChEBI
+   [@hastings2016], an independently curated database unaffiliated with
+   MWB, for RefMet. It also adds CTS-Lite [@ctslite], the Fiehn Lab's
+   successor to the now-closed Chemical Translation Service [@wohlgemuth2010],
+   as an extra attribute source. CTS-Lite cannot translate
    names, but it accepts an InChIKey and returns a matched PubChem entry plus
    literature/patent annotation counts.
 
@@ -303,8 +307,9 @@ retrieves attributes for an InChIKey that has already been found.
 
 `pubchem_id_exchange()` and either `mwb_refmet_lookup()` or `chebi_lookup()`
 attempt a match for each normalised name using the supplied caches.
-`prioritise_columns()` selects one InChIKey per row, preferring the second
-service when a result is available and recording the selected source. RefMet
+`prioritise_columns()` selects one InChIKey per row, preferring the RefMet or
+ChEBI result over PubChem when both are available and recording the selected
+source. RefMet
 provides a curated nomenclature built directly from names reported across
 metabolomics studies, and is therefore more likely to match the input data;
 ChEBI's name-search endpoint (`search_by = "name"`) returns the matched
@@ -334,9 +339,9 @@ pubchem_translate <- function(variant) {
     )
 }
 
-# flag disagreement, prioritise the second service, drop records with no
-# inchikey and merge duplicates. inchikey_col is the column returned by the
-# second service and tag its name in InChIKey_source
+# flag disagreement, prioritise refmet/chebi over pubchem, drop records with
+# no inchikey and merge duplicates. inchikey_col is the column returned by
+# refmet/chebi and tag its name in InChIKey_source
 translate_common <- function(inchikey_col, tag) {
     list(
         # flag where the first 14 characters of the inchikey match but the
@@ -353,7 +358,8 @@ translate_common <- function(inchikey_col, tag) {
                 ambiguous
             }
         ),
-        # select the second service over pubchem where both exist
+        # select refmet/chebi over pubchem where both exist (first column
+        # listed takes priority)
         prioritise_columns(
             column_names = c(inchikey_col, "inchikey_pubchem_id_exchange"),
             output_name = "InChIKey",
@@ -422,9 +428,11 @@ attributes:
 
 - name, molecular weight, molecular formula, InChI and SMILES from PubChem
 - chemical ontology (kingdom, superclass and class) from ClassyFire
+  [@djoumbou2016]
 - HMDB, ChEBI, LipidMaps and PubChem CID identifiers from the Metabolomics
   Workbench compound database
-- a KEGG identifier using `KEGGREST`, an R package that queries the KEGG API.
+- a KEGG identifier using `KEGGREST` [@keggrest], an R package that queries
+  the KEGG API [@kanehisa2000].
 
 DrugBank identifiers and CAS numbers were included in the original paper but
 are omitted from this implementation.
@@ -647,8 +655,8 @@ chebi_cols <- c(
 
 # Comparison against the published result
 
-The published supplementary dataset is available on Zenodo 
-(doi:10.5281/zenodo.8226097). It is imported with `zenodo_file()`, which
+The published supplementary dataset is available on Zenodo
+[@villalba2023data]. It is imported with `zenodo_file()`, which
 downloads the file once and caches it locally using `BiocFileCache`; later
 builds reuse the cached copy, so an internet connection is only needed the
 first time (or set `offline = TRUE` to skip the check for a newer version).
@@ -768,17 +776,13 @@ normalisation and grouping.
 - **Archived lookup responses**. Caching allows previously retrieved responses to be reused rather than requiring a fresh query to each service. Note that reproducibility also requires archiving the caches and inputs with their dates and software versions; caching alone is not version control.
 - **Inspectable grouping rules**. The first-14-character grouping rule is explicit in the code, making this implementation's treatment of structural detail visible and testable.
 - **Targeted ambiguity flag**. The `ambiguous_inchikey` column flags records where the second translation service (RefMet or ChEBI) and PubChem return InChIKeys with the same skeleton but different stereochemical or isotopic layers, and records that Step 3 merged despite having different full InChIKeys. It does not reconstruct the original publication's curation decisions or flag every ambiguity introduced by the workflow.
-- **Explicit source preference**. `prioritise_columns()` specifies that the second service (RefMet or ChEBI) takes priority over PubChem and records the selected source. Source-specific lookup results are also retained as columns for inspection.
+- **Explicit source preference**. `prioritise_columns()` specifies that RefMet or ChEBI takes priority over PubChem and records the selected source. Source-specific lookup results are also retained as columns for inspection.
 - **Swappable translation source**. Replacing `mwb_refmet_lookup()` with `chebi_lookup()` required no change to the PubChem and ClassyFire lookup steps or to Step 3, which are built around the resulting `InChIKey` rather than the service that produced it. Of the steps that differ, only translation affects which records are kept; the Step 2 differences (dropping the MWB compound lookup, adding CTS-Lite) only change which attributes are attached. Differences in the skeletons each variant reports therefore come from the translation-service swap alone.
 - **Extending beyond the built-in REST API classes**. CTS-Lite's batch/POST API does not fit the `rest_api` base class, so `cts_lite_lookup()` is its own `model` following the same `cache`/`cache_mode` conventions; once written, it slots into the attribute steps like any other lookup.
 - **Quantitative comparison**. The workflow supports a direct comparison with the published supplementary dataset. A Venn diagram summarises shared and unmatched 14-character InChIKey skeletons. Further record-level inspection is still needed to explain differences and assess the accuracy of retrieved attributes.
 
 
 # References {-}
-
-Villalba H, Llambrich M, Gumà J, Brezmes J, Cumeras R. A Metabolites
-Merging Strategy (MMS): Harmonization to Enable Studies' Intercomparison.
-Metabolites 2023;13(12):1167. https://doi.org/10.3390/metabo13121167
 
 # Session Info
 
