@@ -13,6 +13,7 @@
 * fix `vertical_join` matching_columns rename direction
 * fix silent type coercion in `database_lookup`
 * fix crash when importing an empty `ls_source`
+* fix `ls_source` truncating `LipidName` at `/`, `+` or `-` inside brackets
 * fix outside-label positioning in bar and pie charts
 * fix `BiocFileCache_database` when the cache has duplicate entries
 * use environment variable for  GitHub API requests to avoid rate limits

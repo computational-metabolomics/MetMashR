@@ -144,18 +144,14 @@ setMethod(
 
             out <- do.call(rbind, out)
 
-            # names
-            N <- strsplit(out$LipidIon, "[/+/-]", perl = TRUE)
-            out$LipidName <- unlist(lapply(N, "[", 1))
+            # drop the trailing adduct (e.g. "+H", "+H-H2O"), keeping
+            # any "/", "+" or "-" inside the brackets
+            out$LipidName <- sub("[+-][^()]*$", "", out$LipidIon)
 
             # add ids
             out$id <- as.character(seq_len(nrow(out)))
-        } else { # empty data.frame
-            # NOTE: this used to size the matrix as 11 + length(M$add_cols),
-            # but ls_source has no `add_cols` slot -- referencing it here
-            # would itself error (`"add_cols" is not valid for this object`)
-            # any time an export produced zero rows, and the +length(...)
-            # would have mismatched the 11 column names below anyway.
+        } else { 
+            # empty data.frame
             out <- data.frame(matrix(
                 nrow = 0,
                 ncol = 11
