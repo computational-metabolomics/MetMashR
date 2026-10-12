@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Villalba et al. (2023) describe a three-step procedure for harmonising
+Villalba et al. (2023a) describe a three-step procedure for harmonising
 metabolite annotations reported by different studies, databases and
 publications into one consistent, cross-referenced dataset. The main
 steps of their “Metabolites Merging Strategy” (MMS) are:
@@ -26,8 +26,8 @@ steps of their “Metabolites Merging Strategy” (MMS) are:
 
 The worked example included in the original publication harmonises
 urinary asthma metabolites reported across three Metabolomics Workbench
-(MWB) studies (ST001039, ST001048, ST001317), the Human Metabolome
-Database, and six literature articles.
+(MWB, Sud et al. 2016) studies (ST001039, ST001048, ST001317), the Human
+Metabolome Database, and six literature articles.
 
 This vignette reimplements the MWB portion of that case study as a
 single MetMashR model sequence i.e. one workflow object built by
@@ -39,17 +39,18 @@ curation decision.
 Two variants of the workflow are built from the same steps and compared
 at the end:
 
-1.  **RefMet variant.** Names are translated using PubChem and the
-    Metabolomics Workbench RefMet service, preferring RefMet’s result
-    when available.
+1.  **RefMet variant.** Names are translated using PubChem (Kim et
+    al. 2023) and the Metabolomics Workbench RefMet service (Fahy and
+    Subramaniam 2020), preferring RefMet’s result when available.
 2.  **ChEBI + CTS-Lite variant.** The input names come from Metabolomics
     Workbench, and RefMet is also a Metabolomics Workbench service, so
     the RefMet translation is not fully independent of the data it is
     translating: any naming convention or curation quirk shared between
     the two could inflate agreement with the published result. This
-    variant substitutes ChEBI, an independently curated database
-    unaffiliated with MWB, for RefMet. It also adds CTS-Lite (the Fiehn
-    Lab’s successor to the now-closed Chemical Translation Service) as
+    variant substitutes ChEBI (Hastings et al. 2016), an independently
+    curated database unaffiliated with MWB, for RefMet. It also adds
+    CTS-Lite (Fiehn Lab, n.d.), the Fiehn Lab’s successor to the
+    now-closed Chemical Translation Service (Wohlgemuth et al. 2010), as
     an extra attribute source. CTS-Lite cannot translate names, but it
     accepts an InChIKey and returns a matched PubChem entry plus
     literature/patent annotation counts.
@@ -285,12 +286,13 @@ or
 [`chebi_lookup()`](https://computational-metabolomics.github.io/MetMashR/reference/chebi_lookup.md)
 attempt a match for each normalised name using the supplied caches.
 [`prioritise_columns()`](https://computational-metabolomics.github.io/MetMashR/reference/prioritise_columns.md)
-selects one InChIKey per row, preferring the second service when a
-result is available and recording the selected source. RefMet provides a
-curated nomenclature built directly from names reported across
-metabolomics studies, and is therefore more likely to match the input
-data; ChEBI’s name-search endpoint (`search_by = "name"`) returns the
-matched entity’s InChIKey directly, so a single lookup is enough.
+selects one InChIKey per row, preferring the RefMet or ChEBI result over
+PubChem when both are available and recording the selected source.
+RefMet provides a curated nomenclature built directly from names
+reported across metabolomics studies, and is therefore more likely to
+match the input data; ChEBI’s name-search endpoint
+(`search_by = "name"`) returns the matched entity’s InChIKey directly,
+so a single lookup is enough.
 
 The steps that follow the service-specific lookup are identical for both
 variants, so they are defined once as `translate_common`. They flag
@@ -322,9 +324,9 @@ name-translation lookup.
 `    ``)`\
 `}`\
 \
-`# flag disagreement, prioritise the second service, drop records with no`\
-`# inchikey and merge duplicates. inchikey_col is the column returned by the`\
-`# second service and tag its name in InChIKey_source`\
+`# flag disagreement, prioritise refmet/chebi over pubchem, drop records with`\
+`# no inchikey and merge duplicates. inchikey_col is the column returned by`\
+`# refmet/chebi and tag its name in InChIKey_source`\
 `translate_common`` ``<-`` ``function``(``inchikey_col``, ``tag``)`` ``{`\
 `    `[`list`](https://rdrr.io/r/base/list.html)`(`\
 `        ``# flag where the first 14 characters of the inchikey match but the`\
@@ -341,7 +343,8 @@ name-translation lookup.
 `                ``ambiguous`\
 `            ``}`\
 `        ``)``,`\
-`        ``# select the second service over pubchem where both exist`\
+`        ``# select refmet/chebi over pubchem where both exist (first column`\
+`        ``# listed takes priority)`\
 `        `[`prioritise_columns`](https://computational-metabolomics.github.io/MetMashR/reference/prioritise_columns.md)`(`\
 `            column_names ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``inchikey_col``, ``"inchikey_pubchem_id_exchange"``)``,`\
 `            output_name ``=`` ``"InChIKey"``,`\
@@ -414,10 +417,12 @@ following attributes:
 - name, molecular weight, molecular formula, InChI and SMILES from
   PubChem
 - chemical ontology (kingdom, superclass and class) from ClassyFire
+  (Djoumbou Feunang et al. 2016)
 - HMDB, ChEBI, LipidMaps and PubChem CID identifiers from the
   Metabolomics Workbench compound database
-- a KEGG identifier using `KEGGREST`, an R package that queries the KEGG
-  API.
+- a KEGG identifier using `KEGGREST` (Tenenbaum and Bioconductor Package
+  Maintainer 2026), an R package that queries the KEGG API (Kanehisa and
+  Goto 2000).
 
 DrugBank identifiers and CAS numbers were included in the original paper
 but are omitted from this implementation.
@@ -650,8 +655,8 @@ PubChem CID columns, and includes the CTS-Lite columns:
 
 ## Comparison against the published result
 
-The published supplementary dataset is available on Zenodo
-(<doi:10.5281/zenodo.8226097>). It is imported with
+The published supplementary dataset is available on Zenodo (Villalba et
+al. 2023b). It is imported with
 [`zenodo_file()`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md),
 which downloads the file once and caches it locally using
 `BiocFileCache`; later builds reuse the cached copy, so an internet
@@ -679,6 +684,8 @@ attributes.
 \
 `# import as an annotation_source`\
 `gold`` ``<-`` `[`read_source`](https://computational-metabolomics.github.io/MetMashR/reference/read_source.md)`(``gold_db``)`\
+`#> Error while performing HEAD request.`\
+`#>    Proceeding without cache information.`\
 \
 `# restrict to the three MWB studies, then derive the same`\
 `# inchikey skeleton used in Step 3`\
@@ -763,9 +770,9 @@ responses, and the effects of normalisation and grouping.
   introduced by the workflow.
 - **Explicit source preference**.
   [`prioritise_columns()`](https://computational-metabolomics.github.io/MetMashR/reference/prioritise_columns.md)
-  specifies that the second service (RefMet or ChEBI) takes priority
-  over PubChem and records the selected source. Source-specific lookup
-  results are also retained as columns for inspection.
+  specifies that RefMet or ChEBI takes priority over PubChem and records
+  the selected source. Source-specific lookup results are also retained
+  as columns for inspection.
 - **Swappable translation source**. Replacing
   [`mwb_refmet_lookup()`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_refmet_lookup.md)
   with
@@ -790,11 +797,6 @@ responses, and the effects of normalisation and grouping.
   assess the accuracy of retrieved attributes.
 
 ## References
-
-Villalba H, Llambrich M, Gumà J, Brezmes J, Cumeras R. A Metabolites
-Merging Strategy (MMS): Harmonization to Enable Studies’
-Intercomparison. Metabolites 2023;13(12):1167.
-<https://doi.org/10.3390/metabo13121167>
 
 ## Session Info
 
@@ -851,25 +853,76 @@ Intercomparison. Metabolites 2023;13(12):1167.
 `#> [45] ragg_1.5.2                    generics_0.1.4               `\
 `#> [47] otel_0.2.0                    httr_1.4.9                   `\
 `#> [49] DBI_1.3.0                     cachem_1.1.0                 `\
-`#> [51] stringr_1.6.0                 ggthemes_6.0.0               `\
-`#> [53] BiocManager_1.30.27           XVector_0.53.0               `\
-`#> [55] matrixStats_1.5.0             vctrs_0.7.3                  `\
-`#> [57] Matrix_1.7-6                  jsonlite_2.0.0               `\
-`#> [59] bookdown_0.48                 IRanges_2.47.5               `\
-`#> [61] S4Vectors_0.51.10             bit64_4.8.6                  `\
-`#> [63] systemfonts_1.3.2             crosstalk_1.2.2              `\
-`#> [65] jquerylib_0.1.4               ggVennDiagram_1.5.7          `\
-`#> [67] glue_1.8.1                    pkgdown_2.2.1.9000           `\
-`#> [69] DT_0.34.0                     stringi_1.8.9                `\
-`#> [71] gtable_0.3.6                  GenomicRanges_1.65.4         `\
-`#> [73] tibble_3.3.1                  pillar_1.11.1                `\
-`#> [75] htmltools_0.5.9               Seqinfo_1.3.2                `\
-`#> [77] dbplyr_2.6.0                  R6_2.6.1                     `\
-`#> [79] httr2_1.3.0                   textshaping_1.0.5            `\
-`#> [81] evaluate_1.0.5                lattice_0.23-1               `\
-`#> [83] Biobase_2.73.2                SnowballC_0.7.1              `\
-`#> [85] openxlsx_4.2.9                memoise_2.0.1                `\
-`#> [87] bslib_0.12.0                  zip_3.0.2                    `\
-`#> [89] Rcpp_1.1.2                    SparseArray_1.13.4           `\
-`#> [91] xfun_0.61                     fs_2.1.0                     `\
-`#> [93] MatrixGenerics_1.25.0         pkgconfig_2.0.3`
+`#> [51] ggthemes_7.0.0                BiocManager_1.30.27          `\
+`#> [53] XVector_0.53.0                matrixStats_1.5.0            `\
+`#> [55] vctrs_0.7.3                   Matrix_1.7-6                 `\
+`#> [57] jsonlite_2.0.0                bookdown_0.48                `\
+`#> [59] IRanges_2.47.5                S4Vectors_0.51.10            `\
+`#> [61] bit64_4.8.6                   systemfonts_1.3.2            `\
+`#> [63] crosstalk_1.2.2               jquerylib_0.1.4              `\
+`#> [65] ggVennDiagram_1.5.7           glue_1.8.1                   `\
+`#> [67] pkgdown_2.2.1.9000            DT_0.34.0                    `\
+`#> [69] stringi_1.8.9                 gtable_0.3.6                 `\
+`#> [71] GenomicRanges_1.65.4          tibble_3.3.1                 `\
+`#> [73] pillar_1.11.1                 htmltools_0.5.9              `\
+`#> [75] Seqinfo_1.3.2                 dbplyr_2.6.0                 `\
+`#> [77] R6_2.6.1                      httr2_1.3.0                  `\
+`#> [79] textshaping_1.0.5             evaluate_1.0.5               `\
+`#> [81] lattice_0.23-1                Biobase_2.73.2               `\
+`#> [83] SnowballC_0.7.1               openxlsx_4.2.9               `\
+`#> [85] memoise_2.0.1                 bslib_0.12.0                 `\
+`#> [87] zip_3.0.2                     Rcpp_1.1.2                   `\
+`#> [89] SparseArray_1.13.4            xfun_0.61                    `\
+`#> [91] fs_2.1.0                      MatrixGenerics_1.25.0        `\
+`#> [93] pkgconfig_2.0.3`
+
+Djoumbou Feunang, Yannick, Roman Eisner, Craig Knox, et al. 2016.
+“ClassyFire: automated chemical classification with a comprehensive,
+computable taxonomy.” *Journal of Cheminformatics* 8 (1): 61.
+<https://doi.org/10.1186/s13321-016-0174-y>.
+
+Fahy, Eoin, and Shankar Subramaniam. 2020. “RefMet: a reference
+nomenclature for metabolomics.” *Nature Methods* 17 (12): 1173–74.
+<https://doi.org/10.1038/s41592-020-01009-y>.
+
+Fiehn Lab. n.d. *CTS-Lite*. UC Davis.
+<https://cts-lite.metabolomics.us>.
+
+Hastings, Janna, Gareth Owen, Adriano Dekker, et al. 2016. “ChEBI in
+2016: Improved services and an expanding collection of metabolites.”
+*Nucleic Acids Research* 44 (D1): D1214–19.
+<https://doi.org/10.1093/nar/gkv1031>.
+
+Kanehisa, Minoru, and Susumu Goto. 2000. “KEGG: Kyoto Encyclopedia of
+Genes and Genomes.” *Nucleic Acids Research* 28 (1): 27–30.
+<https://doi.org/10.1093/nar/28.1.27>.
+
+Kim, Sunghwan, Jie Chen, Tiejun Cheng, et al. 2023. “PubChem 2023
+update.” *Nucleic Acids Research* 51 (D1): D1373–80.
+<https://doi.org/10.1093/nar/gkac956>.
+
+Sud, Manish, Eoin Fahy, Dawn Cotter, et al. 2016. “Metabolomics
+Workbench: An international repository for metabolomics data and
+metadata, metabolite standards, protocols, tutorials and training, and
+analysis tools.” *Nucleic Acids Research* 44 (D1): D463–70.
+<https://doi.org/10.1093/nar/gkv1042>.
+
+Tenenbaum, Dan, and Bioconductor Package Maintainer. 2026. *KEGGREST:
+Client-side REST access to the Kyoto Encyclopedia of Genes and Genomes
+(KEGG)*. <https://doi.org/10.18129/B9.bioc.KEGGREST>.
+
+Villalba, Héctor, Maria Llambrich, Josep Gumà, Jesús Brezmes, and Raquel
+Cumeras. 2023a. “A Metabolites Merging Strategy (MMS): Harmonization to
+Enable Studies’ Intercomparison.” *Metabolites* 13 (12): 1167.
+<https://doi.org/10.3390/metabo13121167>.
+
+Villalba, Héctor, Maria Llambrich, Josep Gumà, Jesús Brezmes, and Raquel
+Cumeras. 2023b. *Dataset of "A Metabolites Merging Strategy (MMS):
+Harmonization to enable studies intercomparison"*. Zenodo.
+<https://doi.org/10.5281/zenodo.8226097>.
+
+Wohlgemuth, Gert, Pradeep Kumar Haldiya, Egon Willighagen, Tobias Kind,
+and Oliver Fiehn. 2010. “The Chemical Translation Service - a web-based
+tool to improve standardization of metabolomic reports.”
+*Bioinformatics* 26 (20): 2647–48.
+<https://doi.org/10.1093/bioinformatics/btq476>.

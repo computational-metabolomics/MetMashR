@@ -97,11 +97,11 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Villalba et al. (2023) describe a three-step procedure for
-harmonising metabolite annotations reported by different studies,
-databases and publications into one consistent, cross-referenced
-dataset. The main steps of their “Metabolites Merging Strategy” (MMS)
-are:</p>
+<p><span class="citation">Villalba et al. (2023a)</span> describe a
+three-step procedure for harmonising metabolite annotations reported by
+different studies, databases and publications into one consistent,
+cross-referenced dataset. The main steps of their “Metabolites Merging
+Strategy” (MMS) are:</p>
 <ol style="list-style-type: decimal">
 <li>
 <strong>Translation and merging</strong> - convert identifiers from
@@ -120,8 +120,9 @@ duplicate/conflicting synonyms.</li>
 </ol>
 <p>The worked example included in the original publication harmonises
 urinary asthma metabolites reported across three Metabolomics Workbench
-(MWB) studies (ST001039, ST001048, ST001317), the Human Metabolome
-Database, and six literature articles.</p>
+<span class="citation">(MWB, Sud et al. 2016)</span> studies (ST001039,
+ST001048, ST001317), the Human Metabolome Database, and six literature
+articles.</p>
 <p>This vignette reimplements the MWB portion of that case study as a
 single MetMashR model sequence i.e. one workflow object built by
 chaining MetMashR steps together, and compares the output with the
@@ -133,20 +134,23 @@ compared at the end:</p>
 <ol style="list-style-type: decimal">
 <li>
 <strong>RefMet variant.</strong> Names are translated using PubChem
-and the Metabolomics Workbench RefMet service, preferring RefMet’s
-result when available.</li>
+<span class="citation">(Kim et al. 2023)</span> and the Metabolomics
+Workbench RefMet service <span class="citation">(Fahy and Subramaniam
+2020)</span>, preferring RefMet’s result when available.</li>
 <li>
 <strong>ChEBI + CTS-Lite variant.</strong> The input names come from
 Metabolomics Workbench, and RefMet is also a Metabolomics Workbench
 service, so the RefMet translation is not fully independent of the data
 it is translating: any naming convention or curation quirk shared
 between the two could inflate agreement with the published result. This
-variant substitutes ChEBI, an independently curated database
-unaffiliated with MWB, for RefMet. It also adds CTS-Lite (the Fiehn
-Lab’s successor to the now-closed Chemical Translation Service) as an
-extra attribute source. CTS-Lite cannot translate names, but it accepts
-an InChIKey and returns a matched PubChem entry plus literature/patent
-annotation counts.</li>
+variant substitutes ChEBI <span class="citation">(Hastings et al.
+2016)</span>, an independently curated database unaffiliated with MWB,
+for RefMet. It also adds CTS-Lite <span class="citation">(Fiehn Lab,
+n.d.)</span>, the Fiehn Lab’s successor to the now-closed Chemical
+Translation Service <span class="citation">(Wohlgemuth et al.
+2010)</span>, as an extra attribute source. CTS-Lite cannot translate
+names, but it accepts an InChIKey and returns a matched PubChem entry
+plus literature/patent annotation counts.</li>
 </ol>
 <p>For the same reason the ChEBI variant does not query the MWB compound
 database for cross-references; it uses the ChEBI identifier it already
@@ -368,12 +372,12 @@ InChIKey that has already been found.</p>
 <code><a href="../reference/mwb_refmet_lookup.html">mwb_refmet_lookup()</a></code> or <code><a href="../reference/chebi_lookup.html">chebi_lookup()</a></code> attempt
 a match for each normalised name using the supplied caches.
 <code><a href="../reference/prioritise_columns.html">prioritise_columns()</a></code> selects one InChIKey per row,
-preferring the second service when a result is available and recording
-the selected source. RefMet provides a curated nomenclature built
-directly from names reported across metabolomics studies, and is
-therefore more likely to match the input data; ChEBI’s name-search
-endpoint (<code>search_by = "name"</code>) returns the matched entity’s
-InChIKey directly, so a single lookup is enough.</p>
+preferring the RefMet or ChEBI result over PubChem when both are
+available and recording the selected source. RefMet provides a curated
+nomenclature built directly from names reported across metabolomics
+studies, and is therefore more likely to match the input data; ChEBI’s
+name-search endpoint (<code>search_by = "name"</code>) returns the
+matched entity’s InChIKey directly, so a single lookup is enough.</p>
 <p>The steps that follow the service-specific lookup are identical for
 both variants, so they are defined once as
 <code>translate_common</code>. They flag selected disagreements between
@@ -400,9 +404,9 @@ name-translation lookup.
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># flag disagreement, prioritise the second service, drop records with no</span></span>
-<span><span class="co"># inchikey and merge duplicates. inchikey_col is the column returned by the</span></span>
-<span><span class="co"># second service and tag its name in InChIKey_source</span></span>
+<span><span class="co"># flag disagreement, prioritise refmet/chebi over pubchem, drop records with</span></span>
+<span><span class="co"># no inchikey and merge duplicates. inchikey_col is the column returned by</span></span>
+<span><span class="co"># refmet/chebi and tag its name in InChIKey_source</span></span>
 <span><span class="va">translate_common</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">inchikey_col</span>, <span class="va">tag</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="co"># flag where the first 14 characters of the inchikey match but the</span></span>
@@ -419,7 +423,8 @@ name-translation lookup.
 <span>                <span class="va">ambiguous</span></span>
 <span>            <span class="op">}</span></span>
 <span>        <span class="op">)</span>,</span>
-<span>        <span class="co"># select the second service over pubchem where both exist</span></span>
+<span>        <span class="co"># select refmet/chebi over pubchem where both exist (first column</span></span>
+<span>        <span class="co"># listed takes priority)</span></span>
 <span>        <span class="fu"><a href="../reference/prioritise_columns.html">prioritise_columns</a></span><span class="op">(</span></span>
 <span>            column_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">inchikey_col</span>, <span class="st">"inchikey_pubchem_id_exchange"</span><span class="op">)</span>,</span>
 <span>            output_name <span class="op">=</span> <span class="st">"InChIKey"</span>,</span>
@@ -489,12 +494,13 @@ following attributes:</p>
 <ul>
 <li>name, molecular weight, molecular formula, InChI and SMILES from
 PubChem</li>
-<li>chemical ontology (kingdom, superclass and class) from
-ClassyFire</li>
+<li>chemical ontology (kingdom, superclass and class) from ClassyFire
+<span class="citation">(Djoumbou Feunang et al. 2016)</span>
+</li>
 <li>HMDB, ChEBI, LipidMaps and PubChem CID identifiers from the
 Metabolomics Workbench compound database</li>
-<li>a KEGG identifier using <code>KEGGREST</code>, an R package that
-queries the KEGG API.</li>
+<li>a KEGG identifier using <code>KEGGREST</code> <span class="citation">(Tenenbaum and Bioconductor Package Maintainer
+2026)</span>, an R package that queries the KEGG API <span class="citation">(Kanehisa and Goto 2000)</span>.</li>
 </ul>
 <p>DrugBank identifiers and CAS numbers were included in the original
 paper but are omitted from this implementation.</p>
@@ -722,7 +728,7 @@ PubChem CID columns, and includes the CTS-Lite columns:</p>
 <div class="section level2">
 <h2 id="comparison-against-the-published-result">Comparison against the published result<a class="anchor" aria-label="anchor" href="#comparison-against-the-published-result"></a>
 </h2>
-<p>The published supplementary dataset is available on Zenodo (<a href="doi:10.5281/zenodo.8226097" class="uri">doi:10.5281/zenodo.8226097</a>). It is imported with
+<p>The published supplementary dataset is available on Zenodo <span class="citation">(Villalba et al. 2023b)</span>. It is imported with
 <code><a href="../reference/zenodo_file.html">zenodo_file()</a></code>, which downloads the file once and caches it
 locally using <code>BiocFileCache</code>; later builds reuse the cached
 copy, so an internet connection is only needed the first time (or set
@@ -747,6 +753,8 @@ attributes.</p>
 <span></span>
 <span><span class="co"># import as an annotation_source</span></span>
 <span><span class="va">gold</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_source.html">read_source</a></span><span class="op">(</span><span class="va">gold_db</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error while performing HEAD request.</span></span>
+<span><span class="co">#&gt;    Proceeding without cache information.</span></span>
 <span></span>
 <span><span class="co"># restrict to the three MWB studies, then derive the same</span></span>
 <span><span class="co"># inchikey skeleton used in Step 3</span></span>
@@ -836,10 +844,9 @@ does not reconstruct the original publication’s curation decisions or
 flag every ambiguity introduced by the workflow.</li>
 <li>
 <strong>Explicit source preference</strong>.
-<code><a href="../reference/prioritise_columns.html">prioritise_columns()</a></code> specifies that the second service
-(RefMet or ChEBI) takes priority over PubChem and records the selected
-source. Source-specific lookup results are also retained as columns for
-inspection.</li>
+<code><a href="../reference/prioritise_columns.html">prioritise_columns()</a></code> specifies that RefMet or ChEBI takes
+priority over PubChem and records the selected source. Source-specific
+lookup results are also retained as columns for inspection.</li>
 <li>
 <strong>Swappable translation source</strong>. Replacing
 <code><a href="../reference/mwb_refmet_lookup.html">mwb_refmet_lookup()</a></code> with <code><a href="../reference/chebi_lookup.html">chebi_lookup()</a></code>
@@ -868,9 +875,6 @@ and assess the accuracy of retrieved attributes.</li>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Villalba H, Llambrich M, Gumà J, Brezmes J, Cumeras R. A Metabolites
-Merging Strategy (MMS): Harmonization to Enable Studies’
-Intercomparison. Metabolites 2023;13(12):1167. <a href="https://doi.org/10.3390/metabo13121167" class="external-link uri">https://doi.org/10.3390/metabo13121167</a></p>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
@@ -928,28 +932,87 @@ Intercomparison. Metabolites 2023;13(12):1167. <a href="https://doi.org/10.3390/
 <span><span class="co">#&gt; [45] ragg_1.5.2                    generics_0.1.4               </span></span>
 <span><span class="co">#&gt; [47] otel_0.2.0                    httr_1.4.9                   </span></span>
 <span><span class="co">#&gt; [49] DBI_1.3.0                     cachem_1.1.0                 </span></span>
-<span><span class="co">#&gt; [51] stringr_1.6.0                 ggthemes_6.0.0               </span></span>
-<span><span class="co">#&gt; [53] BiocManager_1.30.27           XVector_0.53.0               </span></span>
-<span><span class="co">#&gt; [55] matrixStats_1.5.0             vctrs_0.7.3                  </span></span>
-<span><span class="co">#&gt; [57] Matrix_1.7-6                  jsonlite_2.0.0               </span></span>
-<span><span class="co">#&gt; [59] bookdown_0.48                 IRanges_2.47.5               </span></span>
-<span><span class="co">#&gt; [61] S4Vectors_0.51.10             bit64_4.8.6                  </span></span>
-<span><span class="co">#&gt; [63] systemfonts_1.3.2             crosstalk_1.2.2              </span></span>
-<span><span class="co">#&gt; [65] jquerylib_0.1.4               ggVennDiagram_1.5.7          </span></span>
-<span><span class="co">#&gt; [67] glue_1.8.1                    pkgdown_2.2.1.9000           </span></span>
-<span><span class="co">#&gt; [69] DT_0.34.0                     stringi_1.8.9                </span></span>
-<span><span class="co">#&gt; [71] gtable_0.3.6                  GenomicRanges_1.65.4         </span></span>
-<span><span class="co">#&gt; [73] tibble_3.3.1                  pillar_1.11.1                </span></span>
-<span><span class="co">#&gt; [75] htmltools_0.5.9               Seqinfo_1.3.2                </span></span>
-<span><span class="co">#&gt; [77] dbplyr_2.6.0                  R6_2.6.1                     </span></span>
-<span><span class="co">#&gt; [79] httr2_1.3.0                   textshaping_1.0.5            </span></span>
-<span><span class="co">#&gt; [81] evaluate_1.0.5                lattice_0.23-1               </span></span>
-<span><span class="co">#&gt; [83] Biobase_2.73.2                SnowballC_0.7.1              </span></span>
-<span><span class="co">#&gt; [85] openxlsx_4.2.9                memoise_2.0.1                </span></span>
-<span><span class="co">#&gt; [87] bslib_0.12.0                  zip_3.0.2                    </span></span>
-<span><span class="co">#&gt; [89] Rcpp_1.1.2                    SparseArray_1.13.4           </span></span>
-<span><span class="co">#&gt; [91] xfun_0.61                     fs_2.1.0                     </span></span>
-<span><span class="co">#&gt; [93] MatrixGenerics_1.25.0         pkgconfig_2.0.3</span></span></code></pre></div>
+<span><span class="co">#&gt; [51] ggthemes_7.0.0                BiocManager_1.30.27          </span></span>
+<span><span class="co">#&gt; [53] XVector_0.53.0                matrixStats_1.5.0            </span></span>
+<span><span class="co">#&gt; [55] vctrs_0.7.3                   Matrix_1.7-6                 </span></span>
+<span><span class="co">#&gt; [57] jsonlite_2.0.0                bookdown_0.48                </span></span>
+<span><span class="co">#&gt; [59] IRanges_2.47.5                S4Vectors_0.51.10            </span></span>
+<span><span class="co">#&gt; [61] bit64_4.8.6                   systemfonts_1.3.2            </span></span>
+<span><span class="co">#&gt; [63] crosstalk_1.2.2               jquerylib_0.1.4              </span></span>
+<span><span class="co">#&gt; [65] ggVennDiagram_1.5.7           glue_1.8.1                   </span></span>
+<span><span class="co">#&gt; [67] pkgdown_2.2.1.9000            DT_0.34.0                    </span></span>
+<span><span class="co">#&gt; [69] stringi_1.8.9                 gtable_0.3.6                 </span></span>
+<span><span class="co">#&gt; [71] GenomicRanges_1.65.4          tibble_3.3.1                 </span></span>
+<span><span class="co">#&gt; [73] pillar_1.11.1                 htmltools_0.5.9              </span></span>
+<span><span class="co">#&gt; [75] Seqinfo_1.3.2                 dbplyr_2.6.0                 </span></span>
+<span><span class="co">#&gt; [77] R6_2.6.1                      httr2_1.3.0                  </span></span>
+<span><span class="co">#&gt; [79] textshaping_1.0.5             evaluate_1.0.5               </span></span>
+<span><span class="co">#&gt; [81] lattice_0.23-1                Biobase_2.73.2               </span></span>
+<span><span class="co">#&gt; [83] SnowballC_0.7.1               openxlsx_4.2.9               </span></span>
+<span><span class="co">#&gt; [85] memoise_2.0.1                 bslib_0.12.0                 </span></span>
+<span><span class="co">#&gt; [87] zip_3.0.2                     Rcpp_1.1.2                   </span></span>
+<span><span class="co">#&gt; [89] SparseArray_1.13.4            xfun_0.61                    </span></span>
+<span><span class="co">#&gt; [91] fs_2.1.0                      MatrixGenerics_1.25.0        </span></span>
+<span><span class="co">#&gt; [93] pkgconfig_2.0.3</span></span></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-djoumbou2016" class="csl-entry">
+Djoumbou Feunang, Yannick, Roman Eisner, Craig Knox, et al. 2016.
+<span>“<span class="nocase">ClassyFire: automated chemical
+classification with a comprehensive, computable taxonomy</span>.”</span>
+<em>Journal of Cheminformatics</em> 8 (1): 61. <a href="https://doi.org/10.1186/s13321-016-0174-y" class="external-link">https://doi.org/10.1186/s13321-016-0174-y</a>.
+</div>
+<div id="ref-fahy2020" class="csl-entry">
+Fahy, Eoin, and Shankar Subramaniam. 2020. <span>“<span class="nocase">RefMet: a reference nomenclature for
+metabolomics</span>.”</span> <em>Nature Methods</em> 17 (12): 1173–74.
+<a href="https://doi.org/10.1038/s41592-020-01009-y" class="external-link">https://doi.org/10.1038/s41592-020-01009-y</a>.
+</div>
+<div id="ref-ctslite" class="csl-entry">
+Fiehn Lab. n.d. <em><span>CTS-Lite</span></em>. UC Davis. <a href="https://cts-lite.metabolomics.us" class="external-link">https://cts-lite.metabolomics.us</a>.
+</div>
+<div id="ref-hastings2016" class="csl-entry">
+Hastings, Janna, Gareth Owen, Adriano Dekker, et al. 2016. <span>“<span class="nocase">ChEBI in 2016: Improved services and an expanding
+collection of metabolites</span>.”</span> <em>Nucleic Acids
+Research</em> 44 (D1): D1214–19. <a href="https://doi.org/10.1093/nar/gkv1031" class="external-link">https://doi.org/10.1093/nar/gkv1031</a>.
+</div>
+<div id="ref-kanehisa2000" class="csl-entry">
+Kanehisa, Minoru, and Susumu Goto. 2000. <span>“<span class="nocase">KEGG: Kyoto Encyclopedia of Genes and
+Genomes</span>.”</span> <em>Nucleic Acids Research</em> 28 (1): 27–30.
+<a href="https://doi.org/10.1093/nar/28.1.27" class="external-link">https://doi.org/10.1093/nar/28.1.27</a>.
+</div>
+<div id="ref-kim2023" class="csl-entry">
+Kim, Sunghwan, Jie Chen, Tiejun Cheng, et al. 2023. <span>“<span class="nocase">PubChem 2023 update</span>.”</span> <em>Nucleic Acids
+Research</em> 51 (D1): D1373–80. <a href="https://doi.org/10.1093/nar/gkac956" class="external-link">https://doi.org/10.1093/nar/gkac956</a>.
+</div>
+<div id="ref-sud2016" class="csl-entry">
+Sud, Manish, Eoin Fahy, Dawn Cotter, et al. 2016. <span>“<span class="nocase">Metabolomics Workbench: An international repository for
+metabolomics data and metadata, metabolite standards, protocols,
+tutorials and training, and analysis tools</span>.”</span> <em>Nucleic
+Acids Research</em> 44 (D1): D463–70. <a href="https://doi.org/10.1093/nar/gkv1042" class="external-link">https://doi.org/10.1093/nar/gkv1042</a>.
+</div>
+<div id="ref-keggrest" class="csl-entry">
+Tenenbaum, Dan, and Bioconductor Package Maintainer. 2026. <em><span class="nocase">KEGGREST: Client-side REST access to the Kyoto
+Encyclopedia of Genes and Genomes (KEGG)</span></em>. <a href="https://doi.org/10.18129/B9.bioc.KEGGREST" class="external-link">https://doi.org/10.18129/B9.bioc.KEGGREST</a>.
+</div>
+<div id="ref-villalba2023" class="csl-entry">
+Villalba, Héctor, Maria Llambrich, Josep Gumà, Jesús Brezmes, and Raquel
+Cumeras. 2023a. <span>“<span class="nocase">A Metabolites Merging
+Strategy (MMS): Harmonization to Enable Studies’
+Intercomparison</span>.”</span> <em>Metabolites</em> 13 (12): 1167. <a href="https://doi.org/10.3390/metabo13121167" class="external-link">https://doi.org/10.3390/metabo13121167</a>.
+</div>
+<div id="ref-villalba2023data" class="csl-entry">
+Villalba, Héctor, Maria Llambrich, Josep Gumà, Jesús Brezmes, and Raquel
+Cumeras. 2023b. <em><span class="nocase">Dataset of "A Metabolites
+Merging Strategy (MMS): Harmonization to enable studies
+intercomparison"</span></em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.8226097" class="external-link">https://doi.org/10.5281/zenodo.8226097</a>.
+</div>
+<div id="ref-wohlgemuth2010" class="csl-entry">
+Wohlgemuth, Gert, Pradeep Kumar Haldiya, Egon Willighagen, Tobias Kind,
+and Oliver Fiehn. 2010. <span>“<span class="nocase">The Chemical
+Translation Service - a web-based tool to improve standardization of
+metabolomic reports</span>.”</span> <em>Bioinformatics</em> 26 (20):
+2647–48. <a href="https://doi.org/10.1093/bioinformatics/btq476" class="external-link">https://doi.org/10.1093/bioinformatics/btq476</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
