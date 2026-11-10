@@ -1,3 +1,21 @@
+# MetMashR v1.7.3
+* add `zenodo_file` to import files from Zenodo records
+* vignettes now build without network access: online resources are read from
+  stored copies in `inst/extdata/vignette_snapshots` and all lookups use
+  `cache_mode = "offline"`; `inst/scripts/make_vignette_snapshots.R`
+  rebuilds the stored copies and refreshes the lookup caches
+* revise all vignettes following review: new titles, clearer explanations,
+  worked examples, and counts computed in the vignettes
+* `pubchem_property_lookup` replaces the deprecated PubChem property names
+  `CanonicalSMILES` and `IsomericSMILES` with `ConnectivitySMILES` and
+  `SMILES`, with a warning
+* `kegg_lookup` caches ids with no match as NA so they are not queried again
+* `rest_api` lookups no longer rewrite the cache when nothing was queried
+* document `model_train` and `model_predict` with `model_apply`
+* fix `prioritise_columns` assigning the last source tag to rows where all
+  columns are NA; the source is now NA
+* fix `ls_source` truncating `LipidName` at `/`, `+` or `-` inside brackets
+
 # MetMashR v1.7.2
 * add `pubchem_id_exchange` for batch identifier conversion
 * add `classyfire_batch_lookup` for batch ClassyFire queries
@@ -11,10 +29,8 @@
 * vectorise `mz_match` and `rt_match` interval-overlap matching
 * `mspurity_source` is now an `lcms_table`
 * fix `vertical_join` matching_columns rename direction
-* fix `prioritise_columns` assigning the last source tag to rows where all columns are NA; the source is now NA
 * fix silent type coercion in `database_lookup`
 * fix crash when importing an empty `ls_source`
-* fix `ls_source` truncating `LipidName` at `/`, `+` or `-` inside brackets
 * fix outside-label positioning in bar and pie charts
 * fix `BiocFileCache_database` when the cache has duplicate entries
 * use environment variable for  GitHub API requests to avoid rate limits
