@@ -1,5 +1,5 @@
 ---
-title: "Exploring the MTox700+ library"
+title: "Exploring chemical classes and pathway coverage in MTox700+"
 author: "Gavin Rhys Lloyd"
 date: "`r Sys.Date()`"
 output:
@@ -9,7 +9,7 @@ output:
     number_sections: true  
     toc_float: true
 vignette: >
-    %\VignetteIndexEntry{Exploring the MTox700+ library}
+    %\VignetteIndexEntry{Exploring chemical classes and pathway coverage in MTox700+}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
@@ -188,14 +188,14 @@ To explore the biological space covered by the metabolites in MTox700+ we need
 mash the database with additional information about the biological pathways that
 the metabolites are part of.
 
-We use the [PathBank](https://pathbank.org/) for this purpose. A 
-`struct_database` object for PathBank is already included in `MetMashR`.
+We use [PathBank](https://pathbank.org/) for this purpose. `MetMashR` 
+already includes a database source for PathBank.
 
 <br>
 
 ## Importing PathBank
 
-`MetMashR` provides the `PathBank_metabolite_databse` object to import the
+`MetMashR` provides the `PathBank_metabolite_database()` object to import the
 PathBank database. You can choose to import:
 
 - The "primary" database. This is a smaller version of the database restricted 
@@ -256,8 +256,10 @@ g2 <- as.ggplot(chart_plot(C, predicted(M), P)) +
 cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
 ```
 
-The charts show that less than half of the metabolites in MTox700+ are also 
-present in the PathBank database for primary pathways.
+These charts compare full InChIKeys in MTox700+ with those in the selected 
+PathBank primary-pathway dataset. An unmatched key means that it was not found 
+in this PathBank subset; it does not show that the metabolite has no known 
+pathway associations.
 
 <br>
 
@@ -271,7 +273,7 @@ Note that PathBank is not downloaded a second time; it is automatically
 retrieved from the cache.
 
 We request a number of columns from PathBank, including pathway information and
-additional identifiers such as HMBD ID and KEGG ID.
+additional identifiers such as HMDB ID and KEGG ID.
 
 ```{r exploring-mtox-9}
 # prepare object
@@ -291,7 +293,8 @@ X <- model_apply(X, predicted(M))
 ```
 
 We can now visualise e.g. the subject of the pathways captured by the MTox700+ 
-database.
+database. This chart counts records after the PathBank join. One metabolite can 
+contribute more than once if it matches several pathways.
 
 ```{r exploring-mtox-10}
 C <- annotation_bar_chart(
@@ -305,9 +308,9 @@ C <- annotation_bar_chart(
 chart_plot(C, predicted(X)) + ylim(c(0, 17500))
 ```
 
-We can see that MTox700+ largely focuses on metabolites related to Disease 
-metabolism and general metabolism, which is concomitant with the database
-being curated to contain metabolites relevant to toxicology in humans.
+The percentages describe these joined records, including any unmatched records 
+retained by the lookup. This example includes all returned species, so the 
+chart alone does not establish coverage of human toxicology.
 
 <br>
 
@@ -357,7 +360,7 @@ X <- database_lookup(
 X <- model_apply(X, predicted(M))
 ```
 
-We have used the `.unique` helper function so that records for each inchikey are
+We have used the `fuse_unique()` helper function so that records for each inchikey are
 combined into a single record by only retaining unique values in each field 
 (column). If there are multiple unique values for a field then they are 
 combined into a single string using the " || " separator.
@@ -378,7 +381,7 @@ predicted(X)$data$Pathway.Name[w]
 
 <br>
 
-# Session Info
+# Session info
 ```{r exploring-mtox-16}
 sessionInfo()
 ```

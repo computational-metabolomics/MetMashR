@@ -1,5 +1,5 @@
 ---
-title: "Extending MetMashR"
+title: "Extending MetMashR with custom sources and workflow steps"
 author: "Gavin Rhys Lloyd"
 date: "`r Sys.Date()`"
 output:
@@ -9,7 +9,7 @@ output:
     number_sections: true  
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{Extending MetMashR}
+  %\VignetteIndexEntry{Extending MetMashR with custom sources and workflow steps}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -32,7 +32,7 @@ are the ones we use the most.
 In this document we describe how to extend the 
 provided templates to include new sources bespoke to your requirements.
 
-# Getting Started
+# Getting started
 The latest versions of `r Biocpkg("struct")` and `MetMashR` that are compatible 
 with your 
 current R version can be installed using BiocManager.
@@ -68,10 +68,11 @@ library(ggplot2)
 ```
 
 # Example study
-In this example we are going to import some annotations from a study on 
-Metabolomics Workbench and build a workflow to clean up the table and search for
-PubChem CIDs so that we can present some images of some of the annotated
-metabolites for the study.
+This example uses the first ten rows of metabolite annotations from Metabolomics 
+Workbench analysis AN000465, stored with the package. We will create a source 
+reader and add two processing steps: removing columns that contain only missing 
+values and preparing names for database searches. We will then retrieve 
+candidate PubChem CIDs and ConnectivitySMILES strings.
 
 First, we need to import the table of annotations from Metabolomics Workbench.
 For this we make use of the `metabolomicsWorkbenchR` package.
@@ -89,7 +90,7 @@ AN <- do_query(
 The imported table has 747 rows and 8 columns. For brevity in this vignette 
 we have cached the first 10 rows and stored them in the package.
 
-```{r extending-metmashr-4, include=FALSE,eval=TRUE}
+```{r extending-metmashr-4, include=TRUE,eval=TRUE}
 AN <- readRDS(
     system.file("extdata/AN000465_subset.rds", package = "MetMashR")
 )
@@ -118,7 +119,7 @@ steps using the `r Biocpkg("struct")` package template system. We will also
 implement an new `annotation_source` to import the data from Metabolomics
 Workbench as part of the workflow.
 
-# Annotation Sources
+# Annotation sources
 Annotation sources are the mechanism used by `MetMashR` to get tables of 
 annotation data into R and into a well-defined format. Each extension of the 
 base `annotation_source` template provides methods to import the raw annotation 
@@ -136,22 +137,12 @@ model sequence.
 
 We will do this now as an example of implementing a new `annotation_source`.
 
-All `annotation_source` objects use the `model` template from the struct 
-package, so we could create the definition of a source on-the-fly. However, 
-annotation_sources are likely to be used multiple 
-times to read in data from the same source, so instead we define the new source
-in a more permanent way, by using code that can be included in a script to be 
-sourced, or in a new R package.
-
-There are three key components to an annotation source object, or indeed any
-struct model object:
-
-1. A definition of the object which defines what the input and output 
-parameters will be.
-2. A function to create an instance of the object and populate initial values
-for input parameters.
-3. A `model_apply` method. For annotation sources this method will read in data 
-from the source file and parse it into an `annotation_table`.
+This example creates a new database source by extending `annotation_database`. 
+We need three pieces: a class definition, a constructor that creates the 
+object, and a `read_database()` method that reads the data and returns a data 
+frame. The existing `read_source()` method puts that data into the source 
+object. We use `import_source()` to bring the source into a workflow. The 
+processing steps introduced later use `model_apply()` instead.
 
 We will implement each of these steps now.
 
@@ -198,24 +189,15 @@ mwb_source <- function(...) {
 ```
 
 ## The import method
-Like all model objects, the workhorse method for annotation sources is 
-`method_apply`. For annotation sources this method is used to import and
-parse the source files into an `annotation_table`.
-
-Here we use `setMethod` to define the method for the new source.
+The `read_database()` method below reads the cached annotation table and 
+returns it as a data frame. We define this method for the `mwb_source` class 
+using `setMethod()`.
 
 ```{r extending-metmashr-7, eval=TRUE,include=TRUE}
 setMethod(
     f = "read_database",
     signature = c("mwb_source"),
     definition = function(obj) {
-        ## get annotations using metabolomicsWorkbenchR
-        # AN = do_query(
-        #    context = "study",
-        #    input_item = "analysis_id",
-        #    input_value = M$analysis_id,
-        #    output_item = "metabolites")
-
         ## for vignette use locally cached subset
         AN <- readRDS(
             system.file("extdata/AN000465_subset.rds", package = "MetMashR")
@@ -226,13 +208,14 @@ setMethod(
 )
 ```
 
-Note how we pass `M$analysis` id to the `do_query` function so that we can 
-import annotations from any Metabolomics Workbench study when using our new 
-source object.
+This demonstration always reads `AN000465_subset.rds`. Changing the `source` 
+parameter does not select a different analysis. To make a reader for other 
+analyses, replace the cached-file code with a working query that uses the 
+object's `source` parameter.
 
 ## Using the new source
-The new `mwb_source` and `method_apply` method are ready to use. To import the 
-table we can use the `import_source` method:
+The new `mwb_source` class and its `read_database()` method are ready to use. 
+To import the table we can use `read_source()`:
 
 ```{r extending-metmashr-8}
 # initialise source
@@ -400,7 +383,7 @@ set_obj_method(
         if (M$clean) {
             D$data[[M$column_name]] <- unlist(s)
         } else {
-            D$data$name.fixed <- unlist(x)
+            D$data$name.fixed <- unlist(s)
         }
 
         # update model object
@@ -477,7 +460,7 @@ pubchem_smile_cache <- rds_database(
 ```
 
 In practice it is better to create your own cache using e.g. `rds_database`, 
-`sql_database` or other `struct_database` objects with write access.
+`sqlite_database()` or other `annotation_database` objects with write access.
 
 ```{r extending-metmashr-17, message=FALSE, include=TRUE, eval=TRUE}
 # prepare sequence
@@ -536,7 +519,7 @@ with other workflow objects provided you follow the templates. As well as new
 workflow steps MetMashR can also be extended to include additional 
 annotation sources.
 
-# Session Info
+# Session info
 ```{r extending-metmashr-18}
 sessionInfo()
 ```

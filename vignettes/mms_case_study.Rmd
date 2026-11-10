@@ -1,5 +1,5 @@
 ---
-title: 'Case study: reimplementing the Metabolites Merging Strategy with MetMashR'
+title: 'Adapting the Metabolites Merging Strategy with MetMashR'
 output:
   BiocStyle::html_document:
     toc: true
@@ -8,7 +8,7 @@ output:
     toc_float: true
 bibliography: mms_case_study.bib
 vignette: >
-  %\VignetteIndexEntry{Case study: reimplementing the Metabolites Merging Strategy with MetMashR}
+  %\VignetteIndexEntry{Adapting the Metabolites Merging Strategy with MetMashR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -88,13 +88,13 @@ end:
    names, but it accepts an InChIKey and returns a matched PubChem entry plus
    literature/patent annotation counts.
 
-For the same reason the ChEBI variant does not query the MWB compound database
-for cross-references; it uses the ChEBI identifier it already has to retrieve
-KEGG. Normalisation, the PubChem and ClassyFire attribute lookups and the
-InChIKey skeleton grouping in Step 3 do not depend on which service supplied
-the InChIKey, so both variants use the same steps. Each variant has its own
-lookup caches, however, so no response retrieved for one variant is reused by
-the other and the two workflows remain independent.
+The ChEBI variant uses its existing ChEBI identifier to retrieve KEGG compound
+identifiers and does not query the MWB compound database. Both variants use the
+same normalisation, PubChem and ClassyFire lookups, and grouping in Step 3. Each
+workflow has separate cache files so we can inspect the responses used by that
+workflow. The workflows still share the same study data and several database
+services. Their comparison shows how the results change when the translation
+service changes; it does not provide independent validation of those results.
 
 The workflow for each MMS step is shown as a flow diagram, read from left to
 right. Each box names the MetMashR function used for that step of the workflow
@@ -170,7 +170,7 @@ cached <- function(variant, name) {
 }
 ```
 
-## Normalising synonyms
+## Preparing names for identifier lookup
 
 Molecules have many synonyms and resolving them to the same identifier can
 be challenging. We apply a small number of normalisation rules, using
@@ -326,6 +326,12 @@ are assembled with Reduce() at the end.
 knitr::include_graphics("mms_figures/mms_step1_translation.png")
 ```
 
+The `ambiguous_inchikey` flag created below marks cases where the two returned
+InChIKeys have the same first 14 characters but differ within the following 12
+characters. It does not compare the final character, and missing comparisons
+are recorded as `FALSE`. It does not flag every disagreement, so `FALSE` does
+not mean that the services returned the same answer.
+
 ```{r step1}
 # query pubchem by synonym and return inchikey (same step in both variants,
 # each with its own cache)
@@ -445,11 +451,17 @@ returned by `chebi_lookup()` is used to retrieve the KEGG identifier instead,
 and the HMDB, LipidMaps and PubChem CID cross-references (which only that
 lookup provided) are omitted from this variant. The variant also queries
 CTS-Lite with the InChIKey, returning the compound name, formula and mass plus
-literature/patent annotation counts that can serve as a rough confidence
-signal. `cts_lite_lookup()` follows the same `cache`/`cache_mode` convention as
+literature and patent counts that show how much information the database holds
+for a compound. These counts do not confirm that the compound was identified in
+the study samples. `cts_lite_lookup()` follows the same `cache`/`cache_mode` convention as
 the other lookups, but is not built on the `rest_api` base class because
 CTS-Lite's API is POST/batch-based (one request takes a space-separated list
 of queries), which does not fit `rest_api`'s one `GET` per query value.
+
+By default, CTS-Lite can return a match based on the first 14 characters of the
+InChIKey if it cannot find an exact match. It also returns only its
+highest-ranked result. Check the returned InChIKey and match level before
+treating the attached information as an exact match to the requested compound.
 
 ```{r flow-step2, echo = FALSE, fig.wide = TRUE, out.width = "100%", fig.cap = "MMS Step 2 workflow. The variants differ in how the ChEBI identifier for the KEGG lookup is obtained, and only the ChEBI variant queries CTS-Lite.", fig.alt = "Step 2 flow diagram: pubchem_property_lookup and classyfire_batch_lookup, then a split into mwb_compound_lookup for the RefMet variant and compute_column for chebi_number for the ChEBI variant, rejoining at kegg_lookup, followed by cts_lite_lookup for the ChEBI variant only."}
 knitr::include_graphics("mms_figures/mms_step2_attributes.png")
@@ -536,12 +548,15 @@ attribute_step_chebi <- c(
 )
 ```
 
-## Manual curation (MMS Step 3)
+## Automated grouping (adaptation of MMS Step 3)
 
-To implement the first-14-character grouping rule described for MMS, we group 
-records by the InChIKey 14-character skeleton, disregarding stereochemical 
-distinctions. Because of this, a reported name's D-/L- prefix cannot be accepted 
-or rejected on the basis of this workflow alone.
+In this example, we group all records that share the first 14 characters of the
+InChIKey. This is an automated adaptation of MMS Step 3. The original method
+uses manual review to reconcile selected conjugate acid/base forms and check
+missing attributes and conflicting names. Our broader grouping can also combine
+records that differ in stereochemistry or isotopic composition. Keep the full
+InChIKeys and original names so these differences can be checked when they
+matter to the analysis.
 
 ```{r flow-step3, echo = FALSE, fig.wide = TRUE, out.width = "100%", fig.cap = "MMS Step 3 workflow, the same in both variants.", fig.alt = "Step 3 flow diagram: compute_column for inchikey_skeleton, combine_records by inchikey_skeleton and unique_records."}
 knitr::include_graphics("mms_figures/mms_step3_curation.png")
@@ -718,7 +733,7 @@ C <-
 chart_plot(C, result_refmet, result_chebi, gold)
 ```
 
-# Characterising the mismatch
+# Quantifying agreement and differences
 
 ```{r mismatch-check, echo = FALSE}
 gold_keys <- unique(gold$data$inchikey_skeleton)
@@ -770,7 +785,7 @@ overlap alone. Unresolved synonyms may contribute, but attribution requires
 inspection of the unmatched records, lookup responses, and the effects of
 normalisation and grouping.
 
-# Learnings and Benefits of MetMashR
+# Conclusions and limitations
 
 - **Executable workflow**. The reimplementation expresses the MWB analysis as an explicit sequence of steps that can be shared, inspected and rerun when the required inputs, package versions and caches are available.
 - **Archived lookup responses**. Caching allows previously retrieved responses to be reused rather than requiring a fresh query to each service. Note that reproducibility also requires archiving the caches and inputs with their dates and software versions; caching alone is not version control.
@@ -784,7 +799,9 @@ normalisation and grouping.
 
 # References {-}
 
-# Session Info
+<div id="refs"></div>
+
+# Session info
 
 ```{r mms-case-study-5, warning=FALSE}
 sessionInfo()

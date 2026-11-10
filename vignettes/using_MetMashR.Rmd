@@ -1,5 +1,5 @@
 ---
-title: "Using MetMashR"
+title: "Getting started with MetMashR"
 output:
   BiocStyle::html_document:
     toc: true
@@ -7,7 +7,7 @@ output:
     number_sections: true  
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{Using MetMashR}
+  %\VignetteIndexEntry{Getting started with MetMashR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,50 +19,26 @@ knitr::opts_chunk$set(
     fig.align = "center"
 )
 
-.DT <- function(x) {
-    dt_options <- list(
-        scrollX = TRUE,
-        pageLength = 6,
-        dom = "t",
-        initComplete = DT::JS(
-            "function(settings, json) {",
-            "$(this.api().table().header()).css({'font-size':'10pt'});",
-            "}"
-        )
-    )
-
-    x %>%
-        DT::datatable(options = dt_options, rownames = FALSE) %>%
-        DT::formatStyle(
-            columns = colnames(x),
-            fontSize = "10pt"
-        )
-}
-
 library(BiocStyle)
 ```
 
 <br>
 
 # Introduction
-`r Biocpkg("MetMashR")` is an R package designed to facilitate the cleaning, 
-filtering and combining of annotations from different sources. 
-`r Biocpkg("MetMashR")` defines an"annotation source" as a piece of software, 
-proprietary or otherwise, that
-takes the raw input of an analytical instrument and attempts to
-assign molecule names to the peaks in the data, usually by comparison to a 
-library. `r Biocpkg("MetMashR")` was primarily designed for use with 
-metabolomics data measured
-by LCMS (hence "metabolite" in the package name) but could be extended to 
-include
-other platforms (e.g. NMR, DIMS etc.), or other analytical approaches.
+`r Biocpkg("MetMashR")` cleans and combines annotation tables from tools such 
+as LipidSearch and adds information from reference databases. In this tutorial, 
+a *source* is the `r Biocpkg("MetMashR")` object used to hold or read one of 
+these tables or databases. The software that produced the annotations is the 
+*upstream annotation tool*. We use a bundled LipidSearch export, prepare names 
+for database searches and retrieve candidate identifiers from LIPID MAPS. We 
+then inspect the results and combine related records.
 
 In this vignette we describe commonly used annotation workflow steps and show
 how to use them in detail.
   
 <br>
 
-# Statistics in R using Class Templates (struct)
+# Statistics in R using class templates (struct)
 All of the objects defined in `r Biocpkg("MetMashR")` use or extend the class 
 templates 
 defined by the `r Biocpkg("struct")` package. Although originally intended for 
@@ -83,7 +59,7 @@ the [package vignette](https://www.bioconductor.org/packages/release/bioc/vignet
   
 <br>
 
-# Getting Started
+# Getting started
 The latest versions of `r Biocpkg("struct")` and `r Biocpkg("MetMashR")` that 
 are compatible 
 with your 
@@ -101,7 +77,7 @@ BiocManager::install("MetMashR")
 
 Once installed you can activate the packages in the usual way:
 
-```{r using-metmashr-3, eval=TRUE, include=FALSE}
+```{r using-metmashr-3}
 suppressPackageStartupMessages({
     # load the packages
     library(MetMashR)
@@ -112,17 +88,34 @@ suppressPackageStartupMessages({
 })
 ```
 
-```{r using-metmashr-4, eval=FALSE, include=TRUE}
-# load the packages
-library(struct)
-library(MetMashR)
-library(metabolomicsWorkbenchR)
-library(ggplot2)
+In this vignette we use a small helper function, `.DT()`, to display 
+tables using the `r CRANpkg("DT")` package:
+
+```{r using-metmashr-4}
+.DT <- function(x) {
+    dt_options <- list(
+        scrollX = TRUE,
+        pageLength = 6,
+        dom = "t",
+        initComplete = DT::JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'font-size':'10pt'});",
+            "}"
+        )
+    )
+
+    x %>%
+        DT::datatable(options = dt_options, rownames = FALSE) %>%
+        DT::formatStyle(
+            columns = colnames(x),
+            fontSize = "10pt"
+        )
+}
 ```
   
 <br>
 
-# Annotation Sources
+# Annotation sources
 
 `annotation_source` objects are the dataset used by all `r Biocpkg("MetMashR")` 
 workflow 
@@ -142,7 +135,7 @@ use of `annotation_table` and `annotation_database` is different.
   
 <br>
 
-## Annotation Tables
+## Annotation tables
 
 A `annotation_table` is defined by us as a `data.frame` of metabolite 
 annotations
@@ -188,7 +181,7 @@ The imported `annotation_table` object is compatible with MetMashR workflow step
 
 <br>
 
-## Annotation Databases
+## Annotation databases
 
 An `annotation_database` is a table of additional metabolite meta data. For
 example it might contain identifiers and/or InChIKeys for different metabolites.
@@ -239,7 +232,7 @@ resources they retrieve are cached locally.
   
 <br>
 
-# Annotation Mashing
+# Annotation mashing
 We define annotation mashing as the importing, cleaning, filtering and combining 
 of multiple annotation sources. This is useful for metabolomics datasets where
 there might be several assays and/or sources of information/annotations.
@@ -275,12 +268,12 @@ predicted(WF)
 
 <br>
 
-## Filtering / Cleaning
+## Filtering / cleaning
 
 `MetMashR` provides a number of commonly used workflow steps to filter, clean 
 and process annotation sources. Some of these steps, such as `filter_range` are 
 applicable to any annotation source, while others are specific to a source. For example
-`mz_rt_match` is only applicable to an `lcms_table` as it requires that both an 
+`mzrt_match()` is only applicable to an `lcms_table` as it requires that both an 
 m/z and a retention time column are present. This property is only enforced 
 for `lcms_table` objects.
 
@@ -338,7 +331,7 @@ The following methods are restricted to `lcms_table` sources:
 
 - `mz_match`
 - `rt_match`
-- `mz_rt_match`
+- `mzrt_match()`
 - `calc_ppm_diff`
 - `calc_rt_diff`
 
@@ -568,7 +561,7 @@ Lipid annotations.
 
 <br>
 
-# Combining Records
+# Combining records
 In the previous output LipidMaps returned multiple matches to the same lipid.
 This is because Lipid names can be ambiguous regarding the location of double 
 bonds, for example.
@@ -612,17 +605,19 @@ entry separated by semicolons.
 The helper function `fuse_unique` ensures that each inchikey only appears once in 
 the collapsed string, and is applied as default to all columns. 
 
-The `add_count`
-helper function adds a new column of counts for each LipidName. Note that 
-AcCa(20:4) has 8 counts but only 4 inchikey. This means that AcCa(20:4) 
-appeared twice in the original table, each time with the same 4 inchikey.
+`count_records()` counts the rows in each LipidName group at this point in the 
+workflow. One input row can produce several rows when a database search returns 
+several matches. The count therefore describes the current results table, not 
+the number of original input records. To count original records, keep their row 
+identifiers and count each original identifier once. Report that number 
+separately from the number of returned InChIKeys.
 
 There are a 
 number of other helper functions to suit 
 different requirements see `?combine_records_helper_functions` for a complete 
 list.
 
-# Session Info
+# Session info
 ```{r using-metmashr-16}
 sessionInfo()
 ```
