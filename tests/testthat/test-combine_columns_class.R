@@ -39,3 +39,24 @@ test_that("prioritise_columns works", {
     expect_setequal(out$combined, seq_len(10))
     expect_true(all(out$df == "b"))
 })
+
+test_that("prioritise_columns gives NA source when all columns are NA", {
+    df <- data.frame(
+        a = c(1, NA, NA),
+        b = c(NA, 2, NA),
+        id = seq_len(3)
+    )
+    AN <- annotation_table(data = df, id_column = "id")
+
+    M <- prioritise_columns(
+        column_names = c("a", "b"),
+        output_name = "combined",
+        source_name = "src",
+        source_tags = c("a", "b")
+    )
+    M <- model_apply(M, AN)
+    out <- predicted(M)$data
+
+    expect_equal(out$combined, c(1, 2, NA))
+    expect_equal(out$src, c("a", "b", NA))
+})

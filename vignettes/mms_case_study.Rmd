@@ -1,5 +1,5 @@
 ---
-title: 'Case study: reimplementing the Metabolites Merging Strategy with MetMashR'
+title: 'Adapting the Metabolites Merging Strategy with MetMashR'
 output:
   BiocStyle::html_document:
     toc: true
@@ -8,7 +8,7 @@ output:
     toc_float: true
 bibliography: mms_case_study.bib
 vignette: >
-  %\VignetteIndexEntry{Case study: reimplementing the Metabolites Merging Strategy with MetMashR}
+  %\VignetteIndexEntry{Adapting the Metabolites Merging Strategy with MetMashR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -38,6 +38,16 @@ library(struct)
 library(MetMashR)
 library(ggplot2)
 ```
+
+::: {#Offline style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
+**Note:** This vignette is built without network access. The Metabolomics 
+Workbench study tables and the published comparison table are read from stored 
+copies included with `MetMashR`, and all REST API lookups use stored response 
+caches with `cache_mode = "offline"`, so a value that is not in a cache is left 
+as `NA` instead of being queried. To query the online services yourself, use 
+your own cache and the default `cache_mode = "update"`. The stored copies were 
+made with `inst/scripts/make_vignette_snapshots.R`.
+:::
 
 # Introduction
 
@@ -88,13 +98,13 @@ end:
    names, but it accepts an InChIKey and returns a matched PubChem entry plus
    literature/patent annotation counts.
 
-For the same reason the ChEBI variant does not query the MWB compound database
-for cross-references; it uses the ChEBI identifier it already has to retrieve
-KEGG. Normalisation, the PubChem and ClassyFire attribute lookups and the
-InChIKey skeleton grouping in Step 3 do not depend on which service supplied
-the InChIKey, so both variants use the same steps. Each variant has its own
-lookup caches, however, so no response retrieved for one variant is reused by
-the other and the two workflows remain independent.
+The ChEBI variant uses its existing ChEBI identifier to retrieve KEGG compound
+identifiers and does not query the MWB compound database. Both variants use the
+same normalisation, PubChem and ClassyFire lookups, and grouping in Step 3. Each
+workflow has separate cache files so we can inspect the responses used by that
+workflow. The workflows still share the same study data and several database
+services. Their comparison shows how the results change when the translation
+service changes; it does not provide independent validation of those results.
 
 The workflow for each MMS step is shown as a flow diagram, read from left to
 right. Each box names the MetMashR function used for that step of the workflow
@@ -112,9 +122,10 @@ next step they have in common.
 
 # Importing the source data
 
-Each study's reported metabolite list is retrieved directly from Metabolomics
-Workbench with `mwb_study_source()` and the three tables are combined with
-`combine_sources()`.
+Each study's reported metabolite list can be retrieved directly from 
+Metabolomics Workbench with `mwb_study_source()`. In this vignette we read 
+stored copies of the three tables, retrieved with `mwb_study_source()`, and 
+combine them with `combine_sources()`.
 
 Only the `metabolite_name` is used as a chemical lookup input; source and study 
 tags are retained separately. Existing `refmet_name` and `pubchem_id` 
@@ -124,11 +135,17 @@ annotations, where available, are excluded to test the name-based translation.
 # the studies to import
 study_ids <- c("ST001039", "ST001048", "ST001317")
 
-# read each source
-sources <- lapply(
-    study_ids,
-    function(id) read_source(mwb_study_source(source = id, tag = id))
-)
+# read the stored copy of each study table
+sources <- lapply(study_ids, function(id) {
+    read_source(rds_database(
+        source = system.file(
+            paste0("extdata/vignette_snapshots/MWB_", id, ".rds"),
+            package = "MetMashR"
+        ),
+        tag = id,
+        .writable = FALSE
+    ))
+})
 
 # use MetMashR to merge all sources
 combine_step <- combine_sources(
@@ -154,9 +171,9 @@ sequence. The translation and attribute-retrieval steps use pre-existing
 `rds_cache` files with `cache_mode = "offline"`, one per lookup per variant. 
 Cached responses are reused; 
 query values absent from a cache are left as `NA`. A live rerun requires a 
-supported online cache mode and a writable cache location. These lookup 
-caches do not, by themselves, archive the MWB study downloads or the 
-separately imported Zenodo comparison file.
+supported online cache mode and a writable cache location. The MWB study 
+tables and the Zenodo comparison table are stored separately (see the note at 
+the top of this vignette).
 
 ```{r cache-setup}
 # Function that returns the rds_cache for a lookup in one variant
@@ -170,7 +187,7 @@ cached <- function(variant, name) {
 }
 ```
 
-## Normalising synonyms
+## Preparing names for identifier lookup
 
 Molecules have many synonyms and resolving them to the same identifier can
 be challenging. We apply a small number of normalisation rules, using
@@ -326,6 +343,12 @@ are assembled with Reduce() at the end.
 knitr::include_graphics("mms_figures/mms_step1_translation.png")
 ```
 
+The `ambiguous_inchikey` flag created below marks cases where the two returned
+InChIKeys have the same first 14 characters but differ within the following 12
+characters. It does not compare the final character, and missing comparisons
+are recorded as `FALSE`. It does not flag every disagreement, so `FALSE` does
+not mean that the services returned the same answer.
+
 ```{r step1}
 # query pubchem by synonym and return inchikey (same step in both variants,
 # each with its own cache)
@@ -445,11 +468,18 @@ returned by `chebi_lookup()` is used to retrieve the KEGG identifier instead,
 and the HMDB, LipidMaps and PubChem CID cross-references (which only that
 lookup provided) are omitted from this variant. The variant also queries
 CTS-Lite with the InChIKey, returning the compound name, formula and mass plus
-literature/patent annotation counts that can serve as a rough confidence
-signal. `cts_lite_lookup()` follows the same `cache`/`cache_mode` convention as
+literature and patent counts that show how much information the database holds
+for a compound. These counts do not confirm that the compound was identified in
+the study samples. `cts_lite_lookup()` follows the same `cache`/`cache_mode` convention as
 the other lookups, but is not built on the `rest_api` base class because
 CTS-Lite's API is POST/batch-based (one request takes a space-separated list
 of queries), which does not fit `rest_api`'s one `GET` per query value.
+
+By default, CTS-Lite can return a match based on the first 14 characters of the
+InChIKey if it cannot find an exact match. It also returns only its
+highest-ranked result. Check the returned InChIKey and match level before
+treating the attached information as an exact match to the requested compound
+(see the [CTS-Lite documentation](https://cts-lite.metabolomics.us/docs)).
 
 ```{r flow-step2, echo = FALSE, fig.wide = TRUE, out.width = "100%", fig.cap = "MMS Step 2 workflow. The variants differ in how the ChEBI identifier for the KEGG lookup is obtained, and only the ChEBI variant queries CTS-Lite.", fig.alt = "Step 2 flow diagram: pubchem_property_lookup and classyfire_batch_lookup, then a split into mwb_compound_lookup for the RefMet variant and compute_column for chebi_number for the ChEBI variant, rejoining at kegg_lookup, followed by cts_lite_lookup for the ChEBI variant only."}
 knitr::include_graphics("mms_figures/mms_step2_attributes.png")
@@ -536,12 +566,15 @@ attribute_step_chebi <- c(
 )
 ```
 
-## Manual curation (MMS Step 3)
+## Automated grouping (adaptation of MMS Step 3)
 
-To implement the first-14-character grouping rule described for MMS, we group 
-records by the InChIKey 14-character skeleton, disregarding stereochemical 
-distinctions. Because of this, a reported name's D-/L- prefix cannot be accepted 
-or rejected on the basis of this workflow alone.
+In this example, we group all records that share the first 14 characters of the
+InChIKey. This is an automated adaptation of MMS Step 3. The original method
+uses manual review to reconcile selected conjugate acid/base forms and check
+missing attributes and conflicting names. Our broader grouping can also combine
+records that differ in stereochemistry or isotopic composition. Keep the full
+InChIKeys and original names so these differences can be checked when they
+matter to the analysis.
 
 ```{r flow-step3, echo = FALSE, fig.wide = TRUE, out.width = "100%", fig.cap = "MMS Step 3 workflow, the same in both variants.", fig.alt = "Step 3 flow diagram: compute_column for inchikey_skeleton, combine_records by inchikey_skeleton and unique_records."}
 knitr::include_graphics("mms_figures/mms_step3_curation.png")
@@ -605,8 +638,10 @@ workflow_chebi <- Reduce(
 )
 
 # apply model sequences to merged sources and extract the results
-result_refmet <- predicted(model_apply(workflow_refmet, combined))
-result_chebi <- predicted(model_apply(workflow_chebi, combined))
+applied_refmet <- model_apply(workflow_refmet, combined)
+applied_chebi <- model_apply(workflow_chebi, combined)
+result_refmet <- predicted(applied_refmet)
+result_chebi <- predicted(applied_chebi)
 
 # report number of records
 c(
@@ -614,6 +649,83 @@ c(
     chebi = nrow(result_chebi$data)
 )
 ```
+
+The table below shows how the number of records changes through each workflow.
+Preparing the names can split one input record into several candidate names,
+so the number of names looked up can be larger than the number of input
+records.
+
+```{r record-counts}
+record_counts <- function(W) {
+    # output of the step before the InChIKey filter
+    steps <- seq_len(length(W))
+    i <- which(vapply(steps, function(k) is(W[k], "filter_na"), logical(1)))[1]
+    looked_up <- predicted(W[i - 1])$data
+    final <- predicted(W)$data
+    keys <- unique(looked_up$InChIKey[!is.na(looked_up$InChIKey)])
+    c(
+        input_records = nrow(combined$data),
+        names_looked_up = nrow(looked_up),
+        names_without_inchikey = sum(is.na(looked_up$InChIKey)),
+        distinct_full_inchikeys = length(keys),
+        distinct_14_character_groups = nrow(final)
+    )
+}
+data.frame(
+    refmet = record_counts(applied_refmet),
+    chebi = record_counts(applied_chebi)
+)
+```
+
+Names without an InChIKey are removed by `filter_na()`. The remaining names 
+are merged first by full InChIKey and then by the first 14 characters of the 
+InChIKey.
+
+The next table is a worked example from the RefMet variant. It shows a few 
+names chosen to cover the possible outcomes of Step 1: the original name, the 
+name sent to the databases after preparation, the InChIKey returned by each 
+service, and the InChIKey selected by `prioritise_columns()`.
+
+```{r worked-example}
+worked_example <- function(W, inchikey_col, tag) {
+    steps <- seq_len(length(W))
+    i <- which(vapply(steps, function(k) {
+        is(W[k], "prioritise_columns")
+    }, logical(1)))[1]
+    # lookups before prioritising, and the selected InChIKey after
+    before <- predicted(W[i - 1])$data
+    after <- predicted(W[i])$data
+    pc <- before$inchikey_pubchem_id_exchange
+    other <- before[[inchikey_col]]
+    # first example of each outcome
+    pick <- c(
+        both_agree = which(!is.na(pc) & !is.na(other) & pc == other &
+            before$metabolite_name != before$name_normalised)[1],
+        both_differ = which(!is.na(pc) & !is.na(other) & pc != other)[1],
+        pubchem_only = which(!is.na(pc) & is.na(other))[1],
+        other_only = which(is.na(pc) & !is.na(other))[1],
+        unresolved = which(is.na(pc) & is.na(other))[1]
+    )
+    pick <- pick[!is.na(pick)]
+    out <- data.frame(
+        outcome = names(pick),
+        original_name = before$metabolite_name[pick],
+        name_sent = before$name_normalised[pick],
+        inchikey_pubchem = pc[pick],
+        inchikey_other = other[pick],
+        selected = after$InChIKey[pick],
+        selected_from = after$InChIKey_source[pick]
+    )
+    names(out)[5] <- paste0("inchikey_", tag)
+    out
+}
+.DT(worked_example(applied_refmet, "inchi_key_refmet", "refmet"))
+```
+
+In the RefMet variant, 
+`r record_counts(applied_refmet)[["names_without_inchikey"]]` of the 
+`r record_counts(applied_refmet)[["names_looked_up"]]` names looked up were not 
+resolved by either service.
 
 # What the harmonised tables look like
 
@@ -632,14 +744,16 @@ preview_cols <- c(
 )
 ```
 
-RefMet variant:
+RefMet variant (preview of the first 10 of `r nrow(result_refmet$data)` 
+rows):
 
 ```{r result-table-refmet}
 .DT(head(result_refmet$data[, preview_cols], 10))
 ```
 
-ChEBI + CTS-Lite variant. It has no MWB-derived HMDB, LipidMaps or PubChem CID
-columns, and includes the CTS-Lite columns:
+ChEBI + CTS-Lite variant (preview of the first 10 of 
+`r nrow(result_chebi$data)` rows). It has no MWB-derived HMDB, LipidMaps or 
+PubChem CID columns, and includes the CTS-Lite columns:
 
 ```{r result-table-chebi}
 chebi_cols <- c(
@@ -647,6 +761,7 @@ chebi_cols <- c(
     "MolecularFormula_pubchem", "MolecularWeight_pubchem",
     "chebi_id_chebi", "compound_kegg",
     "kingdom.name_cfb", "superclass.name_cfb", "class.name_cfb",
+    "inchikey_cts", "match_level_cts",
     "compound_name_cts", "annotation_type_count_cts",
     "ambiguous_inchikey", "ambiguous_name", "source"
 )
@@ -656,11 +771,9 @@ chebi_cols <- c(
 # Comparison against the published result
 
 The published supplementary dataset is available on Zenodo
-[@villalba2023data]. It is imported with `zenodo_file()`, which
-downloads the file once and caches it locally using `BiocFileCache`; later
-builds reuse the cached copy, so an internet connection is only needed the
-first time (or set `offline = TRUE` to skip the check for a newer version).
-The table is restricted to compounds attributed to the three MWB studies. The
+[@villalba2023data] and can be imported with `zenodo_file()`. In this vignette 
+we read a stored copy of its Table S3, imported with `zenodo_file()`. The table 
+is restricted to compounds attributed to the three MWB studies. The
 original publication's HMDB and literature sources are outside the scope of
 this vignette.
 
@@ -670,13 +783,13 @@ comparison. We only evaluate skeleton membership, not full-key identity or the
 accuracy or completeness of the attached attributes.
 
 ```{r comparison, out.width = "70%", fig.width = 8, fig.height = 6}
-# supplementary file from the Zenodo record, cached with BiocFileCache
-gold_db <- zenodo_file(
-    record_id = 8226097,
-    file_name = "MDM_Suppl_vSubmitted.xlsx",
-    import_fun = function(path) {
-        openxlsx::read.xlsx(path, sheet = "Table S3", colNames = TRUE)
-    }
+# stored copy of Table S3 from the supplementary file of Zenodo record 8226097
+gold_db <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/MMS_zenodo_8226097_TableS3.rds",
+        package = "MetMashR"
+    ),
+    .writable = FALSE
 )
 
 # import as an annotation_source
@@ -718,7 +831,7 @@ C <-
 chart_plot(C, result_refmet, result_chebi, gold)
 ```
 
-# Characterising the mismatch
+# Quantifying agreement and differences
 
 ```{r mismatch-check, echo = FALSE}
 gold_keys <- unique(gold$data$inchikey_skeleton)
@@ -770,7 +883,7 @@ overlap alone. Unresolved synonyms may contribute, but attribution requires
 inspection of the unmatched records, lookup responses, and the effects of
 normalisation and grouping.
 
-# Learnings and Benefits of MetMashR
+# Conclusions and limitations
 
 - **Executable workflow**. The reimplementation expresses the MWB analysis as an explicit sequence of steps that can be shared, inspected and rerun when the required inputs, package versions and caches are available.
 - **Archived lookup responses**. Caching allows previously retrieved responses to be reused rather than requiring a fresh query to each service. Note that reproducibility also requires archiving the caches and inputs with their dates and software versions; caching alone is not version control.
@@ -784,7 +897,9 @@ normalisation and grouping.
 
 # References {-}
 
-# Session Info
+<div id="refs"></div>
+
+# Session info
 
 ```{r mms-case-study-5, warning=FALSE}
 sessionInfo()

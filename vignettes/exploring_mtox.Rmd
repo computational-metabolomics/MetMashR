@@ -1,5 +1,5 @@
 ---
-title: "Exploring the MTox700+ library"
+title: "Exploring chemical classes and pathway coverage in MTox700+"
 author: "Gavin Rhys Lloyd"
 date: "`r Sys.Date()`"
 output:
@@ -9,7 +9,7 @@ output:
     number_sections: true  
     toc_float: true
 vignette: >
-    %\VignetteIndexEntry{Exploring the MTox700+ library}
+    %\VignetteIndexEntry{Exploring chemical classes and pathway coverage in MTox700+}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
     dt_options <- list(
         scrollX = TRUE,
         pageLength = 6,
-        dom = "t",
+        dom = "tip", # table, row count and pagination
         initComplete = DT::JS(
             "function(settings, json) {",
             "$(this.api().table().header()).css({'font-size':'10pt'});",
@@ -47,6 +47,15 @@ knitr::opts_chunk$set(
 
 library(BiocStyle)
 ```
+
+:::{#Offline style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
+**Note:** This vignette is built without network access. Online databases are 
+read from stored copies included with `MetMashR`, and REST API lookups use 
+stored response caches with `cache_mode = "offline"`, so a value that is not in 
+a cache is left as `NA` instead of being queried. To query the online services 
+yourself, use your own cache and the default `cache_mode = "update"`. The stored 
+copies were made with `inst/scripts/make_vignette_snapshots.R`.
+:::
   
   <br>
   
@@ -96,21 +105,38 @@ library(ggplotify)
 > MTox700+ is a list of toxicologically relevant metabolites derived from 
 publications, public databases and relevant toxicological assays.
 
-In this vignette we import the MTox700+ database and combine.merge and "mash" it
-with other databases to explore its contents and its coverage of chemical, 
-biological and toxicological space.
+In this vignette you will learn how to combine MTox700+ with the PathBank 
+pathway database to see which chemical classes MTox700+ contains and how many 
+of its metabolites have pathway information in PathBank.
 
 <br>
 
 # Importing the MTox700+ database
-The MTox700+ database can be imported using the `MTox700plus_database` object.
-It can be imported to a data.frame using the `read_database` method.
+The MTox700+ database can be imported using the `MTox700plus_database` object, 
+which downloads a release of the database from GitHub. In this vignette we 
+read a stored copy of the database with `rds_database()`. A table describing 
+the stored copies included with `MetMashR` records which release was stored 
+and when it was downloaded.
 
 ```{r exploring-mtox-5}
-# prep object
-MT <- MTox700plus_database(
-    version = "latest",
-    tag = "MTox700+"
+# where and when the stored copies were retrieved
+snapshots <- readRDS(system.file(
+    "extdata/vignette_snapshots/snapshot_info.rds",
+    package = "MetMashR"
+))
+snapshots[
+    snapshots$resource %in% c("MTox700+", "PathBank"),
+    c("resource", "version", "retrieved")
+]
+
+# prep object (stored copy of MTox700+)
+MT <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/MTox700plus.rds",
+        package = "MetMashR"
+    ),
+    tag = "MTox700+",
+    .writable = FALSE
 )
 
 # import
@@ -119,6 +145,10 @@ df <- read_database(MT)
 # show contents
 .DT(df)
 ```
+
+This example uses MTox700+ release 
+`r snapshots$version[snapshots$resource == "MTox700+"]`, downloaded on 
+`r snapshots$retrieved[snapshots$resource == "MTox700+"]`.
 
 ```{r exploring-mtox-6}
 # prepare workflow that uses MTox700+ as a source
@@ -188,14 +218,14 @@ To explore the biological space covered by the metabolites in MTox700+ we need
 mash the database with additional information about the biological pathways that
 the metabolites are part of.
 
-We use the [PathBank](https://pathbank.org/) for this purpose. A 
-`struct_database` object for PathBank is already included in `MetMashR`.
+We use [PathBank](https://pathbank.org/) for this purpose. `MetMashR` 
+already includes a database source for PathBank.
 
 <br>
 
 ## Importing PathBank
 
-`MetMashR` provides the `PathBank_metabolite_databse` object to import the
+`MetMashR` provides the `PathBank_metabolite_database()` object to import the
 PathBank database. You can choose to import:
 
 - The "primary" database. This is a smaller version of the database restricted 
@@ -205,8 +235,8 @@ to primary pathways.
 The "complete" database is a >50mb download, and unzipped is >1Gb. Unzipping
 and caching of the database is handled by [BiocFileCache].
 
-For the vignette we restrict to the "primary" PathBank database to keep file 
-sizes and downloads to a minimum.
+For the vignette we use a stored copy of the "primary" PathBank database, 
+keeping only the columns used below.
 
 We can use the database in two ways:
 
@@ -229,10 +259,14 @@ compare the overlap between inchikey identifiers in PathBank and MTox700+.
 ```{r exploring-mtox-8, fig.width=8,warning=FALSE}
 # object M already contains the MTox700+ database as a source
 
-# prepare PathBank as a source
-P <- PathBank_metabolite_database(
-    version = "primary",
-    tag = "PathBank"
+# prepare PathBank as a source (stored copy of the primary database)
+P <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/PathBank_primary_metabolites.rds",
+        package = "MetMashR"
+    ),
+    tag = "PathBank",
+    .writable = FALSE
 )
 
 # import
@@ -256,8 +290,42 @@ g2 <- as.ggplot(chart_plot(C, predicted(M), P)) +
 cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
 ```
 
-The charts show that less than half of the metabolites in MTox700+ are also 
-present in the PathBank database for primary pathways.
+PathBank does not report a version number, so we report the date the stored 
+copy was downloaded: `r snapshots$retrieved[snapshots$resource == "PathBank"]`.
+
+These charts compare full InChIKeys in MTox700+ with those in the selected 
+PathBank primary-pathway dataset. To report the overlap, we count the distinct, 
+non-missing keys shared by both resources and divide by the number of distinct, 
+non-missing MTox700+ keys.
+
+```{r exploring-mtox-8b}
+# distinct, non-missing InChIKeys
+keys <- function(x) {
+    x <- unique(x)
+    x[!is.na(x) & x != ""]
+}
+mtox_keys <- keys(predicted(M)$data$inchikey)
+pathbank_keys <- keys(P$data$InChI.Key)
+shared_keys <- intersect(mtox_keys, pathbank_keys)
+
+# MTox700+ records with no InChIKey
+n_missing <- sum(is.na(predicted(M)$data$inchikey) |
+    predicted(M)$data$inchikey == "")
+
+data.frame(
+    mtox_keys = length(mtox_keys),
+    shared_keys = length(shared_keys),
+    percent_shared = round(100 * length(shared_keys) / length(mtox_keys), 1),
+    mtox_records_without_key = n_missing
+)
+```
+
+Of the `r length(mtox_keys)` distinct MTox700+ InChIKeys, 
+`r length(shared_keys)` 
+(`r round(100 * length(shared_keys) / length(mtox_keys), 1)`%) are also in the 
+PathBank primary-pathway dataset; `r n_missing` MTox700+ records have no 
+InChIKey. An unmatched key means that it was not found in this PathBank subset; 
+it does not show that the metabolite has no known pathway associations.
 
 <br>
 
@@ -267,11 +335,8 @@ To combine the pathway information in PathBank with the MTox700+ database we
 can use PathBank as a lookup table based on inchikeys. To do this we use the 
 `database_lookup` object.
 
-Note that PathBank is not downloaded a second time; it is automatically 
-retrieved from the cache.
-
 We request a number of columns from PathBank, including pathway information and
-additional identifiers such as HMBD ID and KEGG ID.
+additional identifiers such as HMDB ID and KEGG ID.
 
 ```{r exploring-mtox-9}
 # prepare object
@@ -291,7 +356,8 @@ X <- model_apply(X, predicted(M))
 ```
 
 We can now visualise e.g. the subject of the pathways captured by the MTox700+ 
-database.
+database. This chart counts records after the PathBank join. One metabolite can 
+contribute more than once if it matches several pathways.
 
 ```{r exploring-mtox-10}
 C <- annotation_bar_chart(
@@ -305,9 +371,9 @@ C <- annotation_bar_chart(
 chart_plot(C, predicted(X)) + ylim(c(0, 17500))
 ```
 
-We can see that MTox700+ largely focuses on metabolites related to Disease 
-metabolism and general metabolism, which is concomitant with the database
-being curated to contain metabolites relevant to toxicology in humans.
+The percentages describe these joined records, including any unmatched records 
+retained by the lookup. This example includes all returned species, so the 
+chart alone does not establish coverage of human toxicology.
 
 <br>
 
@@ -334,9 +400,13 @@ nrow(predicted(X)$data)
 
 Sometimes it is useful to collapse this information into a single record per 
 metabolite. We can use the `combine_records` object and its helper functions to
-do this in a `MetMashR` workflow.
+do this in a `MetMashR` workflow. Before collapsing the records we save the 
+full table of matches, which has one row per metabolite and pathway.
 
 ```{r exploring-mtox-13}
+# save the full table of matches before collapsing
+pathway_matches <- predicted(X)$data
+
 # prepare object
 X <- database_lookup(
     query_column = "inchikey",
@@ -357,7 +427,7 @@ X <- database_lookup(
 X <- model_apply(X, predicted(M))
 ```
 
-We have used the `.unique` helper function so that records for each inchikey are
+We have used the `fuse_unique()` helper function so that records for each inchikey are
 combined into a single record by only retaining unique values in each field 
 (column). If there are multiple unique values for a field then they are 
 combined into a single string using the " || " separator.
@@ -376,9 +446,33 @@ The pathways associated with Glycolic acid are:
 predicted(X)$data$Pathway.Name[w]
 ```
 
+The summary lists unique values from each column separately. Values in the same 
+position in those lists may not come from the same original row. Use the saved 
+full table to see which pathway ID, pathway name and species belong together:
+
+```{r exploring-mtox-15b}
+glycolic <- pathway_matches[
+    pathway_matches$metabolite_name == "Glycolic acid",
+    c("PathBank.ID", "Pathway.Name", "Species")
+]
+.DT(glycolic)
+```
+
 <br>
 
-# Session Info
+# Summary
+Combining MTox700+ with PathBank shows which MTox700+ metabolites have pathway 
+information in the PathBank primary-pathway dataset, and which pathway subjects 
+those matches belong to. The comparison has limits. Matching uses full 
+InChIKeys, so a metabolite recorded in a different form (e.g. a different 
+charge state or stereoisomer) is not matched. Only the primary-pathway subset of 
+PathBank is used, and all species are included. The pathway charts count 
+joined records rather than metabolites, so metabolites in many pathways have 
+more weight.
+
+<br>
+
+# Session info
 ```{r exploring-mtox-16}
 sessionInfo()
 ```

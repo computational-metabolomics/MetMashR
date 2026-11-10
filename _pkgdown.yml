@@ -9,15 +9,15 @@ navbar:
       href: reference/index.html
     - text: Articles
       menu:
-      - text: Using MetMashR
+      - text: Getting started with MetMashR
         href: articles/using_MetMashR.html
-      - text: Extending MetMashR
+      - text: Extending MetMashR with custom sources and workflow steps
         href: articles/Extending_MetMashR.html
-      - text: Annotating mixtures of standards
+      - text: Evaluating metabolite annotations using standard mixtures
         href: articles/annotate_mixtures.html
-      - text: Exploring the MTox700+ database
+      - text: Exploring chemical classes and pathway coverage in MTox700+
         href: articles/exploring_mtox.html
-      - text: "Case study: reimplementing the Metabolites Merging Strategy"
+      - text: Adapting the Metabolites Merging Strategy with MetMashR
         href: articles/mms_case_study.html
   right:
     - icon: fa-github
