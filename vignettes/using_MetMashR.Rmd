@@ -22,6 +22,16 @@ knitr::opts_chunk$set(
 library(BiocStyle)
 ```
 
+:::{#Offline style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
+**Note:** This vignette is built without network access. Online databases are 
+read from stored copies included with `r Biocpkg("MetMashR")`, and REST API 
+lookups use stored response caches with `cache_mode = "offline"`, so a value 
+that is not in a cache is left as `NA` instead of being queried. To query the 
+online services yourself, use your own cache and the default 
+`cache_mode = "update"`. The stored copies were made with 
+`inst/scripts/make_vignette_snapshots.R`.
+:::
+
 <br>
 
 # Introduction
@@ -109,8 +119,13 @@ AT <- ls_source(
     )
 )
 
-# a local cache for the LIPID MAPS responses (reused later in this vignette)
-TF <- rds_database(source = tempfile())
+# stored LIPID MAPS responses (reused later in this vignette)
+TF <- rds_cache(
+    source = system.file(
+        "cached/lipidmaps_inchikey_cache.rds",
+        package = "MetMashR"
+    )
+)
 
 # import, filter and look up identifiers
 WF <- import_source() +
@@ -125,6 +140,7 @@ WF <- import_source() +
         context_item = "abbrev",
         output_item = "inchi_key",
         cache = TF,
+        cache_mode = "offline",
         suffix = "",
         delay = 2
     )
@@ -235,11 +251,19 @@ Usually (but not always) this table is used in a read-only fashion and is used
 to augment an `annotation_table` with additional information.
 
 Like other sources, `annotation_database` objects have a `read_source` method 
-specific to the database.
+specific to the database. For example, `MTox700plus_database()` downloads the 
+MTox700+ database from GitHub. In this vignette we read a stored copy of it 
+with `rds_database()`, which reads a data.frame saved in an `.rds` file.
 
 ```{r using-metmashr-6}
-# prepare source object
-MT <- MTox700plus_database()
+# prepare source object (stored copy of MTox700+)
+MT <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/MTox700plus.rds",
+        package = "MetMashR"
+    ),
+    .writable = FALSE
+)
 
 # read
 MT <- read_source(MT)
@@ -252,9 +276,6 @@ MT
 table directly to a data.frame.
 
 ```{r using-metmashr-7}
-# prepare source object
-MT <- MTox700plus_database()
-
 # read to data.frame
 df <- read_database(MT)
 
@@ -429,6 +450,11 @@ e.g. querying for molecular identifiers.
 The `rest_api` template object includes the ability to cache results locally, 
 in order to reduce the number of api queries. This means a `rest_api` object can
 be included in a workflow and updated as more results are collected over time. 
+The `cache_mode` input controls how the cache is used. With the default 
+`cache_mode = "update"`, values already in the cache are reused and new values 
+are queried and added to the cache. With `cache_mode = "offline"`, the api is 
+never queried and values that are not in the cache are left as `NA`. In this 
+vignette we use a stored cache with `cache_mode = "offline"`.
 
 ```{r using-metmashr-11}
 # prepare source object
@@ -459,6 +485,7 @@ WF <-
         context_item = "abbrev",
         output_item = "inchi_key",
         cache = TF,
+        cache_mode = "offline",
         suffix = "",
         delay = 2
     )
@@ -578,7 +605,8 @@ WF <-
         context_item = "abbrev",
         output_item = "inchi_key",
         suffix = "_LipidName",
-        cache = TF
+        cache = TF,
+        cache_mode = "offline"
     ) +
     # step 5 query lipidmaps api for inchikey using the names provided by
     # LipidSearch
@@ -587,7 +615,9 @@ WF <-
         context = "compound",
         context_item = "abbrev",
         output_item = "inchi_key",
-        suffix = "_normalised"
+        suffix = "_normalised",
+        cache = TF,
+        cache_mode = "offline"
     )
 
 # apply workflow to annotation source

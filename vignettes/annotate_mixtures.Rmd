@@ -44,6 +44,15 @@ knitr::opts_chunk$set(
 library(BiocStyle)
 ```
 
+:::{#Offline style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
+**Note:** This vignette is built without network access. Online databases are 
+read from stored copies included with `MetMashR`, and REST API lookups use 
+stored response caches with `cache_mode = "offline"`, so a value that is not in 
+a cache is left as `NA` instead of being queried. To query the online services 
+yourself, use your own cache and the default `cache_mode = "update"`. The stored 
+copies were made with `inst/scripts/make_vignette_snapshots.R`.
+:::
+
 <br>
 
 # Getting started
@@ -133,8 +142,7 @@ source-specific cleaning.
 <br>
 
 ## Importing Compound Discoverer annotations
-The CD file format expected by `cd_source` is Excel format; see [TODO] for 
-details on how to generate this format from CD.
+The CD file format expected by `cd_source` is Excel format.
 
 For the CD `MetMashR` workflow we would like to:
 
@@ -302,8 +310,7 @@ range, and set the vertical red lines equal to the range filter so that we can
 see which parts of the histogram are affected by the range filter.
 
 ## Importing LipidSearch annotations
-The file format expected by `ls_source` is a tab-delimited text file. See [TODO] for 
-details on how to generate this format from LS.
+The file format expected by `ls_source` is a tab-delimited text file.
 
 For the `MetMashR` workflow we would like to:
 
@@ -576,7 +583,7 @@ various databases, either stored locally, or in online databases such as
 PubChem by using their REST API.
 
 For this vignette we use cached results so that we don't overburden the api; 
-in practice you would create your own (see [TODO]).
+in practice you would create your own.
 
 ```{r annotate-mixtures-19}
 # import cached results
@@ -594,7 +601,8 @@ id_workflow <-
         suffix = "",
         property = "InChIKey",
         records = "best",
-        cache = inchikey_cache
+        cache = inchikey_cache,
+        cache_mode = "offline"
     )
 
 id_workflow <- model_apply(id_workflow, predicted(combine_workflow))
@@ -702,13 +710,15 @@ N <- normalise_strings(
         suffix = "_norm",
         property = "InChIKey",
         records = "best",
-        cache = inchikey_cache2
+        cache = inchikey_cache2,
+        cache_mode = "offline"
     ) +
     opsin_lookup(
         query_column = "normalised_name",
         suffix = "_opsin",
         output = "stdinchikey",
-        cache = inchikey_cache3
+        cache = inchikey_cache3,
+        cache_mode = "offline"
     ) +
     prioritise_columns(
         column_names = c("stdinchikey_opsin", "InChIKey_norm", "InChIKey"),
@@ -870,8 +880,9 @@ The standards table provides HMDB identifiers for each metabolite, but our
 preference is to work with InChIkey. So our first task is to obtain InChiKey for
 the standards.
 
-The standards are based on the MTox700+ database (see [TODO]), so we can import 
-MTox700+ and use it to obtain InChIKey identifiers by matching the HMDB 
+The standards are based on the MTox700+ database, so we can import 
+MTox700+ (here a stored copy of the database downloaded by 
+`MTox700plus_database()`) and use it to obtain InChIKey identifiers by matching the HMDB 
 identifiers. An alternative might be to use `hmdb_lookup` and/or 
 `pubchem_property_lookup`.
 
@@ -905,7 +916,13 @@ SM <- import_source() +
     database_lookup(
         query_column = "hmdb_id",
         database_column = "hmdb_id",
-        database = MTox700plus_database(),
+        database = rds_database( # stored copy of MTox700+
+            source = system.file(
+                "extdata/vignette_snapshots/MTox700plus.rds",
+                package = "MetMashR"
+            ),
+            .writable = FALSE
+        ),
         include = "inchikey",
         suffix = "",
         not_found = NA

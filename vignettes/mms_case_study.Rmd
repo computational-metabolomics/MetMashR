@@ -39,6 +39,16 @@ library(MetMashR)
 library(ggplot2)
 ```
 
+::: {#Offline style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
+**Note:** This vignette is built without network access. The Metabolomics 
+Workbench study tables and the published comparison table are read from stored 
+copies included with `MetMashR`, and all REST API lookups use stored response 
+caches with `cache_mode = "offline"`, so a value that is not in a cache is left 
+as `NA` instead of being queried. To query the online services yourself, use 
+your own cache and the default `cache_mode = "update"`. The stored copies were 
+made with `inst/scripts/make_vignette_snapshots.R`.
+:::
+
 # Introduction
 
 @villalba2023 describe a three-step procedure for harmonising
@@ -112,9 +122,10 @@ next step they have in common.
 
 # Importing the source data
 
-Each study's reported metabolite list is retrieved directly from Metabolomics
-Workbench with `mwb_study_source()` and the three tables are combined with
-`combine_sources()`.
+Each study's reported metabolite list can be retrieved directly from 
+Metabolomics Workbench with `mwb_study_source()`. In this vignette we read 
+stored copies of the three tables, retrieved with `mwb_study_source()`, and 
+combine them with `combine_sources()`.
 
 Only the `metabolite_name` is used as a chemical lookup input; source and study 
 tags are retained separately. Existing `refmet_name` and `pubchem_id` 
@@ -124,11 +135,17 @@ annotations, where available, are excluded to test the name-based translation.
 # the studies to import
 study_ids <- c("ST001039", "ST001048", "ST001317")
 
-# read each source
-sources <- lapply(
-    study_ids,
-    function(id) read_source(mwb_study_source(source = id, tag = id))
-)
+# read the stored copy of each study table
+sources <- lapply(study_ids, function(id) {
+    read_source(rds_database(
+        source = system.file(
+            paste0("extdata/vignette_snapshots/MWB_", id, ".rds"),
+            package = "MetMashR"
+        ),
+        tag = id,
+        .writable = FALSE
+    ))
+})
 
 # use MetMashR to merge all sources
 combine_step <- combine_sources(
@@ -154,9 +171,9 @@ sequence. The translation and attribute-retrieval steps use pre-existing
 `rds_cache` files with `cache_mode = "offline"`, one per lookup per variant. 
 Cached responses are reused; 
 query values absent from a cache are left as `NA`. A live rerun requires a 
-supported online cache mode and a writable cache location. These lookup 
-caches do not, by themselves, archive the MWB study downloads or the 
-separately imported Zenodo comparison file.
+supported online cache mode and a writable cache location. The MWB study 
+tables and the Zenodo comparison table are stored separately (see the note at 
+the top of this vignette).
 
 ```{r cache-setup}
 # Function that returns the rds_cache for a lookup in one variant
@@ -754,11 +771,9 @@ chebi_cols <- c(
 # Comparison against the published result
 
 The published supplementary dataset is available on Zenodo
-[@villalba2023data]. It is imported with `zenodo_file()`, which
-downloads the file once and caches it locally using `BiocFileCache`; later
-builds reuse the cached copy, so an internet connection is only needed the
-first time (or set `offline = TRUE` to skip the check for a newer version).
-The table is restricted to compounds attributed to the three MWB studies. The
+[@villalba2023data] and can be imported with `zenodo_file()`. In this vignette 
+we read a stored copy of its Table S3, imported with `zenodo_file()`. The table 
+is restricted to compounds attributed to the three MWB studies. The
 original publication's HMDB and literature sources are outside the scope of
 this vignette.
 
@@ -768,13 +783,13 @@ comparison. We only evaluate skeleton membership, not full-key identity or the
 accuracy or completeness of the attached attributes.
 
 ```{r comparison, out.width = "70%", fig.width = 8, fig.height = 6}
-# supplementary file from the Zenodo record, cached with BiocFileCache
-gold_db <- zenodo_file(
-    record_id = 8226097,
-    file_name = "MDM_Suppl_vSubmitted.xlsx",
-    import_fun = function(path) {
-        openxlsx::read.xlsx(path, sheet = "Table S3", colNames = TRUE)
-    }
+# stored copy of Table S3 from the supplementary file of Zenodo record 8226097
+gold_db <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/MMS_zenodo_8226097_TableS3.rds",
+        package = "MetMashR"
+    ),
+    .writable = FALSE
 )
 
 # import as an annotation_source

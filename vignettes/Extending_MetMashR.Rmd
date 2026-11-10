@@ -23,6 +23,15 @@ knitr::opts_chunk$set(
 library(BiocStyle)
 ```
 
+:::{#Offline style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
+**Note:** This vignette is built without network access. Online databases are 
+read from stored copies included with `MetMashR`, and REST API lookups use 
+stored response caches with `cache_mode = "offline"`, so a value that is not in 
+a cache is left as `NA` instead of being queried. To query the online services 
+yourself, use your own cache and the default `cache_mode = "update"`. The stored 
+copies were made with `inst/scripts/make_vignette_snapshots.R`.
+:::
+
 # Introduction
 There is a number software solutions available to annotate an LCMS metabolomics 
 datasets. We
@@ -76,21 +85,12 @@ candidate PubChem CIDs and ConnectivitySMILES strings. At the end, we will
 display the original names, search names, selected identifiers and returned 
 SMILES so that readers can see the result.
 
-First, we need to import the table of annotations from Metabolomics Workbench.
-For this we make use of the `metabolomicsWorkbenchR` package.
-
-```{r example-get-data,eval=FALSE,include=TRUE}
-# get annotations
-AN <- do_query(
-    context = "study",
-    input_item = "analysis_id",
-    input_value = "AN000465",
-    output_item = "metabolites"
-)
-```
-
-The imported table has 747 rows and 8 columns. For brevity in this vignette 
-we have cached the first 10 rows and stored them in the package.
+The annotations were retrieved from Metabolomics Workbench with the 
+`do_query()` function from the `metabolomicsWorkbenchR` package 
+(`context = "study"`, `input_item = "analysis_id"`, 
+`input_value = "AN000465"`, `output_item = "metabolites"`). The full table has 
+747 rows and 8 columns. For brevity in this vignette we have stored the first 
+10 rows in the package.
 
 ```{r extending-metmashr-4, include=TRUE,eval=TRUE}
 AN <- readRDS(
@@ -474,29 +474,20 @@ confidence in for as many metabolites as possible
 6. use the PubChem REST API to obtain SMILES for each metabolite
 
 For clarity in the workflow we import the refmet database before using it in 
-the workflow instead of importing it in-line. We also import some cached REST 
-API responses so that we dont overburden the service when generating the 
-vignette.
+the workflow instead of importing it in-line. `mwb_refmet_database()` downloads 
+the full RefMet database; here we read a stored copy of the RefMet records for 
+the names in this example. We also import stored PubChem responses, which are 
+used with `cache_mode = "offline"`.
 
-```{r extending-metmashr-15, eval=FALSE,include = TRUE}
-# refmet
-refmet <- mwb_refmet_database()
-
-# pubchem caches
-pubchem_cid_cache <- rds_database(
-    source = system.file("cached/pubchem_cid_cache.rds",
+```{r extending-metmashr-16}
+# stored RefMet records for this example
+refmet <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/RefMet_AN000465_subset.rds",
         package = "MetMashR"
-    )
+    ),
+    .writable = FALSE
 )
-pubchem_smile_cache <- rds_database(
-    source = system.file("cached/pubchem_smiles_cache.rds",
-        package = "MetMashR"
-    )
-)
-```
-
-```{r extending-metmashr-16, eval=TRUE,include=FALSE}
-refmet <- mwb_refmet_database()
 
 pubchem_cid_cache <- rds_database(
     source = file.path(
@@ -539,7 +530,8 @@ M <- import_source() +
         output = "cids",
         records = "best",
         delay = 0.2,
-        cache = pubchem_cid_cache
+        cache = pubchem_cid_cache,
+        cache_mode = "offline"
     ) +
     prioritise_columns(
         column_names = c("pubchem_cid_mwb", "CID_pc"),
@@ -554,7 +546,8 @@ M <- import_source() +
         suffix = "",
         property = "ConnectivitySMILES",
         delay = 0.2,
-        cache = pubchem_smile_cache
+        cache = pubchem_smile_cache,
+        cache_mode = "offline"
     )
 
 # apply sequence

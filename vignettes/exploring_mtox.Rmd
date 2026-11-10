@@ -47,6 +47,15 @@ knitr::opts_chunk$set(
 
 library(BiocStyle)
 ```
+
+:::{#Offline style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px"}
+**Note:** This vignette is built without network access. Online databases are 
+read from stored copies included with `MetMashR`, and REST API lookups use 
+stored response caches with `cache_mode = "offline"`, so a value that is not in 
+a cache is left as `NA` instead of being queried. To query the online services 
+yourself, use your own cache and the default `cache_mode = "update"`. The stored 
+copies were made with `inst/scripts/make_vignette_snapshots.R`.
+:::
   
   <br>
   
@@ -103,14 +112,31 @@ of its metabolites have pathway information in PathBank.
 <br>
 
 # Importing the MTox700+ database
-The MTox700+ database can be imported using the `MTox700plus_database` object.
-It can be imported to a data.frame using the `read_database` method.
+The MTox700+ database can be imported using the `MTox700plus_database` object, 
+which downloads a release of the database from GitHub. In this vignette we 
+read a stored copy of the database with `rds_database()`. A table describing 
+the stored copies included with `MetMashR` records which release was stored 
+and when it was downloaded.
 
 ```{r exploring-mtox-5}
-# prep object
-MT <- MTox700plus_database(
-    version = "latest",
-    tag = "MTox700+"
+# where and when the stored copies were retrieved
+snapshots <- readRDS(system.file(
+    "extdata/vignette_snapshots/snapshot_info.rds",
+    package = "MetMashR"
+))
+snapshots[
+    snapshots$resource %in% c("MTox700+", "PathBank"),
+    c("resource", "version", "retrieved")
+]
+
+# prep object (stored copy of MTox700+)
+MT <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/MTox700plus.rds",
+        package = "MetMashR"
+    ),
+    tag = "MTox700+",
+    .writable = FALSE
 )
 
 # import
@@ -120,37 +146,9 @@ df <- read_database(MT)
 .DT(df)
 ```
 
-MTox700+ and PathBank are downloaded once and stored in a local cache using 
-`BiocFileCache`. The helper below lists the cached copies of a resource, with 
-the date each copy was downloaded (`create_time`) and last used 
-(`access_time`).
-
-```{r exploring-mtox-5b}
-cache_info <- function(obj, pattern) {
-    # NULL bfc_path means the default BiocFileCache location
-    bfc <- if (is.null(obj$bfc_path)) {
-        BiocFileCache::BiocFileCache(ask = FALSE)
-    } else {
-        BiocFileCache::BiocFileCache(obj$bfc_path, ask = FALSE)
-    }
-    info <- as.data.frame(BiocFileCache::bfcquery(bfc, pattern, field = "rname"))
-    info[, c("rname", "create_time", "access_time")]
-}
-
-# "latest" is resolved using the GitHub releases API, as read_database() does
-release <- httr::content(httr::GET(paste0(
-    "https://api.github.com/repos/michabohealthscience/",
-    "MTox700plus/releases/latest"
-)))$tag_name
-
-# the cached copy for that release
-mtox_cache <- cache_info(MT, paste0("MTox700plus_", release, "$"))
-mtox_cache
-```
-
-`version = "latest"` returned MTox700+ release `r release`. This copy was 
-downloaded on `r as.Date(mtox_cache$create_time[1])`; if that is earlier than 
-the date this vignette was built, the example read a previously cached copy.
+This example uses MTox700+ release 
+`r snapshots$version[snapshots$resource == "MTox700+"]`, downloaded on 
+`r snapshots$retrieved[snapshots$resource == "MTox700+"]`.
 
 ```{r exploring-mtox-6}
 # prepare workflow that uses MTox700+ as a source
@@ -237,8 +235,8 @@ to primary pathways.
 The "complete" database is a >50mb download, and unzipped is >1Gb. Unzipping
 and caching of the database is handled by [BiocFileCache].
 
-For the vignette we restrict to the "primary" PathBank database to keep file 
-sizes and downloads to a minimum.
+For the vignette we use a stored copy of the "primary" PathBank database, 
+keeping only the columns used below.
 
 We can use the database in two ways:
 
@@ -261,18 +259,18 @@ compare the overlap between inchikey identifiers in PathBank and MTox700+.
 ```{r exploring-mtox-8, fig.width=8,warning=FALSE}
 # object M already contains the MTox700+ database as a source
 
-# prepare PathBank as a source
-P <- PathBank_metabolite_database(
-    version = "primary",
-    tag = "PathBank"
+# prepare PathBank as a source (stored copy of the primary database)
+P <- rds_database(
+    source = system.file(
+        "extdata/vignette_snapshots/PathBank_primary_metabolites.rds",
+        package = "MetMashR"
+    ),
+    tag = "PathBank",
+    .writable = FALSE
 )
 
 # import
 P <- read_source(P)
-
-# cached copy of PathBank used
-pathbank_cache <- cache_info(P, "PathBank_primary")
-pathbank_cache
 
 # prepare chart
 C <- annotation_venn_chart(
@@ -292,8 +290,8 @@ g2 <- as.ggplot(chart_plot(C, predicted(M), P)) +
 cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
 ```
 
-PathBank does not report a version number, so we report the date the cached 
-copy was downloaded: `r as.Date(pathbank_cache$create_time[1])`.
+PathBank does not report a version number, so we report the date the stored 
+copy was downloaded: `r snapshots$retrieved[snapshots$resource == "PathBank"]`.
 
 These charts compare full InChIKeys in MTox700+ with those in the selected 
 PathBank primary-pathway dataset. To report the overlap, we count the distinct, 
@@ -336,9 +334,6 @@ it does not show that the metabolite has no known pathway associations.
 To combine the pathway information in PathBank with the MTox700+ database we 
 can use PathBank as a lookup table based on inchikeys. To do this we use the 
 `database_lookup` object.
-
-Note that PathBank is not downloaded a second time; it is automatically 
-retrieved from the cache.
 
 We request a number of columns from PathBank, including pathway information and
 additional identifiers such as HMDB ID and KEGG ID.
