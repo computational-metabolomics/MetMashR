@@ -29,8 +29,8 @@ prioritise_columns(
 
 - source_name:
 
-  (character) The column name used to indicate the where the merged
-  values originated.
+  (character) The column name used to indicate where the merged values
+  originated. The source is NA if all of the columns are NA.
 
 - source_tags:
 

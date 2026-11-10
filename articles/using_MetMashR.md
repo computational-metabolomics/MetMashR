@@ -1,28 +1,143 @@
-# Using MetMashR
+# Getting started with MetMashR
+
+**Note:** This vignette is built without network access. Online
+databases are read from stored copies included with
+*[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)*, and REST
+API lookups use stored response caches with `cache_mode = "offline"`, so
+a value that is not in a cache is left as `NA` instead of being queried.
+To query the online services yourself, use your own cache and the
+default `cache_mode = "update"`. The stored copies were made with
+`inst/scripts/make_vignette_snapshots.R`.
 
 \
 
 ## Introduction
 
-*[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* is an R
-package designed to facilitate the cleaning, filtering and combining of
-annotations from different sources.
-*[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* defines
-an”annotation source” as a piece of software, proprietary or otherwise,
-that takes the raw input of an analytical instrument and attempts to
-assign molecule names to the peaks in the data, usually by comparison to
-a library. *[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)*
-was primarily designed for use with metabolomics data measured by LCMS
-(hence “metabolite” in the package name) but could be extended to
-include other platforms (e.g. NMR, DIMS etc.), or other analytical
-approaches.
+*[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* cleans and
+combines annotation tables from tools such as LipidSearch and adds
+information from reference databases. In this tutorial, a *source* is
+the *[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* object
+used to hold or read one of these tables or databases. The software that
+produced the annotations is the *upstream annotation tool*. We use a
+bundled LipidSearch export, prepare names for database searches and
+retrieve candidate identifiers from LIPID MAPS. We then inspect the
+results and combine related records.
 
 In this vignette we describe commonly used annotation workflow steps and
 show how to use them in detail.
 
 \
 
-## Statistics in R using Class Templates (struct)
+## Getting started
+
+The latest versions of
+*[struct](https://bioconductor.org/packages/3.24/struct)* and
+*[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* that are
+compatible with your current R version can be installed using
+BiocManager.
+
+\
+`# install BiocManager if not present`\
+`if`` ``(``!`[`requireNamespace`](https://rdrr.io/r/base/ns-load.html)`(``"BiocManager"``, quietly ``=`` ``TRUE``)``)`` ``{`\
+`    `[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"BiocManager"``)`\
+`}`\
+\
+`# install MetMashR and dependencies`\
+`BiocManager``::`[`install`](https://bioconductor.github.io/BiocManager/reference/install.html)`(``"MetMashR"``)`
+
+Once installed you can activate the packages in the usual way:
+
+\
+[`suppressPackageStartupMessages`](https://rdrr.io/r/base/message.html)`(``{`\
+`    ``# load the packages`\
+`    `[`library`](https://rdrr.io/r/base/library.html)`(`[`MetMashR`](https://computational-metabolomics.github.io/MetMashR/)`)`\
+`    `[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`\
+`    `[`library`](https://rdrr.io/r/base/library.html)`(`[`structToolbox`](https://github.com/computational-metabolomics/structToolbox)`)`\
+`    `[`library`](https://rdrr.io/r/base/library.html)`(`[`dplyr`](https://dplyr.tidyverse.org)`)`\
+`    `[`library`](https://rdrr.io/r/base/library.html)`(`[`DT`](https://github.com/rstudio/DT)`)`\
+`}``)`
+
+In this vignette we use a small helper function, `.DT()`, to display
+tables using the *[DT](https://CRAN.R-project.org/package=DT)* package:
+
+\
+`.DT`` ``<-`` ``function``(``x``)`` ``{`\
+`    ``dt_options`` ``<-`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
+`        scrollX ``=`` ``TRUE``,`\
+`        pageLength ``=`` ``6``,`\
+`        dom ``=`` ``"tip"``, ``# table, row count and pagination`\
+`        initComplete ``=`` ``DT``::`[`JS`](https://rdrr.io/pkg/htmlwidgets/man/JS.html)`(`\
+`            ``"function(settings, json) {"``,`\
+`            ``"$(this.api().table().header()).css({'font-size':'10pt'});"``,`\
+`            ``"}"`\
+`        ``)`\
+`    ``)`\
+\
+`    ``x`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
+`        ``DT``::`[`datatable`](https://rdrr.io/pkg/DT/man/datatable.html)`(``options ``=`` ``dt_options``, rownames ``=`` ``FALSE``)`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
+`        ``DT``::`[`formatStyle`](https://rdrr.io/pkg/DT/man/formatCurrency.html)`(`\
+`            columns ``=`` `[`colnames`](https://rdrr.io/r/base/colnames.html)`(``x``)``,`\
+`            fontSize ``=`` ``"10pt"`\
+`        ``)`\
+`}`
+
+\
+
+## A quick example
+
+Before looking at how
+*[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* works,
+here is a short workflow that shows what it does. We import the bundled
+LipidSearch export, keep the annotations graded A or B, and search LIPID
+MAPS for an InChIKey for each lipid name. Each step is explained in
+detail later in this vignette.
+
+\
+`# the LipidSearch export to import`\
+`AT`` ``<-`` `[`ls_source`](https://computational-metabolomics.github.io/MetMashR/reference/ls_source.md)`(`\
+`    source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(`\
+`        ``"extdata/MTox/LS/MTox_2023_HILIC_POS.txt"``,`\
+`        package ``=`` ``"MetMashR"`\
+`    ``)`\
+`)`\
+\
+`# stored LIPID MAPS responses (reused later in this vignette)`\
+`TF`` ``<-`` `[`rds_cache`](https://computational-metabolomics.github.io/MetMashR/reference/rds_cache.md)`(`\
+`    source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(`\
+`        ``"cached/lipidmaps_inchikey_cache.rds"``,`\
+`        package ``=`` ``"MetMashR"`\
+`    ``)`\
+`)`\
+\
+`# import, filter and look up identifiers`\
+`WF`` ``<-`` `[`import_source`](https://computational-metabolomics.github.io/MetMashR/reference/import_source.md)`(``)`` ``+`\
+`    `[`filter_labels`](https://computational-metabolomics.github.io/MetMashR/reference/filter_labels.md)`(`\
+`        column_name ``=`` ``"Grade"``,`\
+`        labels ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"A"``, ``"B"``)``,`\
+`        mode ``=`` ``"include"`\
+`    ``)`` ``+`\
+`    `[`lipidmaps_lookup`](https://computational-metabolomics.github.io/MetMashR/reference/lipidmaps_lookup.md)`(`\
+`        query_column ``=`` ``"LipidName"``,`\
+`        context ``=`` ``"compound"``,`\
+`        context_item ``=`` ``"abbrev"``,`\
+`        output_item ``=`` ``"inchi_key"``,`\
+`        cache ``=`` ``TF``,`\
+`        cache_mode ``=`` ``"offline"``,`\
+`        suffix ``=`` ``""``,`\
+`        delay ``=`` ``2`\
+`    ``)`\
+`WF`` ``<-`` `[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``WF``, ``AT``)`\
+\
+`# show the lipid names and the InChIKeys returned by LIPID MAPS`\
+`.DT``(`[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``WF``)``$``data``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"LipidName"``, ``"Grade"``, ``"inchi_key"``)``]``)`
+
+LIPID MAPS can return several InChIKeys for one name, so the results
+table can have more rows than the filtered input. Rows with no InChIKey
+are names that LIPID MAPS did not recognise.
+
+\
+
+## Statistics in R using class templates (struct)
 
 All of the objects defined in
 *[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* use or
@@ -48,35 +163,7 @@ vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/struct/in
 
 \
 
-## Getting Started
-
-The latest versions of
-*[struct](https://bioconductor.org/packages/3.24/struct)* and
-*[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* that are
-compatible with your current R version can be installed using
-BiocManager.
-
-\
-`# install BiocManager if not present`\
-`if`` ``(``!`[`requireNamespace`](https://rdrr.io/r/base/ns-load.html)`(``"BiocManager"``, quietly ``=`` ``TRUE``)``)`` ``{`\
-`    `[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"BiocManager"``)`\
-`}`\
-\
-`# install MetMashR and dependencies`\
-`BiocManager``::`[`install`](https://bioconductor.github.io/BiocManager/reference/install.html)`(``"MetMashR"``)`
-
-Once installed you can activate the packages in the usual way:
-
-\
-`# load the packages`\
-[`library`](https://rdrr.io/r/base/library.html)`(``struct``)`\
-[`library`](https://rdrr.io/r/base/library.html)`(`[`MetMashR`](https://computational-metabolomics.github.io/MetMashR/)`)`\
-[`library`](https://rdrr.io/r/base/library.html)`(``metabolomicsWorkbenchR``)`\
-[`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`
-
-\
-
-## Annotation Sources
+## Annotation sources
 
 `annotation_source` objects are the dataset used by all
 *[MetMashR](https://bioconductor.org/packages/3.24/MetMashR)* workflow
@@ -99,7 +186,7 @@ different.
 
 \
 
-### Annotation Tables
+### Annotation tables
 
 A `annotation_table` is defined by us as a `data.frame` of metabolite
 annotations for experimentally collected data. For example, we have
@@ -150,7 +237,7 @@ workflow steps.
 
 \
 
-### Annotation Databases
+### Annotation databases
 
 An `annotation_database` is a table of additional metabolite meta data.
 For example it might contain identifiers and/or InChIKeys for different
@@ -159,32 +246,38 @@ fashion and is used to augment an `annotation_table` with additional
 information.
 
 Like other sources, `annotation_database` objects have a `read_source`
-method specific to the database.
+method specific to the database. For example,
+[`MTox700plus_database()`](https://computational-metabolomics.github.io/MetMashR/reference/MTox700plus_database.md)
+downloads the MTox700+ database from GitHub. In this vignette we read a
+stored copy of it with
+[`rds_database()`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md),
+which reads a data.frame saved in an `.rds` file.
 
 \
-`# prepare source object`\
-`MT`` ``<-`` `[`MTox700plus_database`](https://computational-metabolomics.github.io/MetMashR/reference/MTox700plus_database.md)`(``)`\
+`# prepare source object (stored copy of MTox700+)`\
+`MT`` ``<-`` `[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
+`    source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(`\
+`        ``"extdata/vignette_snapshots/MTox700plus.rds"``,`\
+`        package ``=`` ``"MetMashR"`\
+`    ``)``,`\
+`    .writable ``=`` ``FALSE`\
+`)`\
 \
 `# read`\
 `MT`` ``<-`` `[`read_source`](https://computational-metabolomics.github.io/MetMashR/reference/read_source.md)`(``MT``)`\
 \
 `# show`\
 `MT`\
-`#> A "MTox700plus_database" object`\
-`#> -------------------------------`\
-`#> name:          MTox700plus_database`\
-`#> description:   Imports the MTox700+ database, which is made available under the ODC Attribution License.`\
-`#>                  MTox700+ is a list of toxicologically relevant metabolites derived from`\
-`#>                  publications, public databases and relevant toxicological assays.`\
-`#> input params:  version `\
+`#> A "rds_database" object`\
+`#> -----------------------`\
+`#> name:          rds database`\
+`#> description:   A data.frame stored as an RDS file.`\
+`#> input params:  tag, data, source `\
 `#> annotations:   722 rows x 15 columns`
 
 `annotation_database` objects also have a `read_database` method to read
 the table directly to a data.frame.
 
-\
-`# prepare source object`\
-`MT`` ``<-`` `[`MTox700plus_database`](https://computational-metabolomics.github.io/MetMashR/reference/MTox700plus_database.md)`(``)`\
 \
 `# read to data.frame`\
 `df`` ``<-`` `[`read_database`](https://computational-metabolomics.github.io/MetMashR/reference/read_database.md)`(``MT``)`\
@@ -211,7 +304,7 @@ are cached locally.
 
 \
 
-## Annotation Mashing
+## Annotation mashing
 
 We define annotation mashing as the importing, cleaning, filtering and
 combining of multiple annotation sources. This is useful for
@@ -257,14 +350,16 @@ is really intended to be used as the first step in a workflow.
 
 \
 
-### Filtering / Cleaning
+### Filtering / cleaning
 
 `MetMashR` provides a number of commonly used workflow steps to filter,
 clean and process annotation sources. Some of these steps, such as
 `filter_range` are applicable to any annotation source, while others are
-specific to a source. For example `mz_rt_match` is only applicable to an
-`lcms_table` as it requires that both an m/z and a retention time column
-are present. This property is only enforced for `lcms_table` objects.
+specific to a source. For example
+[`mzrt_match()`](https://computational-metabolomics.github.io/MetMashR/reference/mzrt_match.md)
+is only applicable to an `lcms_table` as it requires that both an m/z
+and a retention time column are present. This property is only enforced
+for `lcms_table` objects.
 
 Workflow steps use the `model` class from `struct`. We can build up a
 workflow by “adding” steps together to form a model sequence
@@ -335,7 +430,7 @@ The following methods are restricted to `lcms_table` sources:
 
 - `mz_match`
 - `rt_match`
-- `mz_rt_match`
+- [`mzrt_match()`](https://computational-metabolomics.github.io/MetMashR/reference/mzrt_match.md)
 - `calc_ppm_diff`
 - `calc_rt_diff`
 
@@ -388,7 +483,12 @@ most useful parts e.g. querying for molecular identifiers.
 The `rest_api` template object includes the ability to cache results
 locally, in order to reduce the number of api queries. This means a
 `rest_api` object can be included in a workflow and updated as more
-results are collected over time.
+results are collected over time. The `cache_mode` input controls how the
+cache is used. With the default `cache_mode = "update"`, values already
+in the cache are reused and new values are queried and added to the
+cache. With `cache_mode = "offline"`, the api is never queried and
+values that are not in the cache are left as `NA`. In this vignette we
+use a stored cache with `cache_mode = "offline"`.
 
 \
 `# prepare source object`\
@@ -399,10 +499,8 @@ results are collected over time.
 `    ``)`\
 `)`\
 \
-`# prepare cache`\
-`TF`` ``<-`` `[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
-`    source ``=`` `[`tempfile`](https://rdrr.io/r/base/tempfile.html)`(``)`\
-`)`\
+`# reuse the cache TF created in the quick example, so that LIPID MAPS is`\
+`# not queried again for the same names`\
 \
 `# prepare workflow`\
 `WF`` ``<-`\
@@ -421,6 +519,7 @@ results are collected over time.
 `        context_item ``=`` ``"abbrev"``,`\
 `        output_item ``=`` ``"inchi_key"``,`\
 `        cache ``=`` ``TF``,`\
+`        cache_mode ``=`` ``"offline"``,`\
 `        suffix ``=`` ``""``,`\
 `        delay ``=`` ``2`\
 `    ``)`\
@@ -494,9 +593,18 @@ Additional fields in the list item can be any of the additional inputs
 to [`grepl()`](https://rdrr.io/r/base/grep.html), such as
 `fixed = TRUE`.
 
-For example here we create a dictionary to convert some of the lipid
-abbreviations to the LipidMaps standard, and replace underscores with
-forward slashes:
+Here we change selected lipid-class abbreviations in a separate column
+used for database searches. We keep the original LipidSearch names so
+that readers can check every change. For lipid classes that use this
+notation, an underscore means that the chain positions are not
+established, while a slash means that they are established. We therefore
+leave these separators unchanged unless the original annotation supports
+the change. A successful database search returns a candidate identifier;
+it does not add experimental evidence for the structure.
+
+See the LIPID MAPS [shorthand
+notation](https://pmc.ncbi.nlm.nih.gov/articles/PMC7707175/) for
+details.
 
 \
 `custom_dict`` ``<-`` `[`list`](https://rdrr.io/r/base/list.html)`(`\
@@ -508,11 +616,6 @@ forward slashes:
 `    `[`list`](https://rdrr.io/r/base/list.html)`(`\
 `        pattern ``=`` ``"AEA"``,`\
 `        replace ``=`` ``"NAE"``,`\
-`        fixed ``=`` ``TRUE`\
-`    ``)``,`\
-`    `[`list`](https://rdrr.io/r/base/list.html)`(`\
-`        pattern ``=`` ``"_"``,`\
-`        replace ``=`` ``"/"``,`\
 `        fixed ``=`` ``TRUE`\
 `    ``)`\
 `)`
@@ -546,7 +649,8 @@ LipidMaps:
 `        context_item ``=`` ``"abbrev"``,`\
 `        output_item ``=`` ``"inchi_key"``,`\
 `        suffix ``=`` ``"_LipidName"``,`\
-`        cache ``=`` ``TF`\
+`        cache ``=`` ``TF``,`\
+`        cache_mode ``=`` ``"offline"`\
 `    ``)`` ``+`\
 `    ``# step 5 query lipidmaps api for inchikey using the names provided by`\
 `    ``# LipidSearch`\
@@ -555,7 +659,9 @@ LipidMaps:
 `        context ``=`` ``"compound"``,`\
 `        context_item ``=`` ``"abbrev"``,`\
 `        output_item ``=`` ``"inchi_key"``,`\
-`        suffix ``=`` ``"_normalised"`\
+`        suffix ``=`` ``"_normalised"``,`\
+`        cache ``=`` ``TF``,`\
+`        cache_mode ``=`` ``"offline"`\
 `    ``)`\
 \
 `# apply workflow to annotation source`\
@@ -567,15 +673,23 @@ LipidMaps:
 `    ``"inchi_key_LipidName"``, ``"inchi_key_normalised"`\
 `)``]``)`
 
-You can see that we obtained inchikey for more of the Lipids after
-normalising the lipid names.
+\
+`# number of rows with an InChIKey for each query`\
+[`colSums`](https://rdrr.io/r/base/colSums.html)`(``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(`[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``WF``)``$``data``[``, `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`    ``"inchi_key_LipidName"``, ``"inchi_key_normalised"`\
+`)``]``)``)`\
+`#>  inchi_key_LipidName inchi_key_normalised `\
+`#>                   42                   65`
+
+The LipidSearch names returned an InChIKey for 42 rows, and the
+normalised names for 65 rows.
 
 `MetMashR` also provides an interface to the `rgoslin` package to assist
 with Lipid annotations.
 
 \
 
-## Combining Records
+## Combining records
 
 In the previous output LipidMaps returned multiple matches to the same
 lipid. This is because Lipid names can be ambiguous regarding the
@@ -623,23 +737,27 @@ The helper function `fuse_unique` ensures that each inchikey only
 appears once in the collapsed string, and is applied as default to all
 columns.
 
-The `add_count` helper function adds a new column of counts for each
-LipidName. Note that AcCa(20:4) has 8 counts but only 4 inchikey. This
-means that AcCa(20:4) appeared twice in the original table, each time
-with the same 4 inchikey.
+[`count_records()`](https://computational-metabolomics.github.io/MetMashR/reference/combine_records_helper_functions.md)
+counts the rows in each LipidName group at this point in the workflow.
+One input row can produce several rows when a database search returns
+several matches. The count therefore describes the current results
+table, not the number of original input records. To count original
+records, keep their row identifiers and count each original identifier
+once. Report that number separately from the number of returned
+InChIKeys.
 
 There are a number of other helper functions to suit different
 requirements see
 [`?combine_records_helper_functions`](https://computational-metabolomics.github.io/MetMashR/reference/combine_records_helper_functions.md)
 for a complete list.
 
-## Session Info
+## Session info
 
 \
 [`sessionInfo`](https://rdrr.io/r/utils/sessionInfo.html)`(``)`\
 `#> R version 4.6.1 (2026-06-24)`\
 `#> Platform: x86_64-pc-linux-gnu`\
-`#> Running under: Ubuntu 24.04.4 LTS`\
+`#> Running under: Ubuntu 24.04.5 LTS`\
 `#> `\
 `#> Matrix products: default`\
 `#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 `\
@@ -661,48 +779,43 @@ for a complete list.
 `#> `\
 `#> other attached packages:`\
 `#> [1] DT_0.34.0            dplyr_1.2.1          structToolbox_1.25.0`\
-`#> [4] ggplot2_4.0.3        MetMashR_1.7.2       struct_1.25.0       `\
+`#> [4] ggplot2_4.0.3        MetMashR_1.7.3       struct_1.25.0       `\
 `#> [7] BiocStyle_2.41.0    `\
 `#> `\
 `#> loaded via a namespace (and not attached):`\
 `#>  [1] SummarizedExperiment_1.43.0 gtable_0.3.6               `\
-`#>  [3] xfun_0.61                   bslib_0.12.0               `\
+`#>  [3] xfun_0.62                   bslib_0.12.0               `\
 `#>  [5] httr2_1.3.0                 htmlwidgets_1.6.4          `\
 `#>  [7] Biobase_2.73.2              lattice_0.23-1             `\
 `#>  [9] crosstalk_1.2.2             vctrs_0.7.3                `\
 `#> [11] tools_4.6.1                 generics_0.1.4             `\
-`#> [13] curl_8.0.0                  stats4_4.6.1               `\
-`#> [15] RSQLite_3.53.3              tibble_3.3.1               `\
-`#> [17] blob_1.3.0                  pkgconfig_2.0.3            `\
-`#> [19] Matrix_1.7-6                dbplyr_2.6.0               `\
-`#> [21] RColorBrewer_1.1-3          S7_0.2.2                   `\
-`#> [23] desc_1.4.3                  S4Vectors_0.51.10          `\
-`#> [25] lifecycle_1.0.5             compiler_4.6.1             `\
-`#> [27] farver_2.1.2                textshaping_1.0.5          `\
-`#> [29] Seqinfo_1.3.2               htmltools_0.5.9            `\
-`#> [31] sass_0.4.10                 yaml_2.3.12                `\
-`#> [33] pkgdown_2.2.1.9000          pillar_1.11.1              `\
-`#> [35] jquerylib_0.1.4             DelayedArray_0.39.8        `\
-`#> [37] cachem_1.1.0                abind_1.4-8                `\
-`#> [39] tidyselect_1.2.1            digest_0.6.39              `\
-`#> [41] purrr_1.2.2                 bookdown_0.48              `\
-`#> [43] ggthemes_7.0.0              fastmap_1.2.0              `\
-`#> [45] grid_4.6.1                  cli_3.6.6                  `\
-`#> [47] SparseArray_1.13.4          magrittr_2.0.5             `\
-`#> [49] S4Arrays_1.13.2             withr_3.0.3                `\
-`#> [51] filelock_1.0.3              scales_1.4.0               `\
-`#> [53] bit64_4.8.6                 sp_2.2-4                   `\
-`#> [55] rmarkdown_2.32              XVector_0.53.0             `\
-`#> [57] httr_1.4.9                  matrixStats_1.5.0          `\
-`#> [59] bit_4.6.0                   otel_0.2.0                 `\
-`#> [61] gridExtra_2.3.1             ragg_1.5.2                 `\
-`#> [63] memoise_2.0.1               evaluate_1.0.5             `\
-`#> [65] knitr_1.52                  GenomicRanges_1.65.4       `\
-`#> [67] IRanges_2.47.5              BiocFileCache_3.3.0        `\
-`#> [69] rlang_1.3.0                 Rcpp_1.1.2                 `\
-`#> [71] DBI_1.3.0                   glue_1.8.1                 `\
-`#> [73] BiocManager_1.30.27         xml2_1.6.0                 `\
-`#> [75] BiocGenerics_0.59.12        jsonlite_2.0.0             `\
-`#> [77] R6_2.6.1                    plyr_1.8.9                 `\
-`#> [79] MatrixGenerics_1.25.0       systemfonts_1.3.2          `\
-`#> [81] fs_2.1.0`
+`#> [13] stats4_4.6.1                tibble_3.3.1               `\
+`#> [15] pkgconfig_2.0.3             Matrix_1.7-6               `\
+`#> [17] RColorBrewer_1.1-3          S7_0.2.2                   `\
+`#> [19] desc_1.4.3                  S4Vectors_0.51.10          `\
+`#> [21] lifecycle_1.0.5             compiler_4.6.1             `\
+`#> [23] farver_2.1.2                textshaping_1.0.5          `\
+`#> [25] Seqinfo_1.3.2               htmltools_0.5.9            `\
+`#> [27] sass_0.4.10                 yaml_2.3.12                `\
+`#> [29] pkgdown_2.2.1.9000          pillar_1.11.1              `\
+`#> [31] jquerylib_0.1.4             DelayedArray_0.39.8        `\
+`#> [33] cachem_1.1.0                abind_1.4-8                `\
+`#> [35] tidyselect_1.2.1            digest_0.6.39              `\
+`#> [37] purrr_1.2.2                 bookdown_0.48              `\
+`#> [39] ggthemes_7.0.0              fastmap_1.2.0              `\
+`#> [41] grid_4.6.1                  cli_3.6.6                  `\
+`#> [43] SparseArray_1.13.4          magrittr_2.0.5             `\
+`#> [45] S4Arrays_1.13.2             withr_3.0.3                `\
+`#> [47] scales_1.4.0                sp_2.2-4                   `\
+`#> [49] rmarkdown_2.32              XVector_0.53.0             `\
+`#> [51] httr_1.4.9                  matrixStats_1.5.0          `\
+`#> [53] otel_0.2.0                  gridExtra_2.3.1            `\
+`#> [55] ragg_1.5.2                  evaluate_1.0.5             `\
+`#> [57] knitr_1.52                  GenomicRanges_1.65.4       `\
+`#> [59] IRanges_2.47.5              rlang_1.3.0                `\
+`#> [61] Rcpp_1.1.2                  glue_1.8.1                 `\
+`#> [63] BiocManager_1.30.27         xml2_1.6.0                 `\
+`#> [65] BiocGenerics_0.59.12        jsonlite_2.0.0             `\
+`#> [67] R6_2.6.1                    plyr_1.8.9                 `\
+`#> [69] MatrixGenerics_1.25.0       systemfonts_1.3.2          `\
+`#> [71] fs_2.1.0`

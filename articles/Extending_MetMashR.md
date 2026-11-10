@@ -1,4 +1,12 @@
-# Extending MetMashR
+# Extending MetMashR with custom sources and workflow steps
+
+**Note:** This vignette is built without network access. Online
+databases are read from stored copies included with `MetMashR`, and REST
+API lookups use stored response caches with `cache_mode = "offline"`, so
+a value that is not in a cache is left as `NA` instead of being queried.
+To query the online services yourself, use your own cache and the
+default `cache_mode = "update"`. The stored copies were made with
+`inst/scripts/make_vignette_snapshots.R`.
 
 ## Introduction
 
@@ -9,7 +17,7 @@ metabolomics datasets. We have only included a small number
 In this document we describe how to extend the provided templates to
 include new sources bespoke to your requirements.
 
-## Getting Started
+## Getting started
 
 The latest versions of
 *[struct](https://bioconductor.org/packages/3.24/struct)* and `MetMashR`
@@ -36,26 +44,27 @@ Once installed you can activate the packages in the usual way:
 
 ## Example study
 
-In this example we are going to import some annotations from a study on
-Metabolomics Workbench and build a workflow to clean up the table and
-search for PubChem CIDs so that we can present some images of some of
-the annotated metabolites for the study.
+This example uses the first ten rows of metabolite annotations from
+Metabolomics Workbench analysis AN000465, stored with the package. We
+will create a source reader and add two processing steps: removing
+columns that contain only missing values and preparing names for
+database searches. We will then retrieve candidate PubChem CIDs and
+ConnectivitySMILES strings. At the end, we will display the original
+names, search names, selected identifiers and returned SMILES so that
+readers can see the result.
 
-First, we need to import the table of annotations from Metabolomics
-Workbench. For this we make use of the `metabolomicsWorkbenchR` package.
+The annotations were retrieved from Metabolomics Workbench with the
+[`do_query()`](https://rdrr.io/pkg/metabolomicsWorkbenchR/man/do_query.html)
+function from the `metabolomicsWorkbenchR` package (`context = "study"`,
+`input_item = "analysis_id"`, `input_value = "AN000465"`,
+`output_item = "metabolites"`). The full table has 747 rows and 8
+columns. For brevity in this vignette we have stored the first 10 rows
+in the package.
 
 \
-`# get annotations`\
-`AN`` ``<-`` `[`do_query`](https://rdrr.io/pkg/metabolomicsWorkbenchR/man/do_query.html)`(`\
-`    context ``=`` ``"study"``,`\
-`    input_item ``=`` ``"analysis_id"``,`\
-`    input_value ``=`` ``"AN000465"``,`\
-`    output_item ``=`` ``"metabolites"`\
+`AN`` ``<-`` `[`readRDS`](https://rdrr.io/r/base/readRDS.html)`(`\
+`    `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"extdata/AN000465_subset.rds"``, package ``=`` ``"MetMashR"``)`\
 `)`
-
-The imported table has 747 rows and 8 columns. For brevity in this
-vignette we have cached the first 10 rows and stored them in the
-package.
 
 We can convert the imported table into an `annotation_table`:
 
@@ -81,7 +90,7 @@ workflow steps using the
 template system. We will also implement an new `annotation_source` to
 import the data from Metabolomics Workbench as part of the workflow.
 
-## Annotation Sources
+## Annotation sources
 
 Annotation sources are the mechanism used by `MetMashR` to get tables of
 annotation data into R and into a well-defined format. Each extension of
@@ -100,23 +109,18 @@ import the annotations as part of a workflow model sequence.
 We will do this now as an example of implementing a new
 `annotation_source`.
 
-All `annotation_source` objects use the `model` template from the struct
-package, so we could create the definition of a source on-the-fly.
-However, annotation_sources are likely to be used multiple times to read
-in data from the same source, so instead we define the new source in a
-more permanent way, by using code that can be included in a script to be
-sourced, or in a new R package.
-
-There are three key components to an annotation source object, or indeed
-any struct model object:
-
-1.  A definition of the object which defines what the input and output
-    parameters will be.
-2.  A function to create an instance of the object and populate initial
-    values for input parameters.
-3.  A `model_apply` method. For annotation sources this method will read
-    in data from the source file and parse it into an
-    `annotation_table`.
+This example creates a new database source by extending
+`annotation_database`. We need three pieces: a class definition, a
+constructor that creates the object, and a
+[`read_database()`](https://computational-metabolomics.github.io/MetMashR/reference/read_database.md)
+method that reads the data and returns a data frame. The existing
+[`read_source()`](https://computational-metabolomics.github.io/MetMashR/reference/read_source.md)
+method puts that data into the source object. We use
+[`import_source()`](https://computational-metabolomics.github.io/MetMashR/reference/import_source.md)
+to bring the source into a workflow. The processing steps introduced
+later use
+[`model_apply()`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)
+instead.
 
 We will implement each of these steps now.
 
@@ -163,24 +167,17 @@ in the prototype of the class definition in the previous section.
 
 ### The import method
 
-Like all model objects, the workhorse method for annotation sources is
-`method_apply`. For annotation sources this method is used to import and
-parse the source files into an `annotation_table`.
-
-Here we use `setMethod` to define the method for the new source.
+The
+[`read_database()`](https://computational-metabolomics.github.io/MetMashR/reference/read_database.md)
+method below reads the cached annotation table and returns it as a data
+frame. We define this method for the `mwb_source` class using
+`setMethod()`.
 
 \
 `setMethod``(`\
 `    f ``=`` ``"read_database"``,`\
 `    signature ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"mwb_source"``)``,`\
 `    definition ``=`` ``function``(``obj``)`` ``{`\
-`        ``## get annotations using metabolomicsWorkbenchR`\
-`        ``# AN = do_query(`\
-`        ``#    context = "study",`\
-`        ``#    input_item = "analysis_id",`\
-`        ``#    input_value = M$analysis_id,`\
-`        ``#    output_item = "metabolites")`\
-\
 `        ``## for vignette use locally cached subset`\
 `        ``AN`` ``<-`` `[`readRDS`](https://rdrr.io/r/base/readRDS.html)`(`\
 `            `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"extdata/AN000465_subset.rds"``, package ``=`` ``"MetMashR"``)`\
@@ -190,14 +187,17 @@ Here we use `setMethod` to define the method for the new source.
 `    ``}`\
 `)`
 
-Note how we pass `M$analysis` id to the `do_query` function so that we
-can import annotations from any Metabolomics Workbench study when using
-our new source object.
+This demonstration always reads `AN000465_subset.rds`. Changing the
+`source` parameter does not select a different analysis. To make a
+reader for other analyses, replace the cached-file code with a working
+query that uses the object’s `source` parameter.
 
 ### Using the new source
 
-The new `mwb_source` and `method_apply` method are ready to use. To
-import the table we can use the `import_source` method:
+The new `mwb_source` class and its
+[`read_database()`](https://computational-metabolomics.github.io/MetMashR/reference/read_database.md)
+method are ready to use. To import the table we can use
+[`read_source()`](https://computational-metabolomics.github.io/MetMashR/reference/read_source.md):
 
 \
 `# initialise source`\
@@ -310,8 +310,36 @@ them from the `annotation_table`. To define this method we use the
 Note that in the `signature` we specify that the second input is an
 `annotation_table`.
 
-The new model is ready to use. We can test it using the `model_apply`
-method, and check that some columns have been removed.
+The new model is ready to use. First we try it on a tiny table where
+column `b` contains only missing values:
+
+\
+`toy`` ``<-`` `[`annotation_table`](https://computational-metabolomics.github.io/MetMashR/reference/annotation_table.md)`(`\
+`    data ``=`` `[`data.frame`](https://rdrr.io/r/base/data.frame.html)`(`\
+`        a ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``,`\
+`        b ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``NA``, ``NA``)``,`\
+`        c ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``1``, ``NA``)`\
+`    ``)``,`\
+`    id_column ``=`` ``NULL`\
+`)`\
+\
+`# before`\
+`toy``$``data`\
+`#>   a  b  c .MetMashR_id`\
+`#> 1 x NA  1            1`\
+`#> 2 y NA NA            2`\
+\
+`# after`\
+[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(`[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``drop_empty_columns``(``)``, ``toy``)``)``$``data`\
+`#>   a  c .MetMashR_id`\
+`#> 1 x  1            1`\
+`#> 2 y NA            2`
+
+Column `b` has been removed. Column `c` is kept because it is only
+partly missing.
+
+Now we apply it to the Metabolomics Workbench annotations using the
+`model_apply` method, and check that some columns have been removed.
 
 \
 `M`` ``<-`` `[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``M``, ``AT``)`
@@ -377,7 +405,7 @@ As we did for `drop_empty_columns` we use the `set_struct_obj` and
 `        ``if`` ``(``M``$``clean``)`` ``{`\
 `            ``D``$``data``[[``M``$``column_name``]``]`` ``<-`` `[`unlist`](https://rdrr.io/r/base/unlist.html)`(``s``)`\
 `        ``}`` ``else`` ``{`\
-`            ``D``$``data``$``name.fixed`` ``<-`` `[`unlist`](https://rdrr.io/r/base/unlist.html)`(``x``)`\
+`            ``D``$``data``$``name.fixed`` ``<-`` `[`unlist`](https://rdrr.io/r/base/unlist.html)`(``s``)`\
 `        ``}`\
 \
 `        ``# update model object`\
@@ -396,6 +424,39 @@ values in the `prototype`:
 - clean: a flag that will replace the old column if TRUE or add a new
   column if FALSE
 
+Here is the step applied to a tiny table, first with `clean = FALSE`,
+which adds a new `name.fixed` column and keeps the original names:
+
+\
+`toy`` ``<-`` `[`annotation_table`](https://computational-metabolomics.github.io/MetMashR/reference/annotation_table.md)`(`\
+`    data ``=`` `[`data.frame`](https://rdrr.io/r/base/data.frame.html)`(`\
+`        name ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"Glucose_1"``, ``"Glucose_2"``, ``"Alanine"``)`\
+`    ``)``,`\
+`    id_column ``=`` ``NULL`\
+`)`\
+\
+[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(`[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(`\
+`    ``remove_suffix``(``column_name ``=`` ``"name"``, clean ``=`` ``FALSE``)``,`\
+`    ``toy`\
+`)``)``$``data`\
+`#>        name .MetMashR_id name.fixed`\
+`#> 1 Glucose_1            1    Glucose`\
+`#> 2 Glucose_2            2    Glucose`\
+`#> 3   Alanine            3    Alanine`
+
+and then with `clean = TRUE`, which replaces the names in the existing
+column:
+
+\
+[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(`[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(`\
+`    ``remove_suffix``(``column_name ``=`` ``"name"``, clean ``=`` ``TRUE``)``,`\
+`    ``toy`\
+`)``)``$``data`\
+`#>      name .MetMashR_id`\
+`#> 1 Glucose            1`\
+`#> 2 Glucose            2`\
+`#> 3 Alanine            3`
+
 ## Metabolite mashing
 
 Now that we have defined our new workflow steps we can use them in a
@@ -407,9 +468,11 @@ In this case we do the following:
 
 1.  import the annotations from Metabolomics Workbench
 2.  remove empty columns
-3.  remove suffixes from molecule names
+3.  remove suffixes from molecule names, writing them to a new column so
+    the original names are kept
 4.  search the Metabolomics Workbench refmet database for identifiers
-5.  use the PubChem REST API so search for compound CIDs
+5.  use the PubChem REST API to search for compound CIDs using the names
+    without suffixes
 6.  combine the CID columns from refmet and pubchem into a single
     column, giving priority to refmet, to obtain a single column of
     identifiers we have confidence in for as many metabolites as
@@ -417,36 +480,48 @@ In this case we do the following:
 7.  use the PubChem REST API to obtain SMILES for each metabolite
 
 For clarity in the workflow we import the refmet database before using
-it in the workflow instead of importing it in-line. We also import some
-cached REST API responses so that we dont overburden the service when
-generating the vignette.
+it in the workflow instead of importing it in-line.
+[`mwb_refmet_database()`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_refmet_database.md)
+downloads the full RefMet database; here we read a stored copy of the
+RefMet records for the names in this example. We also import stored
+PubChem responses, which are used with `cache_mode = "offline"`.
 
 \
-`# refmet`\
-`refmet`` ``<-`` `[`mwb_refmet_database`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_refmet_database.md)`(``)`\
-\
-`# pubchem caches`\
-`pubchem_cid_cache`` ``<-`` `[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
-`    source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"cached/pubchem_cid_cache.rds"``,`\
+`# stored RefMet records for this example`\
+`refmet`` ``<-`` `[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
+`    source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(`\
+`        ``"extdata/vignette_snapshots/RefMet_AN000465_subset.rds"``,`\
 `        package ``=`` ``"MetMashR"`\
+`    ``)``,`\
+`    .writable ``=`` ``FALSE`\
+`)`\
+\
+`pubchem_cid_cache`` ``<-`` `[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
+`    source ``=`` `[`file.path`](https://rdrr.io/r/base/file.path.html)`(`\
+`        `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"cached"``, package ``=`` ``"MetMashR"``)``,`\
+`        ``"pubchem_cid_cache.rds"`\
 `    ``)`\
 `)`\
 `pubchem_smile_cache`` ``<-`` `[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
-`    source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"cached/pubchem_smiles_cache.rds"``,`\
-`        package ``=`` ``"MetMashR"`\
+`    source ``=`` `[`file.path`](https://rdrr.io/r/base/file.path.html)`(`\
+`        `[`system.file`](https://rdrr.io/r/base/system.file.html)`(``"cached"``, package ``=`` ``"MetMashR"``)``,`\
+`        ``"pubchem_smiles_cache.rds"`\
 `    ``)`\
 `)`
 
 In practice it is better to create your own cache using
-e.g. `rds_database`, `sql_database` or other `struct_database` objects
-with write access.
+e.g. `rds_database`,
+[`sqlite_database()`](https://computational-metabolomics.github.io/MetMashR/reference/sqlite_database.md)
+or other `annotation_database` objects with write access.
 
 \
 `# prepare sequence`\
 `M`` ``<-`` `[`import_source`](https://computational-metabolomics.github.io/MetMashR/reference/import_source.md)`(``)`` ``+`\
 `    ``drop_empty_columns``(``)`` ``+`\
+`    ``# keep the original names; the names without suffix are written to a`\
+`    ``# new "name.fixed" column`\
 `    ``remove_suffix``(`\
-`        clean ``=`` ``TRUE``,`\
+`        clean ``=`` ``FALSE``,`\
 `        column_name ``=`` ``"metabolite_name"`\
 `    ``)`` ``+`\
 `    `[`database_lookup`](https://computational-metabolomics.github.io/MetMashR/reference/database_lookup.md)`(`\
@@ -457,13 +532,14 @@ with write access.
 `        include ``=`` ``"pubchem_cid"`\
 `    ``)`` ``+`\
 `    `[`pubchem_compound_lookup`](https://computational-metabolomics.github.io/MetMashR/reference/pubchem_compound_lookup.md)`(`\
-`        query_column ``=`` ``"metabolite_name"``,`\
+`        query_column ``=`` ``"name.fixed"``,`\
 `        search_by ``=`` ``"name"``,`\
 `        suffix ``=`` ``"_pc"``,`\
 `        output ``=`` ``"cids"``,`\
 `        records ``=`` ``"best"``,`\
 `        delay ``=`` ``0.2``,`\
-`        cache ``=`` ``pubchem_cid_cache`\
+`        cache ``=`` ``pubchem_cid_cache``,`\
+`        cache_mode ``=`` ``"offline"`\
 `    ``)`` ``+`\
 `    `[`prioritise_columns`](https://computational-metabolomics.github.io/MetMashR/reference/prioritise_columns.md)`(`\
 `        column_names ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"pubchem_cid_mwb"``, ``"CID_pc"``)``,`\
@@ -478,16 +554,70 @@ with write access.
 `        suffix ``=`` ``""``,`\
 `        property ``=`` ``"ConnectivitySMILES"``,`\
 `        delay ``=`` ``0.2``,`\
-`        cache ``=`` ``pubchem_smile_cache`\
+`        cache ``=`` ``pubchem_smile_cache``,`\
+`        cache_mode ``=`` ``"offline"`\
 `    ``)`\
 \
 `# apply sequence`\
 `M`` ``<-`` `[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``M``, ``mwb_source``(``source ``=`` ``"AN000465"``)``)`
 
 Note that because the first step in the workflow is to import data from
-Metabolomics Workbench, we only need to provide an empty
-annotation_table as input to `model_apply` as it will be updated when we
-run the workflow.
+Metabolomics Workbench, the source object we pass to `model_apply` only
+needs to say which source to import; the data are read by the first
+step.
+
+The table below shows the result. For each annotation it gives the
+original name, the name used for the PubChem search, the selected
+PubChem CID, which search supplied that CID (`mwb` for RefMet, `pc` for
+the PubChem name search) and the SMILES returned by PubChem.
+
+\
+`res`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``M``)``$``data`\
+\
+`# the cached PubChem responses may use the older property name`\
+`# "CanonicalSMILES" for what PubChem now calls "ConnectivitySMILES"`\
+`smiles_col`` ``<-`` `[`grep`](https://rdrr.io/r/base/grep.html)`(``"SMILES"``, `[`colnames`](https://rdrr.io/r/base/colnames.html)`(``res``)``, value ``=`` ``TRUE``)``[``1``]`\
+\
+[`data.frame`](https://rdrr.io/r/base/data.frame.html)`(`\
+`    original_name ``=`` ``res``$``metabolite_name``,`\
+`    search_name ``=`` ``res``$``name.fixed``,`\
+`    pubchem_cid ``=`` ``res``$``pubchem_cid``,`\
+`    cid_source ``=`` ``res``$``pubchem_cid_source``,`\
+`    smiles ``=`` ``res``[[``smiles_col``]``]`\
+`)`\
+`#>                                                   original_name`\
+`#> 1                           10-Deacetyl-2-debenzoylbaccatin III`\
+`#> 2                                               10-Oxodecanoate`\
+`#> 3                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine_1`\
+`#> 4                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine_2`\
+`#> 5                          1,2-Dihydroxynaphthalene-6-sulfonate`\
+`#> 6                         12-trans-Hydroxy juvenile hormone III`\
+`#> 7                                         14-Dihydroxycornestin`\
+`#> 8                       1-(5-Phosphoribosyl)imidazole-4-acetate`\
+`#> 9  1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione_1`\
+`#> 10 1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione_2`\
+`#>                                                   search_name pubchem_cid`\
+`#> 1                         10-Deacetyl-2-debenzoylbaccatin III      443489`\
+`#> 2                                             10-Oxodecanoate       79686`\
+`#> 3                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine     6331148`\
+`#> 4                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine     6331148`\
+`#> 5                        1,2-Dihydroxynaphthalene-6-sulfonate     9543072`\
+`#> 6                       12-trans-Hydroxy juvenile hormone III        <NA>`\
+`#> 7                                       14-Dihydroxycornestin     5281160`\
+`#> 8                     1-(5-Phosphoribosyl)imidazole-4-acetate      440341`\
+`#> 9  1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione    11954165`\
+`#> 10 1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione    11954165`\
+`#>    cid_source                                                           smiles`\
+`#> 1         mwb CC1=C2C(C(=O)C3(C(CC4C(C3C(C(C2(C)C)(CC1O)O)O)(CO4)OC(=O)C)O)C)O`\
+`#> 2         mwb                                              C(CCCCC(=O)O)CCCC=O`\
+`#> 3          pc                                                CCN(CC)N(N=O)[O-]`\
+`#> 4          pc                                                CCN(CC)N(N=O)[O-]`\
+`#> 5          pc                              C1=CC2=C(C=CC(=C2O)O)C=C1S(=O)(=O)O`\
+`#> 6        <NA>                                                             <NA>`\
+`#> 7         mwb                        CCCC1C(C(=O)CC(C(=CC)CC2=C1C(=O)OC2=O)O)O`\
+`#> 8         mwb                     C1=C(N=CN1C2C(C(C(O2)COP(=O)(O)O)O)O)CC(=O)O`\
+`#> 9          pc                   CC12CCC3C(C1CCC(=O)O2)CCC45C3(C(CC(=O)C4)SS5)C`\
+`#> 10         pc                   CC12CCC3C(C1CCC(=O)O2)CCC45C3(C(CC(=O)C4)SS5)C`
 
 ## Summary
 
@@ -498,13 +628,13 @@ that use the templates will be compatible with other workflow objects
 provided you follow the templates. As well as new workflow steps
 MetMashR can also be extended to include additional annotation sources.
 
-## Session Info
+## Session info
 
 \
 [`sessionInfo`](https://rdrr.io/r/utils/sessionInfo.html)`(``)`\
 `#> R version 4.6.1 (2026-06-24)`\
 `#> Platform: x86_64-pc-linux-gnu`\
-`#> Running under: Ubuntu 24.04.4 LTS`\
+`#> Running under: Ubuntu 24.04.5 LTS`\
 `#> `\
 `#> Matrix products: default`\
 `#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 `\
@@ -526,48 +656,43 @@ MetMashR can also be extended to include additional annotation sources.
 `#> `\
 `#> other attached packages:`\
 `#> [1] ggplot2_4.0.3                 metabolomicsWorkbenchR_1.23.0`\
-`#> [3] MetMashR_1.7.2                struct_1.25.0                `\
+`#> [3] MetMashR_1.7.3                struct_1.25.0                `\
 `#> [5] BiocStyle_2.41.0             `\
 `#> `\
 `#> loaded via a namespace (and not attached):`\
 `#>  [1] SummarizedExperiment_1.43.0 gtable_0.3.6               `\
-`#>  [3] xfun_0.61                   bslib_0.12.0               `\
+`#>  [3] xfun_0.62                   bslib_0.12.0               `\
 `#>  [5] httr2_1.3.0                 htmlwidgets_1.6.4          `\
 `#>  [7] Biobase_2.73.2              lattice_0.23-1             `\
 `#>  [9] vctrs_0.7.3                 tools_4.6.1                `\
-`#> [11] generics_0.1.4              curl_8.0.0                 `\
-`#> [13] stats4_4.6.1                RSQLite_3.53.3             `\
-`#> [15] tibble_3.3.1                blob_1.3.0                 `\
-`#> [17] pkgconfig_2.0.3             Matrix_1.7-6               `\
-`#> [19] data.table_1.18.6.1         dbplyr_2.6.0               `\
-`#> [21] RColorBrewer_1.1-3          S7_0.2.2                   `\
-`#> [23] desc_1.4.3                  S4Vectors_0.51.10          `\
-`#> [25] lifecycle_1.0.5             compiler_4.6.1             `\
-`#> [27] farver_2.1.2                textshaping_1.0.5          `\
-`#> [29] Seqinfo_1.3.2               htmltools_0.5.9            `\
-`#> [31] sass_0.4.10                 yaml_2.3.12                `\
-`#> [33] pkgdown_2.2.1.9000          pillar_1.11.1              `\
-`#> [35] jquerylib_0.1.4             DelayedArray_0.39.8        `\
-`#> [37] cachem_1.1.0                abind_1.4-8                `\
-`#> [39] tidyselect_1.2.1            digest_0.6.39              `\
-`#> [41] dplyr_1.2.1                 purrr_1.2.2                `\
-`#> [43] bookdown_0.48               ggthemes_7.0.0             `\
-`#> [45] fastmap_1.2.0               grid_4.6.1                 `\
-`#> [47] cli_3.6.6                   SparseArray_1.13.4         `\
-`#> [49] magrittr_2.0.5              S4Arrays_1.13.2            `\
-`#> [51] withr_3.0.3                 filelock_1.0.3             `\
-`#> [53] scales_1.4.0                bit64_4.8.6                `\
-`#> [55] rmarkdown_2.32              XVector_0.53.0             `\
-`#> [57] httr_1.4.9                  matrixStats_1.5.0          `\
-`#> [59] bit_4.6.0                   otel_0.2.0                 `\
-`#> [61] ragg_1.5.2                  memoise_2.0.1              `\
-`#> [63] evaluate_1.0.5              knitr_1.52                 `\
-`#> [65] GenomicRanges_1.65.4        IRanges_2.47.5             `\
-`#> [67] MultiAssayExperiment_1.39.1 BiocFileCache_3.3.0        `\
-`#> [69] rlang_1.3.0                 Rcpp_1.1.2                 `\
-`#> [71] DBI_1.3.0                   glue_1.8.1                 `\
-`#> [73] BiocManager_1.30.27         xml2_1.6.0                 `\
-`#> [75] BiocGenerics_0.59.12        jsonlite_2.0.0             `\
-`#> [77] R6_2.6.1                    plyr_1.8.9                 `\
-`#> [79] MatrixGenerics_1.25.0       systemfonts_1.3.2          `\
-`#> [81] fs_2.1.0`
+`#> [11] generics_0.1.4              stats4_4.6.1               `\
+`#> [13] tibble_3.3.1                pkgconfig_2.0.3            `\
+`#> [15] Matrix_1.7-6                data.table_1.18.6.1        `\
+`#> [17] RColorBrewer_1.1-3          S7_0.2.2                   `\
+`#> [19] desc_1.4.3                  S4Vectors_0.51.10          `\
+`#> [21] lifecycle_1.0.5             compiler_4.6.1             `\
+`#> [23] farver_2.1.2                textshaping_1.0.5          `\
+`#> [25] Seqinfo_1.3.2               htmltools_0.5.9            `\
+`#> [27] sass_0.4.10                 yaml_2.3.12                `\
+`#> [29] pkgdown_2.2.1.9000          pillar_1.11.1              `\
+`#> [31] jquerylib_0.1.4             DelayedArray_0.39.8        `\
+`#> [33] cachem_1.1.0                abind_1.4-8                `\
+`#> [35] tidyselect_1.2.1            digest_0.6.39              `\
+`#> [37] dplyr_1.2.1                 purrr_1.2.2                `\
+`#> [39] bookdown_0.48               ggthemes_7.0.0             `\
+`#> [41] fastmap_1.2.0               grid_4.6.1                 `\
+`#> [43] cli_3.6.6                   SparseArray_1.13.4         `\
+`#> [45] magrittr_2.0.5              S4Arrays_1.13.2            `\
+`#> [47] withr_3.0.3                 scales_1.4.0               `\
+`#> [49] rmarkdown_2.32              XVector_0.53.0             `\
+`#> [51] httr_1.4.9                  matrixStats_1.5.0          `\
+`#> [53] otel_0.2.0                  ragg_1.5.2                 `\
+`#> [55] evaluate_1.0.5              knitr_1.52                 `\
+`#> [57] GenomicRanges_1.65.4        IRanges_2.47.5             `\
+`#> [59] MultiAssayExperiment_1.39.1 rlang_1.3.0                `\
+`#> [61] Rcpp_1.1.2                  glue_1.8.1                 `\
+`#> [63] BiocManager_1.30.27         xml2_1.6.0                 `\
+`#> [65] BiocGenerics_0.59.12        jsonlite_2.0.0             `\
+`#> [67] R6_2.6.1                    plyr_1.8.9                 `\
+`#> [69] MatrixGenerics_1.25.0       systemfonts_1.3.2          `\
+`#> [71] fs_2.1.0`

@@ -1,9 +1,18 @@
-# Case study: reimplementing the Metabolites Merging Strategy with MetMashR
+# Adapting the Metabolites Merging Strategy with MetMashR
 
 \
 [`library`](https://rdrr.io/r/base/library.html)`(``struct``)`\
 [`library`](https://rdrr.io/r/base/library.html)`(`[`MetMashR`](https://computational-metabolomics.github.io/MetMashR/)`)`\
 [`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`
+
+**Note:** This vignette is built without network access. The
+Metabolomics Workbench study tables and the published comparison table
+are read from stored copies included with `MetMashR`, and all REST API
+lookups use stored response caches with `cache_mode = "offline"`, so a
+value that is not in a cache is left as `NA` instead of being queried.
+To query the online services yourself, use your own cache and the
+default `cache_mode = "update"`. The stored copies were made with
+`inst/scripts/make_vignette_snapshots.R`.
 
 ## Introduction
 
@@ -55,14 +64,14 @@ at the end:
     accepts an InChIKey and returns a matched PubChem entry plus
     literature/patent annotation counts.
 
-For the same reason the ChEBI variant does not query the MWB compound
-database for cross-references; it uses the ChEBI identifier it already
-has to retrieve KEGG. Normalisation, the PubChem and ClassyFire
-attribute lookups and the InChIKey skeleton grouping in Step 3 do not
-depend on which service supplied the InChIKey, so both variants use the
-same steps. Each variant has its own lookup caches, however, so no
-response retrieved for one variant is reused by the other and the two
-workflows remain independent.
+The ChEBI variant uses its existing ChEBI identifier to retrieve KEGG
+compound identifiers and does not query the MWB compound database. Both
+variants use the same normalisation, PubChem and ClassyFire lookups, and
+grouping in Step 3. Each workflow has separate cache files so we can
+inspect the responses used by that workflow. The workflows still share
+the same study data and several database services. Their comparison
+shows how the results change when the translation service changes; it
+does not provide independent validation of those results.
 
 The workflow for each MMS step is shown as a flow diagram, read from
 left to right. Each box names the MetMashR function used for that step
@@ -81,10 +90,13 @@ workflow, and rejoins at the next step they have in common.
 
 ## Importing the source data
 
-Each study’s reported metabolite list is retrieved directly from
+Each study’s reported metabolite list can be retrieved directly from
 Metabolomics Workbench with
-[`mwb_study_source()`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_study_source.md)
-and the three tables are combined with
+[`mwb_study_source()`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_study_source.md).
+In this vignette we read stored copies of the three tables, retrieved
+with
+[`mwb_study_source()`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_study_source.md),
+and combine them with
 [`combine_sources()`](https://computational-metabolomics.github.io/MetMashR/reference/combine_sources.md).
 
 Only the `metabolite_name` is used as a chemical lookup input; source
@@ -96,11 +108,17 @@ name-based translation.
 `# the studies to import`\
 `study_ids`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(``"ST001039"``, ``"ST001048"``, ``"ST001317"``)`\
 \
-`# read each source`\
-`sources`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(`\
-`    ``study_ids``,`\
-`    ``function``(``id``)`` `[`read_source`](https://computational-metabolomics.github.io/MetMashR/reference/read_source.md)`(`[`mwb_study_source`](https://computational-metabolomics.github.io/MetMashR/reference/mwb_study_source.md)`(``source ``=`` ``id``, tag ``=`` ``id``)``)`\
-`)`\
+`# read the stored copy of each study table`\
+`sources`` ``<-`` `[`lapply`](https://rdrr.io/r/base/lapply.html)`(``study_ids``, ``function``(``id``)`` ``{`\
+`    `[`read_source`](https://computational-metabolomics.github.io/MetMashR/reference/read_source.md)`(`[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
+`        source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(`\
+`            `[`paste0`](https://rdrr.io/r/base/paste.html)`(``"extdata/vignette_snapshots/MWB_"``, ``id``, ``".rds"``)``,`\
+`            package ``=`` ``"MetMashR"`\
+`        ``)``,`\
+`        tag ``=`` ``id``,`\
+`        .writable ``=`` ``FALSE`\
+`    ``)``)`\
+`}``)`\
 \
 `# use MetMashR to merge all sources`\
 `combine_step`` ``<-`` `[`combine_sources`](https://computational-metabolomics.github.io/MetMashR/reference/combine_sources.md)`(`\
@@ -126,9 +144,9 @@ model sequence. The translation and attribute-retrieval steps use
 pre-existing `rds_cache` files with `cache_mode = "offline"`, one per
 lookup per variant. Cached responses are reused; query values absent
 from a cache are left as `NA`. A live rerun requires a supported online
-cache mode and a writable cache location. These lookup caches do not, by
-themselves, archive the MWB study downloads or the separately imported
-Zenodo comparison file.
+cache mode and a writable cache location. The MWB study tables and the
+Zenodo comparison table are stored separately (see the note at the top
+of this vignette).
 
 \
 `# Function that returns the rds_cache for a lookup in one variant`\
@@ -141,7 +159,7 @@ Zenodo comparison file.
 `    ``)``)`\
 `}`
 
-### Normalising synonyms
+### Preparing names for identifier lookup
 
 Molecules have many synonyms and resolving them to the same identifier
 can be challenging. We apply a small number of normalisation rules,
@@ -311,6 +329,13 @@ combine_records.](mms_figures/mms_step1_translation.png)
 MMS Step 1 workflow. The variants differ only in the second
 name-translation lookup.
 
+The `ambiguous_inchikey` flag created below marks cases where the two
+returned InChIKeys have the same first 14 characters but differ within
+the following 12 characters. It does not compare the final character,
+and missing comparisons are recorded as `FALSE`. It does not flag every
+disagreement, so `FALSE` does not mean that the services returned the
+same answer.
+
 \
 `# query pubchem by synonym and return inchikey (same step in both variants,`\
 `# each with its own cache)`\
@@ -437,14 +462,22 @@ is therefore not used; the ChEBI identifier returned by
 is used to retrieve the KEGG identifier instead, and the HMDB, LipidMaps
 and PubChem CID cross-references (which only that lookup provided) are
 omitted from this variant. The variant also queries CTS-Lite with the
-InChIKey, returning the compound name, formula and mass plus
-literature/patent annotation counts that can serve as a rough confidence
-signal.
+InChIKey, returning the compound name, formula and mass plus literature
+and patent counts that show how much information the database holds for
+a compound. These counts do not confirm that the compound was identified
+in the study samples.
 [`cts_lite_lookup()`](https://computational-metabolomics.github.io/MetMashR/reference/cts_lite_lookup.md)
 follows the same `cache`/`cache_mode` convention as the other lookups,
 but is not built on the `rest_api` base class because CTS-Lite’s API is
 POST/batch-based (one request takes a space-separated list of queries),
 which does not fit `rest_api`’s one `GET` per query value.
+
+By default, CTS-Lite can return a match based on the first 14 characters
+of the InChIKey if it cannot find an exact match. It also returns only
+its highest-ranked result. Check the returned InChIKey and match level
+before treating the attached information as an exact match to the
+requested compound (see the [CTS-Lite
+documentation](https://cts-lite.metabolomics.us/docs)).
 
 ![Step 2 flow diagram: pubchem_property_lookup and
 classyfire_batch_lookup, then a split into mwb_compound_lookup for the
@@ -536,13 +569,15 @@ CTS-Lite.
 `    ``)`\
 `)`
 
-### Manual curation (MMS Step 3)
+### Automated grouping (adaptation of MMS Step 3)
 
-To implement the first-14-character grouping rule described for MMS, we
-group records by the InChIKey 14-character skeleton, disregarding
-stereochemical distinctions. Because of this, a reported name’s D-/L-
-prefix cannot be accepted or rejected on the basis of this workflow
-alone.
+In this example, we group all records that share the first 14 characters
+of the InChIKey. This is an automated adaptation of MMS Step 3. The
+original method uses manual review to reconcile selected conjugate
+acid/base forms and check missing attributes and conflicting names. Our
+broader grouping can also combine records that differ in stereochemistry
+or isotopic composition. Keep the full InChIKeys and original names so
+these differences can be checked when they matter to the analysis.
 
 ![Step 3 flow diagram: compute_column for inchikey_skeleton,
 combine_records by inchikey_skeleton and
@@ -607,8 +642,10 @@ variants.
 `)`\
 \
 `# apply model sequences to merged sources and extract the results`\
-`result_refmet`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(`[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``workflow_refmet``, ``combined``)``)`\
-`result_chebi`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(`[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``workflow_chebi``, ``combined``)``)`\
+`applied_refmet`` ``<-`` `[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``workflow_refmet``, ``combined``)`\
+`applied_chebi`` ``<-`` `[`model_apply`](https://computational-metabolomics.github.io/MetMashR/reference/model_apply.md)`(``workflow_chebi``, ``combined``)`\
+`result_refmet`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``applied_refmet``)`\
+`result_chebi`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``applied_chebi``)`\
 \
 `# report number of records`\
 [`c`](https://rdrr.io/r/base/c.html)`(`\
@@ -617,6 +654,87 @@ variants.
 `)`\
 `#> refmet  chebi `\
 `#>    329    348`
+
+The table below shows how the number of records changes through each
+workflow. Preparing the names can split one input record into several
+candidate names, so the number of names looked up can be larger than the
+number of input records.
+
+\
+`record_counts`` ``<-`` ``function``(``W``)`` ``{`\
+`    ``# output of the step before the InChIKey filter`\
+`    ``steps`` ``<-`` `[`seq_len`](https://rdrr.io/r/base/seq.html)`(`[`length`](https://rdrr.io/r/base/length.html)`(``W``)``)`\
+`    ``i`` ``<-`` `[`which`](https://rdrr.io/r/base/which.html)`(`[`vapply`](https://rdrr.io/r/base/lapply.html)`(``steps``, ``function``(``k``)`` ``is``(``W``[``k``]``, ``"filter_na"``)``, `[`logical`](https://rdrr.io/r/base/logical.html)`(``1``)``)``)``[``1``]`\
+`    ``looked_up`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``W``[``i`` ``-`` ``1``]``)``$``data`\
+`    ``final`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``W``)``$``data`\
+`    ``keys`` ``<-`` `[`unique`](https://rdrr.io/r/base/unique.html)`(``looked_up``$``InChIKey``[``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``looked_up``$``InChIKey``)``]``)`\
+`    `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`        input_records ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``combined``$``data``)``,`\
+`        names_looked_up ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``looked_up``)``,`\
+`        names_without_inchikey ``=`` `[`sum`](https://rdrr.io/r/base/sum.html)`(`[`is.na`](https://rdrr.io/r/base/NA.html)`(``looked_up``$``InChIKey``)``)``,`\
+`        distinct_full_inchikeys ``=`` `[`length`](https://rdrr.io/r/base/length.html)`(``keys``)``,`\
+`        distinct_14_character_groups ``=`` `[`nrow`](https://rdrr.io/r/base/nrow.html)`(``final``)`\
+`    ``)`\
+`}`\
+[`data.frame`](https://rdrr.io/r/base/data.frame.html)`(`\
+`    refmet ``=`` ``record_counts``(``applied_refmet``)``,`\
+`    chebi ``=`` ``record_counts``(``applied_chebi``)`\
+`)`\
+`#>                              refmet chebi`\
+`#> input_records                   738   738`\
+`#> names_looked_up                 757   757`\
+`#> names_without_inchikey           49    47`\
+`#> distinct_full_inchikeys         338   380`\
+`#> distinct_14_character_groups    329   348`
+
+Names without an InChIKey are removed by
+[`filter_na()`](https://computational-metabolomics.github.io/MetMashR/reference/filter_na.md).
+The remaining names are merged first by full InChIKey and then by the
+first 14 characters of the InChIKey.
+
+The next table is a worked example from the RefMet variant. It shows a
+few names chosen to cover the possible outcomes of Step 1: the original
+name, the name sent to the databases after preparation, the InChIKey
+returned by each service, and the InChIKey selected by
+[`prioritise_columns()`](https://computational-metabolomics.github.io/MetMashR/reference/prioritise_columns.md).
+
+\
+`worked_example`` ``<-`` ``function``(``W``, ``inchikey_col``, ``tag``)`` ``{`\
+`    ``steps`` ``<-`` `[`seq_len`](https://rdrr.io/r/base/seq.html)`(`[`length`](https://rdrr.io/r/base/length.html)`(``W``)``)`\
+`    ``i`` ``<-`` `[`which`](https://rdrr.io/r/base/which.html)`(`[`vapply`](https://rdrr.io/r/base/lapply.html)`(``steps``, ``function``(``k``)`` ``{`\
+`        ``is``(``W``[``k``]``, ``"prioritise_columns"``)`\
+`    ``}``, `[`logical`](https://rdrr.io/r/base/logical.html)`(``1``)``)``)``[``1``]`\
+`    ``# lookups before prioritising, and the selected InChIKey after`\
+`    ``before`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``W``[``i`` ``-`` ``1``]``)``$``data`\
+`    ``after`` ``<-`` `[`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``W``[``i``]``)``$``data`\
+`    ``pc`` ``<-`` ``before``$``inchikey_pubchem_id_exchange`\
+`    ``other`` ``<-`` ``before``[[``inchikey_col``]``]`\
+`    ``# first example of each outcome`\
+`    ``pick`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
+`        both_agree ``=`` `[`which`](https://rdrr.io/r/base/which.html)`(``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``pc``)`` ``&`` ``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``other``)`` ``&`` ``pc`` ``==`` ``other`` ``&`\
+`            ``before``$``metabolite_name`` ``!=`` ``before``$``name_normalised``)``[``1``]``,`\
+`        both_differ ``=`` `[`which`](https://rdrr.io/r/base/which.html)`(``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``pc``)`` ``&`` ``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``other``)`` ``&`` ``pc`` ``!=`` ``other``)``[``1``]``,`\
+`        pubchem_only ``=`` `[`which`](https://rdrr.io/r/base/which.html)`(``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``pc``)`` ``&`` `[`is.na`](https://rdrr.io/r/base/NA.html)`(``other``)``)``[``1``]``,`\
+`        other_only ``=`` `[`which`](https://rdrr.io/r/base/which.html)`(`[`is.na`](https://rdrr.io/r/base/NA.html)`(``pc``)`` ``&`` ``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``other``)``)``[``1``]``,`\
+`        unresolved ``=`` `[`which`](https://rdrr.io/r/base/which.html)`(`[`is.na`](https://rdrr.io/r/base/NA.html)`(``pc``)`` ``&`` `[`is.na`](https://rdrr.io/r/base/NA.html)`(``other``)``)``[``1``]`\
+`    ``)`\
+`    ``pick`` ``<-`` ``pick``[``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``pick``)``]`\
+`    ``out`` ``<-`` `[`data.frame`](https://rdrr.io/r/base/data.frame.html)`(`\
+`        outcome ``=`` `[`names`](https://rdrr.io/r/base/names.html)`(``pick``)``,`\
+`        original_name ``=`` ``before``$``metabolite_name``[``pick``]``,`\
+`        name_sent ``=`` ``before``$``name_normalised``[``pick``]``,`\
+`        inchikey_pubchem ``=`` ``pc``[``pick``]``,`\
+`        inchikey_other ``=`` ``other``[``pick``]``,`\
+`        selected ``=`` ``after``$``InChIKey``[``pick``]``,`\
+`        selected_from ``=`` ``after``$``InChIKey_source``[``pick``]`\
+`    ``)`\
+`    `[`names`](https://rdrr.io/r/base/names.html)`(``out``)``[``5``]`` ``<-`` `[`paste0`](https://rdrr.io/r/base/paste.html)`(``"inchikey_"``, ``tag``)`\
+`    ``out`\
+`}`\
+`.DT``(``worked_example``(``applied_refmet``, ``"inchi_key_refmet"``, ``"refmet"``)``)`
+
+In the RefMet variant, 49 of the 757 names looked up were not resolved
+by either service.
 
 ## What the harmonised tables look like
 
@@ -634,13 +752,14 @@ may be combined with `||`, and missing values remain possible.
 `    ``"ambiguous_inchikey"``, ``"ambiguous_name"``, ``"source"`\
 `)`
 
-RefMet variant:
+RefMet variant (preview of the first 10 of 329 rows):
 
 \
 `.DT``(`[`head`](https://rdrr.io/r/utils/head.html)`(``result_refmet``$``data``[``, ``preview_cols``]``, ``10``)``)`
 
-ChEBI + CTS-Lite variant. It has no MWB-derived HMDB, LipidMaps or
-PubChem CID columns, and includes the CTS-Lite columns:
+ChEBI + CTS-Lite variant (preview of the first 10 of 348 rows). It has
+no MWB-derived HMDB, LipidMaps or PubChem CID columns, and includes the
+CTS-Lite columns:
 
 \
 `chebi_cols`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(`\
@@ -648,6 +767,7 @@ PubChem CID columns, and includes the CTS-Lite columns:
 `    ``"MolecularFormula_pubchem"``, ``"MolecularWeight_pubchem"``,`\
 `    ``"chebi_id_chebi"``, ``"compound_kegg"``,`\
 `    ``"kingdom.name_cfb"``, ``"superclass.name_cfb"``, ``"class.name_cfb"``,`\
+`    ``"inchikey_cts"``, ``"match_level_cts"``,`\
 `    ``"compound_name_cts"``, ``"annotation_type_count_cts"``,`\
 `    ``"ambiguous_inchikey"``, ``"ambiguous_name"``, ``"source"`\
 `)`\
@@ -656,15 +776,13 @@ PubChem CID columns, and includes the CTS-Lite columns:
 ## Comparison against the published result
 
 The published supplementary dataset is available on Zenodo (Villalba et
-al. 2023b). It is imported with
-[`zenodo_file()`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md),
-which downloads the file once and caches it locally using
-`BiocFileCache`; later builds reuse the cached copy, so an internet
-connection is only needed the first time (or set `offline = TRUE` to
-skip the check for a newer version). The table is restricted to
-compounds attributed to the three MWB studies. The original
-publication’s HMDB and literature sources are outside the scope of this
-vignette.
+al. 2023b) and can be imported with
+[`zenodo_file()`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md).
+In this vignette we read a stored copy of its Table S3, imported with
+[`zenodo_file()`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md).
+The table is restricted to compounds attributed to the three MWB
+studies. The original publication’s HMDB and literature sources are
+outside the scope of this vignette.
 
 This comparison uses the same 14-character InChIKey skeleton as the
 grouping in Step 3. A small MetMashR workflow processes the imported
@@ -673,19 +791,17 @@ full-key identity or the accuracy or completeness of the attached
 attributes.
 
 \
-`# supplementary file from the Zenodo record, cached with BiocFileCache`\
-`gold_db`` ``<-`` `[`zenodo_file`](https://computational-metabolomics.github.io/MetMashR/reference/zenodo_file.md)`(`\
-`    record_id ``=`` ``8226097``,`\
-`    file_name ``=`` ``"MDM_Suppl_vSubmitted.xlsx"``,`\
-`    import_fun ``=`` ``function``(``path``)`` ``{`\
-`        ``openxlsx``::`[`read.xlsx`](https://rdrr.io/pkg/openxlsx/man/read.xlsx.html)`(``path``, sheet ``=`` ``"Table S3"``, colNames ``=`` ``TRUE``)`\
-`    ``}`\
+`# stored copy of Table S3 from the supplementary file of Zenodo record 8226097`\
+`gold_db`` ``<-`` `[`rds_database`](https://computational-metabolomics.github.io/MetMashR/reference/rds_database.md)`(`\
+`    source ``=`` `[`system.file`](https://rdrr.io/r/base/system.file.html)`(`\
+`        ``"extdata/vignette_snapshots/MMS_zenodo_8226097_TableS3.rds"``,`\
+`        package ``=`` ``"MetMashR"`\
+`    ``)``,`\
+`    .writable ``=`` ``FALSE`\
 `)`\
 \
 `# import as an annotation_source`\
 `gold`` ``<-`` `[`read_source`](https://computational-metabolomics.github.io/MetMashR/reference/read_source.md)`(``gold_db``)`\
-`#> Error while performing HEAD request.`\
-`#>    Proceeding without cache information.`\
 \
 `# restrict to the three MWB studies, then derive the same`\
 `# inchikey skeleton used in Step 3`\
@@ -724,7 +840,7 @@ attributes.
 
 ![](mms_case_study_files/figure-html/comparison-1.png)
 
-## Characterising the mismatch
+## Quantifying agreement and differences
 
 At the skeleton level, the published MWB subset contains 336 entries.
 The table below summarises how each variant overlaps with it.
@@ -747,7 +863,7 @@ aggregate overlap alone. Unresolved synonyms may contribute, but
 attribution requires inspection of the unmatched records, lookup
 responses, and the effects of normalisation and grouping.
 
-## Learnings and Benefits of MetMashR
+## Conclusions and limitations
 
 - **Executable workflow**. The reimplementation expresses the MWB
   analysis as an explicit sequence of steps that can be shared,
@@ -797,84 +913,6 @@ responses, and the effects of normalisation and grouping.
   assess the accuracy of retrieved attributes.
 
 ## References
-
-## Session Info
-
-\
-[`sessionInfo`](https://rdrr.io/r/utils/sessionInfo.html)`(``)`\
-`#> R version 4.6.1 (2026-06-24)`\
-`#> Platform: x86_64-pc-linux-gnu`\
-`#> Running under: Ubuntu 24.04.4 LTS`\
-`#> `\
-`#> Matrix products: default`\
-`#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 `\
-`#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0`\
-`#> `\
-`#> locale:`\
-`#>  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              `\
-`#>  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    `\
-`#>  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   `\
-`#>  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 `\
-`#>  [9] LC_ADDRESS=C               LC_TELEPHONE=C            `\
-`#> [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       `\
-`#> `\
-`#> time zone: UTC`\
-`#> tzcode source: system (glibc)`\
-`#> `\
-`#> attached base packages:`\
-`#> [1] stats     graphics  grDevices utils     datasets  methods   base     `\
-`#> `\
-`#> other attached packages:`\
-`#> [1] ggplot2_4.0.3    MetMashR_1.7.2   struct_1.25.0    BiocStyle_2.41.0`\
-`#> `\
-`#> loaded via a namespace (and not attached):`\
-`#>  [1] tidyselect_1.2.1              dplyr_1.2.1                  `\
-`#>  [3] metabolomicsWorkbenchR_1.23.0 farver_2.1.2                 `\
-`#>  [5] blob_1.3.0                    filelock_1.0.3               `\
-`#>  [7] S7_0.2.2                      fastmap_1.2.0                `\
-`#>  [9] BiocFileCache_3.3.0           janeaustenr_1.0.0            `\
-`#> [11] digest_0.6.39                 lifecycle_1.0.5              `\
-`#> [13] tokenizers_0.3.0              RSQLite_3.53.3               `\
-`#> [15] magrittr_2.0.5                compiler_4.6.1               `\
-`#> [17] rlang_1.3.0                   sass_0.4.10                  `\
-`#> [19] tools_4.6.1                   yaml_2.3.12                  `\
-`#> [21] tidytext_0.4.3                data.table_1.18.6.1          `\
-`#> [23] knitr_1.52                    labeling_0.4.3               `\
-`#> [25] S4Arrays_1.13.2               htmlwidgets_1.6.4            `\
-`#> [27] bit_4.6.0                     curl_8.0.0                   `\
-`#> [29] DelayedArray_0.39.8           plyr_1.8.9                   `\
-`#> [31] xml2_1.6.0                    RColorBrewer_1.1-3           `\
-`#> [33] abind_1.4-8                   withr_3.0.3                  `\
-`#> [35] purrr_1.2.2                   BiocGenerics_0.59.12         `\
-`#> [37] desc_1.4.3                    grid_4.6.1                   `\
-`#> [39] stats4_4.6.1                  scales_1.4.0                 `\
-`#> [41] MultiAssayExperiment_1.39.1   SummarizedExperiment_1.43.0  `\
-`#> [43] cli_3.6.6                     rmarkdown_2.32               `\
-`#> [45] ragg_1.5.2                    generics_0.1.4               `\
-`#> [47] otel_0.2.0                    httr_1.4.9                   `\
-`#> [49] DBI_1.3.0                     cachem_1.1.0                 `\
-`#> [51] ggthemes_7.0.0                BiocManager_1.30.27          `\
-`#> [53] XVector_0.53.0                matrixStats_1.5.0            `\
-`#> [55] vctrs_0.7.3                   Matrix_1.7-6                 `\
-`#> [57] jsonlite_2.0.0                bookdown_0.48                `\
-`#> [59] IRanges_2.47.5                S4Vectors_0.51.10            `\
-`#> [61] bit64_4.8.6                   systemfonts_1.3.2            `\
-`#> [63] crosstalk_1.2.2               jquerylib_0.1.4              `\
-`#> [65] ggVennDiagram_1.5.7           glue_1.8.1                   `\
-`#> [67] pkgdown_2.2.1.9000            DT_0.34.0                    `\
-`#> [69] stringi_1.8.9                 gtable_0.3.6                 `\
-`#> [71] GenomicRanges_1.65.4          tibble_3.3.1                 `\
-`#> [73] pillar_1.11.1                 htmltools_0.5.9              `\
-`#> [75] Seqinfo_1.3.2                 dbplyr_2.6.0                 `\
-`#> [77] R6_2.6.1                      httr2_1.3.0                  `\
-`#> [79] textshaping_1.0.5             evaluate_1.0.5               `\
-`#> [81] lattice_0.23-1                Biobase_2.73.2               `\
-`#> [83] SnowballC_0.7.1               openxlsx_4.2.9               `\
-`#> [85] memoise_2.0.1                 bslib_0.12.0                 `\
-`#> [87] zip_3.0.2                     Rcpp_1.1.2                   `\
-`#> [89] SparseArray_1.13.4            xfun_0.61                    `\
-`#> [91] fs_2.1.0                      MatrixGenerics_1.25.0        `\
-`#> [93] pkgconfig_2.0.3`
 
 Djoumbou Feunang, Yannick, Roman Eisner, Craig Knox, et al. 2016.
 “ClassyFire: automated chemical classification with a comprehensive,
@@ -926,3 +964,73 @@ and Oliver Fiehn. 2010. “The Chemical Translation Service - a web-based
 tool to improve standardization of metabolomic reports.”
 *Bioinformatics* 26 (20): 2647–48.
 <https://doi.org/10.1093/bioinformatics/btq476>.
+
+## Session info
+
+\
+[`sessionInfo`](https://rdrr.io/r/utils/sessionInfo.html)`(``)`\
+`#> R version 4.6.1 (2026-06-24)`\
+`#> Platform: x86_64-pc-linux-gnu`\
+`#> Running under: Ubuntu 24.04.5 LTS`\
+`#> `\
+`#> Matrix products: default`\
+`#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 `\
+`#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0`\
+`#> `\
+`#> locale:`\
+`#>  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              `\
+`#>  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    `\
+`#>  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   `\
+`#>  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 `\
+`#>  [9] LC_ADDRESS=C               LC_TELEPHONE=C            `\
+`#> [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       `\
+`#> `\
+`#> time zone: UTC`\
+`#> tzcode source: system (glibc)`\
+`#> `\
+`#> attached base packages:`\
+`#> [1] stats     graphics  grDevices utils     datasets  methods   base     `\
+`#> `\
+`#> other attached packages:`\
+`#> [1] ggplot2_4.0.3    MetMashR_1.7.3   struct_1.25.0    BiocStyle_2.41.0`\
+`#> `\
+`#> loaded via a namespace (and not attached):`\
+`#>  [1] SummarizedExperiment_1.43.0 gtable_0.3.6               `\
+`#>  [3] xfun_0.62                   bslib_0.12.0               `\
+`#>  [5] httr2_1.3.0                 htmlwidgets_1.6.4          `\
+`#>  [7] Biobase_2.73.2              lattice_0.23-1             `\
+`#>  [9] crosstalk_1.2.2             vctrs_0.7.3                `\
+`#> [11] tools_4.6.1                 generics_0.1.4             `\
+`#> [13] stats4_4.6.1                tibble_3.3.1               `\
+`#> [15] janeaustenr_1.0.0           tokenizers_0.3.0           `\
+`#> [17] pkgconfig_2.0.3             Matrix_1.7-6               `\
+`#> [19] RColorBrewer_1.1-3          S7_0.2.2                   `\
+`#> [21] desc_1.4.3                  S4Vectors_0.51.10          `\
+`#> [23] lifecycle_1.0.5             compiler_4.6.1             `\
+`#> [25] farver_2.1.2                textshaping_1.0.5          `\
+`#> [27] Seqinfo_1.3.2               SnowballC_0.7.1            `\
+`#> [29] htmltools_0.5.9             sass_0.4.10                `\
+`#> [31] tidytext_0.4.3              yaml_2.3.12                `\
+`#> [33] pkgdown_2.2.1.9000          pillar_1.11.1              `\
+`#> [35] jquerylib_0.1.4             DT_0.34.0                  `\
+`#> [37] DelayedArray_0.39.8         cachem_1.1.0               `\
+`#> [39] abind_1.4-8                 tidyselect_1.2.1           `\
+`#> [41] digest_0.6.39               stringi_1.8.9              `\
+`#> [43] dplyr_1.2.1                 purrr_1.2.2                `\
+`#> [45] bookdown_0.48               labeling_0.4.3             `\
+`#> [47] ggthemes_7.0.0              fastmap_1.2.0              `\
+`#> [49] grid_4.6.1                  cli_3.6.6                  `\
+`#> [51] SparseArray_1.13.4          magrittr_2.0.5             `\
+`#> [53] S4Arrays_1.13.2             withr_3.0.3                `\
+`#> [55] scales_1.4.0                rmarkdown_2.32             `\
+`#> [57] XVector_0.53.0              httr_1.4.9                 `\
+`#> [59] matrixStats_1.5.0           otel_0.2.0                 `\
+`#> [61] ragg_1.5.2                  evaluate_1.0.5             `\
+`#> [63] knitr_1.52                  GenomicRanges_1.65.4       `\
+`#> [65] IRanges_2.47.5              rlang_1.3.0                `\
+`#> [67] Rcpp_1.1.2                  ggVennDiagram_1.5.7        `\
+`#> [69] glue_1.8.1                  BiocManager_1.30.27        `\
+`#> [71] xml2_1.6.0                  BiocGenerics_0.59.12       `\
+`#> [73] jsonlite_2.0.0              R6_2.6.1                   `\
+`#> [75] plyr_1.8.9                  MatrixGenerics_1.25.0      `\
+`#> [77] systemfonts_1.3.2           fs_2.1.0`

@@ -54,25 +54,25 @@ also be extended to other analytical platforms.
 
 ### Vignettes and case studies
 
-- [Using
+- [Getting started with
   MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html):
   an introduction to annotation sources, workflow steps, REST API
   lookups, dictionaries and combining records.
-- [Extending
-  MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/Extending_MetMashR.html):
+- [Extending MetMashR with custom sources and workflow
+  steps](https://computational-metabolomics.github.io/MetMashR/articles/Extending_MetMashR.html):
   how to create your own annotation sources and workflow steps.
-- [Annotation of mixtures of
-  standards](https://computational-metabolomics.github.io/MetMashR/articles/annotate_mixtures.html):
+- [Evaluating metabolite annotations using standard
+  mixtures](https://computational-metabolomics.github.io/MetMashR/articles/annotate_mixtures.html):
   a case study combining Compound Discoverer and LipidSearch annotations
   of mixtures of chemical standards, and assessing them against the
   known contents of the mixtures.
-- [Exploring the MTox700+
-  library](https://computational-metabolomics.github.io/MetMashR/articles/exploring_mtox.html):
+- [Exploring chemical classes and pathway coverage in
+  MTox700+](https://computational-metabolomics.github.io/MetMashR/articles/exploring_mtox.html):
   a case study combining the MTox700+ database of toxicologically
   relevant metabolites with other databases (e.g. PathBank) to explore
   its chemical and biological coverage.
-- [Case study: reimplementing the Metabolites Merging
-  Strategy](https://computational-metabolomics.github.io/MetMashR/articles/mms_case_study.html):
+- [Adapting the Metabolites Merging Strategy with
+  MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/mms_case_study.html):
   a case study reproducing a published annotation-merging strategy as a
   `MetMashR` workflow.
 
@@ -141,7 +141,7 @@ annotations of the same lipid into a single record.
 `# the annotations after any individual step, e.g. after filtering`\
 [`predicted`](https://rdrr.io/pkg/struct/man/predicted.html)`(``WF``[``2``]``)`
 
-The [Using
+The [Getting started with
 MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.html)
 vignette describes these and many other workflow steps in detail.
 
@@ -450,13 +450,13 @@ Supporting functions are used by MetMashR
 
 ### All vignettes
 
-- [Annotation of mixtures of
-  standards](https://computational-metabolomics.github.io/MetMashR/articles/annotate_mixtures.md):
-- [Exploring the MTox700+
-  library](https://computational-metabolomics.github.io/MetMashR/articles/exploring_mtox.md):
-- [Extending
-  MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/Extending_MetMashR.md):
-- [Case study: reimplementing the Metabolites Merging Strategy with
+- [Evaluating metabolite annotations using standard
+  mixtures](https://computational-metabolomics.github.io/MetMashR/articles/annotate_mixtures.md):
+- [Exploring chemical classes and pathway coverage in
+  MTox700+](https://computational-metabolomics.github.io/MetMashR/articles/exploring_mtox.md):
+- [Extending MetMashR with custom sources and workflow
+  steps](https://computational-metabolomics.github.io/MetMashR/articles/Extending_MetMashR.md):
+- [Adapting the Metabolites Merging Strategy with
   MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/mms_case_study.md):
-- [Using
+- [Getting started with
   MetMashR](https://computational-metabolomics.github.io/MetMashR/articles/using_MetMashR.md):

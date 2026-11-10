@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Extending MetMashR • MetMashR</title>
+<title>Extending MetMashR with custom sources and workflow steps • MetMashR</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Extending MetMashR">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Extending MetMashR with custom sources and workflow steps">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MetMashR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,11 +33,11 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/using_MetMashR.html">Using MetMashR</a></li>
-    <li><a class="dropdown-item" href="../articles/Extending_MetMashR.html">Extending MetMashR</a></li>
-    <li><a class="dropdown-item" href="../articles/annotate_mixtures.html">Annotating mixtures of standards</a></li>
-    <li><a class="dropdown-item" href="../articles/exploring_mtox.html">Exploring the MTox700+ database</a></li>
-    <li><a class="dropdown-item" href="../articles/mms_case_study.html">Case study: reimplementing the Metabolites Merging Strategy</a></li>
+<li><a class="dropdown-item" href="../articles/using_MetMashR.html">Getting started with MetMashR</a></li>
+    <li><a class="dropdown-item" href="../articles/Extending_MetMashR.html">Extending MetMashR with custom sources and workflow steps</a></li>
+    <li><a class="dropdown-item" href="../articles/annotate_mixtures.html">Evaluating metabolite annotations using standard mixtures</a></li>
+    <li><a class="dropdown-item" href="../articles/exploring_mtox.html">Exploring chemical classes and pathway coverage in MTox700+</a></li>
+    <li><a class="dropdown-item" href="../articles/mms_case_study.html">Adapting the Metabolites Merging Strategy with MetMashR</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -77,11 +77,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Extending MetMashR</h1>
+      <h1>Extending MetMashR with custom sources and workflow steps</h1>
                         <h4 data-toc-skip class="author">Gavin Rhys
 Lloyd</h4>
             
-            <h4 data-toc-skip class="date">2026-10-12</h4>
+            <h4 data-toc-skip class="date">2026-11-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/computational-metabolomics/MetMashR/blob/devel/vignettes/Extending_MetMashR.Rmd" class="external-link"><code>vignettes/Extending_MetMashR.Rmd</code></a></small>
       <div class="d-none name"><code>Extending_MetMashR.Rmd</code></div>
@@ -89,6 +89,16 @@ Lloyd</h4>
 
     
     
+<div id="Offline" style="background-color: #ffffcc; border: 1px solid black; padding: 1em; border-radius: 10px">
+<p><strong>Note:</strong> This vignette is built without network access.
+Online databases are read from stored copies included with
+<code>MetMashR</code>, and REST API lookups use stored response caches
+with <code>cache_mode = "offline"</code>, so a value that is not in a
+cache is left as <code>NA</code> instead of being queried. To query the
+online services yourself, use your own cache and the default
+<code>cache_mode = "update"</code>. The stored copies were made with
+<code>inst/scripts/make_vignette_snapshots.R</code>.</p>
+</div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -100,7 +110,7 @@ ones we use the most.</p>
 include new sources bespoke to your requirements.</p>
 </div>
 <div class="section level2">
-<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>The latest versions of <em><a href="https://bioconductor.org/packages/3.24/struct" class="external-link">struct</a></em> and
 <code>MetMashR</code> that are compatible with your current R version
@@ -124,24 +134,27 @@ can be installed using BiocManager.</p>
 <div class="section level2">
 <h2 id="example-study">Example study<a class="anchor" aria-label="anchor" href="#example-study"></a>
 </h2>
-<p>In this example we are going to import some annotations from a study
-on Metabolomics Workbench and build a workflow to clean up the table and
-search for PubChem CIDs so that we can present some images of some of
-the annotated metabolites for the study.</p>
-<p>First, we need to import the table of annotations from Metabolomics
-Workbench. For this we make use of the
-<code>metabolomicsWorkbenchR</code> package.</p>
+<p>This example uses the first ten rows of metabolite annotations from
+Metabolomics Workbench analysis AN000465, stored with the package. We
+will create a source reader and add two processing steps: removing
+columns that contain only missing values and preparing names for
+database searches. We will then retrieve candidate PubChem CIDs and
+ConnectivitySMILES strings. At the end, we will display the original
+names, search names, selected identifiers and returned SMILES so that
+readers can see the result.</p>
+<p>The annotations were retrieved from Metabolomics Workbench with the
+<code><a href="https://rdrr.io/pkg/metabolomicsWorkbenchR/man/do_query.html" class="external-link">do_query()</a></code> function from the
+<code>metabolomicsWorkbenchR</code> package
+(<code>context = "study"</code>,
+<code>input_item = "analysis_id"</code>,
+<code>input_value = "AN000465"</code>,
+<code>output_item = "metabolites"</code>). The full table has 747 rows
+and 8 columns. For brevity in this vignette we have stored the first 10
+rows in the package.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># get annotations</span></span>
-<span><span class="va">AN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/metabolomicsWorkbenchR/man/do_query.html" class="external-link">do_query</a></span><span class="op">(</span></span>
-<span>    context <span class="op">=</span> <span class="st">"study"</span>,</span>
-<span>    input_item <span class="op">=</span> <span class="st">"analysis_id"</span>,</span>
-<span>    input_value <span class="op">=</span> <span class="st">"AN000465"</span>,</span>
-<span>    output_item <span class="op">=</span> <span class="st">"metabolites"</span></span>
+<code class="sourceCode R"><span><span class="va">AN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/AN000465_subset.rds"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The imported table has 747 rows and 8 columns. For brevity in this
-vignette we have cached the first 10 rows and stored them in the
-package.</p>
 <p>We can convert the imported table into an
 <code>annotation_table</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -166,7 +179,7 @@ package template system. We will also implement an new
 Workbench as part of the workflow.</p>
 </div>
 <div class="section level2">
-<h2 id="annotation-sources">Annotation Sources<a class="anchor" aria-label="anchor" href="#annotation-sources"></a>
+<h2 id="annotation-sources">Annotation sources<a class="anchor" aria-label="anchor" href="#annotation-sources"></a>
 </h2>
 <p>Annotation sources are the mechanism used by <code>MetMashR</code> to
 get tables of annotation data into R and into a well-defined format.
@@ -186,23 +199,14 @@ that would import the annotations as part of a workflow model
 sequence.</p>
 <p>We will do this now as an example of implementing a new
 <code>annotation_source</code>.</p>
-<p>All <code>annotation_source</code> objects use the <code>model</code>
-template from the struct package, so we could create the definition of a
-source on-the-fly. However, annotation_sources are likely to be used
-multiple times to read in data from the same source, so instead we
-define the new source in a more permanent way, by using code that can be
-included in a script to be sourced, or in a new R package.</p>
-<p>There are three key components to an annotation source object, or
-indeed any struct model object:</p>
-<ol style="list-style-type: decimal">
-<li>A definition of the object which defines what the input and output
-parameters will be.</li>
-<li>A function to create an instance of the object and populate initial
-values for input parameters.</li>
-<li>A <code>model_apply</code> method. For annotation sources this
-method will read in data from the source file and parse it into an
-<code>annotation_table</code>.</li>
-</ol>
+<p>This example creates a new database source by extending
+<code>annotation_database</code>. We need three pieces: a class
+definition, a constructor that creates the object, and a
+<code><a href="../reference/read_database.html">read_database()</a></code> method that reads the data and returns a
+data frame. The existing <code><a href="../reference/read_source.html">read_source()</a></code> method puts that
+data into the source object. We use <code><a href="../reference/import_source.html">import_source()</a></code> to
+bring the source into a workflow. The processing steps introduced later
+use <code><a href="../reference/model_apply.html">model_apply()</a></code> instead.</p>
 <p>We will implement each of these steps now.</p>
 <div class="section level3">
 <h3 id="the-class-definition">The class definition<a class="anchor" aria-label="anchor" href="#the-class-definition"></a>
@@ -248,24 +252,15 @@ the previous section.</p>
 <div class="section level3">
 <h3 id="the-import-method">The import method<a class="anchor" aria-label="anchor" href="#the-import-method"></a>
 </h3>
-<p>Like all model objects, the workhorse method for annotation sources
-is <code>method_apply</code>. For annotation sources this method is used
-to import and parse the source files into an
-<code>annotation_table</code>.</p>
-<p>Here we use <code>setMethod</code> to define the method for the new
-source.</p>
+<p>The <code><a href="../reference/read_database.html">read_database()</a></code> method below reads the cached
+annotation table and returns it as a data frame. We define this method
+for the <code>mwb_source</code> class using
+<code>setMethod()</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">setMethod</span><span class="op">(</span></span>
 <span>    f <span class="op">=</span> <span class="st">"read_database"</span>,</span>
 <span>    signature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mwb_source"</span><span class="op">)</span>,</span>
 <span>    definition <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="co">## get annotations using metabolomicsWorkbenchR</span></span>
-<span>        <span class="co"># AN = do_query(</span></span>
-<span>        <span class="co">#    context = "study",</span></span>
-<span>        <span class="co">#    input_item = "analysis_id",</span></span>
-<span>        <span class="co">#    input_value = M$analysis_id,</span></span>
-<span>        <span class="co">#    output_item = "metabolites")</span></span>
-<span></span>
 <span>        <span class="co">## for vignette use locally cached subset</span></span>
 <span>        <span class="va">AN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/AN000465_subset.rds"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span></span>
@@ -274,16 +269,18 @@ source.</p>
 <span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">AN</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Note how we pass <code>M$analysis</code> id to the
-<code>do_query</code> function so that we can import annotations from
-any Metabolomics Workbench study when using our new source object.</p>
+<p>This demonstration always reads <code>AN000465_subset.rds</code>.
+Changing the <code>source</code> parameter does not select a different
+analysis. To make a reader for other analyses, replace the cached-file
+code with a working query that uses the object’s <code>source</code>
+parameter.</p>
 </div>
 <div class="section level3">
 <h3 id="using-the-new-source">Using the new source<a class="anchor" aria-label="anchor" href="#using-the-new-source"></a>
 </h3>
-<p>The new <code>mwb_source</code> and <code>method_apply</code> method
-are ready to use. To import the table we can use the
-<code>import_source</code> method:</p>
+<p>The new <code>mwb_source</code> class and its
+<code><a href="../reference/read_database.html">read_database()</a></code> method are ready to use. To import the
+table we can use <code><a href="../reference/read_source.html">read_source()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># initialise source</span></span>
 <span><span class="va">SRC</span> <span class="op">&lt;-</span> <span class="fu">mwb_source</span><span class="op">(</span></span>
@@ -391,17 +388,42 @@ missing values and then remove them from the
 <span><span class="op">)</span></span></code></pre></div>
 <p>Note that in the <code>signature</code> we specify that the second
 input is an <code>annotation_table</code>.</p>
-<p>The new model is ready to use. We can test it using the
+<p>The new model is ready to use. First we try it on a tiny table where
+column <code>b</code> contains only missing values:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">toy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_table.html">annotation_table</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>        a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>,</span>
+<span>        b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>        c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    id_column <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># before</span></span>
+<span><span class="va">toy</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="co">#&gt;   a  b  c .MetMashR_id</span></span>
+<span><span class="co">#&gt; 1 x NA  1            1</span></span>
+<span><span class="co">#&gt; 2 y NA NA            2</span></span>
+<span></span>
+<span><span class="co"># after</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="fu">drop_empty_columns</span><span class="op">(</span><span class="op">)</span>, <span class="va">toy</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="co">#&gt;   a  c .MetMashR_id</span></span>
+<span><span class="co">#&gt; 1 x  1            1</span></span>
+<span><span class="co">#&gt; 2 y NA            2</span></span></code></pre></div>
+<p>Column <code>b</code> has been removed. Column <code>c</code> is kept
+because it is only partly missing.</p>
+<p>Now we apply it to the Metabolomics Workbench annotations using the
 <code>model_apply</code> method, and check that some columns have been
 removed.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">M</span>, <span class="va">AT</span><span class="op">)</span></span></code></pre></div>
 <p>The number of columns before was:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">AT</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 8</span></span></code></pre></div>
 <p>The number of columns afterwards is:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">M</span><span class="op">$</span><span class="va">updated</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 5</span></span></code></pre></div>
 </div>
@@ -415,7 +437,7 @@ part of the molecule name.</p>
 <p>As we did for <code>drop_empty_columns</code> we use the
 <code>set_struct_obj</code> and <code>set_obj_method</code> function to
 create our new workflow step.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define new model object</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/set_struct_obj.html" class="external-link">set_struct_obj</a></span><span class="op">(</span></span>
 <span>    class_name <span class="op">=</span> <span class="st">"remove_suffix"</span>,</span>
@@ -454,7 +476,7 @@ create our new workflow step.</p>
 <span>        <span class="kw">if</span> <span class="op">(</span><span class="va">M</span><span class="op">$</span><span class="va">clean</span><span class="op">)</span> <span class="op">{</span></span>
 <span>            <span class="va">D</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="va">M</span><span class="op">$</span><span class="va">column_name</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
 <span>        <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>            <span class="va">D</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">name.fixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span>            <span class="va">D</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">name.fixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
 <span>        <span class="op">}</span></span>
 <span></span>
 <span>        <span class="co"># update model object</span></span>
@@ -472,6 +494,36 @@ containing molecule names</li>
 <li>clean: a flag that will replace the old column if TRUE or add a new
 column if FALSE</li>
 </ul>
+<p>Here is the step applied to a tiny table, first with
+<code>clean = FALSE</code>, which adds a new <code>name.fixed</code>
+column and keeps the original names:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">toy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotation_table.html">annotation_table</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>        name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Glucose_1"</span>, <span class="st">"Glucose_2"</span>, <span class="st">"Alanine"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    id_column <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span></span>
+<span>    <span class="fu">remove_suffix</span><span class="op">(</span>column_name <span class="op">=</span> <span class="st">"name"</span>, clean <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>    <span class="va">toy</span></span>
+<span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="co">#&gt;        name .MetMashR_id name.fixed</span></span>
+<span><span class="co">#&gt; 1 Glucose_1            1    Glucose</span></span>
+<span><span class="co">#&gt; 2 Glucose_2            2    Glucose</span></span>
+<span><span class="co">#&gt; 3   Alanine            3    Alanine</span></span></code></pre></div>
+<p>and then with <code>clean = TRUE</code>, which replaces the names in
+the existing column:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span></span>
+<span>    <span class="fu">remove_suffix</span><span class="op">(</span>column_name <span class="op">=</span> <span class="st">"name"</span>, clean <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    <span class="va">toy</span></span>
+<span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="co">#&gt;      name .MetMashR_id</span></span>
+<span><span class="co">#&gt; 1 Glucose            1</span></span>
+<span><span class="co">#&gt; 2 Glucose            2</span></span>
+<span><span class="co">#&gt; 3 Alanine            3</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -485,10 +537,12 @@ additional information.</p>
 <ol style="list-style-type: decimal">
 <li>import the annotations from Metabolomics Workbench</li>
 <li>remove empty columns</li>
-<li>remove suffixes from molecule names</li>
+<li>remove suffixes from molecule names, writing them to a new column so
+the original names are kept</li>
 <li>search the Metabolomics Workbench refmet database for
 identifiers</li>
-<li>use the PubChem REST API so search for compound CIDs</li>
+<li>use the PubChem REST API to search for compound CIDs using the names
+without suffixes</li>
 <li>combine the CID columns from refmet and pubchem into a single
 column, giving priority to refmet, to obtain a single column of
 identifiers we have confidence in for as many metabolites as
@@ -496,33 +550,44 @@ possible</li>
 <li>use the PubChem REST API to obtain SMILES for each metabolite</li>
 </ol>
 <p>For clarity in the workflow we import the refmet database before
-using it in the workflow instead of importing it in-line. We also import
-some cached REST API responses so that we dont overburden the service
-when generating the vignette.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># refmet</span></span>
-<span><span class="va">refmet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mwb_refmet_database.html">mwb_refmet_database</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># pubchem caches</span></span>
-<span><span class="va">pubchem_cid_cache</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
-<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached/pubchem_cid_cache.rds"</span>,</span>
+using it in the workflow instead of importing it in-line.
+<code><a href="../reference/mwb_refmet_database.html">mwb_refmet_database()</a></code> downloads the full RefMet database;
+here we read a stored copy of the RefMet records for the names in this
+example. We also import stored PubChem responses, which are used with
+<code>cache_mode = "offline"</code>.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># stored RefMet records for this example</span></span>
+<span><span class="va">refmet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
+<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>        <span class="st">"extdata/vignette_snapshots/RefMet_AN000465_subset.rds"</span>,</span>
 <span>        package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    .writable <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pubchem_cid_cache</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
+<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span>,</span>
+<span>        <span class="st">"pubchem_cid_cache.rds"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">pubchem_smile_cache</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rds_database.html">rds_database</a></span><span class="op">(</span></span>
-<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached/pubchem_smiles_cache.rds"</span>,</span>
-<span>        package <span class="op">=</span> <span class="st">"MetMashR"</span></span>
+<span>    source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cached"</span>, package <span class="op">=</span> <span class="st">"MetMashR"</span><span class="op">)</span>,</span>
+<span>        <span class="st">"pubchem_smiles_cache.rds"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>In practice it is better to create your own cache using
-e.g. <code>rds_database</code>, <code>sql_database</code> or other
-<code>struct_database</code> objects with write access.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+e.g. <code>rds_database</code>, <code><a href="../reference/sqlite_database.html">sqlite_database()</a></code> or other
+<code>annotation_database</code> objects with write access.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># prepare sequence</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_source.html">import_source</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">drop_empty_columns</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># keep the original names; the names without suffix are written to a</span></span>
+<span>    <span class="co"># new "name.fixed" column</span></span>
 <span>    <span class="fu">remove_suffix</span><span class="op">(</span></span>
-<span>        clean <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        clean <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>        column_name <span class="op">=</span> <span class="st">"metabolite_name"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/database_lookup.html">database_lookup</a></span><span class="op">(</span></span>
@@ -533,13 +598,14 @@ e.g. <code>rds_database</code>, <code>sql_database</code> or other
 <span>        include <span class="op">=</span> <span class="st">"pubchem_cid"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/pubchem_compound_lookup.html">pubchem_compound_lookup</a></span><span class="op">(</span></span>
-<span>        query_column <span class="op">=</span> <span class="st">"metabolite_name"</span>,</span>
+<span>        query_column <span class="op">=</span> <span class="st">"name.fixed"</span>,</span>
 <span>        search_by <span class="op">=</span> <span class="st">"name"</span>,</span>
 <span>        suffix <span class="op">=</span> <span class="st">"_pc"</span>,</span>
 <span>        output <span class="op">=</span> <span class="st">"cids"</span>,</span>
 <span>        records <span class="op">=</span> <span class="st">"best"</span>,</span>
 <span>        delay <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>        cache <span class="op">=</span> <span class="va">pubchem_cid_cache</span></span>
+<span>        cache <span class="op">=</span> <span class="va">pubchem_cid_cache</span>,</span>
+<span>        cache_mode <span class="op">=</span> <span class="st">"offline"</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/prioritise_columns.html">prioritise_columns</a></span><span class="op">(</span></span>
 <span>        column_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pubchem_cid_mwb"</span>, <span class="st">"CID_pc"</span><span class="op">)</span>,</span>
@@ -554,15 +620,68 @@ e.g. <code>rds_database</code>, <code>sql_database</code> or other
 <span>        suffix <span class="op">=</span> <span class="st">""</span>,</span>
 <span>        property <span class="op">=</span> <span class="st">"ConnectivitySMILES"</span>,</span>
 <span>        delay <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>        cache <span class="op">=</span> <span class="va">pubchem_smile_cache</span></span>
+<span>        cache <span class="op">=</span> <span class="va">pubchem_smile_cache</span>,</span>
+<span>        cache_mode <span class="op">=</span> <span class="st">"offline"</span></span>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># apply sequence</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_apply.html">model_apply</a></span><span class="op">(</span><span class="va">M</span>, <span class="fu">mwb_source</span><span class="op">(</span>source <span class="op">=</span> <span class="st">"AN000465"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Note that because the first step in the workflow is to import data
-from Metabolomics Workbench, we only need to provide an empty
-annotation_table as input to <code>model_apply</code> as it will be
-updated when we run the workflow.</p>
+from Metabolomics Workbench, the source object we pass to
+<code>model_apply</code> only needs to say which source to import; the
+data are read by the first step.</p>
+<p>The table below shows the result. For each annotation it gives the
+original name, the name used for the PubChem search, the selected
+PubChem CID, which search supplied that CID (<code>mwb</code> for
+RefMet, <code>pc</code> for the PubChem name search) and the SMILES
+returned by PubChem.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/struct/man/predicted.html" class="external-link">predicted</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span>
+<span></span>
+<span><span class="co"># the cached PubChem responses may use the older property name</span></span>
+<span><span class="co"># "CanonicalSMILES" for what PubChem now calls "ConnectivitySMILES"</span></span>
+<span><span class="va">smiles_col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"SMILES"</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    original_name <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">metabolite_name</span>,</span>
+<span>    search_name <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">name.fixed</span>,</span>
+<span>    pubchem_cid <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">pubchem_cid</span>,</span>
+<span>    cid_source <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">pubchem_cid_source</span>,</span>
+<span>    smiles <span class="op">=</span> <span class="va">res</span><span class="op">[[</span><span class="va">smiles_col</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                                   original_name</span></span>
+<span><span class="co">#&gt; 1                           10-Deacetyl-2-debenzoylbaccatin III</span></span>
+<span><span class="co">#&gt; 2                                               10-Oxodecanoate</span></span>
+<span><span class="co">#&gt; 3                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine_1</span></span>
+<span><span class="co">#&gt; 4                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine_2</span></span>
+<span><span class="co">#&gt; 5                          1,2-Dihydroxynaphthalene-6-sulfonate</span></span>
+<span><span class="co">#&gt; 6                         12-trans-Hydroxy juvenile hormone III</span></span>
+<span><span class="co">#&gt; 7                                         14-Dihydroxycornestin</span></span>
+<span><span class="co">#&gt; 8                       1-(5-Phosphoribosyl)imidazole-4-acetate</span></span>
+<span><span class="co">#&gt; 9  1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione_1</span></span>
+<span><span class="co">#&gt; 10 1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione_2</span></span>
+<span><span class="co">#&gt;                                                   search_name pubchem_cid</span></span>
+<span><span class="co">#&gt; 1                         10-Deacetyl-2-debenzoylbaccatin III      443489</span></span>
+<span><span class="co">#&gt; 2                                             10-Oxodecanoate       79686</span></span>
+<span><span class="co">#&gt; 3                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine     6331148</span></span>
+<span><span class="co">#&gt; 4                    1,1-Diethyl-2-hydroxy-2-nitrosohydrazine     6331148</span></span>
+<span><span class="co">#&gt; 5                        1,2-Dihydroxynaphthalene-6-sulfonate     9543072</span></span>
+<span><span class="co">#&gt; 6                       12-trans-Hydroxy juvenile hormone III        &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 7                                       14-Dihydroxycornestin     5281160</span></span>
+<span><span class="co">#&gt; 8                     1-(5-Phosphoribosyl)imidazole-4-acetate      440341</span></span>
+<span><span class="co">#&gt; 9  1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione    11954165</span></span>
+<span><span class="co">#&gt; 10 1alpha,5alpha-Epidithio-17a-oxa-D-homoandrostan-3,17-dione    11954165</span></span>
+<span><span class="co">#&gt;    cid_source                                                           smiles</span></span>
+<span><span class="co">#&gt; 1         mwb CC1=C2C(C(=O)C3(C(CC4C(C3C(C(C2(C)C)(CC1O)O)O)(CO4)OC(=O)C)O)C)O</span></span>
+<span><span class="co">#&gt; 2         mwb                                              C(CCCCC(=O)O)CCCC=O</span></span>
+<span><span class="co">#&gt; 3          pc                                                CCN(CC)N(N=O)[O-]</span></span>
+<span><span class="co">#&gt; 4          pc                                                CCN(CC)N(N=O)[O-]</span></span>
+<span><span class="co">#&gt; 5          pc                              C1=CC2=C(C=CC(=C2O)O)C=C1S(=O)(=O)O</span></span>
+<span><span class="co">#&gt; 6        &lt;NA&gt;                                                             &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 7         mwb                        CCCC1C(C(=O)CC(C(=CC)CC2=C1C(=O)OC2=O)O)O</span></span>
+<span><span class="co">#&gt; 8         mwb                     C1=C(N=CN1C2C(C(C(O2)COP(=O)(O)O)O)O)CC(=O)O</span></span>
+<span><span class="co">#&gt; 9          pc                   CC12CCC3C(C1CCC(=O)O2)CCC45C3(C(CC(=O)C4)SS5)C</span></span>
+<span><span class="co">#&gt; 10         pc                   CC12CCC3C(C1CCC(=O)O2)CCC45C3(C(CC(=O)C4)SS5)C</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
@@ -576,13 +695,13 @@ workflow steps MetMashR can also be extended to include additional
 annotation sources.</p>
 </div>
 <div class="section level2">
-<h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+<h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 24.04.4 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 24.04.5 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -604,51 +723,46 @@ annotation sources.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt; [1] ggplot2_4.0.3                 metabolomicsWorkbenchR_1.23.0</span></span>
-<span><span class="co">#&gt; [3] MetMashR_1.7.2                struct_1.25.0                </span></span>
+<span><span class="co">#&gt; [3] MetMashR_1.7.3                struct_1.25.0                </span></span>
 <span><span class="co">#&gt; [5] BiocStyle_2.41.0             </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] SummarizedExperiment_1.43.0 gtable_0.3.6               </span></span>
-<span><span class="co">#&gt;  [3] xfun_0.61                   bslib_0.12.0               </span></span>
+<span><span class="co">#&gt;  [3] xfun_0.62                   bslib_0.12.0               </span></span>
 <span><span class="co">#&gt;  [5] httr2_1.3.0                 htmlwidgets_1.6.4          </span></span>
 <span><span class="co">#&gt;  [7] Biobase_2.73.2              lattice_0.23-1             </span></span>
 <span><span class="co">#&gt;  [9] vctrs_0.7.3                 tools_4.6.1                </span></span>
-<span><span class="co">#&gt; [11] generics_0.1.4              curl_8.0.0                 </span></span>
-<span><span class="co">#&gt; [13] stats4_4.6.1                RSQLite_3.53.3             </span></span>
-<span><span class="co">#&gt; [15] tibble_3.3.1                blob_1.3.0                 </span></span>
-<span><span class="co">#&gt; [17] pkgconfig_2.0.3             Matrix_1.7-6               </span></span>
-<span><span class="co">#&gt; [19] data.table_1.18.6.1         dbplyr_2.6.0               </span></span>
-<span><span class="co">#&gt; [21] RColorBrewer_1.1-3          S7_0.2.2                   </span></span>
-<span><span class="co">#&gt; [23] desc_1.4.3                  S4Vectors_0.51.10          </span></span>
-<span><span class="co">#&gt; [25] lifecycle_1.0.5             compiler_4.6.1             </span></span>
-<span><span class="co">#&gt; [27] farver_2.1.2                textshaping_1.0.5          </span></span>
-<span><span class="co">#&gt; [29] Seqinfo_1.3.2               htmltools_0.5.9            </span></span>
-<span><span class="co">#&gt; [31] sass_0.4.10                 yaml_2.3.12                </span></span>
-<span><span class="co">#&gt; [33] pkgdown_2.2.1.9000          pillar_1.11.1              </span></span>
-<span><span class="co">#&gt; [35] jquerylib_0.1.4             DelayedArray_0.39.8        </span></span>
-<span><span class="co">#&gt; [37] cachem_1.1.0                abind_1.4-8                </span></span>
-<span><span class="co">#&gt; [39] tidyselect_1.2.1            digest_0.6.39              </span></span>
-<span><span class="co">#&gt; [41] dplyr_1.2.1                 purrr_1.2.2                </span></span>
-<span><span class="co">#&gt; [43] bookdown_0.48               ggthemes_7.0.0             </span></span>
-<span><span class="co">#&gt; [45] fastmap_1.2.0               grid_4.6.1                 </span></span>
-<span><span class="co">#&gt; [47] cli_3.6.6                   SparseArray_1.13.4         </span></span>
-<span><span class="co">#&gt; [49] magrittr_2.0.5              S4Arrays_1.13.2            </span></span>
-<span><span class="co">#&gt; [51] withr_3.0.3                 filelock_1.0.3             </span></span>
-<span><span class="co">#&gt; [53] scales_1.4.0                bit64_4.8.6                </span></span>
-<span><span class="co">#&gt; [55] rmarkdown_2.32              XVector_0.53.0             </span></span>
-<span><span class="co">#&gt; [57] httr_1.4.9                  matrixStats_1.5.0          </span></span>
-<span><span class="co">#&gt; [59] bit_4.6.0                   otel_0.2.0                 </span></span>
-<span><span class="co">#&gt; [61] ragg_1.5.2                  memoise_2.0.1              </span></span>
-<span><span class="co">#&gt; [63] evaluate_1.0.5              knitr_1.52                 </span></span>
-<span><span class="co">#&gt; [65] GenomicRanges_1.65.4        IRanges_2.47.5             </span></span>
-<span><span class="co">#&gt; [67] MultiAssayExperiment_1.39.1 BiocFileCache_3.3.0        </span></span>
-<span><span class="co">#&gt; [69] rlang_1.3.0                 Rcpp_1.1.2                 </span></span>
-<span><span class="co">#&gt; [71] DBI_1.3.0                   glue_1.8.1                 </span></span>
-<span><span class="co">#&gt; [73] BiocManager_1.30.27         xml2_1.6.0                 </span></span>
-<span><span class="co">#&gt; [75] BiocGenerics_0.59.12        jsonlite_2.0.0             </span></span>
-<span><span class="co">#&gt; [77] R6_2.6.1                    plyr_1.8.9                 </span></span>
-<span><span class="co">#&gt; [79] MatrixGenerics_1.25.0       systemfonts_1.3.2          </span></span>
-<span><span class="co">#&gt; [81] fs_2.1.0</span></span></code></pre></div>
+<span><span class="co">#&gt; [11] generics_0.1.4              stats4_4.6.1               </span></span>
+<span><span class="co">#&gt; [13] tibble_3.3.1                pkgconfig_2.0.3            </span></span>
+<span><span class="co">#&gt; [15] Matrix_1.7-6                data.table_1.18.6.1        </span></span>
+<span><span class="co">#&gt; [17] RColorBrewer_1.1-3          S7_0.2.2                   </span></span>
+<span><span class="co">#&gt; [19] desc_1.4.3                  S4Vectors_0.51.10          </span></span>
+<span><span class="co">#&gt; [21] lifecycle_1.0.5             compiler_4.6.1             </span></span>
+<span><span class="co">#&gt; [23] farver_2.1.2                textshaping_1.0.5          </span></span>
+<span><span class="co">#&gt; [25] Seqinfo_1.3.2               htmltools_0.5.9            </span></span>
+<span><span class="co">#&gt; [27] sass_0.4.10                 yaml_2.3.12                </span></span>
+<span><span class="co">#&gt; [29] pkgdown_2.2.1.9000          pillar_1.11.1              </span></span>
+<span><span class="co">#&gt; [31] jquerylib_0.1.4             DelayedArray_0.39.8        </span></span>
+<span><span class="co">#&gt; [33] cachem_1.1.0                abind_1.4-8                </span></span>
+<span><span class="co">#&gt; [35] tidyselect_1.2.1            digest_0.6.39              </span></span>
+<span><span class="co">#&gt; [37] dplyr_1.2.1                 purrr_1.2.2                </span></span>
+<span><span class="co">#&gt; [39] bookdown_0.48               ggthemes_7.0.0             </span></span>
+<span><span class="co">#&gt; [41] fastmap_1.2.0               grid_4.6.1                 </span></span>
+<span><span class="co">#&gt; [43] cli_3.6.6                   SparseArray_1.13.4         </span></span>
+<span><span class="co">#&gt; [45] magrittr_2.0.5              S4Arrays_1.13.2            </span></span>
+<span><span class="co">#&gt; [47] withr_3.0.3                 scales_1.4.0               </span></span>
+<span><span class="co">#&gt; [49] rmarkdown_2.32              XVector_0.53.0             </span></span>
+<span><span class="co">#&gt; [51] httr_1.4.9                  matrixStats_1.5.0          </span></span>
+<span><span class="co">#&gt; [53] otel_0.2.0                  ragg_1.5.2                 </span></span>
+<span><span class="co">#&gt; [55] evaluate_1.0.5              knitr_1.52                 </span></span>
+<span><span class="co">#&gt; [57] GenomicRanges_1.65.4        IRanges_2.47.5             </span></span>
+<span><span class="co">#&gt; [59] MultiAssayExperiment_1.39.1 rlang_1.3.0                </span></span>
+<span><span class="co">#&gt; [61] Rcpp_1.1.2                  glue_1.8.1                 </span></span>
+<span><span class="co">#&gt; [63] BiocManager_1.30.27         xml2_1.6.0                 </span></span>
+<span><span class="co">#&gt; [65] BiocGenerics_0.59.12        jsonlite_2.0.0             </span></span>
+<span><span class="co">#&gt; [67] R6_2.6.1                    plyr_1.8.9                 </span></span>
+<span><span class="co">#&gt; [69] MatrixGenerics_1.25.0       systemfonts_1.3.2          </span></span>
+<span><span class="co">#&gt; [71] fs_2.1.0</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
