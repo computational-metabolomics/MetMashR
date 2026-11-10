@@ -767,14 +767,23 @@ C <- annotation_upset_chart(
 chart_plot(C, predicted(N[3]))
 ```
 
-In the next chart we visualise the proportion of annotations from each query,
-after prioritisation and merging has taken place. 
+In the next chart we visualise which query supplied the selected identifier 
+for each annotation row, after prioritisation has taken place. Rows with no 
+identifier from any query have no source and are shown as NA.
 
-Note that in this case some of
-the identifiers might be the same if e.g. the same molecule is present in 
-multiple rows. You can see that in the end only a small proportion (12.1%) of 
-the 
-identifiers are from the PubChem query based on the original name.
+```{r annotate-mixtures-22b, include = FALSE}
+src <- predicted(N)$data$inchikey_source
+n_rows <- length(src)
+n_with_id <- sum(!is.na(src))
+n_from_name <- sum(src == "InChIKey", na.rm = TRUE)
+```
+
+These counts are annotation rows, not distinct identifiers; the same 
+identifier can appear in several rows if e.g. the same molecule was annotated 
+more than once. Of the `r n_rows` annotation rows, `r n_with_id` have an 
+identifier, and `r n_from_name` of these 
+(`r round(100 * n_from_name / n_with_id, 1)`%) came from the PubChem query 
+based on the original name.
 
 ```{r annotate-mixtures-23}
 # pie source of inchikey
@@ -798,8 +807,9 @@ chart_plot(C, predicted(N)) +
 
 This example removes rows whose selected identifier was found only by PubChem 
 using the original name. This is a chosen filtering rule; it has not been shown 
-to produce more accurate identifiers. The unfiltered lookup results are kept in 
-`predicted(N)`.
+to produce more accurate identifiers. It removes `r n_from_name` of the 
+`r n_rows` rows; rows with no identifier are kept. The unfiltered lookup 
+results are kept in `predicted(N)`.
 
 ```{r annotate-mixtures-24}
 # prepare workflow

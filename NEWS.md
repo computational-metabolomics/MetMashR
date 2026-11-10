@@ -11,6 +11,7 @@
 * vectorise `mz_match` and `rt_match` interval-overlap matching
 * `mspurity_source` is now an `lcms_table`
 * fix `vertical_join` matching_columns rename direction
+* fix `prioritise_columns` assigning the last source tag to rows where all columns are NA; the source is now NA
 * fix silent type coercion in `database_lookup`
 * fix crash when importing an empty `ls_source`
 * fix `ls_source` truncating `LipidName` at `/`, `+` or `-` inside brackets

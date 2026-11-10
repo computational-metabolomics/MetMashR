@@ -63,8 +63,9 @@ prioritise_columns <- function(column_names,
         source_name = entity(
             name = "Source name",
             description = paste0(
-                "The column name used to indicate the where ",
-                "the merged values originated."
+                "The column name used to indicate where ",
+                "the merged values originated. The source is NA if ",
+                "all of the columns are NA."
             ),
             type = "character",
             value = "source_name",
@@ -125,6 +126,9 @@ setMethod(
             new_column[w] <- X[w, M$column_names[k], drop = TRUE]
             selected[w] <- M$source_tags[k]
         }
+
+        # no value in any column, so there is no source
+        selected[is.na(new_column)] <- NA
 
         X[[M$output_name]] <- new_column
         X[[M$source_name]] <- selected

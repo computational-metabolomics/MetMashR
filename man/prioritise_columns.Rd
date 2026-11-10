@@ -19,8 +19,8 @@ combined.}
 
 \item{output_name}{(character) The name of the new column.}
 
-\item{source_name}{(character) The column name used to indicate the
-where the merged values originated.}
+\item{source_name}{(character) The column name used to indicate where
+the merged values originated. The source is NA if all of the columns are NA.}
 
 \item{source_tags}{(character) The tags used to identify the source
 of each item in the new column. A tag should be provided for each
