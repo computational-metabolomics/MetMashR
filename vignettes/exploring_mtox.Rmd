@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
     dt_options <- list(
         scrollX = TRUE,
         pageLength = 6,
-        dom = "t",
+        dom = "tip", # table, row count and pagination
         initComplete = DT::JS(
             "function(settings, json) {",
             "$(this.api().table().header()).css({'font-size':'10pt'});",
@@ -96,9 +96,9 @@ library(ggplotify)
 > MTox700+ is a list of toxicologically relevant metabolites derived from 
 publications, public databases and relevant toxicological assays.
 
-In this vignette we import the MTox700+ database and combine.merge and "mash" it
-with other databases to explore its contents and its coverage of chemical, 
-biological and toxicological space.
+In this vignette you will learn how to combine MTox700+ with the PathBank 
+pathway database to see which chemical classes MTox700+ contains and how many 
+of its metabolites have pathway information in PathBank.
 
 <br>
 
@@ -119,6 +119,38 @@ df <- read_database(MT)
 # show contents
 .DT(df)
 ```
+
+MTox700+ and PathBank are downloaded once and stored in a local cache using 
+`BiocFileCache`. The helper below lists the cached copies of a resource, with 
+the date each copy was downloaded (`create_time`) and last used 
+(`access_time`).
+
+```{r exploring-mtox-5b}
+cache_info <- function(obj, pattern) {
+    # NULL bfc_path means the default BiocFileCache location
+    bfc <- if (is.null(obj$bfc_path)) {
+        BiocFileCache::BiocFileCache(ask = FALSE)
+    } else {
+        BiocFileCache::BiocFileCache(obj$bfc_path, ask = FALSE)
+    }
+    info <- as.data.frame(BiocFileCache::bfcquery(bfc, pattern, field = "rname"))
+    info[, c("rname", "create_time", "access_time")]
+}
+
+# "latest" is resolved using the GitHub releases API, as read_database() does
+release <- httr::content(httr::GET(paste0(
+    "https://api.github.com/repos/michabohealthscience/",
+    "MTox700plus/releases/latest"
+)))$tag_name
+
+# the cached copy for that release
+mtox_cache <- cache_info(MT, paste0("MTox700plus_", release, "$"))
+mtox_cache
+```
+
+`version = "latest"` returned MTox700+ release `r release`. This copy was 
+downloaded on `r as.Date(mtox_cache$create_time[1])`; if that is earlier than 
+the date this vignette was built, the example read a previously cached copy.
 
 ```{r exploring-mtox-6}
 # prepare workflow that uses MTox700+ as a source
@@ -238,6 +270,10 @@ P <- PathBank_metabolite_database(
 # import
 P <- read_source(P)
 
+# cached copy of PathBank used
+pathbank_cache <- cache_info(P, "PathBank_primary")
+pathbank_cache
+
 # prepare chart
 C <- annotation_venn_chart(
     factor_name = c("inchikey", "InChI.Key"), legend = FALSE,
@@ -255,6 +291,9 @@ g2 <- as.ggplot(chart_plot(C, predicted(M), P)) +
   theme(plot.margin = unit(c(1, 1, 1, 1), "cm"))
 cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
 ```
+
+PathBank does not report a version number, so we report the date the cached 
+copy was downloaded: `r as.Date(pathbank_cache$create_time[1])`.
 
 These charts compare full InChIKeys in MTox700+ with those in the selected 
 PathBank primary-pathway dataset. To report the overlap, we count the distinct, 
@@ -366,9 +405,13 @@ nrow(predicted(X)$data)
 
 Sometimes it is useful to collapse this information into a single record per 
 metabolite. We can use the `combine_records` object and its helper functions to
-do this in a `MetMashR` workflow.
+do this in a `MetMashR` workflow. Before collapsing the records we save the 
+full table of matches, which has one row per metabolite and pathway.
 
 ```{r exploring-mtox-13}
+# save the full table of matches before collapsing
+pathway_matches <- predicted(X)$data
+
 # prepare object
 X <- database_lookup(
     query_column = "inchikey",
@@ -407,6 +450,30 @@ The pathways associated with Glycolic acid are:
 # print list of pathways
 predicted(X)$data$Pathway.Name[w]
 ```
+
+The summary lists unique values from each column separately. Values in the same 
+position in those lists may not come from the same original row. Use the saved 
+full table to see which pathway ID, pathway name and species belong together:
+
+```{r exploring-mtox-15b}
+glycolic <- pathway_matches[
+    pathway_matches$metabolite_name == "Glycolic acid",
+    c("PathBank.ID", "Pathway.Name", "Species")
+]
+.DT(glycolic)
+```
+
+<br>
+
+# Summary
+Combining MTox700+ with PathBank shows which MTox700+ metabolites have pathway 
+information in the PathBank primary-pathway dataset, and which pathway subjects 
+those matches belong to. The comparison has limits. Matching uses full 
+InChIKeys, so a metabolite recorded in a different form (e.g. a different 
+charge state or stereoisomer) is not matched. Only the primary-pathway subset of 
+PathBank is used, and all species are included. The pathway charts count 
+joined records rather than metabolites, so metabolites in many pathways have 
+more weight.
 
 <br>
 

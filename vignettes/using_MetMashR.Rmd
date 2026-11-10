@@ -38,27 +38,6 @@ how to use them in detail.
   
 <br>
 
-# Statistics in R using class templates (struct)
-All of the objects defined in `r Biocpkg("MetMashR")` use or extend the class 
-templates 
-defined by the `r Biocpkg("struct")` package. Although originally intended for 
-statistics
-applications, the templates in the `r Biocpkg("struct")` package have proven to 
-be adaptable
-to many different scenarios and types of analysis/workflow step.
-
-The use of `r Biocpkg("struct")` templates allows workflow steps to be applied 
-in sequence 
-and intermediate outputs to be retained for further analysis if required. The
-templates include ontology definitions for both the object and its input/output
-parameters. This makes the workflows more "FAIR" which is critical alongside
-FAIR data to making workflows repeatable, transparent and reproducible.
-
-A general summary of extending `r Biocpkg("struct")` templates is provided in 
-the [package vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/struct/inst/doc/struct_templates_and_helper_functions.html).
-  
-<br>
-
 # Getting started
 The latest versions of `r Biocpkg("struct")` and `r Biocpkg("MetMashR")` that 
 are compatible 
@@ -96,7 +75,7 @@ tables using the `r CRANpkg("DT")` package:
     dt_options <- list(
         scrollX = TRUE,
         pageLength = 6,
-        dom = "t",
+        dom = "tip", # table, row count and pagination
         initComplete = DT::JS(
             "function(settings, json) {",
             "$(this.api().table().header()).css({'font-size':'10pt'});",
@@ -112,6 +91,73 @@ tables using the `r CRANpkg("DT")` package:
         )
 }
 ```
+  
+<br>
+
+# A quick example
+Before looking at how `r Biocpkg("MetMashR")` works, here is a short workflow 
+that shows what it does. We import the bundled LipidSearch export, keep the 
+annotations graded A or B, and search LIPID MAPS for an InChIKey for each lipid 
+name. Each step is explained in detail later in this vignette.
+
+```{r using-metmashr-quick}
+# the LipidSearch export to import
+AT <- ls_source(
+    source = system.file(
+        "extdata/MTox/LS/MTox_2023_HILIC_POS.txt",
+        package = "MetMashR"
+    )
+)
+
+# a local cache for the LIPID MAPS responses (reused later in this vignette)
+TF <- rds_database(source = tempfile())
+
+# import, filter and look up identifiers
+WF <- import_source() +
+    filter_labels(
+        column_name = "Grade",
+        labels = c("A", "B"),
+        mode = "include"
+    ) +
+    lipidmaps_lookup(
+        query_column = "LipidName",
+        context = "compound",
+        context_item = "abbrev",
+        output_item = "inchi_key",
+        cache = TF,
+        suffix = "",
+        delay = 2
+    )
+WF <- model_apply(WF, AT)
+
+# show the lipid names and the InChIKeys returned by LIPID MAPS
+.DT(predicted(WF)$data[, c("LipidName", "Grade", "inchi_key")])
+```
+
+LIPID MAPS can return several InChIKeys for one name, so the results table can 
+have more rows than the filtered input. Rows with no InChIKey are names that 
+LIPID MAPS did not recognise.
+
+<br>
+
+# Statistics in R using class templates (struct)
+All of the objects defined in `r Biocpkg("MetMashR")` use or extend the class 
+templates 
+defined by the `r Biocpkg("struct")` package. Although originally intended for 
+statistics
+applications, the templates in the `r Biocpkg("struct")` package have proven to 
+be adaptable
+to many different scenarios and types of analysis/workflow step.
+
+The use of `r Biocpkg("struct")` templates allows workflow steps to be applied 
+in sequence 
+and intermediate outputs to be retained for further analysis if required. The
+templates include ontology definitions for both the object and its input/output
+parameters. This makes the workflows more "FAIR" which is critical alongside
+FAIR data to making workflows repeatable, transparent and reproducible.
+
+A general summary of extending `r Biocpkg("struct")` templates is provided in 
+the [package vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/struct/inst/doc/struct_templates_and_helper_functions.html).
   
 <br>
 
@@ -393,10 +439,8 @@ AT <- ls_source(
     )
 )
 
-# prepare cache
-TF <- rds_database(
-    source = tempfile()
-)
+# reuse the cache TF created in the quick example, so that LIPID MAPS is
+# not queried again for the same names
 
 # prepare workflow
 WF <-

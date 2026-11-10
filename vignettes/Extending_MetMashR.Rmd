@@ -72,7 +72,9 @@ This example uses the first ten rows of metabolite annotations from Metabolomics
 Workbench analysis AN000465, stored with the package. We will create a source 
 reader and add two processing steps: removing columns that contain only missing 
 values and preparing names for database searches. We will then retrieve 
-candidate PubChem CIDs and ConnectivitySMILES strings.
+candidate PubChem CIDs and ConnectivitySMILES strings. At the end, we will 
+display the original names, search names, selected identifiers and returned 
+SMILES so that readers can see the result.
 
 First, we need to import the table of annotations from Metabolomics Workbench.
 For this we make use of the `metabolomicsWorkbenchR` package.
@@ -320,8 +322,31 @@ set_obj_method(
 Note that in the `signature` we specify that the second input is an 
 `annotation_table`.
 
-The new model is ready to use. We can test it using the `model_apply` method, 
-and check that some columns have been removed.
+The new model is ready to use. First we try it on a tiny table where column 
+`b` contains only missing values:
+
+```{r extending-metmashr-toy-1}
+toy <- annotation_table(
+    data = data.frame(
+        a = c("x", "y"),
+        b = c(NA, NA),
+        c = c(1, NA)
+    ),
+    id_column = NULL
+)
+
+# before
+toy$data
+
+# after
+predicted(model_apply(drop_empty_columns(), toy))$data
+```
+
+Column `b` has been removed. Column `c` is kept because it is only partly 
+missing.
+
+Now we apply it to the Metabolomics Workbench annotations using the 
+`model_apply` method, and check that some columns have been removed.
 
 ```{r extending-metmashr-11}
 M <- model_apply(M, AT)
@@ -403,6 +428,32 @@ molecule names
 - clean: a flag that will replace the old column if TRUE or add a new column 
 if FALSE
 
+Here is the step applied to a tiny table, first with `clean = FALSE`, which 
+adds a new `name.fixed` column and keeps the original names:
+
+```{r extending-metmashr-toy-2}
+toy <- annotation_table(
+    data = data.frame(
+        name = c("Glucose_1", "Glucose_2", "Alanine")
+    ),
+    id_column = NULL
+)
+
+predicted(model_apply(
+    remove_suffix(column_name = "name", clean = FALSE),
+    toy
+))$data
+```
+
+and then with `clean = TRUE`, which replaces the names in the existing column:
+
+```{r extending-metmashr-toy-3}
+predicted(model_apply(
+    remove_suffix(column_name = "name", clean = TRUE),
+    toy
+))$data
+```
+
 # Metabolite mashing
 Now that we have defined our new workflow steps we can use them in a `model_seq`
 (workflow), alongside other existing steps to mash the annotations with
@@ -412,9 +463,11 @@ In this case we do the following:
 
 1. import the annotations from Metabolomics Workbench
 1. remove empty columns
-2. remove suffixes from molecule names
+2. remove suffixes from molecule names, writing them to a new column so the 
+original names are kept
 3. search the Metabolomics Workbench refmet database for identifiers
-4. use the PubChem REST API so search for compound CIDs
+4. use the PubChem REST API to search for compound CIDs using the names 
+without suffixes
 5. combine the CID columns from refmet and pubchem into a single column, 
 giving priority to refmet, to obtain a single column of identifiers we have 
 confidence in for as many metabolites as possible
@@ -466,8 +519,10 @@ In practice it is better to create your own cache using e.g. `rds_database`,
 # prepare sequence
 M <- import_source() +
     drop_empty_columns() +
+    # keep the original names; the names without suffix are written to a
+    # new "name.fixed" column
     remove_suffix(
-        clean = TRUE,
+        clean = FALSE,
         column_name = "metabolite_name"
     ) +
     database_lookup(
@@ -478,7 +533,7 @@ M <- import_source() +
         include = "pubchem_cid"
     ) +
     pubchem_compound_lookup(
-        query_column = "metabolite_name",
+        query_column = "name.fixed",
         search_by = "name",
         suffix = "_pc",
         output = "cids",
@@ -507,8 +562,29 @@ M <- model_apply(M, mwb_source(source = "AN000465"))
 ```
 
 Note that because the first step in the workflow is to import data from 
-Metabolomics Workbench, we only need to provide an empty annotation_table as 
-input to `model_apply` as it will be updated when we run the workflow.
+Metabolomics Workbench, the source object we pass to `model_apply` only needs 
+to say which source to import; the data are read by the first step.
+
+The table below shows the result. For each annotation it gives the original 
+name, the name used for the PubChem search, the selected PubChem CID, which 
+search supplied that CID (`mwb` for RefMet, `pc` for the PubChem name search) 
+and the SMILES returned by PubChem.
+
+```{r extending-metmashr-results}
+res <- predicted(M)$data
+
+# the cached PubChem responses may use the older property name
+# "CanonicalSMILES" for what PubChem now calls "ConnectivitySMILES"
+smiles_col <- grep("SMILES", colnames(res), value = TRUE)[1]
+
+data.frame(
+    original_name = res$metabolite_name,
+    search_name = res$name.fixed,
+    pubchem_cid = res$pubchem_cid,
+    cid_source = res$pubchem_cid_source,
+    smiles = res[[smiles_col]]
+)
+```
 
 # Summary
 Extending the templates provided by `struct` to implement workflow steps for 

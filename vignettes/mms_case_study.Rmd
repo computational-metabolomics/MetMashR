@@ -664,6 +664,52 @@ Names without an InChIKey are removed by `filter_na()`. The remaining names
 are merged first by full InChIKey and then by the first 14 characters of the 
 InChIKey.
 
+The next table is a worked example from the RefMet variant. It shows a few 
+names chosen to cover the possible outcomes of Step 1: the original name, the 
+name sent to the databases after preparation, the InChIKey returned by each 
+service, and the InChIKey selected by `prioritise_columns()`.
+
+```{r worked-example}
+worked_example <- function(W, inchikey_col, tag) {
+    steps <- seq_len(length(W))
+    i <- which(vapply(steps, function(k) {
+        is(W[k], "prioritise_columns")
+    }, logical(1)))[1]
+    # lookups before prioritising, and the selected InChIKey after
+    before <- predicted(W[i - 1])$data
+    after <- predicted(W[i])$data
+    pc <- before$inchikey_pubchem_id_exchange
+    other <- before[[inchikey_col]]
+    # first example of each outcome
+    pick <- c(
+        both_agree = which(!is.na(pc) & !is.na(other) & pc == other &
+            before$metabolite_name != before$name_normalised)[1],
+        both_differ = which(!is.na(pc) & !is.na(other) & pc != other)[1],
+        pubchem_only = which(!is.na(pc) & is.na(other))[1],
+        other_only = which(is.na(pc) & !is.na(other))[1],
+        unresolved = which(is.na(pc) & is.na(other))[1]
+    )
+    pick <- pick[!is.na(pick)]
+    out <- data.frame(
+        outcome = names(pick),
+        original_name = before$metabolite_name[pick],
+        name_sent = before$name_normalised[pick],
+        inchikey_pubchem = pc[pick],
+        inchikey_other = other[pick],
+        selected = after$InChIKey[pick],
+        selected_from = after$InChIKey_source[pick]
+    )
+    names(out)[5] <- paste0("inchikey_", tag)
+    out
+}
+.DT(worked_example(applied_refmet, "inchi_key_refmet", "refmet"))
+```
+
+In the RefMet variant, 
+`r record_counts(applied_refmet)[["names_without_inchikey"]]` of the 
+`r record_counts(applied_refmet)[["names_looked_up"]]` names looked up were not 
+resolved by either service.
+
 # What the harmonised tables look like
 
 `result_refmet$data` and `result_chebi$data` are flat tables with one row per
@@ -681,14 +727,16 @@ preview_cols <- c(
 )
 ```
 
-RefMet variant:
+RefMet variant (preview of the first 10 of `r nrow(result_refmet$data)` 
+rows):
 
 ```{r result-table-refmet}
 .DT(head(result_refmet$data[, preview_cols], 10))
 ```
 
-ChEBI + CTS-Lite variant. It has no MWB-derived HMDB, LipidMaps or PubChem CID
-columns, and includes the CTS-Lite columns:
+ChEBI + CTS-Lite variant (preview of the first 10 of 
+`r nrow(result_chebi$data)` rows). It has no MWB-derived HMDB, LipidMaps or 
+PubChem CID columns, and includes the CTS-Lite columns:
 
 ```{r result-table-chebi}
 chebi_cols <- c(
@@ -696,6 +744,7 @@ chebi_cols <- c(
     "MolecularFormula_pubchem", "MolecularWeight_pubchem",
     "chebi_id_chebi", "compound_kegg",
     "kingdom.name_cfb", "superclass.name_cfb", "class.name_cfb",
+    "inchikey_cts", "match_level_cts",
     "compound_name_cts", "annotation_type_count_cts",
     "ambiguous_inchikey", "ambiguous_name", "source"
 )

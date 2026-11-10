@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
     dt_options <- list(
         scrollX = TRUE,
         pageLength = 6,
-        dom = "t",
+        dom = "tip", # table, row count and pagination
         initComplete = DT::JS(
             "function(settings, json) {",
             "$(this.api().table().header()).css({'font-size':'10pt'});",
@@ -227,7 +227,8 @@ The HILIC_NEG table is shown below.
 
 `MetMashR` workflows store the output after each step. We can use this to 
 explore the impact of different workflow steps. For example, we can display
-the different compound matched present before and after filtering as pie charts.
+the different compound matches present before and after filtering as pie charts.
+The pie charts count annotation rows.
 
 First, we create the pie chart object and specify some parameters.
 ```{r annotate-mixtures-8}
@@ -397,7 +398,8 @@ The LIPIDS_NEG table is shown below.
 
 `MetMashR` workflows store the output after each step. We can use this to 
 explore the impact of different workflow steps. For example, we can display
-the different Grades present before and after filtering as pie charts.
+the different Grades present before and after filtering as pie charts of
+annotation rows.
 
 ```{r annotate-mixtures-14}
 C <- annotation_pie_chart(
@@ -430,7 +432,8 @@ The annotations imported from each source are interesting to explore graphically
 In this example we generate Venn diagrams by providing several 
 `annotation_table` inputs to the `chart_plot` function for an 
 `annotation_venn_chart`. This allows us to compare columns of e.g. compound 
-names present in each table.
+names present in each table. The Venn and UpSet charts count distinct names, not 
+annotation rows.
 
 Here, we compare the compound names for each assay within each source, to see 
 if there is any overlap i.e. the same metabolite detecting in several assays.
@@ -737,7 +740,7 @@ to obtain without normalisation. The use of OPSIN then added a further
 not found by either PubChem query. The column of combined identifiers 
 therefore contains `r length(ik_combined)` distinct, non-missing identifiers.
 
-```{r annotate-mixtures-21}
+```{r annotate-mixtures-21, fig.cap = "Distinct InChIKeys returned by each query."}
 # venn inchikey columns
 C <- annotation_venn_chart(
     factor_name = c("InChIKey", "InChIKey_norm", "stdinchikey_opsin"),
@@ -785,7 +788,7 @@ identifier, and `r n_from_name` of these
 (`r round(100 * n_from_name / n_with_id, 1)`%) came from the PubChem query 
 based on the original name.
 
-```{r annotate-mixtures-23}
+```{r annotate-mixtures-23, fig.cap = "Annotation rows by the query that supplied the selected InChIKey; NA means no identifier was found."}
 # pie source of inchikey
 C <- annotation_pie_chart(
     factor_name = "inchikey_source",
@@ -837,7 +840,7 @@ known to be included in each of the mixtures.
 ## Importing the standard mixture tables
 
 The first step is to import the tables of standards for each mixture. The data 
-has ready been saved as an RDS file so we can use `rds_database` to import it.
+has already been saved as an RDS file so we can use `rds_database` to import it.
 
 ```{r annotate-mixtures-25}
 # prepare object
@@ -871,6 +874,15 @@ The standards are based on the MTox700+ database (see [TODO]), so we can import
 MTox700+ and use it to obtain InChIKey identifiers by matching the HMDB 
 identifiers. An alternative might be to use `hmdb_lookup` and/or 
 `pubchem_property_lookup`.
+
+Each row of the standards table is one standard in one assay. Before looking up 
+identifiers we remove rows where the retention time, the number of MS/MS scans 
+or the mzCloud identifier is missing, and rows with no MS/MS scans (the 
+`filter_range()` step with `equal_to = TRUE` removes values equal to the lower 
+limit of 0). These rows describe standards that were 
+not observed in that assay, or have no MS/MS spectrum or mzCloud entry that 
+the annotation software could have matched. The comparison with the 
+annotations below uses only the standards left after these filters.
 
 ```{r annotate-mixtures-27}
 # convert standard mixtures to source, then get inchikey from MTox700+
@@ -907,11 +919,26 @@ SM <- import_source() +
 SM <- model_apply(SM, R)
 ```
 
+The number of standard rows left after each step of the workflow:
+
+```{r annotate-mixtures-27b}
+data.frame(
+    step = c(
+        "imported", "rt not missing", "MS/MS scans not missing",
+        "mzCloud id not missing", "at least one MS/MS scan"
+    ),
+    rows = vapply(1:5, function(i) nrow(predicted(SM[i])$data), numeric(1))
+)
+```
+
+After the filters, `r nrow(predicted(SM)$data)` rows remain, representing 
+`r length(unique(na.omit(predicted(SM)$data$inchikey)))` distinct InChIKeys.
+
 In this next plot we show the overlap in standards for each assay detected by
-manual observation.
+manual observation. The Venn diagram counts distinct InChIKeys.
 
 
-```{r annotate-mixtures-28}
+```{r annotate-mixtures-28, fig.cap = "Distinct InChIKeys of the filtered standards in each assay."}
 C <- annotation_venn_chart(
     factor_name = "inchikey",
     group_column = "ion_mode",
@@ -932,9 +959,11 @@ Now that we have both the annotations and the standards we can look at overlap
 between the identifiers in both sources, and begin to assess the ability of the
 annotation software annotate the standards.
 
-Here we plot a venn diagram showing the overlap in identifiers.
+Here we plot a venn diagram showing the overlap in identifiers. As for the 
+previous charts, the Venn diagram counts distinct InChIKeys, not annotation 
+rows.
 
-```{r annotate-mixtures-29, fig.width=4}
+```{r annotate-mixtures-29, fig.width=4, fig.cap = "Distinct InChIKeys in the filtered standards and in the annotations from all assays and sources."}
 # get processed data
 AN <- predicted(FF)
 AN$tag <- "Annotations"
@@ -962,7 +991,7 @@ These are followed by a 4-set Venn diagram that
 shows the overlap between annotations from each assay that matched to a 
 standard.
 
-```{r annotate-mixtures-30, fig.height  = 10, fig.width = 8}
+```{r annotate-mixtures-30, fig.height  = 10, fig.width = 8, fig.cap = "Distinct InChIKeys of the filtered standards and the annotations for each assay (top), and the standards InChIKeys also annotated in each assay (bottom)."}
 G <- list()
 VV <- list()
 for (k in c("HILIC_NEG", "HILIC_POS", "LIPIDS_NEG", "LIPIDS_POS")) {
@@ -1016,7 +1045,7 @@ that the annotated feature is the standard.
 
 In the next plot we compare the overlap in InChIKey for each source.
 
-```{r annotate-mixtures-31, fig.height  = 3, fig.width = 8}
+```{r annotate-mixtures-31, fig.height  = 3, fig.width = 8, fig.cap = "Distinct InChIKeys of the filtered standards and the annotations from each source."}
 G <- list()
 for (k in c("CD", "LS")) {
     wf <- filter_labels(
