@@ -257,9 +257,38 @@ cowplot::plot_grid(g1, g2, nrow = 1, labels = c("Venn diagram", "UpSet plot"))
 ```
 
 These charts compare full InChIKeys in MTox700+ with those in the selected 
-PathBank primary-pathway dataset. An unmatched key means that it was not found 
-in this PathBank subset; it does not show that the metabolite has no known 
-pathway associations.
+PathBank primary-pathway dataset. To report the overlap, we count the distinct, 
+non-missing keys shared by both resources and divide by the number of distinct, 
+non-missing MTox700+ keys.
+
+```{r exploring-mtox-8b}
+# distinct, non-missing InChIKeys
+keys <- function(x) {
+    x <- unique(x)
+    x[!is.na(x) & x != ""]
+}
+mtox_keys <- keys(predicted(M)$data$inchikey)
+pathbank_keys <- keys(P$data$InChI.Key)
+shared_keys <- intersect(mtox_keys, pathbank_keys)
+
+# MTox700+ records with no InChIKey
+n_missing <- sum(is.na(predicted(M)$data$inchikey) |
+    predicted(M)$data$inchikey == "")
+
+data.frame(
+    mtox_keys = length(mtox_keys),
+    shared_keys = length(shared_keys),
+    percent_shared = round(100 * length(shared_keys) / length(mtox_keys), 1),
+    mtox_records_without_key = n_missing
+)
+```
+
+Of the `r length(mtox_keys)` distinct MTox700+ InChIKeys, 
+`r length(shared_keys)` 
+(`r round(100 * length(shared_keys) / length(mtox_keys), 1)`%) are also in the 
+PathBank primary-pathway dataset; `r n_missing` MTox700+ records have no 
+InChIKey. An unmatched key means that it was not found in this PathBank subset; 
+it does not show that the metabolite has no known pathway associations.
 
 <br>
 

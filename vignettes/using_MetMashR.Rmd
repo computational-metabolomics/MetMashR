@@ -480,8 +480,16 @@ pattern with in the matching string.
 Additional fields in the list item can be any of the additional inputs to 
 `grepl()`, such as `fixed = TRUE`.
 
-For example here we create a dictionary to convert some of the lipid abbreviations
-to the LipidMaps standard, and replace underscores with forward slashes:
+Here we change selected lipid-class abbreviations in a separate column used for 
+database searches. We keep the original LipidSearch names so that readers can 
+check every change. For lipid classes that use this notation, an underscore 
+means that the chain positions are not established, while a slash means that 
+they are established. We therefore leave these separators unchanged unless the 
+original annotation supports the change. A successful database search returns a 
+candidate identifier; it does not add experimental evidence for the structure.
+
+See the LIPID MAPS [shorthand notation](https://pmc.ncbi.nlm.nih.gov/articles/PMC7707175/) 
+for details.
 
 ```{r using-metmashr-13}
 custom_dict <- list(
@@ -493,11 +501,6 @@ custom_dict <- list(
     list(
         pattern = "AEA",
         replace = "NAE",
-        fixed = TRUE
-    ),
-    list(
-        pattern = "_",
-        replace = "/",
         fixed = TRUE
     )
 )
@@ -553,8 +556,17 @@ WF <- model_apply(WF, AT)
 )])
 ```
 
-You can see that we obtained inchikey for more of the Lipids after normalising
-the lipid names.
+```{r using-metmashr-14b}
+# number of rows with an InChIKey for each query
+colSums(!is.na(predicted(WF)$data[, c(
+    "inchi_key_LipidName", "inchi_key_normalised"
+)]))
+```
+
+The LipidSearch names returned an InChIKey for 
+`r sum(!is.na(predicted(WF)$data$inchi_key_LipidName))` rows, and the 
+normalised names for 
+`r sum(!is.na(predicted(WF)$data$inchi_key_normalised))` rows.
 
 `MetMashR` also provides an interface to the `rgoslin` package to assist with
 Lipid annotations.

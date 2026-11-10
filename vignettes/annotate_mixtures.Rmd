@@ -93,7 +93,8 @@ A library built from authentic standards can support MSI level 1
 identification when a feature matches at least two independent, orthogonal 
 properties of a standard measured under identical experimental conditions. This 
 vignette compares identifiers with a reference list. Identifier agreement alone 
-does not establish level 1 identification.
+does not establish level 1 identification (see the 
+[MSI reporting recommendations](https://pmc.ncbi.nlm.nih.gov/articles/PMC3772505/)).
 
 In this vignette we will explore the annotations generated using Compound
 Discoverer (CD) and LipidSearch (LS) for several mixtures of standards.
@@ -307,11 +308,17 @@ For the `MetMashR` workflow we would like to:
 
 1. Import the LS annotations and convert to `annotation_table` format
 2. Filter the annotations to only include grades A and B
-3. Resolve duplicates
+3. Extract the adduct from the `LipidIon` column
+4. Resolve duplicates
 
 When we import the annotations, we add a column indicating which assay and 
 source the annotations are associated with. We also include a `tag` for the 
 table. This will be useful later when processing the combined tables.
+
+LipidSearch reports the adduct as part of the `LipidIon` column (e.g. 
+"PC(16:0_18:1)+H"). We use `compute_column()` to extract the adduct into a new 
+`LipidAdduct` column, written in the same notation as the Compound Discoverer 
+`ion` column (e.g. "[M+H]+1"), so that the two can be combined later.
 
 For LS we resolve duplicates by selecting the annotation with the smallest 
 ppm error. We use the `combine_records` object with the `select_min` helper
@@ -325,6 +332,19 @@ M <- import_source() +
             assay = "placeholder", # will be replaced later
             source_name = "LS"
         )
+    ) +
+    # extract the adduct from LipidIon (e.g. "PC(16:0_18:1)+H" -> "+H") and
+    # write it in the same notation as the Compound Discoverer "ion" column
+    compute_column(
+        input_columns = c("LipidIon", "LipidName", "assay"),
+        output_column = "LipidAdduct",
+        fcn = function(x) {
+            a <- substring(x$LipidIon, nchar(x$LipidName) + 1)
+            a[a == "+CH3COO"] <- "-H+HAc"
+            a[a == "+HCOO"] <- "+FA-H"
+            charge <- ifelse(grepl("NEG", x$assay), "-1", "+1")
+            paste0("[M", a, "]", charge)
+        }
     ) +
     filter_labels(
         column_name = "Grade",
@@ -476,8 +496,8 @@ When combining different sources the `combine_sources()` object provides input
 parameters that allow you to combine and select columns from different sources
 into new columns with the same information. For example the `adduct` column in 
 CD
-is called "Ion" and in LS it is called "LipidIon"; we can combine these columns
-into a new column called "adduct".
+is called "ion" and in LS it is the "LipidAdduct" column we extracted from 
+"LipidIon"; we can combine these columns into a new column called "adduct".
 
 Here we specify that all columns should be retained from both tables, padding 
 with NA if not present; columns with the same name are automatically merged.
@@ -494,7 +514,7 @@ combine_workflow <-
             name = "LipidName",
             name = "compound",
             adduct = "ion",
-            adduct = "LipidIon"
+            adduct = "LipidAdduct"
         ),
         keep_cols = ".all",
         source_col = "annotation_table",
@@ -700,13 +720,22 @@ N <- model_apply(N, predicted(id_workflow))
 We can explore the impact of these workflow steps using Venn and Pie charts to 
 compare the results before/after the workflow.
 
-In this Venn diagram we show the overlap between the InChIKey identifiers 
-obtained from 
-the three queries. It can be seen that normalising the names resulted in 37
-identifiers that we were unable to obtain without normalisation.
+```{r annotate-mixtures-20b, include = FALSE}
+# distinct, non-missing identifiers from each query and after prioritisation
+ids <- function(x) unique(x[!is.na(x)])
+ik_name <- ids(predicted(N[3])$data$InChIKey)
+ik_norm <- ids(predicted(N[3])$data$InChIKey_norm)
+ik_opsin <- ids(predicted(N[3])$data$stdinchikey_opsin)
+ik_combined <- ids(predicted(N)$data$inchikey)
+```
 
-The use of OPSIN then added a further 31 identifiers. The column of combined
-identifiers therefore contains 
+In this Venn diagram we show the overlap between the distinct InChIKey 
+identifiers obtained from the three queries. Normalising the names resulted in 
+`r length(setdiff(ik_norm, ik_name))` distinct identifiers that we were unable 
+to obtain without normalisation. The use of OPSIN then added a further 
+`r length(setdiff(ik_opsin, union(ik_name, ik_norm)))` distinct identifiers 
+not found by either PubChem query. The column of combined identifiers 
+therefore contains `r length(ik_combined)` distinct, non-missing identifiers.
 
 ```{r annotate-mixtures-21}
 # venn inchikey columns
@@ -776,7 +805,7 @@ to produce more accurate identifiers. The unfiltered lookup results are kept in
 # prepare workflow
 FL <- filter_labels(
     column_name = "inchikey_source",
-    labels = "InChIKey",
+    labels = "^InChIKey$", # exact match; labels are regular expressions
     mode = "exclude"
 )
 # apply
@@ -940,7 +969,8 @@ for (k in c("HILIC_NEG", "HILIC_POS", "LIPIDS_NEG", "LIPIDS_POS")) {
     V <- filter_venn(
         factor_name = "inchikey",
         tables = list(predicted(wf1)),
-        mode = 'exclude'
+        filter = upset_min_groups(2),
+        mode = "include"
     )
     V <- model_apply(V, predicted(wf2))
     VV[[k]] <- predicted(V)
@@ -954,7 +984,25 @@ r1 <- cowplot::plot_grid(
 cowplot::plot_grid(r1, chart_plot(C, VV), nrow = 2, rel_heights = c(1, 0.5))
 ```
 
-The majority of the standards were correctly annotated in the HILIC_NEG assay.
+```{r annotate-mixtures-30b}
+# distinct standard InChIKeys per assay, and how many were also annotated
+data.frame(
+    assay = names(VV),
+    standards = vapply(names(VV), function(k) {
+        x <- sM$data$inchikey[sM$data$ion_mode == k]
+        length(unique(x[!is.na(x)]))
+    }, numeric(1)),
+    also_annotated = vapply(VV, function(v) {
+        length(unique(v$data$inchikey[!is.na(v$data$inchikey)]))
+    }, numeric(1)),
+    row.names = NULL
+)
+```
+
+The table counts distinct InChIKeys of the filtered standards for each assay, 
+and how many of them were also found among the annotations for that assay. A 
+shared InChIKey shows that the identifiers agree; it does not on its own confirm 
+that the annotated feature is the standard.
 
 In the next plot we compare the overlap in InChIKey for each source.
 

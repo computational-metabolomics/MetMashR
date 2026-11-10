@@ -461,7 +461,8 @@ of queries), which does not fit `rest_api`'s one `GET` per query value.
 By default, CTS-Lite can return a match based on the first 14 characters of the
 InChIKey if it cannot find an exact match. It also returns only its
 highest-ranked result. Check the returned InChIKey and match level before
-treating the attached information as an exact match to the requested compound.
+treating the attached information as an exact match to the requested compound
+(see the [CTS-Lite documentation](https://cts-lite.metabolomics.us/docs)).
 
 ```{r flow-step2, echo = FALSE, fig.wide = TRUE, out.width = "100%", fig.cap = "MMS Step 2 workflow. The variants differ in how the ChEBI identifier for the KEGG lookup is obtained, and only the ChEBI variant queries CTS-Lite.", fig.alt = "Step 2 flow diagram: pubchem_property_lookup and classyfire_batch_lookup, then a split into mwb_compound_lookup for the RefMet variant and compute_column for chebi_number for the ChEBI variant, rejoining at kegg_lookup, followed by cts_lite_lookup for the ChEBI variant only."}
 knitr::include_graphics("mms_figures/mms_step2_attributes.png")
@@ -620,8 +621,10 @@ workflow_chebi <- Reduce(
 )
 
 # apply model sequences to merged sources and extract the results
-result_refmet <- predicted(model_apply(workflow_refmet, combined))
-result_chebi <- predicted(model_apply(workflow_chebi, combined))
+applied_refmet <- model_apply(workflow_refmet, combined)
+applied_chebi <- model_apply(workflow_chebi, combined)
+result_refmet <- predicted(applied_refmet)
+result_chebi <- predicted(applied_chebi)
 
 # report number of records
 c(
@@ -629,6 +632,37 @@ c(
     chebi = nrow(result_chebi$data)
 )
 ```
+
+The table below shows how the number of records changes through each workflow.
+Preparing the names can split one input record into several candidate names,
+so the number of names looked up can be larger than the number of input
+records.
+
+```{r record-counts}
+record_counts <- function(W) {
+    # output of the step before the InChIKey filter
+    steps <- seq_len(length(W))
+    i <- which(vapply(steps, function(k) is(W[k], "filter_na"), logical(1)))[1]
+    looked_up <- predicted(W[i - 1])$data
+    final <- predicted(W)$data
+    keys <- unique(looked_up$InChIKey[!is.na(looked_up$InChIKey)])
+    c(
+        input_records = nrow(combined$data),
+        names_looked_up = nrow(looked_up),
+        names_without_inchikey = sum(is.na(looked_up$InChIKey)),
+        distinct_full_inchikeys = length(keys),
+        distinct_14_character_groups = nrow(final)
+    )
+}
+data.frame(
+    refmet = record_counts(applied_refmet),
+    chebi = record_counts(applied_chebi)
+)
+```
+
+Names without an InChIKey are removed by `filter_na()`. The remaining names 
+are merged first by full InChIKey and then by the first 14 characters of the 
+InChIKey.
 
 # What the harmonised tables look like
 
