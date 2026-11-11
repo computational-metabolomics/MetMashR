@@ -55,7 +55,27 @@ setMethod(
 
         # cache
         bfc <- BiocFileCache::BiocFileCache(obj$bfc)
-        path <- BiocFileCache::bfcrpath(bfc, u)
+
+        # find the cached copy by its url; if there are duplicate entries
+        # (e.g. left by a failed download) use the most recent one
+        rid <- BiocFileCache::bfcquery(
+            x = bfc,
+            query = u,
+            field = "fpath", exact = TRUE
+        )$rid
+        rid <- utils::tail(rid, 1)
+
+        # if not present, download and add it
+        if (!length(rid)) {
+            rid <- names(BiocFileCache::bfcadd(x = bfc, rname = u, fpath = u))
+        }
+
+        path <- BiocFileCache::bfcrpath(bfc, rids = rid)
+
+        # download again if the cached file is missing
+        if (!file.exists(path)) {
+            BiocFileCache::bfcdownload(x = bfc, rid = rid, ask = FALSE)
+        }
 
         # read without simplification; simplifying this large file with
         # jsonlite::fromJSON() can crash R

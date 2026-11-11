@@ -15,6 +15,8 @@
 * fix `prioritise_columns` assigning the last source tag to rows where all
   columns are NA; the source is now NA
 * fix `ls_source` truncating `LipidName` at `/`, `+` or `-` inside brackets
+* fix `mwb_refmet_database` failing when the cache has duplicate entries for
+  the RefMet download
 
 # MetMashR v1.7.2
 * add `pubchem_id_exchange` for batch identifier conversion
